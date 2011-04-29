@@ -1,0 +1,26 @@
+ProductPage:
+  productA:
+    Title: Product A
+    URLSegment: product-a
+    AmountAmount: 500
+    AmountCurrency: NZD
+    Date: 2011-02-17 18:45:00
+  productB:
+    Title: Product B
+    URLSegment: product-b
+    AmountAmount: 19.95
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:48:00
+      
+Member:
+  admin:
+    FirstName: Admin
+    Surname: Admin
+    Email: admin@test.com
+    Password: password
+  buyer:
+    FirstName: Test
+    Surname: Buyer
+    Email: buyer_1301305489_per@stripeythemes.com
+    Password: password
+
