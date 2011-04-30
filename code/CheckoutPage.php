@@ -17,23 +17,6 @@ class CheckoutPage extends Page
 }
 
 class CheckoutPage_Controller extends Page_Controller {
-
-  function init() {
-    parent::init();
-  }
-  
-  /**
-   * Retrieve the current cart
-   */
-  function Cart() {
-    
-    $order = CartController::get_current_order();
-    $order->Items();
-    $order->Total;
-
-		//HTTP::set_cache_age(0);
-		return $order;
-	}
 	
 	/**
 	 * Create an order form
