@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Mixin for other data objects that are to represent products.
+ * @author frankmullenger
+ *
+ * TODO post payment hook for emails and virtual products with downloads etc.
+ */
 class ProductDecorator extends DataObjectDecorator {
   
   /**
@@ -65,7 +70,7 @@ class ProductDecorator extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Helper to get URL for the checkout pate
+	 * Helper to get URL for the checkout page
 	 * TODO if checkout page does not exist throw error
 	 * 
 	 * @return String URL for the checkout page
@@ -77,5 +82,3 @@ class ProductDecorator extends DataObjectDecorator {
 	}
 	
 }
- 
-?>

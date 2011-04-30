@@ -37,6 +37,63 @@ class CartTest extends FunctionalTest {
 	}
 	
 	/**
+	 * Adding items to the cart and setting quantity
+	 */
+	function testCartItemsQuantity() {
+	  
+	  $this->loginAs('buyer');
+	  
+	  //Add product A to cart
+	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $addLink = $productA->AddToCartLink();
+	  $removeLink = $productA->RemoveFromCartLink();
+	  
+	  
+	  //1 item with quantity 2 in cart
+	  $this->get(Director::makeRelative($addLink)); 
+	  $this->get(Director::makeRelative($addLink)); 
+
+	  $order = CartController::get_current_order();
+	  $this->assertEquals(1000, $order->Total->getAmount());
+	  
+	  $items = $order->Items();
+	  $this->assertInstanceOf('ComponentSet', $items);
+	  $this->assertEquals(1, $items->TotalItems());
+	  
+	  $firstItem = $items->First();
+	  $this->assertInstanceOf('Item', $firstItem);
+	  $this->assertEquals(2, $firstItem->Quantity);
+	  
+	  
+	  //1 item with quantity 1 in cart
+	  $this->get(Director::makeRelative($removeLink));
+	  
+	  $order = CartController::get_current_order();
+	  $this->assertEquals(500, $order->Total->getAmount());
+	  
+	  $items = $order->Items();
+	  $this->assertInstanceOf('ComponentSet', $items);
+	  $this->assertEquals(1, $items->TotalItems());
+	  
+	  $firstItem = $items->First();
+	  $this->assertInstanceOf('Item', $firstItem);
+	  $this->assertEquals(1, $firstItem->Quantity);
+	  
+	  
+	  //0 items in the cart
+	  $this->get(Director::makeRelative($removeLink));
+	  
+	  $order = CartController::get_current_order();
+	  $this->assertEquals(null, $order->Total->getAmount());
+	  
+	  $items = $order->Items();
+	  $this->assertInstanceOf('ComponentSet', $items);
+	  $this->assertEquals(0, $items->TotalItems());
+	  
+	}
+
+	
+	/**
 	 * Removing an item from the cart and checking that cart is empty
 	 */
 	function testRemoveItemFromCart() {

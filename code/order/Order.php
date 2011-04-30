@@ -68,6 +68,11 @@ class Order extends DataObject {
 //		return Permission::check('ADMIN', 'any', $member);
 	}
 	
+	/**
+	 * Set CMS fields for viewing this Order in the CMS
+	 * 
+	 * @see DataObject::getCMSFields()
+	 */
 	public function getCMSFields() {
 	  $fields = parent::getCMSFields();
 	  
@@ -164,6 +169,60 @@ class Order extends DataObject {
 	}
 	
 	/**
+	 * Add an item to the order representing the product, 
+	 * if an item for this product exists increase the quantity
+	 * 
+	 * @param DataObject $product The product to be represented by this order item
+	 */
+	function addItem(DataObject $product) {
+	  
+	  //
+	  $this->Total->setAmount($this->Total->getAmount() + $product->Amount->getAmount()); 
+    $this->Total->setCurrency($product->Amount->getCurrency()); 
+    $this->write();
+    
+    //Incrememnt the quantity if this item exists already
+    $item = $this->Items()->find('ObjectID', $product->ID);
+    
+    if ($item && $item->exists()) {
+      $item->Quantity = $item->Quantity + 1;
+      $item->write();
+    }
+    else {
+      $item = new Item();
+      $item->ObjectID = $product->ID;
+      $item->ObjectClass = $product->class;
+      $item->Amount->setAmount($product->Amount->getAmount());
+      $item->Amount->setCurrency($product->Amount->getCurrency());
+      $item->OrderID = $this->ID;
+      $item->write();
+    }
+	}
+	
+	/**
+	 * Decrease quantity of an item or remove it if quantity = 1
+	 * 
+	 * @param DataObject $product The product to remove
+	 */
+	function removeItem(DataObject $product) {
+
+	  $this->Total->setAmount($this->Total->getAmount() - $product->Amount->getAmount()); 
+    $this->write();
+    
+    $item = $this->Items()->find('ObjectID', $product->ID);
+    
+    if ($item && $item->exists()) {
+      if ($item->Quantity == 1) {
+        $item->delete();
+      }
+      else {
+        $item->Quantity = $item->Quantity - 1;
+        $item->write();
+      }
+    }
+	}
+	
+	/**
 	 * Transitions the order from being in the Cart to being in an unpaid post-cart state.
 	 *
 	 * @return Order The current order
@@ -184,4 +243,3 @@ class Order extends DataObject {
 	}
 	*/
 }
-

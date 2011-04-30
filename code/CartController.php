@@ -30,18 +30,8 @@ class CartController extends Controller {
     $product = $this->getProduct();
 
     $currentOrder = self::get_current_order();
-    $currentOrder->Total->setAmount($currentOrder->Total->getAmount() + $product->Amount->getAmount()); 
-    $currentOrder->Total->setCurrency($product->Amount->getCurrency()); 
-    $currentOrder->write();
-    
-    $item = new Item();
-    $item->ObjectID = $product->ID;
-    $item->ObjectClass = $product->class;
-    $item->Amount->setAmount($product->Amount->getAmount());
-    $item->Amount->setCurrency($product->Amount->getCurrency());
-    $item->OrderID = $currentOrder->ID;
-		$item->write();
-    
+    $currentOrder->addItem($product);
+
     Director::redirectBack();
   }
   
@@ -53,12 +43,8 @@ class CartController extends Controller {
     $product = $this->getProduct();
 
     $currentOrder = self::get_current_order();
-    $currentOrder->Total->setAmount($currentOrder->Total->getAmount() - $product->Amount->getAmount()); 
-    $currentOrder->write();
-    
-    $item = DataObject::get_one('Item', "ObjectID = $product->ID AND ObjectClass = '$product->class' AND OrderID = $currentOrder->ID");
-		$item->delete();
-    
+    $currentOrder->removeItem($product);
+
     Director::redirectBack();
   }
   
@@ -77,9 +63,9 @@ class CartController extends Controller {
     return DataObject::get_by_id($productClassName, $productID);
   }
 
-
   /**
-   * Get the current order from the session
+   * Get the current order from the session, if order does not exist
+   * John Connor it (create a new order)
    * 
    * @return Order
    */

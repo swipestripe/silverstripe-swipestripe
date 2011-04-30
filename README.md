@@ -13,3 +13,7 @@ SilverStripe payment module
 About
 -----
 This is a simple shopping cart, based on the silverstripe payment-test and ecommerce modules. 
+
+Notes
+-----
+All products need to be in the same currency.

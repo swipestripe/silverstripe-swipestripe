@@ -5,11 +5,16 @@ class Item extends DataObject {
 	public static $db = array(
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
-	  'Amount' => 'Money'
+	  'Amount' => 'Money',
+	  'Quantity' => 'Int'
 	);
 
 	public static $has_one = array(
 		'Order' => 'Order'
+	);
+	
+	public static $defaults = array(
+	  'Quantity' => 1
 	);
 	
 	/**

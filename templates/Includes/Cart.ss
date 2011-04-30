@@ -3,9 +3,11 @@
 <% control Cart %>
   <ul>
 	  <% control Items %>
-	    <% control Object %>
-	      <li>$Title - $Amount.Nice</li>
-	    <% end_control %>
+	  
+	    <li>
+	    <% control Object %>$Title - $Amount.Nice<% end_control %> - $Quantity
+	    </li>
+	    
 	  <% end_control %>
   </ul>
 
