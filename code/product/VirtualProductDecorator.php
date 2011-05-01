@@ -8,6 +8,8 @@
  */
 class VirutalProductDecorator extends DataObjectDecorator {
   
+  public $downloadFolder;
+  
   /**
    * Add fields for virtual products
    * 
@@ -35,9 +37,24 @@ class VirutalProductDecorator extends DataObjectDecorator {
 	}
 	
 	function downloadLocation() {
+	  
+	  return false;
+	  
 	  //TODO create a new download file and return the path to it
 	  
+	  //TODO set the download folder from somewhere central
+	  $origin = 
+	  
+	  $this->downloadFolder = dirname(__FILE__) . '../../downloads/';
+	  $destination = $this->downloadFolder;
+	  
+  	if (!copy($file, $newfile)) {
+      echo "failed to copy $file...\n";
+    }
+	  
 	  Page::log($this->owner->FileLocation);
+	  
+	  
 	  
 	  return false;
 	}
