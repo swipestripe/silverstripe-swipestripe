@@ -2,7 +2,15 @@
 class CartTest extends FunctionalTest {
   
 	static $fixture_file = 'simplecart/tests/CartTest.yml';
-	static $disable_themes = true;
+	static $disable_themes = false;
+	static $use_draft_site = true;
+	
+  function setUp() {
+		parent::setUp();
+		
+		//Check that payment module is installed
+		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
+	}
 
 	/**
 	 * Creating a product and checking price and currency
@@ -152,6 +160,68 @@ class CartTest extends FunctionalTest {
 	  $items = $order->Items();
 	  $this->assertInstanceOf('ComponentSet', $items);
 	  $this->assertEquals(0, $items->TotalItems());
+	}
+	
+	/**
+	 * Process the order form with dummy data for basic cheque payment
+	 */
+	function testProcessPayment() {
+
+	  $this->loginAs('buyer');
+	  
+	  //Add some products to the shopping cart
+	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $addLink = $productA->AddToCartLink();
+	  $this->get(Director::makeRelative($addLink)); 
+	  $this->get(Director::makeRelative($addLink)); 
+	  
+	  $customer = $this->objFromFixture('Member', 'buyer');
+	  $accountPage = $this->objFromFixture('AccountPage', 'account');
+	  $checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout');
+
+	  $this->get(Director::makeRelative($checkoutPage->Link()));
+	  
+	  //Check that ChequePayment exists
+		$this->assertTrue(class_exists('ChequePayment'), 'Payment module is installed with cheque payment.');
+		
+		//Maybe use $customer->toMap(), need to consider other fields like ID which will be posted
+
+	  $orderPage = $this->submitForm('Form_OrderForm', null, array(
+	    'FirstName' => $customer->FirstName,
+      'Surname' => $customer->Surname,
+      'HomePhone' => '64 3 3249 163',
+      'Email' => $customer->Email,
+      'Address' => '4 Leafy Lane',
+      'AddressLine2' => 'Sydenham',
+      'City' => 'Christchurch',
+      'PostalCode' => '8014',
+      'Country' => 'NZ',
+      'PaymentMethod' => 'ChequePayment',
+      'Cheque' => '0',
+      'Amount' => '1000'
+	  ));
+	  
+	  //Get the last order and its payment and set Payment->Status = Success
+	  //to test onAfterPayment()
+	  $order = DataObject::get_one('Order');
+	  $customerID = $this->idFromFixture('Member', 'buyer');
+	  $this->assertEquals($order->MemberID, $customerID);
+	  
+	  $payments = $order->Payments();
+	  $this->assertInstanceOf('DataObjectSet', $payments);
+	  $this->assertEquals(1, $payments->TotalItems());
+
+    $payment = $payments->First();
+    $this->assertEquals('ChequePayment', $payment->ClassName);
+    $this->assertEquals('1000', $payment->Amount->getAmount(), 'Payment is for $199.98');
+    $this->assertEquals($customerID, $payment->PaidByID);
+    
+    $payment->Status = 'Success';
+    $payment->write();
+    
+    //Check that receipt was sent
+    $this->assertEmailSent($customer->Email, Email::getAdminEmail(), "/.*/");
+	  $this->assertEquals(1, $order->ReceiptSent);
 	}
 
 }

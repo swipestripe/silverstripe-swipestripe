@@ -53,6 +53,11 @@ class PaymentDecorator extends DataObjectDecorator {
 	  return implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', $this->owner->ClassName));
 	}
 	
+	/**
+	 * Fields to display this payment in the CMS
+	 * 
+	 * @see DataObjectDecorator::updateCMSFields()
+	 */
   function updateCMSFields(FieldSet &$fields) {
     
     $fields->removeByName('Status');
@@ -85,17 +90,20 @@ class PaymentDecorator extends DataObjectDecorator {
     return $fields;
 	}
 
-	/*
+	/**
+	 * After payment success process Order::onAfterPayment()
+	 * 
+	 * @see DataObjectDecorator::onAfterWrite()
+	 */
 	function onAfterWrite() {
-		if($this->owner->Status == 'Success' && $order = $this->owner->Order()) {
 
-			if(!$order->ReceiptSent){
-				$order->sendReceipt();
-				$order->updatePaymentStatus();
-			}
+	  $order = $this->owner->PaidObject();
 
+	  //Incomplete,Success,Failure,Pending
+		if($this->owner->Status == 'Success' && $order) {
+		  $order->onAfterPayment();
 		}
 	}
-	*/
+	
 
 }

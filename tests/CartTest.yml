@@ -11,6 +11,16 @@ ProductPage:
     AmountAmount: 19.95
     AmountCurrency: NZD 
     Date: 2011-01-31 20:48:00
+ 
+CheckoutPage:
+  checkout:
+    Title: Checkout
+    URLSegment: checkout
+    
+AccountPage:
+  account:
+    Title: Account Page
+    URLSegment: account
       
 Member:
   admin:
@@ -21,6 +31,7 @@ Member:
   buyer:
     FirstName: Test
     Surname: Buyer
-    Email: buyer_1301305489_per@stripeythemes.com
+    Email: test_buyer@example.com
     Password: password
 
+    

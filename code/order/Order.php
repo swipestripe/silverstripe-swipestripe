@@ -4,7 +4,12 @@ class Order extends DataObject {
 
 	public static $db = array(
 		'Status' => "Enum('Unpaid,Paid,Cart','Cart')",
-	  'Total' => 'Money'
+	  'Total' => 'Money',
+		'ReceiptSent' => 'Boolean'
+	);
+	
+	public static $defaults = array(
+	  'ReceiptSent' => false
 	);
 
 	public static $has_one = array(
@@ -142,16 +147,32 @@ class Order extends DataObject {
 	}
 	
 	/**
+	 * Processed if payment is successful
+	 * 
+	 * @see PaymentDecorator::onAfterWrite()
+	 */
+	function onAfterPayment() {
+	  
+		if(!$this->ReceiptSent){
+			$this->sendReceipt();
+//			$this->updatePaymentStatus();
+		}
+	}
+	
+	/**
 	 * Sending a receipt to the new customer
-	 * TODO: implement properly
+	 * TODO: get from address, subject and content from somewhere useful
 	 * 
 	 * @return Boolean True if sending email worked
 	 */
 	function sendReceipt() {
+
+	  $customer = $this->Member();
+	  
 	  $receipt = new Email(
 	    $from = Email::getAdminEmail(),
-	    $to = 'frankmullenger@gmail.com', 
-	    $subject = 'Testing receipt', 
+	    $to = $customer->Email, 
+	    $subject = 'Order receipt from somewebsite.com', 
 	    $body = 'This is a receipt'
 	  );
 	  
@@ -164,8 +185,15 @@ class Order extends DataObject {
 			)
 		);
 	  
-	  $sent = $receipt->send();
-	  return $sent;
+	  if ($receipt->send()) {
+	    
+	    $this->ReceiptSent = true;
+	    $this->write();
+	    return true;
+	  }
+	  else {
+	    return false;
+	  }
 	}
 	
 	/**
@@ -221,6 +249,7 @@ class Order extends DataObject {
       }
     }
 	}
+
 	
 	/**
 	 * Transitions the order from being in the Cart to being in an unpaid post-cart state.

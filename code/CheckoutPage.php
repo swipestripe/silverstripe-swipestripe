@@ -4,6 +4,7 @@ class CheckoutPage extends Page
   static $has_many = array (
   );
   static $db = array(
+    'ChequeMessage' => 'HTMLText' //Dependency for ChequePayment::ChequeContent()
   );
   static $has_one = array(
   );
@@ -97,7 +98,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function ProcessOrder($data, $form) {
-	  
+
 	  //Get payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
@@ -152,10 +153,8 @@ class CheckoutPage_Controller extends Page_Controller {
 		$payment->PaidForID = $order->ID;
 		$payment->PaidForClass = $order->class;
 		$payment->OrderID = $order->ID;
-		
-		//TODO get the amount out of the order
-		$payment->Amount->Amount = $data['Amount'];
-		
+		$payment->Amount->setAmount($order->Total->getAmount());
+		$payment->Amount->setCurrency($order->Total->getCurrency());
 		$payment->write();
 		
 		// Process payment, get the result back
