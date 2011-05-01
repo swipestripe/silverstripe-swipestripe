@@ -290,6 +290,20 @@ class Order extends DataObject {
       }
     }
 	}
+	
+	function Downloads() {
+	  //TODO get the products for downloads
+	  $virtualItems = new DataObjectSet();
+	  $items = $this->Items();
+	  
+	  foreach ($items as $item) {
+	    
+	    if (isset($item->Object()->FileLocation) && $item->Object()->FileLocation) {
+	      $virtualItems->push($item);
+	    }
+	  }
+	  return $virtualItems;
+	}
 
 	
 	/**

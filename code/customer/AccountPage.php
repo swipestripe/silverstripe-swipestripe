@@ -32,7 +32,8 @@ class AccountPage extends Page {
 class AccountPage_Controller extends Page_Controller {
   
   static $allowed_actions = array (
-    'order'
+    'order',
+    'orders'
   );
 
 	/**
@@ -44,16 +45,12 @@ class AccountPage_Controller extends Page_Controller {
 	 * @return array of template variables
 	 */
 	function order($request) {
-	  
-	  //Get the order to make sure it is being saved properly 
-	  //Check that the products are versioned to get the correct ones
 
 		$memberID = Member::currentUserID();
 
 		if($orderID = $request->param('ID')) {
 //			if($order = DataObject::get_one('Order', "\"Order\".\"ID\" = '$orderID' AND \"Order\".\"MemberID\" = '$memberID'")) {
 		  if($order = DataObject::get_one('Order', "\"Order\".\"ID\" = '$orderID'")) {
-				
 				return array(
 					'Order' => $order
 				);
@@ -71,6 +68,27 @@ class AccountPage_Controller extends Page_Controller {
 				'Message' => 'There is no order by that ID.'
 			);
 		}
+	}
+	
+	function orders() {
+	  //TODO get the orders out
+	}
+	
+	function downloadProduct($request) {
+
+	  //TODO Get Item out of $request
+	  //If product has been downloaded too many times then return false
+	  //Update download count and redirect to new download link
+	  $id = 0;
+	  $item = DataObject::get('Item', $id);
+	  $virtualProduct = $$item->Object();
+	  
+	  if ($downloadLink = $virtualProduct->downloadLink()) {
+	    $$item->DownloadCount = $$item->DownloadCount + 1;
+	    $item->write();
+	    Director::redirect($downloadLink);
+	  }
+	  return;
 	}
 
 }

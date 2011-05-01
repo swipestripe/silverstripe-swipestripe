@@ -1,14 +1,14 @@
 <?php
 /**
  * Mixin for other data objects that are to represent products.
+ * 
  * @author frankmullenger
- *
- * TODO post payment hook for emails and virtual products with downloads etc.
  */
 class ProductDecorator extends DataObjectDecorator {
   
   /**
    * Add fields for products such as Amount
+   * 
    * @see DataObjectDecorator::extraStatics()
    */
 	function extraStatics() {
@@ -80,5 +80,5 @@ class ProductDecorator extends DataObjectDecorator {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 		return $checkoutPage->Link();
 	}
-	
+
 }

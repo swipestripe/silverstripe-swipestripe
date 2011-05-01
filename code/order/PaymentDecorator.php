@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Mixin to augment the Payment class
+ * Payment statuses: Incomplete,Success,Failure,Pending
+ * 
+ * @author frankmullenger
+ */
 class PaymentDecorator extends DataObjectDecorator {
 
 	function extraStatics() {
@@ -99,11 +104,8 @@ class PaymentDecorator extends DataObjectDecorator {
 
 	  $order = $this->owner->PaidObject();
 
-	  //Incomplete,Success,Failure,Pending
 		if($this->owner->Status == 'Success' && $order) {
 		  $order->onAfterPayment();
 		}
 	}
-	
-
 }

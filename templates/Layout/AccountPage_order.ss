@@ -63,6 +63,30 @@
 			    </table>
 			  <% end_if %>
 			  
+			  <% if Downloads %>
+			    <table id="PaymentTable" class="infotable">
+            <thead>     
+              <tr class="gap mainHeader">
+                  <th colspan="10" class="left">Download(s)</th>
+              </tr>
+              <tr>
+                <th scope="row" class="twoColHeader">Product</th>
+                <th scope="row"  class="twoColHeader">Quantity</th>
+                <th scope="row"  class="twoColHeader">Download Count</th>
+              </tr>
+              <% control Downloads %>  
+                <tr>
+                  <% control Object %> 
+                  <td class="price">$Title</td>
+                  <% end_control %>
+                  
+                  <td class="price">$Quantity</td>
+                  <td class="price">$DownloadCount</td>
+                </tr>
+              <% end_control %>
+            </tbody>
+          </table>
+			  <% end_if %>
 			  
 			</div>
       

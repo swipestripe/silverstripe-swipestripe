@@ -6,7 +6,8 @@ class Item extends DataObject {
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
 	  'Amount' => 'Money',
-	  'Quantity' => 'Int'
+	  'Quantity' => 'Int',
+	  'DownloadCount' => 'Int' //If item represents a downloadable product
 	);
 
 	public static $has_one = array(
@@ -14,7 +15,8 @@ class Item extends DataObject {
 	);
 	
 	public static $defaults = array(
-	  'Quantity' => 1
+	  'Quantity' => 1,
+	  'DownloadCount' => 0
 	);
 	
 	/**
@@ -24,6 +26,10 @@ class Item extends DataObject {
 	 */
 	function Object() {
 	  return Dataobject::get_by_id($this->ObjectClass, $this->ObjectID);
+	}
+	
+	function DownloadLink() {
+	  //TODO get an account page and create a link to the controller downloadProduct() action
 	}
 
 }
