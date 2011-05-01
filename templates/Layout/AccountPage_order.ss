@@ -73,6 +73,7 @@
                 <th scope="row" class="twoColHeader">Product</th>
                 <th scope="row"  class="twoColHeader">Quantity</th>
                 <th scope="row"  class="twoColHeader">Download Count</th>
+                <th scope="row"  class="twoColHeader">Download Link</th>
               </tr>
               <% control Downloads %>  
                 <tr>
@@ -82,6 +83,7 @@
                   
                   <td class="price">$Quantity</td>
                   <td class="price">$DownloadCount</td>
+                  <td class="price"><a href="$DownloadLink">Download</a></td>
                 </tr>
               <% end_control %>
             </tbody>

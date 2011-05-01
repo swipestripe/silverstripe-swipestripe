@@ -163,7 +163,8 @@ class CartTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Process the order form with dummy data for basic cheque payment
+	 * Process the order form with dummy data
+	 * Relies on ChequePayment 
 	 */
 	function testProcessPayment() {
 
@@ -222,6 +223,10 @@ class CartTest extends FunctionalTest {
     //Check that receipt was sent
     $this->assertEmailSent($customer->Email, $order->getReceiptFrom(), $order->getReceiptSubject());
 	  $this->assertEquals(1, $order->ReceiptSent);
+	}
+	
+	function testVirtualProductDownload() {
+	  
 	}
 
 }

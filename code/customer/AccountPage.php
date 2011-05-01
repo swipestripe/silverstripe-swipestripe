@@ -33,7 +33,8 @@ class AccountPage_Controller extends Page_Controller {
   
   static $allowed_actions = array (
     'order',
-    'orders'
+    'orders',
+  	'downloadProduct'
   );
 
 	/**
@@ -80,15 +81,17 @@ class AccountPage_Controller extends Page_Controller {
 	  //If product has been downloaded too many times then return false
 	  //Update download count and redirect to new download link
 	  $id = 0;
-	  $item = DataObject::get('Item', $id);
-	  $virtualProduct = $$item->Object();
+	  $item = DataObject::get_one('Item', $id);
+	  $virtualProduct = $item->Object();
 	  
-	  if ($downloadLink = $virtualProduct->downloadLink()) {
-	    $$item->DownloadCount = $$item->DownloadCount + 1;
+	  if ($downloadLocation = $virtualProduct->downloadLocation()) {
+	    $item->DownloadCount = $item->DownloadCount + 1;
 	    $item->write();
-	    Director::redirect($downloadLink);
+	    Director::redirect($downloadLocation);
 	  }
-	  return;
+	  
+	  //TODO set an error message
+	  Director::redirectBack();
 	}
 
 }

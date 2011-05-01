@@ -29,7 +29,21 @@ class Item extends DataObject {
 	}
 	
 	function DownloadLink() {
-	  //TODO get an account page and create a link to the controller downloadProduct() action
+	  
+	  //TODO better method of calculating download count thresholds
+	  if ($this->DownloadCount < 3) {
+	  
+  	  if ($accountPage = DataObject::get_one('AccountPage')) {
+  	    return $accountPage->Link() . 'downloadproduct/?ItemID='.$this->ID;
+  	  }
+  	  else {
+  	    return false;
+  	  }
+	  
+	  }
+	  else {
+	    return false;
+	  }
 	}
 
 }

@@ -34,8 +34,11 @@ class VirutalProductDecorator extends DataObjectDecorator {
 		$fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product'), 'Content');
 	}
 	
-	function downloadLink() {
+	function downloadLocation() {
 	  //TODO create a new download file and return the path to it
+	  
+	  Page::log($this->owner->FileLocation);
+	  
 	  return false;
 	}
 	
