@@ -35,10 +35,6 @@ class AccountPage_Controller extends Page_Controller {
     'order'
   );
 
-	function init() {
-		parent::init();
-	}
-
 	/**
 	 * Return the {@link Order} details for the current
 	 * Order ID that we're viewing (ID parameter in URL).

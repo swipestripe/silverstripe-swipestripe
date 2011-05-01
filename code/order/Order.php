@@ -160,8 +160,49 @@ class Order extends DataObject {
 	}
 	
 	/**
+	 * Get sender for the receipt emails
+	 * 
+	 * @see OrderConfigDecorator::extraStatics()
+	 * @return Mixed Email address or empty string
+	 */
+	function getReceiptFrom() {
+	  $siteConfig = SiteConfig::current_site_config();
+	  if (!$email = $siteConfig->ReceiptFrom) {
+	    $email = Email::getAdminEmail();
+	  }
+	  return $email;
+	}
+	
+	/**
+	 * Get the subject for the receipt email
+	 * 
+	 * @see OrderConfigDecorator::extraStatics()
+	 * @return Mixed String or false if no subject exists
+	 */
+	function getReceiptSubject() {
+	  $siteConfig = SiteConfig::current_site_config();
+	  if ($subject = $siteConfig->ReceiptFrom) {
+	    return $subject;
+	  }
+	  return false;
+	}
+	
+	/**
+	 * Get the body message for the receipt email
+	 * 
+	 * @see OrderConfigDecorator::extraStatics()
+	 * @return Mixed String or false if nobody exists
+	 */
+	function getReceiptBody() {
+	  $siteConfig = SiteConfig::current_site_config();
+	  if ($body = $siteConfig->ReceiptBody) {
+	    return $body;
+	  }
+	  return false;
+	}
+	
+	/**
 	 * Sending a receipt to the new customer
-	 * TODO: get from address, subject and content from somewhere useful
 	 * 
 	 * @return Boolean True if sending email worked
 	 */
@@ -170,17 +211,17 @@ class Order extends DataObject {
 	  $customer = $this->Member();
 	  
 	  $receipt = new Email(
-	    $from = Email::getAdminEmail(),
+	    $from = $this->getReceiptFrom(),
 	    $to = $customer->Email, 
-	    $subject = 'Order receipt from somewebsite.com', 
-	    $body = 'This is a receipt'
+	    $subject = $this->getReceiptSubject(), 
+	    $body = $this->getReceiptBody()
 	  );
 	  
 	  $receipt->setTemplate('Order_ReceiptEmail');
 	  
 	  $receipt->populateTemplate(
 			array(
-				'Message' => 'Thank you for making an order from us.',
+				'Message' => $this->getReceiptBody(),
 				'Order' => $this
 			)
 		);
