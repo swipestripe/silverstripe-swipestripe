@@ -42,7 +42,6 @@ class CheckoutPage_Controller extends Page_Controller {
 			new TextField('FirstName', 'First Name', $member->FirstName),
 			new TextField('Surname', 'Surname'),
 			new TextField('HomePhone', 'Phone'),
-			//new TextField('MobilePhone', 'Mobile'),
 			new EmailField('Email', 'Email'),
 			new TextField('Address', 'Street Address'),
 			new TextField('AddressLine2', 'Suburb'),

@@ -33,5 +33,9 @@ Member:
     Surname: Buyer
     Email: test_buyer@example.com
     Password: password
-
-    
+    HomePhone: 64 3 3546 216
+    Address: 4 Leafy Lane
+    AddressLine2: Sydenham
+    City: Christchurch
+    PostalCode: 8014
+    Country: NZ
