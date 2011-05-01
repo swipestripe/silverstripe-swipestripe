@@ -220,7 +220,7 @@ class CartTest extends FunctionalTest {
     $payment->write();
     
     //Check that receipt was sent
-    $this->assertEmailSent($customer->Email, Email::getAdminEmail(), "/.*/");
+    $this->assertEmailSent($customer->Email, $order->getReceiptFrom(), $order->getReceiptSubject());
 	  $this->assertEquals(1, $order->ReceiptSent);
 	}
 
