@@ -1,6 +1,5 @@
 <?php
 /**
- * TODO Fixture is currently dependent on a ProductPage, need to fix
  * 
  * @author frankmullenger
  *
@@ -23,7 +22,7 @@ class CartTest extends FunctionalTest {
 	 */
   function testProductAttributes() {
     
-		$product = $this->objFromFixture('ProductPage', 'productA');
+		$product = $this->objFromFixture('DummyProductPage', 'productA');
 		$this->assertEquals($product->dbObject('Amount')->getAmount(), 500.00, 'The price of Product A should be 500.');
 		$this->assertEquals($product->dbObject('Amount')->getCurrency(), 'NZD', 'The currency of Product A should be NZD.');
 	}
@@ -36,7 +35,7 @@ class CartTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  
 	  //Add product A to cart
-	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $productA = $this->objFromFixture('DummyProductPage', 'productA');
 	  $addLink = $productA->AddToCartLink();
 	  $this->get(Director::makeRelative($addLink)); 
 	  
@@ -46,7 +45,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->TotalItems());
 	  
 	  $firstProduct = $items->First()->Object();
-	  $this->assertInstanceOf('ProductPage', $firstProduct);
+	  $this->assertInstanceOf('DummyProductPage', $firstProduct);
 	  $this->assertEquals($productA, $firstProduct);
 	}
 	
@@ -58,7 +57,7 @@ class CartTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  
 	  //Add product A to cart
-	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $productA = $this->objFromFixture('DummyProductPage', 'productA');
 	  $addLink = $productA->AddToCartLink();
 	  $removeLink = $productA->RemoveFromCartLink();
 	  
@@ -113,7 +112,7 @@ class CartTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  
 	  //Add product A to cart
-	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $productA = $this->objFromFixture('DummyProductPage', 'productA');
 	  $addLink = $productA->AddToCartLink();
 	  $this->get(Director::makeRelative($addLink)); 
 	  
@@ -123,7 +122,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->TotalItems());
 	  
 	  $firstProduct = $items->First()->Object();
-	  $this->assertInstanceOf('ProductPage', $firstProduct);
+	  $this->assertInstanceOf('DummyProductPage', $firstProduct);
 	  $this->assertEquals($productA, $firstProduct);
 	  
 	  //Remove product A from cart
@@ -144,11 +143,11 @@ class CartTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  
 	  //Add products A and B to cart
-	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $productA = $this->objFromFixture('DummyProductPage', 'productA');
 	  $addLink = $productA->AddToCartLink();
 	  $this->get(Director::makeRelative($addLink)); 
 	  
-	  $productB = $this->objFromFixture('ProductPage', 'productB');
+	  $productB = $this->objFromFixture('DummyProductPage', 'productB');
 	  $addLink = $productB->AddToCartLink();
 	  $this->get(Director::makeRelative($addLink)); 
 	  
@@ -175,7 +174,7 @@ class CartTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  
 	  //Add some products to the shopping cart
-	  $productA = $this->objFromFixture('ProductPage', 'productA');
+	  $productA = $this->objFromFixture('DummyProductPage', 'productA');
 	  $addLink = $productA->AddToCartLink();
 	  $this->get(Director::makeRelative($addLink)); 
 	  $this->get(Director::makeRelative($addLink)); 
@@ -239,7 +238,7 @@ class CartTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 
 	  //Add virtual product A to cart a few times
-	  $virtualProductA = $this->objFromFixture('ProductPage', 'virtualProductA');
+	  $virtualProductA = $this->objFromFixture('DummyVirtualProductPage', 'virtualProductA');
 	  $addLink = $virtualProductA->AddToCartLink();
 	  $removeLink = $virtualProductA->RemoveFromCartLink();
 	  
