@@ -155,8 +155,34 @@ class Order extends DataObject {
 	  
 		if(!$this->ReceiptSent){
 			$this->sendReceipt();
-//			$this->updatePaymentStatus();
 		}
+		$this->updateStatus();
+	}
+	
+	/**
+	 * Update the order status after payment
+	 * 
+	 * @see Order::onAfterPayment()
+	 */
+	private function updateStatus() {
+
+	  if ($this->getPaid()) {
+	    $this->Status = 'Paid';
+	    $this->write();
+	  }
+	  elseif ($this->Status == 'Cart') {
+	    $this->Status = 'Unpaid';
+	    $this->write();
+	  }
+	}
+	
+	/**
+	 * If the order has been totally paid
+	 * 
+	 * @return Boolean
+	 */
+	public function getPaid() {
+	  return ($this->TotalOutstanding()->getAmount() == 0);
 	}
 	
 	/**

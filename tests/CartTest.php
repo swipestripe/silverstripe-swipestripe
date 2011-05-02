@@ -210,7 +210,8 @@ class CartTest extends FunctionalTest {
 	  $order = DataObject::get_one('Order');
 	  $customerID = $this->idFromFixture('Member', 'buyer');
 	  $this->assertEquals($order->MemberID, $customerID);
-	  
+	  $this->assertEquals($order->Status, 'Cart', 'Order status is Cart');
+
 	  $payments = $order->Payments();
 	  $this->assertInstanceOf('DataObjectSet', $payments);
 	  $this->assertEquals(1, $payments->TotalItems());
@@ -226,6 +227,10 @@ class CartTest extends FunctionalTest {
     //Check that receipt was sent
     $this->assertEmailSent($customer->Email, $order->getReceiptFrom(), $order->getReceiptSubject());
 	  $this->assertEquals(1, $order->ReceiptSent);
+
+	  //Check that order status is updated
+	  $order = DataObject::get_one('Order');
+	  $this->assertEquals($order->Status, 'Paid', 'Order status is Paid');
 	}
 	
 	/**
