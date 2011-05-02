@@ -28,10 +28,15 @@ class Item extends DataObject {
 	  return Dataobject::get_by_id($this->ObjectClass, $this->ObjectID);
 	}
 	
+	/**
+	 * Return the link that should be used for downloading the 
+	 * virtual product represented by this item.
+	 * 
+	 * @return Mixed URL to download or false
+	 */
 	function DownloadLink() {
-	  
-	  //TODO better method of calculating download count thresholds
-	  if ($this->DownloadCount < 3) {
+
+	  if ($this->DownloadCount < $this->getDownloadLimit()) {
 	  
   	  if ($accountPage = DataObject::get_one('AccountPage')) {
   	    return $accountPage->Link() . 'downloadproduct/?ItemID='.$this->ID;
@@ -44,6 +49,19 @@ class Item extends DataObject {
 	  else {
 	    return false;
 	  }
+	}
+	
+	/**
+	 * Number of times this item can be downloaded for this order
+	 * 
+	 * @return Int
+	 */
+	function getDownloadLimit() {
+	  return VirutalProductDecorator::$downloadLimit * $this->Quantity;
+	}
+	
+	function RemainingDownloadLimit() {
+	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}
 
 }

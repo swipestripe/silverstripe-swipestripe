@@ -75,21 +75,35 @@ class AccountPage_Controller extends Page_Controller {
 	  //TODO get the orders out
 	}
 	
-	function downloadProduct($request) {
+	/**
+	 * Redirect browser to the download location, increment number of times
+	 * this item has been downloaded.
+	 * 
+	 * If the item has been downloaded too many times redirects back with 
+	 * error message.
+	 * 
+	 * @param SS_HTTPRequest $request
+	 */
+	function downloadProduct(SS_HTTPRequest $request) {
 
-	  //TODO Get Item out of $request
-	  //If product has been downloaded too many times then return false
-	  //Update download count and redirect to new download link
-	  $id = 0;
-	  $item = DataObject::get_one('Item', $id);
-	  $virtualProduct = $item->Object();
-	  
-	  if ($downloadLocation = $virtualProduct->downloadLocation()) {
-	    $item->DownloadCount = $item->DownloadCount + 1;
-	    $item->write();
-	    Director::redirect($downloadLocation);
+	  $item = DataObject::get_by_id('Item', $request->requestVar('ItemID'));
+	  if ($item->exists()) {
+	    
+	    $virtualProduct = $item->Object();
+	    
+	    if (isset($virtualProduct->FileLocation) && $virtualProduct->FileLocation) {
+  	    if ($downloadLocation = $virtualProduct->downloadLocation()) {
+    	    $item->DownloadCount = $item->DownloadCount + 1;
+    	    $item->write();
+    	    
+    	    Page::log($item);
+    	    
+    	    Director::redirect($downloadLocation);
+    	    return;
+    	  }
+	    }
 	  }
-	  
+
 	  //TODO set an error message
 	  Director::redirectBack();
 	}

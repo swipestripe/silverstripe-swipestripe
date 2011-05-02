@@ -8,7 +8,26 @@
  */
 class VirutalProductDecorator extends DataObjectDecorator {
   
-  public $downloadFolder;
+  /**
+   * Download folder relative to site root
+   * 
+   * @var String
+   */
+  public $downloadFolder = 'simplecart/downloads/';
+  
+  /**
+   * Number of times the product can be downloaded
+   * 
+   * @var Int
+   */
+  public static $downloadLimit = 3;
+  
+  /**
+   * Window of time product can be downloaded
+   * 
+   * @var String
+   */
+  public static $downloadWindow = '24H';
   
   /**
    * Add fields for virtual products
@@ -36,26 +55,28 @@ class VirutalProductDecorator extends DataObjectDecorator {
 		$fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product'), 'Content');
 	}
 	
+	/**
+	 * Copy the downloadable file to another location on the server and
+	 * redirect browser to that location.
+	 * 
+	 * Files are removed from new location after a certain amount of time.
+	 * 
+	 * @see VirutalProductDecorator::downloadFolder
+	 * @see VirtualProductCleanupTask
+	 */
 	function downloadLocation() {
-	  
-	  return false;
-	  
-	  //TODO create a new download file and return the path to it
-	  
-	  //TODO set the download folder from somewhere central
-	  $origin = 
-	  
-	  $this->downloadFolder = dirname(__FILE__) . '../../downloads/';
-	  $destination = $this->downloadFolder;
-	  
-  	if (!copy($file, $newfile)) {
-      echo "failed to copy $file...\n";
-    }
-	  
-	  Page::log($this->owner->FileLocation);
-	  
-	  
-	  
+
+	  if (Director::fileExists($this->owner->FileLocation)) {
+	    
+	    $downloadFolder = Director::getAbsFile($this->downloadFolder);
+	    
+	    $origin = Director::getAbsFile($this->owner->FileLocation);
+	    $destination = $downloadFolder . mt_rand(100000, 999999) .'_'. date('H-d-m-y') .'_'. basename($this->owner->FileLocation);
+
+  	  if (copy($origin, $destination)) {
+        return Director::absoluteURL(Director::baseURL() . Director::makeRelative($destination));
+      }
+	  }
 	  return false;
 	}
 	

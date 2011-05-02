@@ -72,7 +72,7 @@
               <tr>
                 <th scope="row" class="twoColHeader">Product</th>
                 <th scope="row"  class="twoColHeader">Quantity</th>
-                <th scope="row"  class="twoColHeader">Download Count</th>
+                <th scope="row"  class="twoColHeader">Download Limit</th>
                 <th scope="row"  class="twoColHeader">Download Link</th>
               </tr>
               <% control Downloads %>  
@@ -82,8 +82,11 @@
                   <% end_control %>
                   
                   <td class="price">$Quantity</td>
-                  <td class="price">$DownloadCount</td>
-                  <td class="price"><a href="$DownloadLink">Download</a></td>
+                  <td class="price">$DownloadLimit ($RemainingDownloadLimit downloads remaining)</td>
+                  <td class="price">
+                    <a href="$DownloadLink" target="_blank">Download</a>
+                    downloaded $DownloadCount time(s)
+                  </td>
                 </tr>
               <% end_control %>
             </tbody>

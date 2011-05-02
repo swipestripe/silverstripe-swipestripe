@@ -6,7 +6,7 @@
  * @author frankmullenger
  *
  */
-class VirtualCleanupTask extends HourlyTask{
+class VirtualProductCleanupTask extends HourlyTask{
 	
   /*
 	static $cleardays = 90;
