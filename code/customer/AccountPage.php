@@ -36,18 +36,37 @@ class AccountPage_Controller extends Page_Controller {
     'orders',
   	'downloadProduct'
   );
+  
+  function index() {
+    
+    $memberID = Member::currentUserID();
+    
+    if (!$memberID) {
+      return Security::permissionFailure($this, 'You must be logged in to view this page.');
+    }
+
+    return array( 
+       'Content' => $this->Content, 
+       'Form' => $this->Form 
+    );
+  }
 
 	/**
 	 * Return the {@link Order} details for the current
 	 * Order ID that we're viewing (ID parameter in URL).
 	 * 
 	 * TODO not checking member IDs before getting order for testing, need to fix
+	 * TODO pass errors back using session instead
 	 *
 	 * @return array of template variables
 	 */
 	function order($request) {
 
 		$memberID = Member::currentUserID();
+		
+	  if (!$memberID) {
+      return Security::permissionFailure($this, 'You must be logged in to view this page.');
+    }
 
 		if($orderID = $request->param('ID')) {
 //			if($order = DataObject::get_one('Order', "\"Order\".\"ID\" = '$orderID' AND \"Order\".\"MemberID\" = '$memberID'")) {
@@ -71,8 +90,14 @@ class AccountPage_Controller extends Page_Controller {
 		}
 	}
 	
+	/**
+	 * Retreive orders this member has made
+	 * 
+	 * @return DataObjectSet 
+	 */
 	function orders() {
-	  //TODO get the orders out
+	  $memberID = Member::currentUserID();
+	  return DataObject::get('Order', "`MemberID` = $memberID");
 	}
 	
 	/**

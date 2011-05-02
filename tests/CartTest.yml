@@ -11,6 +11,7 @@ DummyProductPage:
     AmountAmount: 19.95
     AmountCurrency: NZD 
     Date: 2011-01-31 20:48:00
+    
 DummyVirtualProductPage:
   virtualProductA:
     Title: Virtual Product A
