@@ -225,6 +225,9 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $order->ReceiptSent);
 	}
 	
+	/**
+	 * TODO Test downloading virtual products
+	 */
 	function testVirtualProductDownload() {
 	  
 	}

@@ -13,7 +13,7 @@ class VirutalProductDecorator extends DataObjectDecorator {
    * 
    * @var String
    */
-  public $downloadFolder = 'simplecart/downloads/';
+  public static $downloadFolder = 'simplecart/downloads/';
   
   /**
    * Number of times the product can be downloaded
@@ -24,10 +24,11 @@ class VirutalProductDecorator extends DataObjectDecorator {
   
   /**
    * Window of time product can be downloaded
+   * Should be a relative unit (http://nz.php.net/manual/en/datetime.formats.relative.php)
    * 
    * @var String
    */
-  public static $downloadWindow = '24H';
+  public static $downloadWindow = '1 day';
   
   /**
    * Add fields for virtual products
@@ -68,7 +69,7 @@ class VirutalProductDecorator extends DataObjectDecorator {
 
 	  if (Director::fileExists($this->owner->FileLocation)) {
 	    
-	    $downloadFolder = Director::getAbsFile($this->downloadFolder);
+	    $downloadFolder = Director::getAbsFile(self::$downloadFolder);
 	    
 	    $origin = Director::getAbsFile($this->owner->FileLocation);
 	    $destination = $downloadFolder . mt_rand(100000, 999999) .'_'. date('H-d-m-y') .'_'. basename($this->owner->FileLocation);

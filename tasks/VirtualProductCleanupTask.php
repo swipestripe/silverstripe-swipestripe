@@ -1,32 +1,31 @@
 <?php
 /**
- * TODO clean up the filesystem, remove virtual products older than 1 day to 
- * prevent hotlinking to the files directly and bypassing download limits
+ * Remove virtual products that are older than the 
+ * download window, cleaning up the filesystem and 
+ * preventing linking directly to product downloads 
+ * for extended periods of time.
  * 
  * @author frankmullenger
- *
+ * @see VirutalProductDecorator::$downloadWindow
  */
-class VirtualProductCleanupTask extends HourlyTask{
+class VirtualProductCleanupTask extends HourlyTask {
 	
-  /*
-	static $cleardays = 90;
-	
-	function set_clear_days($days = 90){
-		self::$cleardays = $days;
-	}
-	
-	//Find and remove carts older than X days
 	function process(){
-		
-		$time = date('Y-m-d H:i:s', strtotime("-".self::$cleardays." days"));
-		if($oldcarts = DataObject::get('Order',"\"Status\" = 'Cart' AND \"LastEdited\" < '$time'")){
-			foreach($oldcarts as $cart){
-				echo "deleting ".$cart->Title."  </br>\n";
-				$cart->delete();
-				$cart->destroy();
-			}
-		}
-		
+
+	  $dir = Director::getAbsFile(VirutalProductDecorator::$downloadFolder);
+	  $files = scandir($dir);
+	  
+	  foreach ($files as $file) {
+
+	    $filelastmodified = filemtime($dir . $file);
+	    
+	    //Skip ., .. and .htaccess files
+	    if (strpos($file, '.') !== 0) {
+	      
+  	    if($filelastmodified < strtotime('-'.VirutalProductDecorator::$downloadWindow)) {
+          unlink($dir . $file);
+        }
+	    }
+	  }
 	} 
-	*/
 }

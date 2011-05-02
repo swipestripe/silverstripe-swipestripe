@@ -85,6 +85,8 @@ class AccountPage_Controller extends Page_Controller {
 	 * @param SS_HTTPRequest $request
 	 */
 	function downloadProduct(SS_HTTPRequest $request) {
+	  
+	  //TODO can only download product if order has been paid for
 
 	  $item = DataObject::get_by_id('Item', $request->requestVar('ItemID'));
 	  if ($item->exists()) {
