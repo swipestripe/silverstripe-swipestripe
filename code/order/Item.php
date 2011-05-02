@@ -60,6 +60,11 @@ class Item extends DataObject {
 	  return VirutalProductDecorator::$downloadLimit * $this->Quantity;
 	}
 	
+	/**
+	 * Calculate remaining number of downloads for this item
+	 * 
+	 * @return Int
+	 */
 	function RemainingDownloadLimit() {
 	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}

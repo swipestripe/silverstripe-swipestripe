@@ -11,6 +11,12 @@ ProductPage:
     AmountAmount: 19.95
     AmountCurrency: NZD 
     Date: 2011-01-31 20:48:00
+  virtualProductA:
+    Title: Virtual Product A
+    URLSegment: virtual-product-a
+    AmountAmount: 69.99
+    AmountCurrency: NZD
+    FileLocation: /products/productA.txt
  
 CheckoutPage:
   checkout:

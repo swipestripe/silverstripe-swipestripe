@@ -64,7 +64,7 @@
 			  <% end_if %>
 			  
 			  <% if Downloads %>
-			    <table id="PaymentTable" class="infotable">
+			    <table id="DownloadsTable" class="infotable">
             <thead>     
               <tr class="gap mainHeader">
                   <th colspan="10" class="left">Download(s)</th>
@@ -78,12 +78,12 @@
               <% control Downloads %>  
                 <tr>
                   <% control Object %> 
-                  <td class="price">$Title</td>
+                  <td class="productTitle">$Title</td>
                   <% end_control %>
                   
-                  <td class="price">$Quantity</td>
-                  <td class="price">$DownloadLimit ($RemainingDownloadLimit downloads remaining)</td>
-                  <td class="price">
+                  <td class="quantity">$Quantity</td>
+                  <td class="downloadLimit">$DownloadLimit ($RemainingDownloadLimit downloads remaining)</td>
+                  <td class="downloadLink">
                     <a href="$DownloadLink" target="_blank">Download</a>
                     downloaded $DownloadCount time(s)
                   </td>

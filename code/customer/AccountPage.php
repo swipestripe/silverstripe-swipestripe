@@ -97,9 +97,7 @@ class AccountPage_Controller extends Page_Controller {
   	    if ($downloadLocation = $virtualProduct->downloadLocation()) {
     	    $item->DownloadCount = $item->DownloadCount + 1;
     	    $item->write();
-    	    
-    	    Page::log($item);
-    	    
+
     	    Director::redirect($downloadLocation);
     	    return;
     	  }

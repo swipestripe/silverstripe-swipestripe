@@ -291,8 +291,13 @@ class Order extends DataObject {
     }
 	}
 	
+	/**
+	 * Retrieving the downloadable virtual products for this order
+	 * 
+	 * @return DataObjectSet Items for this order that can be downloaded
+	 */
 	function Downloads() {
-	  //TODO get the products for downloads
+	  
 	  $virtualItems = new DataObjectSet();
 	  $items = $this->Items();
 	  

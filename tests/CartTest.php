@@ -1,4 +1,10 @@
 <?php
+/**
+ * TODO Fixture is currently dependent on a ProductPage, need to fix
+ * 
+ * @author frankmullenger
+ *
+ */
 class CartTest extends FunctionalTest {
   
 	static $fixture_file = 'simplecart/tests/CartTest.yml';
@@ -97,10 +103,8 @@ class CartTest extends FunctionalTest {
 	  $items = $order->Items();
 	  $this->assertInstanceOf('ComponentSet', $items);
 	  $this->assertEquals(0, $items->TotalItems());
-	  
 	}
 
-	
 	/**
 	 * Removing an item from the cart and checking that cart is empty
 	 */
@@ -214,7 +218,7 @@ class CartTest extends FunctionalTest {
 
     $payment = $payments->First();
     $this->assertEquals('ChequePayment', $payment->ClassName);
-    $this->assertEquals('1000', $payment->Amount->getAmount(), 'Payment is for $199.98');
+    $this->assertEquals('1000', $payment->Amount->getAmount(), 'Payment is for $1000');
     $this->assertEquals($customerID, $payment->PaidByID);
     
     $payment->Status = 'Success';
@@ -226,9 +230,95 @@ class CartTest extends FunctionalTest {
 	}
 	
 	/**
-	 * TODO Test downloading virtual products
+	 * TODO Test downloading virtual products: download limit, cleanup task, file creation, download window
+	 * TODO Remove test dependency on products/productA.txt file, create a test file if necessary
+	 * TODO see RemoveOrphanedPagesTaskTest for examples of testing tasks
 	 */
 	function testVirtualProductDownload() {
+
+	  $this->loginAs('buyer');
+
+	  //Add virtual product A to cart a few times
+	  $virtualProductA = $this->objFromFixture('ProductPage', 'virtualProductA');
+	  $addLink = $virtualProductA->AddToCartLink();
+	  $removeLink = $virtualProductA->RemoveFromCartLink();
+	  
+	  $this->get(Director::makeRelative($addLink)); 
+	  $this->get(Director::makeRelative($addLink)); 
+	  
+	  $order = CartController::get_current_order();
+	  $this->assertEquals(139.98, $order->Total->getAmount());
+	  
+	  $items = $order->Items();
+	  $this->assertInstanceOf('ComponentSet', $items);
+	  $this->assertEquals(1, $items->TotalItems());
+	  
+	  $firstItem = $items->First();
+	  $this->assertInstanceOf('Item', $firstItem);
+	  $this->assertEquals(2, $firstItem->Quantity);
+	  
+	  $virtualProduct = $firstItem->Object();
+	  $this->assertEquals('/products/productA.txt', $virtualProduct->FileLocation);
+	  
+	  //Process the order
+	  $customer = $this->objFromFixture('Member', 'buyer');
+	  $accountPage = $this->objFromFixture('AccountPage', 'account');
+	  $checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout');
+
+	  $this->get(Director::makeRelative($checkoutPage->Link()));
+	  
+	  //Check that ChequePayment exists
+		$this->assertTrue(class_exists('ChequePayment'), 'Payment module is installed with cheque payment.');
+		
+		//Maybe use $customer->toMap(), need to consider other fields like ID which will be posted
+
+	  $orderPage = $this->submitForm('Form_OrderForm', null, array(
+	    'FirstName' => $customer->FirstName,
+      'Surname' => $customer->Surname,
+      'HomePhone' => $customer->HomePhone,
+      'Email' => $customer->Email,
+      'Address' => $customer->Address,
+      'AddressLine2' => $customer->AddressLine2,
+      'City' => $customer->City,
+      'PostalCode' => $customer->PostalCode,
+      'Country' => $customer->Country,
+      'PaymentMethod' => 'ChequePayment',
+      'Cheque' => '0',
+      'Amount' => '139.98' //This value does not actually get used
+	  ));
+	  
+	  //Get the last order and its payment and set Payment->Status = Success
+	  //to test onAfterPayment()
+	  $order = DataObject::get_one('Order');
+	  $customerID = $this->idFromFixture('Member', 'buyer');
+	  $this->assertEquals($order->MemberID, $customerID);
+	  
+	  $payments = $order->Payments();
+	  $this->assertInstanceOf('DataObjectSet', $payments);
+	  $this->assertEquals(1, $payments->TotalItems());
+
+    $payment = $payments->First();
+    $this->assertEquals('ChequePayment', $payment->ClassName);
+    $this->assertEquals(139.98, $payment->Amount->getAmount(), 'Payment is for $139.98');
+    $this->assertEquals($customerID, $payment->PaidByID);
+    
+    $payment->Status = 'Success';
+    $payment->write();
+    
+    //Get the order page and check that downloads exist
+	  $this->get(Director::makeRelative($accountPage->Link() . '/order/' . $order->ID));
+	  
+	  $this->assertExactHTMLMatchBySelector('#DownloadsTable td.productTitle', array(
+			'<td class="productTitle">Virtual Product A</td>'
+		));
+	  
+	  //Get the download 
+	  $downloadLink = $firstItem->DownloadLink();
+	  $this->assertEquals($accountPage->Link() . 'downloadproduct/?ItemID='.$firstItem->ID, $downloadLink);
+	  
+	  $this->get(Director::makeRelative($downloadLink));
+	  
+	  //TODO finish this off, test that a download was created etc.
 	  
 	}
 
