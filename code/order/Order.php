@@ -197,6 +197,8 @@ class Order extends DataObject {
 	  if ($this->getPaid()) {
 	    $this->Status = 'Paid';
 	    $this->write();
+	    
+	    //TODO: Notify the customer that their order is successful
 	  }
 	  elseif ($this->Status == 'Cart') {
 	    $this->Status = 'Unpaid';

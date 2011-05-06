@@ -5,7 +5,16 @@ $Content
 
 <ul>
 <% control Orders %>
-  <li><a href="$Link">$ID $Created.Nice $Status $Total.Nice</a></li>
+  <li>
+    <div>
+      <h4><a href="$Link">Order #$ID - $Status </a></h4>
+      <p>
+        Order created: $Created.Nice. <br />
+        Status: $Status. <br />
+        Total: $Total.Nice. <br />
+      </p>
+    </div>
+  </li>
 <% end_control %>
 </ul>
 

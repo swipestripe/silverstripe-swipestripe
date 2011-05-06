@@ -90,13 +90,13 @@ class AccountPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Retreive orders this member has made
+	 * Retreive processed (non cart) orders this member has made
 	 * 
 	 * @return DataObjectSet 
 	 */
 	function orders() {
 	  $memberID = Member::currentUserID();
-	  return DataObject::get('Order', "`MemberID` = $memberID");
+	  return DataObject::get('Order', "`MemberID` = $memberID AND `Order`.`Status` != 'Cart'");
 	}
 	
 	/**
