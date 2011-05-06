@@ -2,8 +2,8 @@
 	
 	<% if Order %>
     <% control Order %>
-      <h2>Order #$ID</h2>
-      <h3>$Created.Nice</h3>
+      <h2>Order #$ID - $Status <span class="payment_status">($PaymentStatus)</span></h2>
+      <h3>$Created.Format(j M Y - g:i a)</h3>
       
       <div id="OrderInformation">
 
@@ -88,7 +88,7 @@
 	                    <a href="$DownloadLink" target="_blank">Download</a>
 	                    downloaded $DownloadCount time(s)
 	                  <% else %>
-	                    Link will appear when payment is complete.
+	                    Download link will appear when payment is complete.
                     <% end_if %>
                   </td>
                 </tr>
