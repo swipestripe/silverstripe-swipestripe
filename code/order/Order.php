@@ -379,5 +379,27 @@ class Order extends DataObject {
 	  }
 	  return $products;
 	}
+	
+	/**
+	 * Helper to summarize payment status for an order.
+	 * 
+	 * @return String List of payments and their status
+	 */
+	function PaymentStatus() {
+	  $payments = $this->Payments();
+	  $status = null;
+
+	  if ($payments->Count() == 1) {
+	    $status = 'Payment ' . $payments->First()->Status;
+	  }
+	  else {
+	    $statii = array();
+  	  foreach ($payments as $payment) {
+  	    $statii[] = "Payment #$payment->ID $payment->Status";
+  	  }
+  	  $status = implode(', ', $statii);
+	  }
+	  return $status;
+	}
 
 }

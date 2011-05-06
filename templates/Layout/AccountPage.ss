@@ -7,7 +7,7 @@ $Content
 <% control Orders %>
   <li>
     <div>
-      <h4><a href="$Link">Order #$ID - $Status </a></h4>
+      <h4><a href="$Link">Order #$ID - $Status <span class="payment_status">($PaymentStatus)</span></a></h4>
       <p>
         Order created: $Created.Format(j M y). <br />
         Total: $Total.Nice. <br />
