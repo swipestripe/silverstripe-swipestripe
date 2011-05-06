@@ -65,7 +65,7 @@ class PaymentDecorator extends DataObjectDecorator {
 	 */
   function updateCMSFields(FieldSet &$fields) {
     
-    $fields->removeByName('Status');
+    //$fields->removeByName('Status');
     
     $toBeRemoved = array(
       'IP',

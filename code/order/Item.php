@@ -37,6 +37,12 @@ class Item extends DataObject {
 	function DownloadLink() {
 
 	  if ($this->DownloadCount < $this->getDownloadLimit()) {
+	    
+	    //If order is not paid do not provide access to download
+	    $order = $this->Order();
+	    if (!$order->getPaid()) {
+	      return false;
+	    }
 	  
   	  if ($accountPage = DataObject::get_one('AccountPage')) {
   	    return $accountPage->Link() . 'downloadproduct/?ItemID='.$this->ID;

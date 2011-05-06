@@ -40,7 +40,6 @@ class AccountPage_Controller extends Page_Controller {
   function index() {
     
     $memberID = Member::currentUserID();
-    
     if (!$memberID) {
       return Security::permissionFailure($this, 'You must be logged in to view this page.');
     }

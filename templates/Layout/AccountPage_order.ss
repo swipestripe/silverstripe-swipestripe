@@ -84,8 +84,12 @@
                   <td class="quantity">$Quantity</td>
                   <td class="downloadLimit">$DownloadLimit ($RemainingDownloadLimit downloads remaining)</td>
                   <td class="downloadLink">
-                    <a href="$DownloadLink" target="_blank">Download</a>
-                    downloaded $DownloadCount time(s)
+                    <% if DownloadLink %>
+	                    <a href="$DownloadLink" target="_blank">Download</a>
+	                    downloaded $DownloadCount time(s)
+	                  <% else %>
+	                    Link will appear when payment is complete.
+                    <% end_if %>
                   </td>
                 </tr>
               <% end_control %>
