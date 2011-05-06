@@ -135,6 +135,7 @@ class Order extends DataObject {
 	function TotalOutstanding() {
 	  $total = $this->Total->getAmount();
 	  
+	  //TODO get payments that are Paid and not another status
 	  foreach ($this->Payments() as $payment) {
 	    $total -= $payment->Amount->getAmount();
 	  }
@@ -152,7 +153,7 @@ class Order extends DataObject {
 	 * @see PaymentDecorator::onAfterWrite()
 	 */
 	function onAfterPayment() {
-	  
+
 		if(!$this->ReceiptSent){
 			$this->sendReceipt();
 		}
@@ -178,6 +179,8 @@ class Order extends DataObject {
 	
 	/**
 	 * If the order has been totally paid
+	 * 
+	 * //TODO take into account the status of the payments, perhaps add a pending status to Order
 	 * 
 	 * @return Boolean
 	 */
@@ -336,25 +339,4 @@ class Order extends DataObject {
 	  return $virtualItems;
 	}
 
-	
-	/**
-	 * Transitions the order from being in the Cart to being in an unpaid post-cart state.
-	 *
-	 * @return Order The current order
-	 *
-	function save() {
-
-		$this->Status = 'Unpaid';
-		
-		//re-write all attributes and modifiers to make sure they are up-to-date before they can't be changed again
-		if($this->Attributes()->exists()){
-			foreach($this->Attributes() as $attribute){
-				$attribute->write();
-			}
-		}
-		
-		$this->extend('onSave'); //allow decorators to do stuff when order is saved.
-		$this->write();
-	}
-	*/
 }
