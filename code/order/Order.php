@@ -75,6 +75,7 @@ class Order extends DataObject {
 	
 	/**
 	 * Set CMS fields for viewing this Order in the CMS
+	 * Cannot change status of an order in the CMS
 	 * 
 	 * @see DataObject::getCMSFields()
 	 */
@@ -93,6 +94,8 @@ class Order extends DataObject {
 		
 		$htmlSummary = $this->renderWith("Order");
 		$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
+		
+		$fields->makeFieldReadonly('Status');
 
 	  return $fields;
 	}
