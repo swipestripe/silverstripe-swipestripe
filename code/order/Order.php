@@ -128,16 +128,18 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Calculate the total outstanding for this order that remains to be paid
+	 * Calculate the total outstanding for this order that remains to be paid,
+	 * all payments except 'Failure' payments are considered
 	 * 
 	 * @return Money With value and currency of total outstanding
 	 */
 	function TotalOutstanding() {
 	  $total = $this->Total->getAmount();
-	  
-	  //TODO get payments that are Paid and not another status
+
 	  foreach ($this->Payments() as $payment) {
-	    $total -= $payment->Amount->getAmount();
+	    if ($payment->Status != 'Failure') {
+	      $total -= $payment->Amount->getAmount();
+	    }
 	  }
 	  
 	  $outstanding = new Money();
@@ -145,6 +147,28 @@ class Order extends DataObject {
 	  $outstanding->setCurrency($this->Total->getCurrency());
 	  
 	  return $outstanding;
+	}
+	
+	/**
+	 * Calculate the total paid for this order, only 'Success' payments
+	 * are considered.
+	 * 
+	 * @return Money With value and currency of total paid
+	 */
+	function TotalPaid() {
+	   $paid = 0;
+	   
+	  foreach ($this->Payments() as $payment) {
+	    if ($payment->Status == 'Success') {
+	      $paid += $payment->Amount->getAmount();
+	    }
+	  }
+	  
+	  $totalPaid = new Money();
+	  $totalPaid->setAmount($paid);
+	  $totalPaid->setCurrency($this->Total->getCurrency());
+	  
+	  return $totalPaid;
 	}
 	
 	/**
@@ -180,12 +204,10 @@ class Order extends DataObject {
 	/**
 	 * If the order has been totally paid
 	 * 
-	 * //TODO take into account the status of the payments, perhaps add a pending status to Order
-	 * 
 	 * @return Boolean
 	 */
 	public function getPaid() {
-	  return ($this->TotalOutstanding()->getAmount() == 0);
+	  return ($this->TotalPaid()->getAmount() == $this->Total->getAmount());
 	}
 	
 	/**
