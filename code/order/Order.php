@@ -365,5 +365,19 @@ class Order extends DataObject {
 	  }
 	  return $virtualItems;
 	}
+	
+	/**
+	 * Retreive products for this order from the order items.
+	 * 
+	 * @return DataObjectSet Set of Products, likely to be children of Page class
+	 */
+	function Products() {
+	  $items = $this->Items();
+	  $products = new DataObjectSet();
+	  foreach ($items as $item) {
+	    $products->push($item->Object());
+	  }
+	  return $products;
+	}
 
 }
