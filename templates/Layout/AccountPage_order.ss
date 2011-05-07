@@ -1,10 +1,13 @@
-<div class="typography">
+<div class="Order typography">
 	
 	<% if Order %>
     <% control Order %>
     
-      <h2>Order #$ID - $Status <span class="payment_status">($PaymentStatus)</span></h2>
-      <h3>$Created.Format(j M Y - g:i a)</h3>
+      <h3>Order #$ID - $Status</h3>
+      <p class="OrderMeta">
+        $Created.Format(j M Y - g:i a)<br />
+        ($PaymentStatus)
+      </p>
       
       <div id="OrderInformation">
 

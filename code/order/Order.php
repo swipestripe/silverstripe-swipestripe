@@ -180,11 +180,12 @@ class Order extends DataObject {
 	 * @see PaymentDecorator::onAfterWrite()
 	 */
 	function onAfterPayment() {
+	  
+	  $this->updateStatus();
 
 		if(!$this->ReceiptSent){
 			$this->sendReceipt();
 		}
-		$this->updateStatus();
 	}
 	
 	/**
@@ -198,7 +199,7 @@ class Order extends DataObject {
 	    $this->Status = 'Paid';
 	    $this->write();
 	    
-	    //TODO: Notify the customer that their order is successful
+	    //TODO: Notify the customer that their order is successful unless sending receipt at same time
 	  }
 	  elseif ($this->Status == 'Cart') {
 	    $this->Status = 'Unpaid';
@@ -264,6 +265,8 @@ class Order extends DataObject {
 	 * @return Boolean True if sending email worked
 	 */
 	function sendReceipt() {
+	  
+	  Page::log('sending receipt called' . date('H:i:s A'));
 
 	  $customer = $this->Member();
 

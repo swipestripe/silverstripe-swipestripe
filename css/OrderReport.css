@@ -142,3 +142,13 @@
 		#ShippingTable th{
 			width:50%;
 		}
+		
+.Order h3 {
+	margin-bottom: 2px;
+}
+		
+.OrderMeta {
+  color: #666;
+  font-size: 12px;
+  font-style: italic;	
+}

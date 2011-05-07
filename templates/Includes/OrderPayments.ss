@@ -28,7 +28,7 @@
   <tbody>
     <tr class="gap summary" id="Outstanding">
       <th colspan="3" scope="row" class="threeColHeader"><strong>Total outstanding</strong></th>
-      <td class="right"><strong>$TotalOutstanding.Nice </strong></td>
+      <td class="right"><strong>$TotalOutstanding.Nice</strong></td>
     </tr>
   </tbody>
 </table>

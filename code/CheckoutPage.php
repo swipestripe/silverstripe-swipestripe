@@ -18,6 +18,19 @@ class CheckoutPage extends Page
 }
 
 class CheckoutPage_Controller extends Page_Controller {
+  
+  /**
+   * Include some CSS for the checkout page
+   */
+  function index() {
+    
+    Requirements::css('simplecart/css/OrderReport.css');
+
+    return array( 
+       'Content' => $this->Content, 
+       'Form' => $this->Form 
+    );
+  }
 	
 	/**
 	 * Create an order form

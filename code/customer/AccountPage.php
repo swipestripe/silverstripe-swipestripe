@@ -37,6 +37,9 @@ class AccountPage_Controller extends Page_Controller {
   	'downloadProduct'
   );
   
+  /**
+   * Check access permissions for account page.
+   */
   function index() {
     
     $memberID = Member::currentUserID();
@@ -61,6 +64,7 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function order($request) {
 
+	  Requirements::css('simplecart/css/OrderReport.css');
 		$memberID = Member::currentUserID();
 		
 	  if (!$memberID) {
