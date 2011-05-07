@@ -178,10 +178,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 
 		if($result->isSuccess()) {
-			//$order->sendReceipt();
 		}
-		
-		$order->sendReceipt();
 
 		Director::redirect($order->Link());
 		return true;

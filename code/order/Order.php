@@ -265,8 +265,6 @@ class Order extends DataObject {
 	 * @return Boolean True if sending email worked
 	 */
 	function sendReceipt() {
-	  
-	  Page::log('sending receipt called' . date('H:i:s A'));
 
 	  $customer = $this->Member();
 
