@@ -96,7 +96,7 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function orders() {
 	  $memberID = Member::currentUserID();
-	  return DataObject::get('Order', "`MemberID` = $memberID AND `Order`.`Status` != 'Cart'");
+	  return DataObject::get('Order', "`MemberID` = $memberID AND `Order`.`Status` != 'Cart'", "`Created` DESC");
 	}
 	
 	/**

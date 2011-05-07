@@ -11,9 +11,23 @@
 	
 	$Message
 
-	<% control Order %>
-		<% include Order %>
-	<% end_control %>
+	  <% control Order %>
+    
+      <h2>Order #$ID - $Status <span class="payment_status">($PaymentStatus)</span></h2>
+      
+      <div id="OrderInformation">
+
+        <% include OrderMember %>
+      
+        <% include Order %>
+          
+        <% if Payments %>
+          <% include OrderPayments %>
+        <% end_if %>
+        
+      </div>
+      
+    <% end_control %>
 
 	</body>
 </html>

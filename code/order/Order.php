@@ -277,7 +277,12 @@ class Order extends DataObject {
 	  $receipt->setTemplate('Order_ReceiptEmail');
 
 	  //Get css for Email by reading css file and put css inline for emogrification
-	  $css = file_get_contents(Director::getAbsFile('simplecart/css/OrderReport.css'));
+	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'))) {
+	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'));
+	  }
+	  else {
+	    $css = file_get_contents(Director::getAbsFile('simplecart/css/OrderReport.css'));
+	  }
 
 	  $receipt->populateTemplate(
 			array(
@@ -288,8 +293,7 @@ class Order extends DataObject {
 			)
 		);
 
-	  if ($receipt->send()) {
-	    
+	  if ($receipt->send() && !$this->ReceiptSent) {
 	    $this->ReceiptSent = true;
 	    $this->write();
 	    return true;
