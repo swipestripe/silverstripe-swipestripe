@@ -259,14 +259,15 @@ class Order extends DataObject {
 	
 	/**
 	 * Sending a receipt to the new customer
+	 * Using ProcessedEmail class in order to use Emogrifier
 	 * 
 	 * @return Boolean True if sending email worked
 	 */
 	function sendReceipt() {
 
 	  $customer = $this->Member();
-	  
-	  $receipt = new Email(
+
+	  $receipt = new ProcessedEmail(
 	    $from = $this->getReceiptFrom(),
 	    $to = $customer->Email, 
 	    $subject = $this->getReceiptSubject(), 
@@ -274,14 +275,19 @@ class Order extends DataObject {
 	  );
 	  
 	  $receipt->setTemplate('Order_ReceiptEmail');
-	  
+
+	  //Get css for Email by reading css file and put css inline for emogrification
+	  $css = file_get_contents(Director::getAbsFile('simplecart/css/OrderReport.css'));
+
 	  $receipt->populateTemplate(
 			array(
 				'Message' => $this->getReceiptBody(),
-				'Order' => $this
+				'Order' => $this,
+			  'Customer' => $this->Member(),
+			  'InlineCSS' => "<style>$css</style>"
 			)
 		);
-	  
+
 	  if ($receipt->send()) {
 	    
 	    $this->ReceiptSent = true;

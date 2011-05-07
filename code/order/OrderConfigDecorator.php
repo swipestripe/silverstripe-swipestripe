@@ -7,7 +7,7 @@ class OrderConfigDecorator extends DataObjectDecorator {
 		return array(
 			'db' => array(
 				'ReceiptSubject' => 'Varchar',
-		    'ReceiptBody' => 'Text',
+		    'ReceiptBody' => 'HTMLText',
 		    'ReceiptFrom' => 'Varchar'
 			)
 		);
@@ -23,7 +23,7 @@ class OrderConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab("Root", new Tab('SimpleCart')); 
     $fields->addFieldToTab('Root.SimpleCart', new EmailField('ReceiptFrom', 'Receipt sender'));
     $fields->addFieldToTab('Root.SimpleCart', new TextField('ReceiptSubject', 'Receipt email subject line'));
-    $fields->addFieldToTab('Root.SimpleCart', new TextareaField('ReceiptBody', 'Receipt email body', 15));
+    $fields->addFieldToTab('Root.SimpleCart', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
 	}
 
 }
