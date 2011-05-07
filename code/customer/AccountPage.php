@@ -57,7 +57,6 @@ class AccountPage_Controller extends Page_Controller {
 	 * Return the {@link Order} details for the current
 	 * Order ID that we're viewing (ID parameter in URL).
 	 * 
-	 * TODO not checking member IDs before getting order for testing, need to fix
 	 * TODO pass errors back using session instead
 	 *
 	 * @return array of template variables
@@ -65,32 +64,31 @@ class AccountPage_Controller extends Page_Controller {
 	function order($request) {
 
 	  Requirements::css('simplecart/css/OrderReport.css');
+    
 		$memberID = Member::currentUserID();
-		
-	  if (!$memberID) {
+	  if (!Member::currentUserID()) {
       return Security::permissionFailure($this, 'You must be logged in to view this page.');
     }
 
 		if($orderID = $request->param('ID')) {
-//			if($order = DataObject::get_one('Order', "\"Order\".\"ID\" = '$orderID' AND \"Order\".\"MemberID\" = '$memberID'")) {
-		  if($order = DataObject::get_one('Order', "\"Order\".\"ID\" = '$orderID'")) {
-				return array(
+		  
+		  $order = DataObject::get_one('Order', "`Order`.`ID` = $orderID");
+		  $member = Member::currentUser();
+  		if (!$member->ID && $member != $order->Member()) {
+        return Security::permissionFailure($this, 'You must be logged in to view this page.');
+      }
+      
+      if ($order) {
+        return array(
 					'Order' => $order
 				);
-			}
-			else {
-				return array(
-					'Order' => false,
-					'Message' => 'You do not have any order corresponding to this ID.'
-				);
-			}
+      }
 		}
-		else {
-			return array(
-				'Order' => false,
-				'Message' => 'There is no order by that ID.'
-			);
-		}
+		
+		return array(
+			'Order' => false,
+			'Message' => 'You do not have any order corresponding to this ID.'
+		);
 	}
 	
 	/**
