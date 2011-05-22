@@ -50,6 +50,17 @@ class ProductDecorator extends DataObjectDecorator {
 	}
 	
 	/**
+	 * Helper to get URL for adding a product to the cart and going to checkout
+	 * 
+	 * @return String URL to add product to the cart
+	 */
+  function BuyNowLink() {
+		$productID = $this->owner->ID;
+		$productClass = $this->owner->ClassName;
+		return Director::absoluteURL(CartController::$URLSegment."/buynow/?ProductClass=$productClass&ProductID=$productID");
+	}
+	
+	/**
 	 * Helper to get URL for removing a product from the cart
 	 * 
 	 * @return String URL to remove a product from the cart
