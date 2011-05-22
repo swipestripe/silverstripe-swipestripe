@@ -31,6 +31,7 @@ class ProductDecorator extends DataObjectDecorator {
 	  
 		$amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(array(
+		  'USD'=>'United States Dollar',
   		'NZD'=>'New Zealand Dollar'
   	));
 		
