@@ -13,7 +13,7 @@
 		$Content
 
     <% control Cart %>
-      <% include Order %>
+      <% include OrderCart %>
 	  <% end_control %>
 
     $OrderForm

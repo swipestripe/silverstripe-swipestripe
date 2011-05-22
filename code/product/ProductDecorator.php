@@ -29,7 +29,7 @@ class ProductDecorator extends DataObjectDecorator {
 	  //TODO: get allowed currencies from Payment class like:
 	  //$amountField->setAllowedCurrencies(DPSAdapter::$allowed_currencies);
 	  
-		$amountField = new MoneyField('Amount', 'Price');
+		$amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(array(
   		'NZD'=>'New Zealand Dollar'
   	));
