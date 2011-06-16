@@ -105,7 +105,7 @@ class CheckoutPage_Controller extends Page_Controller {
 			$validator->addRequiredField('Password');
 		}
     
-    $order = CartController::get_current_order();
+    $order = ProductControllerExtension::get_current_order();
     $paymentFields = Payment::combined_form_fields($order->Total->getAmount());
 		foreach ($paymentFields as $field) {
 		  $rightFields->push($field);
@@ -162,7 +162,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 		
 		//Get the order and items in the order
-		$order = CartController::get_current_order();
+		$order = ProductControllerExtension::get_current_order();
 		$items = $order->Items();
 
 		//Save the order

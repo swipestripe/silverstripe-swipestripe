@@ -43,10 +43,14 @@ class ProductDecorator extends DataObjectDecorator {
 	 * 
 	 * @return String URL to add product to the cart
 	 */
-  function AddToCartLink() {
+  function AddToCartLink($num = null) {
+    
+    $controller = Controller::curr();
+
 		$productID = $this->owner->ID;
 		$productClass = $this->owner->ClassName;
-		return Director::absoluteURL(CartController::$URLSegment."/add/?ProductClass=$productClass&ProductID=$productID");
+		
+		return Director::absoluteURL($controller->Link()."add/?ProductClass=$productClass&ProductID=$productID");
 	}
 	
 	/**
@@ -54,10 +58,14 @@ class ProductDecorator extends DataObjectDecorator {
 	 * 
 	 * @return String URL to remove a product from the cart
 	 */
-  function RemoveFromCartLink() {
+  function RemoveFromCartLink($num = null) {
+    
+    $controller = Controller::curr();
+    
 		$productID = $this->owner->ID;
 		$productClass = $this->owner->ClassName;
-		return Director::absoluteURL(CartController::$URLSegment."/remove/?ProductClass=$productClass&ProductID=$productID");
+		
+		return Director::absoluteURL($controller->Link()."remove/?ProductClass=$productClass&ProductID=$productID");
 	}
 	
 	/**
@@ -66,7 +74,9 @@ class ProductDecorator extends DataObjectDecorator {
 	 * @return String URL to clear the cart
 	 */
 	function ClearCartLink() {
-	  return Director::absoluteURL(CartController::$URLSegment."/clear/");
+	  
+	  $controller = Controller::curr();
+	  return Director::absoluteURL($controller->Link()."clear/");
 	}
 	
 	/**
@@ -80,5 +90,6 @@ class ProductDecorator extends DataObjectDecorator {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 		return $checkoutPage->Link();
 	}
-
 }
+
+
