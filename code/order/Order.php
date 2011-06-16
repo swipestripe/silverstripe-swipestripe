@@ -268,12 +268,12 @@ class Order extends DataObject {
 
 	  $customer = $this->Member();
 
-	  $receipt = new ProcessedEmail(
-	    $from = $this->getReceiptFrom(),
-	    $to = $customer->Email, 
-	    $subject = $this->getReceiptSubject(), 
-	    $body = $this->getReceiptBody()
-	  );
+    $receipt = new ProcessedEmail(
+      $from = $this->getReceiptFrom(),
+      $to = $customer->Email, 
+      $subject = $this->getReceiptSubject(), 
+      $body = $this->getReceiptBody()
+    );
 	  
 	  $receipt->setTemplate('Order_ReceiptEmail');
 
@@ -285,14 +285,14 @@ class Order extends DataObject {
 	    $css = file_get_contents(Director::getAbsFile('simplecart/css/OrderReport.css'));
 	  }
 
-	  $receipt->populateTemplate(
-			array(
-				'Message' => $this->getReceiptBody(),
-				'Order' => $this,
-			  'Customer' => $this->Member(),
-			  'InlineCSS' => "<style>$css</style>"
-			)
-		);
+    $receipt->populateTemplate(
+    	array(
+    		'Message' => $this->getReceiptBody(),
+    		'Order' => $this,
+    	  'Customer' => $this->Member(),
+    	  'InlineCSS' => "<style>$css</style>"
+    	)
+    );
 
 	  if ($receipt->send() && !$this->ReceiptSent) {
 	    $this->ReceiptSent = true;

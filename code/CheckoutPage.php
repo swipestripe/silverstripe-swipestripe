@@ -15,6 +15,26 @@ class CheckoutPage extends Page
     $fields = parent::getCMSFields();
     return $fields;
   }
+  
+	/**
+	 * Automatically create a CheckoutPage if one is not found
+	 * on the site at the time the database is built (dev/build).
+	 */
+	function requireDefaultRecords() {
+		parent::requireDefaultRecords();
+
+		if(!DataObject::get_one('CheckoutPage')) {
+			$page = new CheckoutPage();
+			$page->Title = 'Checkout';
+			$page->Content = '<p>This is the checkout page, it is used for customers to complete their order.</p>';
+			$page->URLSegment = 'checkout';
+			$page->ShowInMenus = 0;
+			$page->writeToStage('Stage');
+			$page->publish('Stage', 'Live');
+
+			DB::alteration_message('Checkout page \'Checkout\' created', 'created');
+		}
+	}
 }
 
 class CheckoutPage_Controller extends Page_Controller {
