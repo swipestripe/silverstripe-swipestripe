@@ -66,6 +66,10 @@ class ProductControllerExtension extends Extension {
     //Get the request (SS_HTTPRequest)
     $request = $this->owner->getRequest();
     
+    SS_Log::log(new Exception(print_r($request, true)), SS_Log::NOTICE);
+    
+    //TODO get the product based on URL segment, if it is not a product return false
+    
     //Create a product to add to the current order
     $productClassName = $request->requestVar('ProductClass');
     $productID = $request->requestVar('ProductID');

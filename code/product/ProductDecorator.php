@@ -39,6 +39,17 @@ class ProductDecorator extends DataObjectDecorator {
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
 	}
 	
+	private function generateGetString($productClass, $productID, $quantity = null, $redirectURL = null) {
+	  $string = "ProductClass=$productClass&ProductID=$productID";
+	  
+	  if ($quantity && is_numeric($quantity)) $string .= "&Quantity=$quantity";
+	  
+	  //Check if URL is local, before appending to string
+	  if ($redirectURL && Director::is_site_url($redirectURL)) $string .= "&Redirect=$redirectURL"; 
+	  
+	  return $string;
+	}
+	
 	/**
 	 * Helper to get URL for adding a product to the cart
 	 * 
@@ -46,14 +57,16 @@ class ProductDecorator extends DataObjectDecorator {
 	 * 
 	 * @return String URL to add product to the cart
 	 */
-  function AddToCartLink($num = null) {
-    
-    $controller = Controller::curr();
+  function AddToCartLink($quantity = null, $redirectURL = null) {
 
-		$productID = $this->owner->ID;
-		$productClass = $this->owner->ClassName;
+		$getParams = $this->generateGetString(
+		  $this->owner->ClassName, 
+		  $this->owner->ID,
+		  $quantity,
+		  $redirectURL
+		);
 		
-		return Director::absoluteURL($controller->Link()."add/?ProductClass=$productClass&ProductID=$productID");
+		return Director::absoluteURL(Controller::curr()->Link()."add/?".$getParams);
 	}
 	
 	/**
@@ -61,25 +74,27 @@ class ProductDecorator extends DataObjectDecorator {
 	 * 
 	 * @return String URL to add product to the cart
 	 */
-  function BuyNowLink() {
-		$productID = $this->owner->ID;
-		$productClass = $this->owner->ClassName;
-		return Director::absoluteURL(CartController::$URLSegment."/buynow/?ProductClass=$productClass&ProductID=$productID");
-	}
+//  function BuyNowLink() {
+//		$productID = $this->owner->ID;
+//		$productClass = $this->owner->ClassName;
+//		return Director::absoluteURL(CartController::$URLSegment."/buynow/?ProductClass=$productClass&ProductID=$productID");
+//	}
 	
 	/**
 	 * Helper to get URL for removing a product from the cart
 	 * 
 	 * @return String URL to remove a product from the cart
 	 */
-  function RemoveFromCartLink($num = null) {
-    
-    $controller = Controller::curr();
-    
-		$productID = $this->owner->ID;
-		$productClass = $this->owner->ClassName;
+  function RemoveFromCartLink($quantity = null, $redirectURL = null) {
+
+		$getParams = $this->generateGetString(
+		  $this->owner->ClassName, 
+		  $this->owner->ID,
+		  $quantity,
+		  $redirectURL
+		);
 		
-		return Director::absoluteURL($controller->Link()."remove/?ProductClass=$productClass&ProductID=$productID");
+		return Director::absoluteURL(Controller::curr()->Link()."remove/?".$getParams);
 	}
 	
 	/**
@@ -88,9 +103,7 @@ class ProductDecorator extends DataObjectDecorator {
 	 * @return String URL to clear the cart
 	 */
 	function ClearCartLink() {
-	  
-	  $controller = Controller::curr();
-	  return Director::absoluteURL($controller->Link()."clear/");
+	  return Director::absoluteURL(Controller::curr()->Link()."clear/");
 	}
 	
 	/**
@@ -100,9 +113,7 @@ class ProductDecorator extends DataObjectDecorator {
 	 * @return String URL for the checkout page
 	 */
 	function GoToCheckoutLink() {
-	  //get the checkount page and go to it
-	  $checkoutPage = DataObject::get_one('CheckoutPage');
-		return $checkoutPage->Link();
+		return DataObject::get_one('CheckoutPage')->Link();
 	}
 }
 
