@@ -30,6 +30,20 @@ class ProductControllerExtension extends Extension {
     Director::redirectBack();
   }
   
+	/**
+   * Add an item to the cart and go straight to checkout
+   */
+  function buynow() {
+    
+    $product = $this->getProduct();
+
+    $currentOrder = self::get_current_order();
+    $currentOrder->addItem($product);
+
+    $checkoutPage = DataObject::get_one('CheckoutPage');
+		Director::redirect($checkoutPage->Link());
+  }
+  
   /**
    * Remove an item from the cart
    */

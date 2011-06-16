@@ -342,10 +342,10 @@ class Order extends DataObject {
 	 */
 	function removeItem(DataObject $product) {
 
-	  $this->Total->setAmount($this->Total->getAmount() - $product->Amount->getAmount()); 
-    $this->write();
-    
     $item = $this->Items()->find('ObjectID', $product->ID);
+    
+    $this->Total->setAmount($this->Total->getAmount() - $item->Amount->getAmount()); 
+    $this->write();
     
     if ($item && $item->exists()) {
       if ($item->Quantity == 1) {

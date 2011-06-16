@@ -29,8 +29,9 @@ class ProductDecorator extends DataObjectDecorator {
 	  //TODO: get allowed currencies from Payment class like:
 	  //$amountField->setAllowedCurrencies(DPSAdapter::$allowed_currencies);
 	  
-		$amountField = new MoneyField('Amount', 'Price');
+		$amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(array(
+		  'USD'=>'United States Dollar',
   		'NZD'=>'New Zealand Dollar'
   	));
 		
@@ -40,6 +41,8 @@ class ProductDecorator extends DataObjectDecorator {
 	
 	/**
 	 * Helper to get URL for adding a product to the cart
+	 * 
+	 * TODO add number and possible redirect/support for AJAX after adding in controller
 	 * 
 	 * @return String URL to add product to the cart
 	 */
@@ -51,6 +54,17 @@ class ProductDecorator extends DataObjectDecorator {
 		$productClass = $this->owner->ClassName;
 		
 		return Director::absoluteURL($controller->Link()."add/?ProductClass=$productClass&ProductID=$productID");
+	}
+	
+	/**
+	 * Helper to get URL for adding a product to the cart and going to checkout
+	 * 
+	 * @return String URL to add product to the cart
+	 */
+  function BuyNowLink() {
+		$productID = $this->owner->ID;
+		$productClass = $this->owner->ClassName;
+		return Director::absoluteURL(CartController::$URLSegment."/buynow/?ProductClass=$productClass&ProductID=$productID");
 	}
 	
 	/**
