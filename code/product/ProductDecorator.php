@@ -39,6 +39,17 @@ class ProductDecorator extends DataObjectDecorator {
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
 	}
 	
+	/**
+	 * Generate the get params for cart links
+	 * 
+	 * @see ProductDecorator::AddToCartLink()
+	 * @see ProductDecorator::RemoveFromCartLink()
+	 * @param String $productClass Class name of product
+	 * @param Int $productID ID of product
+	 * @param Int $quantity Quantity of product
+	 * @param String $redirectURL URL to redirect to 
+	 * @return String Get params joined by &
+	 */
 	private function generateGetString($productClass, $productID, $quantity = null, $redirectURL = null) {
 	  $string = "ProductClass=$productClass&ProductID=$productID";
 	  
@@ -53,8 +64,6 @@ class ProductDecorator extends DataObjectDecorator {
 	/**
 	 * Helper to get URL for adding a product to the cart
 	 * 
-	 * TODO add number and possible redirect/support for AJAX after adding in controller
-	 * 
 	 * @return String URL to add product to the cart
 	 */
   function AddToCartLink($quantity = null, $redirectURL = null) {
@@ -65,20 +74,8 @@ class ProductDecorator extends DataObjectDecorator {
 		  $quantity,
 		  $redirectURL
 		);
-		
 		return Director::absoluteURL(Controller::curr()->Link()."add/?".$getParams);
 	}
-	
-	/**
-	 * Helper to get URL for adding a product to the cart and going to checkout
-	 * 
-	 * @return String URL to add product to the cart
-	 */
-//  function BuyNowLink() {
-//		$productID = $this->owner->ID;
-//		$productClass = $this->owner->ClassName;
-//		return Director::absoluteURL(CartController::$URLSegment."/buynow/?ProductClass=$productClass&ProductID=$productID");
-//	}
 	
 	/**
 	 * Helper to get URL for removing a product from the cart
@@ -93,7 +90,6 @@ class ProductDecorator extends DataObjectDecorator {
 		  $quantity,
 		  $redirectURL
 		);
-		
 		return Director::absoluteURL(Controller::curr()->Link()."remove/?".$getParams);
 	}
 	
