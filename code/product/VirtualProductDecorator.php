@@ -6,7 +6,7 @@
  * 
  * @author frankmullenger
  */
-class VirutalProductDecorator extends DataObjectDecorator {
+class VirutalProductDecorator extends ProductDecorator {
   
   /**
    * Download folder relative to site root
@@ -36,15 +36,19 @@ class VirutalProductDecorator extends DataObjectDecorator {
    * @see DataObjectDecorator::extraStatics()
    */
 	function extraStatics() {
-		return array(
-			'db' => array(
-				'FileLocation' => 'Varchar',
-		    'TotalDownloadCount' => 'Int'
-			),
-			'defaults' => array(
-			  'TotalDownloadCount' => 0
-			)
-		);
+
+	  return array_merge_recursive(
+	    parent::extraStatics(),
+	    array(
+  			'db' => array(
+  				'FileLocation' => 'Varchar',
+  		    'TotalDownloadCount' => 'Int'
+  			),
+  			'defaults' => array(
+  			  'TotalDownloadCount' => 0
+  			)
+  		)
+	  );
 	}
 	
 	/**
@@ -53,6 +57,8 @@ class VirutalProductDecorator extends DataObjectDecorator {
 	 * @see DataObjectDecorator::updateCMSFields()
 	 */
 	function updateCMSFields(&$fields) {
+	  
+	  parent::updateCMSFields($fields);
 		$fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product'), 'Content');
 	}
 	
