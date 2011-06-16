@@ -12,68 +12,58 @@ class ProductControllerExtension extends Extension {
    * Clear the cart by clearing the session
    */
   function clear() {
-    Session::clear_all();
     Session::clear('Cart.OrderID');
-    Director::redirectBack();
+    $this->goToNextPage();
   }
 
   /**
    * Add an item to the cart
    */
   function add() {
-
-    $product = $this->getProduct();
-
-    $currentOrder = self::get_current_order();
-    $currentOrder->addItem($product);
-
-    Director::redirectBack();
-  }
-  
-	/**
-   * Add an item to the cart and go straight to checkout
-   */
-  function buynow() {
-    
-    $product = $this->getProduct();
-
-    $currentOrder = self::get_current_order();
-    $currentOrder->addItem($product);
-
-    $checkoutPage = DataObject::get_one('CheckoutPage');
-		Director::redirect($checkoutPage->Link());
+    self::get_current_order()->addItem($this->getProduct());
+    $this->goToNextPage();
   }
   
   /**
    * Remove an item from the cart
    */
   function remove() {
-    
-    $product = $this->getProduct();
-
-    $currentOrder = self::get_current_order();
-    $currentOrder->removeItem($product);
-
-    Director::redirectBack();
+    self::get_current_order()->removeItem($this->getProduct());
+    $this->goToNextPage();
   }
   
   /**
    * Find a product based on current request
    * 
+   * @see SS_HTTPRequest
    * @return DataObject 
    */
   private function getProduct() {
-    //Get the request (SS_HTTPRequest)
     $request = $this->owner->getRequest();
-    
-    SS_Log::log(new Exception(print_r($request, true)), SS_Log::NOTICE);
-    
-    //TODO get the product based on URL segment, if it is not a product return false
-    
-    //Create a product to add to the current order
-    $productClassName = $request->requestVar('ProductClass');
-    $productID = $request->requestVar('ProductID');
-    return DataObject::get_by_id($productClassName, $productID);
+    return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
+  }
+  
+  /**
+   * Find the quantity based on current request
+   * 
+   * @return Int
+   */
+  private function getQuantity() {
+    return $this->owner->getRequest()->requestVar('Quantity');
+  }
+  
+  /**
+   * Send user to next page based on current request vars,
+   * if no redirect is specified redirect back.
+   * 
+   * TODO make this work with AJAX
+   */
+  private function goToNextPage() {
+    $redirectURL = $this->owner->getRequest()->requestVar('Redirect');
+
+    //Check if on site URL, if so redirect there, else redirect back
+    if ($redirectURL && Director::is_site_url($redirectURL)) Director::redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
+    else Director::redirectBack();
   }
 
   /**
@@ -82,7 +72,6 @@ class ProductControllerExtension extends Extension {
    * @return Order 
    */
   function Cart() {
-
     $order = self::get_current_order();
     $order->Items();
     $order->Total;
