@@ -28,7 +28,7 @@ class ProductControllerExtension extends Extension {
    * Remove an item from the cart
    */
   function remove() {
-    self::get_current_order()->removeItem($this->getProduct());
+    self::get_current_order()->removeItem($this->getProduct(), $this->getQuantity());
     $this->goToNextPage();
   }
   

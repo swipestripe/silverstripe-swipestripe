@@ -312,7 +312,7 @@ class Order extends DataObject {
 	 */
 	function addItem(DataObject $product, $quantity = 1) {
 	  
-	  //If quantity not correct set flash message and return
+	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
 	    user_error("Can not add item to cart, quantity mustbe a positive number.", E_USER_WARNING);
 	  }
@@ -343,17 +343,22 @@ class Order extends DataObject {
 	 * 
 	 * @param DataObject $product The product to remove
 	 */
-	function removeItem(DataObject $product) {
+	function removeItem(DataObject $product, $quantity = 1) {
+	  
+	  //If quantity not correct throw error
+	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
+	    user_error("Can not add item to cart, quantity mustbe a positive number.", E_USER_WARNING);
+	  }
 
 	  //Update order items
     $item = $this->Items()->find('ObjectID', $product->ID);
 
     if ($item && $item->exists()) {
-      if ($item->Quantity == 1) {
+      if ($item->Quantity <= $quantity) {
         $item->delete();
       }
       else {
-        $item->Quantity = $item->Quantity - 1;
+        $item->Quantity = $item->Quantity - $quantity;
         $item->write();
       }
     }
