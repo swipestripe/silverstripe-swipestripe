@@ -20,7 +20,7 @@ class ProductControllerExtension extends Extension {
    * Add an item to the cart
    */
   function add() {
-    self::get_current_order()->addItem($this->getProduct());
+    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity());
     $this->goToNextPage();
   }
   

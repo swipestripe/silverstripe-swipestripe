@@ -310,18 +310,18 @@ class Order extends DataObject {
 	 * 
 	 * @param DataObject $product The product to be represented by this order item
 	 */
-	function addItem(DataObject $product) {
+	function addItem(DataObject $product, $quantity = 1) {
 	  
-	  //
-	  $this->Total->setAmount($this->Total->getAmount() + $product->Amount->getAmount()); 
-    $this->Total->setCurrency($product->Amount->getCurrency()); 
-    $this->write();
-    
-    //Incrememnt the quantity if this item exists already
+	  //If quantity not correct set flash message and return
+	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
+	    user_error("Can not add item to cart, quantity mustbe a positive number.", E_USER_WARNING);
+	  }
+
+    //Increment the quantity if this item exists already
     $item = $this->Items()->find('ObjectID', $product->ID);
     
     if ($item && $item->exists()) {
-      $item->Quantity = $item->Quantity + 1;
+      $item->Quantity = $item->Quantity + $quantity;
       $item->write();
     }
     else {
@@ -330,9 +330,12 @@ class Order extends DataObject {
       $item->ObjectClass = $product->class;
       $item->Amount->setAmount($product->Amount->getAmount());
       $item->Amount->setCurrency($product->Amount->getCurrency());
+      $item->Quantity = $quantity;
       $item->OrderID = $this->ID;
       $item->write();
     }
+    
+    $this->updateTotal();
 	}
 	
 	/**
@@ -342,11 +345,9 @@ class Order extends DataObject {
 	 */
 	function removeItem(DataObject $product) {
 
+	  //Update order items
     $item = $this->Items()->find('ObjectID', $product->ID);
-    
-    $this->Total->setAmount($this->Total->getAmount() - $item->Amount->getAmount()); 
-    $this->write();
-    
+
     if ($item && $item->exists()) {
       if ($item->Quantity == 1) {
         $item->delete();
@@ -356,6 +357,33 @@ class Order extends DataObject {
         $item->write();
       }
     }
+    
+    $this->updateTotal();
+	}
+	
+	/**
+	 * Go through items and update cart total
+	 * 
+	 * Had to use DataObject::get() to retrieve Items because
+	 * $this->Items() was not returning any items after first call
+	 * to $this->addItem().
+	 * 
+	 * TODO need to sort out currency so it is the same across the board
+	 */
+	private function updateTotal() {
+	  
+	  $total = 0;
+	  $currency = 'NZD';
+	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
+	  
+	  if ($items) foreach ($items as $item) {
+	    $total += ($item->Amount->getAmount() * $item->Quantity);
+	    $currency = $item->Amount->getCurrency();
+	  }
+	  
+	  $this->Total->setAmount($total); 
+	  $this->Total->setCurrency($currency);
+    $this->write();
 	}
 	
 	/**

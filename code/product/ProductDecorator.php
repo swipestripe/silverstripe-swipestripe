@@ -50,14 +50,11 @@ class ProductDecorator extends DataObjectDecorator {
 	 * @param String $redirectURL URL to redirect to 
 	 * @return String Get params joined by &
 	 */
-	private function generateGetString($productClass, $productID, $quantity = null, $redirectURL = null) {
+	private function generateGetString($productClass, $productID, $quantity = 1, $redirectURL = null) {
+	  
 	  $string = "ProductClass=$productClass&ProductID=$productID";
-	  
-	  if ($quantity && is_numeric($quantity)) $string .= "&Quantity=$quantity";
-	  
-	  //Check if URL is local, before appending to string
+	  if ($quantity && is_numeric($quantity) && $quantity > 0) $string .= "&Quantity=$quantity";
 	  if ($redirectURL && Director::is_site_url($redirectURL)) $string .= "&Redirect=$redirectURL"; 
-	  
 	  return $string;
 	}
 	
