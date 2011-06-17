@@ -20,6 +20,9 @@ class ProductControllerExtension extends Extension {
    * Add an item to the cart
    */
   function add() {
+    
+    SS_Log::log(new Exception(print_r('&&&&&&&&&&& '.gettype($this->getQuantity()), true)), SS_Log::NOTICE);
+    
     self::get_current_order()->addItem($this->getProduct(), $this->getQuantity());
     $this->goToNextPage();
   }
@@ -49,7 +52,8 @@ class ProductControllerExtension extends Extension {
    * @return Int
    */
   private function getQuantity() {
-    return $this->owner->getRequest()->requestVar('Quantity');
+    $quantity = $this->owner->getRequest()->requestVar('Quantity');
+    return ($quantity) ?$quantity :1;
   }
   
   /**

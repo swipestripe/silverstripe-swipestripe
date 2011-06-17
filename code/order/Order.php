@@ -311,7 +311,7 @@ class Order extends DataObject {
 	 * @param DataObject $product The product to be represented by this order item
 	 */
 	function addItem(DataObject $product, $quantity = 1) {
-	  
+
 	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
 	    user_error("Cannot add item to cart, quantity must be a positive number.", E_USER_WARNING);
