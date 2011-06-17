@@ -314,7 +314,7 @@ class Order extends DataObject {
 	  
 	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-	    user_error("Can not add item to cart, quantity mustbe a positive number.", E_USER_WARNING);
+	    user_error("Cannot add item to cart, quantity must be a positive number.", E_USER_WARNING);
 	  }
 
     //Increment the quantity if this item exists already
@@ -347,7 +347,7 @@ class Order extends DataObject {
 	  
 	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-	    user_error("Can not add item to cart, quantity mustbe a positive number.", E_USER_WARNING);
+	    user_error("Cannot remove item from cart, quantity mustbe a positive number.", E_USER_WARNING);
 	  }
 
 	  //Update order items
@@ -372,22 +372,18 @@ class Order extends DataObject {
 	 * Had to use DataObject::get() to retrieve Items because
 	 * $this->Items() was not returning any items after first call
 	 * to $this->addItem().
-	 * 
-	 * TODO need to sort out currency so it is the same across the board
 	 */
 	private function updateTotal() {
 	  
 	  $total = 0;
-	  $currency = 'NZD';
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
 	  
 	  if ($items) foreach ($items as $item) {
 	    $total += ($item->Amount->getAmount() * $item->Quantity);
-	    $currency = $item->Amount->getCurrency();
 	  }
 	  
 	  $this->Total->setAmount($total); 
-	  $this->Total->setCurrency($currency);
+	  $this->Total->setCurrency(Payment::site_currency());
     $this->write();
 	}
 	

@@ -7,6 +7,17 @@
 class ProductDecorator extends DataObjectDecorator {
   
   /**
+   * Currency allowed to be used for products
+   * Code match Payment::$site_currency
+   * Only once currency site wide allowed
+   * 
+   * @var Array Currency code indexes currency name
+   */
+  public static $allowed_currency = array(
+    'NZD' => 'New Zealand Dollar'
+  );
+  
+  /**
    * Add fields for products such as Amount
    * 
    * @see DataObjectDecorator::extraStatics()
@@ -26,17 +37,26 @@ class ProductDecorator extends DataObjectDecorator {
 	 */
 	function updateCMSFields(&$fields) {
 
-	  //TODO: get allowed currencies from Payment class like:
-	  //$amountField->setAllowedCurrencies(DPSAdapter::$allowed_currencies);
-	  
 		$amountField = new MoneyField('Amount', 'Amount');
-		$amountField->setAllowedCurrencies(array(
-		  'USD'=>'United States Dollar',
-  		'NZD'=>'New Zealand Dollar'
-  	));
+		$amountField->setAllowedCurrencies(self::$allowed_currency);
 		
   	//TODO: Assuming that the dataobject being decorated is a Page not ideal?
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
+	}
+	
+	/**
+	 * Set the currency for all products.
+	 * Must match site curency
+	 * 
+	 * @param array $currency
+	 */
+	public static function set_allowed_currency(Array $currency) {
+	  if (count($currency) && array_key_exists(Payment::site_currency(), $currency)) {
+	    self::$allowed_currency = $currency;
+	  }
+	  else {
+	    user_error("Cannot set allowed currency. Currency must match: ".Payment::site_currency(), E_USER_WARNING);
+	  }
 	}
 	
 	/**
