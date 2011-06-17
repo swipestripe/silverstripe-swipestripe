@@ -429,15 +429,17 @@ class Order extends DataObject {
 	  $payments = $this->Payments();
 	  $status = null;
 
-	  if ($payments->Count() == 1) {
-	    $status = 'Payment ' . $payments->First()->Status;
-	  }
-	  else {
-	    $statii = array();
-  	  foreach ($payments as $payment) {
-  	    $statii[] = "Payment #$payment->ID $payment->Status";
+	  if ($payments instanceof DataObjectSet) {
+  	  if ($payments->Count() == 1) {
+  	    $status = 'Payment ' . $payments->First()->Status;
   	  }
-  	  $status = implode(', ', $statii);
+  	  else {
+  	    $statii = array();
+    	  foreach ($payments as $payment) {
+    	    $statii[] = "Payment #$payment->ID $payment->Status";
+    	  }
+    	  $status = implode(', ', $statii);
+  	  }
 	  }
 	  return $status;
 	}
