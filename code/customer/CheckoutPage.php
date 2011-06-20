@@ -45,6 +45,7 @@ class CheckoutPage_Controller extends Page_Controller {
   function index() {
     
     Requirements::css('simplecart/css/OrderReport.css');
+    Requirements::css('simplecart/css/Checkout.css');
 
     return array( 
        'Content' => $this->Content, 
@@ -98,7 +99,7 @@ class CheckoutPage_Controller extends Page_Controller {
 			));
 			$rightFields->push(new LiteralField(
 				'AccountInfo', 
-				'<p>Please choose a password, so you can login and check your order history in the future</p><br/>'
+				'<p>Please choose a password, so you can login and check your order history in the future</p>'
 			));
 			$rightFields->push(new FieldGroup(new ConfirmedPasswordField('Password', 'Password')));
 			

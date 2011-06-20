@@ -16,7 +16,9 @@
       <% include OrderCart %>
 	  <% end_control %>
 
-    $OrderForm
+    <div id="Checkout">
+      $OrderForm
+    </div>
 
 		$Form
 		$PageComments
