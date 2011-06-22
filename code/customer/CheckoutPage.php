@@ -65,9 +65,7 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		$rightFields = new CompositeField();
 		$rightFields->setID('RightCheckout');
-		
-		$validator = new RequiredFields();
-       
+  
 		$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
 		
 		//Left fields
@@ -83,13 +81,14 @@ class CheckoutPage_Controller extends Page_Controller {
 			new TextField('PostalCode', 'Postal Code'),
 			new DropdownField('Country', 'Country', Geoip::getCountryDropDown(), 'NZ')
     );
+    
+    $validator = new RequiredFields();
     $validator->addRequiredField('FirstName');
     $validator->addRequiredField('Email');
     $validator->addRequiredField('HomePhone');
     
     $leftFields->push($memberFields);
-    
-    
+
     //Right fields
 	  if(!$member->ID || $member->Password == '') {
 			$rightFields->push(new HeaderField(_t('OrderForm.MembershipDetails','Membership Details'), 3));

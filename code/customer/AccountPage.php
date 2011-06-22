@@ -102,6 +102,10 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function orders() {
 	  $memberID = Member::currentUserID();
+	  if (!Member::currentUserID()) {
+      return Security::permissionFailure($this, 'You must be logged in to view this page.');
+    }
+    
 	  return DataObject::get('Order', "`MemberID` = $memberID AND `Order`.`Status` != 'Cart'", "`Created` DESC");
 	}
 	
@@ -115,6 +119,11 @@ class AccountPage_Controller extends Page_Controller {
 	 * @param SS_HTTPRequest $request
 	 */
 	function downloadProduct(SS_HTTPRequest $request) {
+	  
+	  $memberID = Member::currentUserID();
+	  if (!Member::currentUserID()) {
+      return Security::permissionFailure($this, 'You must be logged in to view this page.');
+    }
 	  
 	  //TODO can only download product if order has been paid for
 

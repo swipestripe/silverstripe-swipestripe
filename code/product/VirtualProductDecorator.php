@@ -59,7 +59,7 @@ class VirutalProductDecorator extends ProductDecorator {
 	function updateCMSFields(&$fields) {
 	  
 	  parent::updateCMSFields($fields);
-		$fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product'), 'Content');
+		$fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product (relative to root)'), 'Content');
 	}
 	
 	/**
