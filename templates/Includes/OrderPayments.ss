@@ -1,14 +1,13 @@
 <table id="PaymentTable" class="infotable">
   <thead>     
     <tr class="gap mainHeader">
-        <th colspan="10" class="left">Payment(s)</th>
+        <th colspan="10" class="left">Payments</th>
     </tr>
     <tr>
       <th scope="row" class="twoColHeader">Date</th>
       <th scope="row" class="twoColHeader">Amount</th>
       <th scope="row" class="twoColHeader">Payment Status</th>
       <th scope="row" class="twoColHeader">Method</th>
-      <th scope="row" class="twoColHeader">Note</th>
     </tr>
   </thead>
   <tbody>
@@ -18,7 +17,6 @@
         <td>$Amount.Nice $Currency</td>
         <td>$Status</td>
         <td>$PaymentMethod</td>
-        <td>$Message.NoHTML</td>
       </tr>
     <% end_control %>
   </tbody>

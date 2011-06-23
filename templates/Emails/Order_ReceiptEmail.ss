@@ -8,7 +8,7 @@
 	
 	  <div class="Order typography">
 	
-			<h2>Hi <% control Customer %>$FirstName,<% end_control %></h2>
+			<h3>Hi $Customer.Name,</h3>
 			$Message
 	
 		  <% control Order %>

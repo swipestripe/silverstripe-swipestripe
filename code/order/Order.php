@@ -175,7 +175,8 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Processed if payment is successful
+	 * Processed if payment is successful,
+	 * send a receipt to the customer
 	 * 
 	 * @see PaymentDecorator::onAfterWrite()
 	 */
@@ -184,7 +185,11 @@ class Order extends DataObject {
 	  $this->updateStatus();
 
 		if(!$this->ReceiptSent){
-			$this->sendReceipt();
+			$receipt = new ReceiptEmail($this->Member(), $this);
+  		if ($receipt->send()) {
+  	    $this->ReceiptSent = true;
+  	    $this->write();
+  	  }
 		}
 	}
 	
@@ -214,94 +219,6 @@ class Order extends DataObject {
 	 */
 	public function getPaid() {
 	  return ($this->TotalPaid()->getAmount() == $this->Total->getAmount());
-	}
-	
-	/**
-	 * Get sender for the receipt emails
-	 * 
-	 * @see OrderConfigDecorator::extraStatics()
-	 * @return Mixed Email address or empty string
-	 */
-	function getReceiptFrom() {
-	  $siteConfig = SiteConfig::current_site_config();
-	  if (!$email = $siteConfig->ReceiptFrom) {
-	    $email = Email::getAdminEmail();
-	  }
-	  return $email;
-	}
-	
-	/**
-	 * Get the subject for the receipt email
-	 * 
-	 * @see OrderConfigDecorator::extraStatics()
-	 * @return Mixed String or false if no subject exists
-	 */
-	function getReceiptSubject() {
-	  $siteConfig = SiteConfig::current_site_config();
-	  if ($subject = $siteConfig->ReceiptFrom) {
-	    return $subject;
-	  }
-	  return false;
-	}
-	
-	/**
-	 * Get the body message for the receipt email
-	 * 
-	 * @see OrderConfigDecorator::extraStatics()
-	 * @return Mixed String or false if nobody exists
-	 */
-	function getReceiptBody() {
-	  $siteConfig = SiteConfig::current_site_config();
-	  if ($body = $siteConfig->ReceiptBody) {
-	    return $body;
-	  }
-	  return false;
-	}
-	
-	/**
-	 * Sending a receipt to the new customer
-	 * Using ProcessedEmail class in order to use Emogrifier
-	 * 
-	 * @return Boolean True if sending email worked
-	 */
-	function sendReceipt() {
-
-	  $customer = $this->Member();
-
-    $receipt = new ProcessedEmail(
-      $from = $this->getReceiptFrom(),
-      $to = $customer->Email, 
-      $subject = $this->getReceiptSubject(), 
-      $body = $this->getReceiptBody()
-    );
-	  
-	  $receipt->setTemplate('Order_ReceiptEmail');
-
-	  //Get css for Email by reading css file and put css inline for emogrification
-	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'))) {
-	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'));
-	  }
-	  else {
-	    $css = file_get_contents(Director::getAbsFile('simplecart/css/OrderReport.css'));
-	  }
-
-    $receipt->populateTemplate(
-    	array(
-    		'Message' => $this->getReceiptBody(),
-    		'Order' => $this,
-    	  'Customer' => $this->Member(),
-    	  'InlineCSS' => "<style>$css</style>"
-    	)
-    );
-
-	  if ($receipt->send() && !$this->ReceiptSent) {
-	    $this->ReceiptSent = true;
-	    $this->write();
-	    return true;
-	  }
-	  else {
-	    return false;
-	  }
 	}
 	
 	/**

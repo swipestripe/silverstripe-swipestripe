@@ -1,7 +1,7 @@
 <table id="DownloadsTable" class="infotable">
   <thead>     
     <tr class="gap mainHeader">
-        <th colspan="10" class="left">Download(s)</th>
+        <th colspan="10" class="left">Downloads</th>
     </tr>
     <tr>
       <th scope="row" class="twoColHeader">Product</th>
@@ -24,7 +24,13 @@
             <a href="$DownloadLink" target="_blank">Download</a>
             downloaded $DownloadCount time(s)
           <% else %>
-            Download link will appear when payment is complete.
+          
+            <% if RemainingDownloadLimit = 0 %>
+              There are no downloads remaining, you have<br /> reached your limit.
+            <% else %>
+              Download link will appear when payment is complete.
+            <% end_if %>
+            
           <% end_if %>
         </td>
       </tr>

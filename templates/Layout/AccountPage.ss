@@ -4,7 +4,7 @@
 $Content
 
 <% if Orders %>
-	<ul>
+	<ul id="Orders">
 	<% control Orders %>
 	  <li>
 	    <div>
