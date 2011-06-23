@@ -9,6 +9,8 @@ class OrderAdmin extends ModelAdmin{
 	static $menu_priority = 6;
 
 	public static $managed_models = array('Order');
+	
+	static $default_model   = 'Order';
 
 	public static $collection_controller_class = 'OrderAdmin_CollectionController';
 
@@ -18,6 +20,10 @@ class OrderAdmin extends ModelAdmin{
 		parent::init();
 		Requirements::css('simplecart/css/OrderReport.css');
 	}
+	
+  function getEditForm(){ 
+    return $this->bindModelController('Order')->ResultsForm(array()); 
+  }
 
 }
 
