@@ -104,7 +104,6 @@ class PaymentDecorator extends DataObjectDecorator {
 
 	  $order = $this->owner->PaidObject();
 
-//		if($this->owner->Status == 'Success' && $order) {
 		if ($order) {
 		  $order->onAfterPayment();
 		}

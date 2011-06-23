@@ -6,7 +6,20 @@
  * @author Mark Guinn
  */
 class ProcessedEmail extends Email {
+  
+  /**
+   * Email signature
+   * 
+   * @var String HTML content from central config for signature
+   * @see OrderConfigDecorator
+   */
+  public $signature;
 
+  /**
+   * Runs the content through Emogrifier to merge css style inline before sending
+   * 
+   * @see Email::parseVariables()
+   */
 	protected function parseVariables($isPlain = false) {
 		parent::parseVariables($isPlain);
 

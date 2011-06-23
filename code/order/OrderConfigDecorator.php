@@ -6,9 +6,13 @@ class OrderConfigDecorator extends DataObjectDecorator {
 
 		return array(
 			'db' => array(
+		    'EmailSignature' => 'HTMLText',
 				'ReceiptSubject' => 'Varchar',
 		    'ReceiptBody' => 'HTMLText',
-		    'ReceiptFrom' => 'Varchar'
+		    'ReceiptFrom' => 'Varchar',
+		    'PaidSubject' => 'Varchar',
+		    'PaidBody' => 'HTMLText',
+		    'PaidFrom' => 'Varchar'
 			)
 		);
 	}
@@ -20,10 +24,22 @@ class OrderConfigDecorator extends DataObjectDecorator {
 	 */
   function updateCMSFields(FieldSet &$fields) {
 
-    $fields->addFieldToTab("Root", new Tab('SimpleCart')); 
-    $fields->addFieldToTab('Root.SimpleCart', new EmailField('ReceiptFrom', 'Receipt sender'));
-    $fields->addFieldToTab('Root.SimpleCart', new TextField('ReceiptSubject', 'Receipt email subject line'));
-    $fields->addFieldToTab('Root.SimpleCart', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
+    $fields->addFieldToTab("Root", new TabSet('SimpleCart')); 
+    $fields->addFieldToTab("Root.SimpleCart", 
+      new Tab('Email'),
+      new Tab('ReceiptEmail'),
+      new Tab('PaidEmail')
+    );
+    
+    $fields->addFieldToTab('Root.SimpleCart.Email', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
+    
+    $fields->addFieldToTab('Root.SimpleCart.ReceiptEmail', new EmailField('ReceiptFrom', 'Receipt email sender'));
+    $fields->addFieldToTab('Root.SimpleCart.ReceiptEmail', new TextField('ReceiptSubject', 'Receipt email subject line'));
+    $fields->addFieldToTab('Root.SimpleCart.ReceiptEmail', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
+    
+    $fields->addFieldToTab('Root.SimpleCart.PaidEmail', new EmailField('PaidFrom', 'Paid email sender'));
+    $fields->addFieldToTab('Root.SimpleCart.PaidEmail', new TextField('PaidSubject', 'Paid email subject line'));
+    $fields->addFieldToTab('Root.SimpleCart.PaidEmail', new HtmlEditorField('PaidBody', 'Paid email body', 15));
 	}
 
 }

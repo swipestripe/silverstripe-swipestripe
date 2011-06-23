@@ -5,11 +5,13 @@ class Order extends DataObject {
 	public static $db = array(
 		'Status' => "Enum('Unpaid,Paid,Cart','Cart')",
 	  'Total' => 'Money',
-		'ReceiptSent' => 'Boolean'
+		'ReceiptSent' => 'Boolean',
+	  'PaidEmailSent' => 'Boolean'
 	);
 	
 	public static $defaults = array(
-	  'ReceiptSent' => false
+	  'ReceiptSent' => false,
+	  'PaidEmailSent' => false
 	);
 
 	public static $has_one = array(
@@ -187,6 +189,12 @@ class Order extends DataObject {
 		if(!$this->ReceiptSent){
 			$receipt = new ReceiptEmail($this->Member(), $this);
   		if ($receipt->send()) {
+  		  
+  		  //Prevent another paid confirmation email being sent
+  		  if ($this->getPaid()) {
+  		    $this->PaidEmailSent = true;
+  		  }
+  		  
   	    $this->ReceiptSent = true;
   	    $this->write();
   	  }
@@ -194,7 +202,8 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Update the order status after payment
+	 * Update the order status after payment,
+	 * send email to customer if order is paid
 	 * 
 	 * @see Order::onAfterPayment()
 	 */
@@ -204,7 +213,13 @@ class Order extends DataObject {
 	    $this->Status = 'Paid';
 	    $this->write();
 	    
-	    //TODO: Notify the customer that their order is successful unless sending receipt at same time
+	    if (!$this->PaidEmailSent) {
+  	    $paidEmail = new PaidEmail($this->Member(), $this);
+    		if ($paidEmail->send()) {
+    	    $this->PaidEmailSent = true;
+    	    $this->write();
+    	  }
+	    }
 	  }
 	  elseif ($this->Status == 'Cart') {
 	    $this->Status = 'Unpaid';
