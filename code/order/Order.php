@@ -375,5 +375,15 @@ class Order extends DataObject {
 	  }
 	  return $status;
 	}
+	
+	/**
+	 * Testing to add auto increment to table
+	 */
+	public function augmentDatabase() {
+//	  $tableName = $this->class;
+//	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
+//	  
+//	  SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
+	}
 
 }
