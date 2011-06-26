@@ -21,8 +21,13 @@ class OrderAdmin extends ModelAdmin{
 		Requirements::css('simplecart/css/OrderReport.css');
 	}
 	
+	/**
+	 * Get a list of orders to display by default
+	 * Only show orders with payments i.e: not the cart orders
+	 */
   function getEditForm(){ 
-    return $this->bindModelController('Order')->ResultsForm(array()); 
+    $searchCriteria = new SS_HTTPRequest('GET', '/', array('TotalPaid' => '1'));
+    return $this->bindModelController('Order')->ResultsForm($searchCriteria); 
   }
 
 }

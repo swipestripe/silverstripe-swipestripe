@@ -53,8 +53,26 @@ class Order extends DataObject {
 		'Member.Email' => array(
 			'title' => 'Customer Email',
 			'filter' => 'PartialMatchFilter'
-		)
+		),
+		'TotalPaid' => array(
+			'filter' => 'OrderAdminFilters_MustHaveAtLeastOnePayment',
+		),
 	);
+	
+	public static $casting = array(
+		'TotalPaid' => 'Money'
+	);
+	
+	/**
+	 * Filter for order admin area search.
+	 * 
+	 * @see DataObject::scaffoldSearchFields()
+	 */
+  function scaffoldSearchFields(){
+		$fieldSet = parent::scaffoldSearchFields();
+		$fieldSet->push(new DropdownField("TotalPaid", "Has Payment", array(1 => "yes", 0 => "no")));
+		return $fieldSet;
+	}
 	
 	/**
 	 * Prevent orders from being created in the CMS
