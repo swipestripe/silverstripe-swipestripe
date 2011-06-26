@@ -204,6 +204,7 @@ class Order extends DataObject {
 	  
 	  $this->updateStatus();
 
+	  //Send a receipt to customer
 		if(!$this->ReceiptSent){
 			$receipt = new ReceiptEmail($this->Member(), $this);
   		if ($receipt->send()) {
@@ -212,6 +213,10 @@ class Order extends DataObject {
   		  if ($this->getPaid()) {
   		    $this->PaidEmailSent = true;
   		  }
+  		  
+  		  //Send a notification to website owner
+    		$orderEmail = new OrderEmail($this->Member(), $this);
+    		$orderEmail->send();
   		  
   	    $this->ReceiptSent = true;
   	    $this->write();

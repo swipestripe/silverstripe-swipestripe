@@ -12,7 +12,10 @@ class OrderConfigDecorator extends DataObjectDecorator {
 		    'ReceiptFrom' => 'Varchar',
 		    'PaidSubject' => 'Varchar',
 		    'PaidBody' => 'HTMLText',
-		    'PaidFrom' => 'Varchar'
+		    'PaidFrom' => 'Varchar',
+				'OrderSubject' => 'Varchar',
+		    'OrderBody' => 'HTMLText',
+		    'OrderTo' => 'Varchar'
 			)
 		);
 	}
@@ -28,7 +31,8 @@ class OrderConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab("Root.SimpleCart", 
       new Tab('Email'),
       new Tab('ReceiptEmail'),
-      new Tab('PaidEmail')
+      new Tab('PaidEmail'),
+      new Tab('OrderEmail')
     );
     
     $fields->addFieldToTab('Root.SimpleCart.Email', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
@@ -40,6 +44,10 @@ class OrderConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab('Root.SimpleCart.PaidEmail', new EmailField('PaidFrom', 'Paid email sender'));
     $fields->addFieldToTab('Root.SimpleCart.PaidEmail', new TextField('PaidSubject', 'Paid email subject line'));
     $fields->addFieldToTab('Root.SimpleCart.PaidEmail', new HtmlEditorField('PaidBody', 'Paid email body', 15));
+    
+    $fields->addFieldToTab('Root.SimpleCart.OrderEmail', new EmailField('OrderTo', 'Order email recipient'));
+    $fields->addFieldToTab('Root.SimpleCart.OrderEmail', new TextField('OrderSubject', 'Order email subject line'));
+    $fields->addFieldToTab('Root.SimpleCart.OrderEmail', new HtmlEditorField('OrderBody', 'Order email body', 15));
 	}
 
 }
