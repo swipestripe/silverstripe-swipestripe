@@ -108,14 +108,17 @@ class Order extends DataObject {
 	  $toBeRemoved[] = 'MemberID';
 	  $toBeRemoved[] = 'Total';
 	  $toBeRemoved[] = 'Items';
+	  $toBeRemoved[] = 'Status';
+	  $toBeRemoved[] = 'ReceiptSent';
+	  $toBeRemoved[] = 'PaidEmailSent';
 	  foreach($toBeRemoved as $field) {
 			$fields->removeByName($field);
 		}
 		
-		$htmlSummary = $this->renderWith("Order");
+		$htmlSummary = $this->renderWith("OrderAdmin");
 		$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 		
-		$fields->makeFieldReadonly('Status');
+		//$fields->makeFieldReadonly('Status');
 
 	  return $fields;
 	}
@@ -406,7 +409,7 @@ class Order extends DataObject {
 //	  $tableName = $this->class;
 //	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
 //	  
-//	  SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
+	  SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
 	}
 
 }

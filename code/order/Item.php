@@ -72,9 +72,6 @@ class Item extends DataObject {
 	 * @return Int
 	 */
 	function RemainingDownloadLimit() {
-	  
-	  SS_Log::log(new Exception(print_r($this->getDownloadLimit() - $this->DownloadCount, true)), SS_Log::NOTICE);
-	  
 	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}
 
