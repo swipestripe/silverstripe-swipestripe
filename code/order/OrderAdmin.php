@@ -24,6 +24,13 @@ class OrderAdmin extends ModelAdmin{
 	function init() {
 		parent::init();
 		Requirements::css('simplecart/css/OrderReport.css');
+		Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');
+		Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.datepicker.css');
+		Requirements::css('simplecart/css/libs/ui.daterangepicker.css');
+		
+		Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.core.js');
+		Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.datepicker.js');
+		Requirements::javascript('simplecart/javascript/libs/daterangepicker.jquery.js');
 		Requirements::javascript('simplecart/javascript/OrderAdmin.js');
 	}
 	

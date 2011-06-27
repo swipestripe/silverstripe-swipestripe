@@ -54,13 +54,16 @@ class Order extends DataObject {
 			'title' => 'Customer Email',
 			'filter' => 'PartialMatchFilter'
 		),
-		'TotalPaid' => array(
-			'filter' => 'OrderAdminFilters_MustHaveAtLeastOnePayment',
+		'HasPayment' => array(
+			'filter' => 'PaymentSearchFilter',
 		),
+		'Created' => array (
+  		'filter' => 'DateRangeSearchFilter'
+  	)
 	);
 	
 	public static $casting = array(
-		'TotalPaid' => 'Money'
+		'HasPayment' => 'Money'
 	);
 	
 	/**
@@ -70,9 +73,17 @@ class Order extends DataObject {
 	 */
   function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
-		$fieldSet->push(new DropdownField("TotalPaid", "Has Payment", array(1 => "yes", 0 => "no")));
+		$fieldSet->push(new DropdownField("HasPayment", "Has Payment", array(1 => "yes", 0 => "no")));
 		return $fieldSet;
 	}
+	
+  public function getDefaultSearchContext() {
+  	return new DateRangeSearchContext(
+  		$this->class,
+  		$this->scaffoldSearchFields(),
+  		$this->defaultSearchFilters()
+  	);
+  }
 	
 	/**
 	 * Prevent orders from being created in the CMS
@@ -210,7 +221,7 @@ class Order extends DataObject {
 	function TotalPaid() {
 	   $paid = 0;
 	   
-	  foreach ($this->Payments() as $payment) {
+	  if ($this->Payments()) foreach ($this->Payments() as $payment) {
 	    if ($payment->Status == 'Success') {
 	      $paid += $payment->Amount->getAmount();
 	    }

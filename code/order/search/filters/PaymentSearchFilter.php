@@ -1,6 +1,6 @@
 <?php
 
-class OrderAdminFilters_MustHaveAtLeastOnePayment extends SearchFilter {
+class PaymentSearchFilter extends SearchFilter {
 
   /**
    * Apply filter query SQL to a search query
@@ -29,3 +29,4 @@ class OrderAdminFilters_MustHaveAtLeastOnePayment extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
 	}
 }
+

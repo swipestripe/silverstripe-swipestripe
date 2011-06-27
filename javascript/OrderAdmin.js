@@ -1,6 +1,12 @@
 (function($) { 
     $(document).ready(function() { 
     	
+    	//Date picker
+    	$('#Form_SearchForm_Order_Created').daterangepicker({
+    		arrows: false,
+    		dateFormat: 'yy-m-d'
+    	});
+    	
        //Submit the search form
        var doList = function() {
 	     $("#Form_SearchForm_Order").submit();
