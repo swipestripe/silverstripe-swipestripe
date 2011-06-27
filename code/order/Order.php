@@ -81,7 +81,6 @@ class Order extends DataObject {
 	 */
   public function canCreate($member = null) {
     return false;
-//		return Permission::check('ADMIN', 'any', $member);
 	}
 	
 	/**
@@ -90,7 +89,6 @@ class Order extends DataObject {
 	 */
   public function canDelete($member = null) {
     return false;
-//		return Permission::check('ADMIN', 'any', $member);
 	}
 	
 	/**
@@ -104,6 +102,7 @@ class Order extends DataObject {
 	  
 	  $fields->insertBefore(new LiteralField('Title',"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"),'Root');
 	  
+    //Main fields
 	  $toBeRemoved = array();
 	  $toBeRemoved[] = 'MemberID';
 	  $toBeRemoved[] = 'Total';
@@ -118,9 +117,36 @@ class Order extends DataObject {
 		$htmlSummary = $this->renderWith("OrderAdmin");
 		$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 		
-		//$fields->makeFieldReadonly('Status');
+		//Action fields
+		$fields->addFieldToTab("Root", new Tab('Actions'));
+		$fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
+		$fields->addFieldToTab('Root.Actions', new LiteralField(
+			'UpdateDownloadLimit', 
+			'<p>Reset the download count for items below, can be used to allow customers to download items more times.</p>'
+		));
+		foreach ($this->Downloads() as $item) {
+		  $fields->addFieldToTab('Root.Actions', new TextField(
+		  	'DownloadCountItem['.$item->ID.']', 
+		  	'Download Count for '.$item->Object()->Title.' (download limit = '.$item->getDownloadLimit() .')', 
+		    $item->DownloadCount
+		  ));
+		}
+		
+		//Workflow fields
+		//$fields->addFieldToTab("Root", new Tab('WorkFlow'));
 
 	  return $fields;
+	}
+	
+	/**
+	 * Set custom CMS actions which call 
+	 * OrderAdmin_RecordController actions of the same name
+	 * 
+	 * @see DataObject::getCMSActions()
+	 */
+	public function getCMSActions() {
+	  $actions = parent::getCMSActions();
+	  return $actions;
 	}
 	
 	/**
