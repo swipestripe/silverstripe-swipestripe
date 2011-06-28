@@ -11,7 +11,7 @@
        var doList = function() {
 	     $("#Form_SearchForm_Order").submit();
 	     return false;
-	   }
+	   };
        doList();
      
        //Submit custom model admin actions 
@@ -40,6 +40,26 @@
             });
             return false;
         });
+       
+       //Work flow tab
+       
+       //Keep radio buttons and drop down in sync
+       $('input[name="status"]').live('change', function() {
+    	   console.log(this);
+    	   $('#Form_EditForm_Status').val($(this).val());
+       });
+       
+       $('#Form_EditForm_Status').live('change', function() {
+    	   var self = this;
+    	   $('input[name="status"]').each(function() {
+    		   if ($(this).val() == $(self).val()) {
+    			   $(this).attr('checked', 'checked');
+    		   }
+    		   else {
+    			   $(this).removeAttr('checked');
+    		   }
+    	   });
+       });
              
     })
 })(jQuery);

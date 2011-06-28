@@ -24,6 +24,8 @@ class OrderAdmin extends ModelAdmin{
   function init() {
   	parent::init();
   	Requirements::css('simplecart/css/OrderReport.css');
+  	Requirements::css('simplecart/css/OrderAdmin.css');
+  	
   	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');
   	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.datepicker.css');
   	Requirements::css('simplecart/css/libs/ui.daterangepicker.css');

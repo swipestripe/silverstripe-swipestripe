@@ -145,13 +145,16 @@ class Order extends DataObject {
 	  $fields->insertBefore(new LiteralField('Title',"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"),'Root');
 	  
     //Main fields
-	  $toBeRemoved = array();
-	  $toBeRemoved[] = 'MemberID';
-	  $toBeRemoved[] = 'Total';
-	  $toBeRemoved[] = 'Items';
-	  $toBeRemoved[] = 'Status';
-	  $toBeRemoved[] = 'ReceiptSent';
-	  $toBeRemoved[] = 'PaidEmailSent';
+	  $toBeRemoved = array(
+	    'MemberID',
+	    'Total',
+	    'Items',
+	    'Status',
+	    'ReceiptSent',
+	    'PaidEmailSent',
+	    'OrderedOn',
+	    'PaymentStatus'
+	  );
 	  foreach($toBeRemoved as $field) {
 			$fields->removeByName($field);
 		}
@@ -175,7 +178,13 @@ class Order extends DataObject {
 		}
 		
 		//Workflow fields
-		//$fields->addFieldToTab("Root", new Tab('WorkFlow'));
+		$fields->addFieldToTab("Root", new Tab('WorkFlow'));
+		$statuses = $this->dbObject('Status')->enumValues();
+		unset($statuses['Cart']);
+		$fields->addFieldToTab('Root.WorkFlow', new DropdownField('Status', 'Status', $statuses));
+		
+		$workflowContent = $this->renderWith('OrderAdminWorkFlow');
+		$fields->addFieldToTab('Root.WorkFlow', new LiteralField('OrderWorkFlow', $workflowContent));
 
 	  return $fields;
 	}
