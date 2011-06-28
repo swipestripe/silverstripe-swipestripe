@@ -1,12 +1,37 @@
 <?php
 
 class Order extends DataObject {
+  
+  /**
+   * Order has been made, waiting for payment
+   * to clear/be approved
+   * 
+   * @var String
+   */
+  const STATUS_PENDING = 'Pending';
+  
+  /**
+   * Payment approved, order being processed
+   * before being dispatched
+   * 
+   * @var String
+   */
+  const STATUS_PROCESSING = 'Processing';
+  
+  /**
+   * Order has been sent
+   * 
+   * @var String
+   */
+  const STATUS_DISPATCHED = 'Dispatched';
 
 	public static $db = array(
-		'Status' => "Enum('Unpaid,Paid,Cart','Cart')",
+		'Status' => "Enum('Pending,Processing,Dispatched,Cart','Cart')",
+	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 	  'Total' => 'Money',
 		'ReceiptSent' => 'Boolean',
-	  'PaidEmailSent' => 'Boolean'
+	  'PaidEmailSent' => 'Boolean',
+	  'OrderedOn' => 'SS_Datetime'
 	);
 	
 	public static $defaults = array(
@@ -77,6 +102,12 @@ class Order extends DataObject {
 		return $fieldSet;
 	}
 	
+	/**
+	 * Get a new date range search context for filtering
+	 * the search results in OrderAdmin
+	 * 
+	 * @see DataObject::getDefaultSearchContext()
+	 */
   public function getDefaultSearchContext() {
   	return new DateRangeSearchContext(
   		$this->class,
@@ -242,7 +273,7 @@ class Order extends DataObject {
 	 */
 	function onAfterPayment() {
 	  
-	  $this->updateStatus();
+	  $this->updatePaymentStatus();
 
 	  //Send a receipt to customer
 		if(!$this->ReceiptSent){
@@ -265,15 +296,16 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Update the order status after payment,
+	 * Update the order payment status after payment,
 	 * send email to customer if order is paid
 	 * 
 	 * @see Order::onAfterPayment()
 	 */
-	private function updateStatus() {
+	private function updatePaymentStatus() {
 
 	  if ($this->getPaid()) {
-	    $this->Status = 'Paid';
+	    $this->PaymentStatus = 'Paid';
+	    $this->Status = self::STATUS_PROCESSING;
 	    $this->write();
 	    
 	    if (!$this->PaidEmailSent) {
@@ -284,8 +316,9 @@ class Order extends DataObject {
     	  }
 	    }
 	  }
-	  elseif ($this->Status == 'Cart') {
-	    $this->Status = 'Unpaid';
+	  else {
+	    $this->PaymentStatus = 'Unpaid';
+	    $this->Status = self::STATUS_PENDING;
 	    $this->write();
 	  }
 	}
@@ -420,7 +453,7 @@ class Order extends DataObject {
 	 * 
 	 * @return String List of payments and their status
 	 */
-	function PaymentStatus() {
+	function PaymentStatusSummary() {
 	  $payments = $this->Payments();
 	  $status = null;
 

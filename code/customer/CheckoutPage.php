@@ -168,6 +168,8 @@ class CheckoutPage_Controller extends Page_Controller {
 		//Save the order
 		$form->saveInto($order);
 		$order->MemberID = $member->ID;
+		$order->Status = Order::STATUS_PENDING;
+		$order->OrderedOn = SS_Datetime::now()->getValue();
 		$order->write();
 
 		//Save the order items (not sure why can't do this with writeComponents() perhaps because Items() are cached?!)
@@ -198,6 +200,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 
 		if($result->isSuccess()) {
+		  //TODO Need to update order status here
 		}
 
 		Director::redirect($order->Link());
