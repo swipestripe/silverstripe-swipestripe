@@ -10,6 +10,8 @@
 		<p class="Meaning">
 		  Order has been made, waiting for payment to be approved.
 		</p>
+
+
   
   </div>
   

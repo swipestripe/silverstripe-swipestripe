@@ -50,21 +50,24 @@ margin-top: 3px;
   font-size: 11px;	
 }
 
-#Status {
+#Root_WorkFlow #Status {
 float: left;
 margin-bottom: 8px;
 }
 
-#Status label.left {
+#Root_WorkFlow #Status label.left {
 	float: left;
 	width: 45px;
 	font-size: 14px;
 	margin-top: 3px;
 }	
 	
-#Status .middleColumn {
+#Root_WorkFlow #Status .middleColumn {
 background: none;
 width: inherit;
 float: left;
 }
 	
+.WorkFlowActions {
+  border: 1px solid blue;	
+}

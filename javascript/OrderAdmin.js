@@ -2,7 +2,7 @@
     $(document).ready(function() { 
     	
     	//Date picker
-    	$('#Form_SearchForm_Order_Created').daterangepicker({
+    	$('#Form_SearchForm_Order_OrderedOn').daterangepicker({
     		arrows: false,
     		dateFormat: 'yy-m-d'
     	});
@@ -42,15 +42,16 @@
         });
        
        //Work flow tab
-       
        //Keep radio buttons and drop down in sync
        $('input[name="status"]').live('change', function() {
-    	   console.log(this);
     	   $('#Form_EditForm_Status').val($(this).val());
        });
        
        $('#Form_EditForm_Status').live('change', function() {
     	   var self = this;
+    	   
+    	   console.log('there was a change in the matrix');
+    	   
     	   $('input[name="status"]').each(function() {
     		   if ($(this).val() == $(self).val()) {
     			   $(this).attr('checked', 'checked');
@@ -60,6 +61,6 @@
     		   }
     	   });
        });
-             
+       
     })
 })(jQuery);
