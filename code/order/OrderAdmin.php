@@ -89,13 +89,22 @@ class OrderAdmin_RecordController extends ModelAdmin_RecordController {
 	 */
 	function doSave($data, $form, $request) {
 	  
+	  //Set the status of payments
+	  if (isset($data['Payments'])) foreach ($data['Payments'] as $paymentID => $newPaymentStatus) {
+	    $payment = DataObject::get_by_id('Payment', $paymentID);
+	    $payment->Status = $newPaymentStatus;
+	    $payment->write();
+	  }
+	  $this->currentRecord->updatePaymentStatus();
+
+	  //TODO move this to some place else
 	  //Reset the download count for a particular item
 	  if (isset($data['DownloadCountItem'])) foreach($data['DownloadCountItem'] as $itemID => $newDownloadCount) {
 	    $item = DataObject::get_by_id('Item', $itemID);
 	    $item->DownloadCount = $newDownloadCount;
 	    $item->write();
 	  }
-
+	  
 	  $form->saveInto($this->currentRecord);
 		
 		try {
@@ -103,7 +112,7 @@ class OrderAdmin_RecordController extends ModelAdmin_RecordController {
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 		}
-		
+
 		// Behaviour switched on ajax.
 		if(Director::is_ajax()) {
 			return $this->edit($request);

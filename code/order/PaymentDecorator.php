@@ -64,9 +64,7 @@ class PaymentDecorator extends DataObjectDecorator {
 	 * @see DataObjectDecorator::updateCMSFields()
 	 */
   function updateCMSFields(FieldSet &$fields) {
-    
-    //$fields->removeByName('Status');
-    
+
     $toBeRemoved = array(
       'IP',
       'ProxyIP',

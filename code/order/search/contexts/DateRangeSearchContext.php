@@ -47,7 +47,7 @@ class DateRangeSearchContext extends SearchContext {
 
  		foreach($searchParamArray as $key => $value) {
 
- 		  if ($key == 'Created') {
+ 		  if ($key == 'OrderedOn') {
  		    
  		    $filter = $this->getFilter($key);
  		    if ($filter && get_class($filter) == "DateRangeSearchFilter") {

@@ -26,7 +26,7 @@ class Order extends DataObject {
   const STATUS_DISPATCHED = 'Dispatched';
 
 	public static $db = array(
-		'Status' => "Enum('Pending,Processing,Dispatched,Cart','Cart')",
+		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 	  'Total' => 'Money',
 		'ReceiptSent' => 'Boolean',
@@ -59,7 +59,7 @@ class Order extends DataObject {
 	
 	public static $summary_fields = array(
 	  'ID' => 'Order No',
-		'Created' => 'Created',
+		'OrderedOn' => 'Date',
 		'Member.Name' => 'Customer',
 		'SummaryTotal' => 'Total',
 		'Status' => 'Status'
@@ -82,8 +82,12 @@ class Order extends DataObject {
 		'HasPayment' => array(
 			'filter' => 'PaymentSearchFilter',
 		),
-		'Created' => array (
+		'OrderedOn' => array (
   		'filter' => 'DateRangeSearchFilter'
+  	),
+  	'Status' => array(
+  	  'title' => 'Status',
+  		'filter' => 'OptionSetSearchFilter',
   	)
 	);
 	
@@ -98,7 +102,13 @@ class Order extends DataObject {
 	 */
   function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
+
 		$fieldSet->push(new DropdownField("HasPayment", "Has Payment", array(1 => "yes", 0 => "no")));
+		$fieldSet->push(new CheckboxSetField("Status", "Status", array(
+		  'Pending' => 'Pending',
+		  'Processing' => 'Processing',
+		  'Dispatched' => 'Dispatched'
+		)));
 		return $fieldSet;
 	}
 	
@@ -162,9 +172,37 @@ class Order extends DataObject {
 		$htmlSummary = $this->renderWith("OrderAdmin");
 		$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 		
+		$fields->removeFieldFromTab("Root", "Payments");
+		
 		//Action fields
 		$fields->addFieldToTab("Root", new Tab('Actions'));
-		$fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
+		
+		$fields->addFieldToTab('Root.Actions', new HeaderField('OrderStatus', 'Order Status', 3));
+		$statuses = $this->dbObject('Status')->enumValues();
+		unset($statuses['Cart']);
+		$fields->addFieldToTab('Root.Actions', new DropdownField('Status', 'Status', $statuses));
+		
+		$fields->addFieldToTab('Root.Actions', new HeaderField('PaymentStatus', 'Payments Status', 3));
+		$fields->addFieldToTab('Root.Actions', new LiteralField('PaymentStatusP', "<p>Payment status of this order is currently <strong>$this->PaymentStatus</strong>.</p>"));
+//		$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
+		
+		foreach ($this->Payments() as $item) {
+		  
+		  $customerName = DataObject::get_by_id('Member', $item->PaidByID)->getName();
+		  $value = $item->dbObject('Amount')->Nice();
+		  $date = $item->dbObject('Created')->Format('j M y g:i a');
+		  $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
+
+		  $fields->addFieldToTab('Root.Actions', new DropdownField(
+		  	'Payments['.$item->ID.']', 
+		  	"$paymentType by $customerName <br />$value <br />$date", 
+		    singleton('Payment')->dbObject('Status')->enumValues(),
+		    $item->Status
+		  ));
+		}
+		
+		//TODO move this to virtual products
+	  $fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
 		$fields->addFieldToTab('Root.Actions', new LiteralField(
 			'UpdateDownloadLimit', 
 			'<p>Reset the download count for items below, can be used to allow customers to download items more times.</p>'
@@ -176,17 +214,45 @@ class Order extends DataObject {
 		    $item->DownloadCount
 		  ));
 		}
-		
-		//Workflow fields
-		$fields->addFieldToTab("Root", new Tab('WorkFlow'));
-		$statuses = $this->dbObject('Status')->enumValues();
-		unset($statuses['Cart']);
-		$fields->addFieldToTab('Root.WorkFlow', new DropdownField('Status', 'Status', $statuses));
-		
-		$workflowContent = $this->renderWith('OrderAdminWorkFlow');
-		$fields->addFieldToTab('Root.WorkFlow', new LiteralField('OrderWorkFlow', $workflowContent));
 
 	  return $fields;
+	}
+	
+	/**
+	 * Trying something for pending options UI in admin area 
+	 * 
+	 * @return unknown
+	 */
+	public function PendingOptions() {
+	  
+	  	//Workflow fields
+//		$fields->addFieldToTab("Root", new Tab('WorkFlow'));
+//		
+//		$statuses = $this->dbObject('Status')->enumValues();
+//		unset($statuses['Cart']);
+//		$fields->addFieldToTab('Root.WorkFlow', new DropdownField('Status', 'Status', $statuses));
+//		
+//		SS_Log::log(new Exception(print_r($this->Status, true)), SS_Log::NOTICE);
+//		
+//		$workflowContent = $this->renderWith('OrderAdminWorkFlow');
+//		$fields->addFieldToTab('Root.WorkFlow', new LiteralField('OrderWorkFlow', $workflowContent));
+
+    $fields = new FieldSet();
+    
+    $fields->push(new DropdownField( 
+      'PaymentStatus', 
+      'This order is:', 
+      $this->dbObject('PaymentStatus')->enumValues(),
+      $this->PaymentStatus
+    ));
+    
+    $content = ($this->ReceiptSent) ?'has' :'has not';
+    $fields->push(new LiteralField('ReceiptSent', "A receipt <strong>$content</strong> been sent to the customer."));
+    
+    //Set the form as a hack to set form field IDs
+    $form = new Form($this, 'EditForm', new FieldSet(), new FieldSet());
+    $fields->setForm($form);
+    return $fields;
 	}
 	
 	/**
@@ -310,7 +376,7 @@ class Order extends DataObject {
 	 * 
 	 * @see Order::onAfterPayment()
 	 */
-	private function updatePaymentStatus() {
+	public function updatePaymentStatus() {
 
 	  if ($this->getPaid()) {
 	    $this->PaymentStatus = 'Paid';
