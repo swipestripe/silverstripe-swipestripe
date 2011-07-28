@@ -114,16 +114,8 @@ class ProductControllerExtension extends Extension {
   }
   
   function AddToCartForm($quantity = null, $redirectURL = null) {
-    
-    $productObject = $this->owner->data();
-   
-    $fields = new FieldSet(
-      new TextField('ProductClass', 'ProductClass', $productObject->ClassName),
-      new TextField('ProductID', 'ProductID', $productObject->ID),
-      new TextField('Quantity', 'Quantity', $quantity),
-      new TextField('Redirect', 'Redirect', $redirectURL)
-    );
-    
+
+    $fields = $this->getAddProductFields($quantity, $redirectURL);
     $actions = new FieldSet(
       new FormAction('add', 'Add To Cart')
     );
@@ -136,16 +128,8 @@ class ProductControllerExtension extends Extension {
 	}
 	
   function RemoveFromCartForm($quantity = null, $redirectURL = null) {
-    
-    $productObject = $this->owner->data();
-   
-    $fields = new FieldSet(
-      new TextField('ProductClass', 'ProductClass', $productObject->ClassName),
-      new TextField('ProductID', 'ProductID', $productObject->ID),
-      new TextField('Quantity', 'Quantity', $quantity),
-      new TextField('Redirect', 'Redirect', $redirectURL)
-    );
-    
+
+    $fields = $this->getRemoveProductFields($quantity, $redirectURL);
     $actions = new FieldSet(
       new FormAction('remove', 'Remove From Cart')
     );
@@ -155,6 +139,39 @@ class ProductControllerExtension extends Extension {
     );
      
     return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
+	}
+	
+	protected function getAddProductFields($quantity = null, $redirectURL = null) {
+	  $fields = $this->getProductFields($quantity, $redirectURL);
+	  
+	  //Cannot use extend in Extension class because the concrete class 
+    //is not in Object->extension_instances...
+    //$this->owner->extend('updateAddProductFields', $fields);
+
+    if (method_exists($this->owner, 'updateAddProductFields')) {
+      $this->owner->updateAddProductFields($fields);
+    }
+    return $fields;
+	}
+	
+	protected function getRemoveProductFields($quantity = null, $redirectURL = null) {
+	  $fields = $this->getProductFields($quantity, $redirectURL);
+
+    if (method_exists($this->owner, 'updateRemoveProductFields')) {
+      $this->owner->updateRemoveProductFields($fields);
+    }
+    return $fields;
+	}
+	
+	protected function getProductFields($quantity = null, $redirectURL = null) {
+	  
+	  $productObject = $this->owner->data();
+	  return new FieldSet(
+      new HiddenField('ProductClass', 'ProductClass', $productObject->ClassName),
+      new HiddenField('ProductID', 'ProductID', $productObject->ID),
+      new HiddenField('Quantity', 'Quantity', $quantity),
+      new HiddenField('Redirect', 'Redirect', $redirectURL)
+    );
 	}
   
 }
