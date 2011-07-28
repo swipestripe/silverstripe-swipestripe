@@ -93,7 +93,7 @@ class ProductDecorator extends DataObjectDecorator {
 		);
 		return Director::absoluteURL(Controller::curr()->Link()."add/?".$getParams);
 	}
-	
+
 	/**
 	 * Helper to get URL for removing a product from the cart
 	 * 
@@ -128,6 +128,19 @@ class ProductDecorator extends DataObjectDecorator {
 	function GoToCheckoutLink() {
 		return DataObject::get_one('CheckoutPage')->Link();
 	}
+  
+  /**
+   * Return a set of product options that augment the price for this
+   * product
+   * 
+   * Needs to be implemented in concrete class
+   * TODO create an abstract class for this method?
+   * 
+   * @return DataObjectSet|null Set of product options 
+   */
+  function getProductOptions() {
+    return null;
+  }
 }
 
 

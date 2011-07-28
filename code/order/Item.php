@@ -7,7 +7,7 @@ class Item extends DataObject {
 	  'ObjectClass' => 'Varchar',
 	  'Amount' => 'Money',
 	  'Quantity' => 'Int',
-	  'DownloadCount' => 'Int' //If item represents a downloadable product
+	  'DownloadCount' => 'Int', //If item represents a downloadable product
 	);
 
 	public static $has_one = array(
@@ -21,6 +21,7 @@ class Item extends DataObject {
 	
 	/**
 	 * Retrieve the object this item represents (Product)
+	 * TODO serialize product object data and save in item row
 	 * 
 	 * @return DataObject 
 	 */

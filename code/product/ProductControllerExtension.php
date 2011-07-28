@@ -5,7 +5,9 @@ class ProductControllerExtension extends Extension {
   public static $allowed_actions = array (
   	'add',
     'remove',
-    'clear'
+    'clear',
+    'AddToCartForm',
+    'RemoveFromCartForm'
   );
   
   /**
@@ -41,6 +43,11 @@ class ProductControllerExtension extends Extension {
   private function getProduct() {
     $request = $this->owner->getRequest();
     return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
+  }
+  
+  private function getProductOptions() {
+    //TODO get the product options from the form, they must use some kind of convention
+    //return DataObjectSet
   }
   
   /**
@@ -105,5 +112,49 @@ class ProductControllerExtension extends Extension {
     
     return $order;
   }
+  
+  function AddToCartForm($quantity = null, $redirectURL = null) {
+    
+    $productObject = $this->owner->data();
+   
+    $fields = new FieldSet(
+      new TextField('ProductClass', 'ProductClass', $productObject->ClassName),
+      new TextField('ProductID', 'ProductID', $productObject->ID),
+      new TextField('Quantity', 'Quantity', $quantity),
+      new TextField('Redirect', 'Redirect', $redirectURL)
+    );
+    
+    $actions = new FieldSet(
+      new FormAction('add', 'Add To Cart')
+    );
+    $validator = new RequiredFields(
+    	'ProductClass', 
+    	'ProductID'
+    );
+     
+    return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
+	}
+	
+  function RemoveFromCartForm($quantity = null, $redirectURL = null) {
+    
+    $productObject = $this->owner->data();
+   
+    $fields = new FieldSet(
+      new TextField('ProductClass', 'ProductClass', $productObject->ClassName),
+      new TextField('ProductID', 'ProductID', $productObject->ID),
+      new TextField('Quantity', 'Quantity', $quantity),
+      new TextField('Redirect', 'Redirect', $redirectURL)
+    );
+    
+    $actions = new FieldSet(
+      new FormAction('remove', 'Remove From Cart')
+    );
+    $validator = new RequiredFields(
+    	'ProductClass', 
+    	'ProductID'
+    );
+     
+    return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
+	}
   
 }

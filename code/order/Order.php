@@ -411,9 +411,11 @@ class Order extends DataObject {
 	 * Add an item to the order representing the product, 
 	 * if an item for this product exists increase the quantity
 	 * 
+	 * TODO add item options to the order
+	 * 
 	 * @param DataObject $product The product to be represented by this order item
 	 */
-	function addItem(DataObject $product, $quantity = 1) {
+	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
 
 	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
@@ -443,6 +445,7 @@ class Order extends DataObject {
 	
 	/**
 	 * Decrease quantity of an item or remove it if quantity = 1
+	 * TODO remove product options from order
 	 * 
 	 * @param DataObject $product The product to remove
 	 */
