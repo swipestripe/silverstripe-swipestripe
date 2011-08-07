@@ -14,6 +14,10 @@ class Item extends DataObject {
 		'Order' => 'Order'
 	);
 	
+	public static $has_many = array(
+	  'ItemOptions' => 'ItemOption'
+	);
+	
 	public static $defaults = array(
 	  'Quantity' => 1,
 	  'DownloadCount' => 0
@@ -26,7 +30,35 @@ class Item extends DataObject {
 	 * @return DataObject 
 	 */
 	function Object() {
-	  return Dataobject::get_by_id($this->ObjectClass, $this->ObjectID);
+	  return DataObject::get_by_id($this->ObjectClass, $this->ObjectID);
+	}
+	
+	/**
+	 * Find item options and delete them
+	 * 
+	 * @see DataObject::onBeforeDelete()
+	 */
+	public function onBeforeDelete() {
+	  parent::onBeforeDelete();
+	  
+	  $itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
+	  if ($itemOptions->exists()) foreach ($itemOptions as $itemOption) {
+	    $itemOption->delete();
+	  } 
+	}
+	
+	/**
+	 * Get total amount for item and including item options and quantity
+	 */
+	public function getTotalAmount() {
+	  
+	  $amountPerItem = $this->Amount->getAmount();
+	  
+	  foreach ($this->ItemOptions() as $itemOption) {
+	    $amountPerItem += $itemOption->Amount->getAmount();
+	  } 
+	  
+	  return $amountPerItem * $this->Quantity;
 	}
 	
 	/**

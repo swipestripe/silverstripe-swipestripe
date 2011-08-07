@@ -40,7 +40,6 @@ class ProductDecorator extends DataObjectDecorator {
 		$amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);
 		
-  	//TODO: Assuming that the dataobject being decorated is a Page not ideal?
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
 	}
 	
@@ -69,6 +68,7 @@ class ProductDecorator extends DataObjectDecorator {
 	 * @param Int $quantity Quantity of product
 	 * @param String $redirectURL URL to redirect to 
 	 * @return String Get params joined by &
+	 * @deprecated
 	 */
 	private function generateGetString($productClass, $productID, $quantity = 1, $redirectURL = null) {
 	  
@@ -82,6 +82,7 @@ class ProductDecorator extends DataObjectDecorator {
 	 * Helper to get URL for adding a product to the cart
 	 * 
 	 * @return String URL to add product to the cart
+	 * @deprecated
 	 */
   function AddToCartLink($quantity = null, $redirectURL = null) {
 
@@ -98,6 +99,7 @@ class ProductDecorator extends DataObjectDecorator {
 	 * Helper to get URL for removing a product from the cart
 	 * 
 	 * @return String URL to remove a product from the cart
+	 * @deprecated
 	 */
   function RemoveFromCartLink($quantity = null, $redirectURL = null) {
 
@@ -114,6 +116,7 @@ class ProductDecorator extends DataObjectDecorator {
 	 * Helper to get URL for clearing the cart
 	 * 
 	 * @return String URL to clear the cart
+	 * @deprecated
 	 */
 	function ClearCartLink() {
 	  return Director::absoluteURL(Controller::curr()->Link()."clear/");
@@ -128,19 +131,7 @@ class ProductDecorator extends DataObjectDecorator {
 	function GoToCheckoutLink() {
 		return DataObject::get_one('CheckoutPage')->Link();
 	}
-  
-  /**
-   * Return a set of product options that augment the price for this
-   * product
-   * 
-   * Needs to be implemented in concrete class
-   * TODO create an abstract class for this method?
-   * 
-   * @return DataObjectSet|null Set of product options 
-   */
-  function getProductOptions() {
-    return null;
-  }
+
 }
 
 

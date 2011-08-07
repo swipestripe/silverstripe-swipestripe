@@ -1,0 +1,44 @@
+<% if IncludeFormTag %>
+<form $FormAttributes>
+<% end_if %>
+	<% if Message %>
+	<p id="{$FormName}_error" class="message $MessageType">$Message</p>
+	<% else %>
+	<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
+	<% end_if %>
+	
+	<table id="InformationTable" class="infotable">
+    <thead>
+      <tr>
+        <th scope="col" class="left">Product</th>
+        <th scope="col" class="left">Options</th>
+        <th scope="col" class="left">Quantity</th>
+        <th scope="col" class="right">Total Price ($Total.Currency)</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <% control Fields %>
+	      $FieldHolder
+	    <% end_control %>
+  
+      <tr class="gap summary total" id="Total">
+        <% control Cart %> 
+        <td scope="row" class="threeColHeader total">Total</td>
+        <td class="right" colspan="3">$Total.Nice ($Total.Currency)</td>
+        <% end_control %>
+      </tr>
+    </tbody>
+  </table>
+
+
+	<% if Actions %>
+	<div class="Actions">
+		<% control Actions %>
+			$Field
+		<% end_control %>
+	</div>
+	<% end_if %>
+<% if IncludeFormTag %>
+</form>
+<% end_if %>

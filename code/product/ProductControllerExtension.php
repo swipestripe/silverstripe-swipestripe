@@ -22,7 +22,7 @@ class ProductControllerExtension extends Extension {
    * Add an item to the cart
    */
   function add() {
-    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity());
+    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }
   
@@ -46,8 +46,14 @@ class ProductControllerExtension extends Extension {
   }
   
   private function getProductOptions() {
-    //TODO get the product options from the form, they must use some kind of convention
-    //return DataObjectSet
+    
+    $options = new DataObjectSet();
+    $request = $this->owner->getRequest();
+
+    foreach ($request->requestVar('Options') as $optionClassName => $optionID) {
+      $options->push(DataObject::get_by_id($optionClassName, $optionID));
+    }
+    return $options;
   }
   
   /**

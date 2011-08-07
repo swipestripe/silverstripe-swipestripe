@@ -15,7 +15,6 @@ class ItemOption extends DataObject {
 	);
 
 	public static $has_one = array(
-		'Order' => 'Order',
 	  'Item' => 'Item'
 	);
 	

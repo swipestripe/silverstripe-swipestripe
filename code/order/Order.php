@@ -411,8 +411,6 @@ class Order extends DataObject {
 	 * Add an item to the order representing the product, 
 	 * if an item for this product exists increase the quantity
 	 * 
-	 * TODO add item options to the order
-	 * 
 	 * @param DataObject $product The product to be represented by this order item
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
@@ -423,7 +421,7 @@ class Order extends DataObject {
 	  }
 
     //Increment the quantity if this item exists already
-    $item = $this->Items()->find('ObjectID', $product->ID);
+    $item = $this->findIdenticalItem($product->ID, $productOptions);
     
     if ($item && $item->exists()) {
       $item->Quantity = $item->Quantity + $quantity;
@@ -438,14 +436,55 @@ class Order extends DataObject {
       $item->Quantity = $quantity;
       $item->OrderID = $this->ID;
       $item->write();
+      
+      if ($productOptions->exists()) foreach ($productOptions as $productOption) {
+        $itemOption = new ItemOption();
+        $itemOption->ObjectID = $productOption->ID;
+        $itemOption->ObjectClass = $productOption->class;
+        $itemOption->Amount->setAmount($productOption->Amount->getAmount());
+        $itemOption->Amount->setCurrency($productOption->Amount->getCurrency());
+        $itemOption->ItemID = $item->ID;
+        $itemOption->write();
+      }
     }
     
     $this->updateTotal();
 	}
 	
 	/**
+	 * Find an identical item in the order/cart, item is identical if the 
+	 * productID and the options for the item are the same.
+	 * 
+	 * @param Int $productID
+	 * @param DataObjectSet $productOptions
+	 */
+	function findIdenticalItem($productID, DataObjectSet $productOptions) {
+
+	  foreach ($this->Items() as $item) {
+	    
+	    if ($item->ObjectID == $productID) {
+	      
+  	    $productOptionsMap = array();
+  	    $existingOptionsMap = array();
+  	    
+    	  if ($productOptions) {
+    	    $productOptionsMap = $productOptions->map();
+    	  }
+
+    	  if ($item) foreach ($item->ItemOptions() as $itemOption) {
+    	    $productOption = $itemOption->Object();
+    	    $existingOptionsMap[$productOption->ID] = $productOption->Title;
+    	  }
+    	  
+    	  if ($productOptionsMap == $existingOptionsMap) {
+    	    return $item;
+    	  }
+	    }
+	  }
+	}
+	
+	/**
 	 * Decrease quantity of an item or remove it if quantity = 1
-	 * TODO remove product options from order
 	 * 
 	 * @param DataObject $product The product to remove
 	 */
@@ -453,7 +492,7 @@ class Order extends DataObject {
 	  
 	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-	    user_error("Cannot remove item from cart, quantity mustbe a positive number.", E_USER_WARNING);
+	    user_error("Cannot remove item from cart, quantity must be a positive number.", E_USER_WARNING);
 	  }
 
 	  //Update order items
@@ -472,6 +511,7 @@ class Order extends DataObject {
     $this->updateTotal();
 	}
 	
+	
 	/**
 	 * Go through items and update cart total
 	 * 
@@ -485,7 +525,7 @@ class Order extends DataObject {
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
 	  
 	  if ($items) foreach ($items as $item) {
-	    $total += ($item->Amount->getAmount() * $item->Quantity);
+	    $total += $item->getTotalAmount();
 	  }
 	  
 	  $this->Total->setAmount($total); 
@@ -512,6 +552,7 @@ class Order extends DataObject {
 	  return $virtualItems;
 	}
 	
+	
 	/**
 	 * Retreive products for this order from the order items.
 	 * 
@@ -525,6 +566,7 @@ class Order extends DataObject {
 	  }
 	  return $products;
 	}
+	
 	
 	/**
 	 * Helper to summarize payment status for an order.
@@ -549,6 +591,7 @@ class Order extends DataObject {
 	  }
 	  return $status;
 	}
+	
 	
 	/**
 	 * Testing to add auto increment to table

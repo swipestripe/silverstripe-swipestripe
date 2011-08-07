@@ -287,5 +287,38 @@ class CheckoutPage_Controller extends Page_Controller {
 		return true;
 
 	}
+	
+	function CheckoutForm() {
+
+	  //TODO should this be its own CheckoutForm class?
+	  //Go through the items of the cart and get quantity fields for each
+
+	  $fields = new FieldSet();
+	  $currentOrder = $this->Cart();
+	  $items = $currentOrder->Items();
+	  
+	  if ($items) foreach ($items as $item) {
+	    
+	    $quantityField = new CheckoutQuantityField('Quantity['.$item->ID.']', '', $item->Quantity);
+	    $quantityField->setItem($item);
+	    
+	    $fields->push($quantityField);
+	  } 
+	  
+    $actions = new FieldSet(
+      new FormAction('updateCart', 'Update Cart')
+    );
+    
+    $validator = new RequiredFields(
+    );
+    
+    $checkoutForm = new CheckoutForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
+    
+    return $checkoutForm;
+	}
+	
+	function updateCart() {
+	  
+	}
 
 }

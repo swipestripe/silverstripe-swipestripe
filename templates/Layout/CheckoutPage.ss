@@ -1,28 +1,10 @@
 <div class="typography">
-	<% if Menu(2) %>
-		<% include SideBar %>
-		<div id="Content">
-	<% end_if %>
 
-	<% if Level(2) %>
-	  	<% include BreadCrumbs %>
-	<% end_if %>
+	<h2>$Title</h2>
+	$Content 
 	
-		<h2>$Title</h2>
-	
-		$Content
+	$CheckoutForm
 
-    <% control Cart %>
-      <% include OrderCart %>
-	  <% end_control %>
+	<div id="Checkout">$OrderForm</div>
 
-    <div id="Checkout">
-      $OrderForm
-    </div>
-
-		$Form
-		$PageComments
-	<% if Menu(2) %>
-		</div>
-	<% end_if %>
 </div>
