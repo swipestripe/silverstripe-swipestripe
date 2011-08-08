@@ -186,7 +186,7 @@ class Order extends DataObject {
 		$fields->addFieldToTab('Root.Actions', new LiteralField('PaymentStatusP', "<p>Payment status of this order is currently <strong>$this->PaymentStatus</strong>.</p>"));
 //		$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
 		
-		foreach ($this->Payments() as $item) {
+		if ($this->Payments()) foreach ($this->Payments() as $item) {
 		  
 		  $customerName = DataObject::get_by_id('Member', $item->PaidByID)->getName();
 		  $value = $item->dbObject('Amount')->Nice();
