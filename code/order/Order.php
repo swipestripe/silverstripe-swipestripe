@@ -487,6 +487,7 @@ class Order extends DataObject {
 	 * Decrease quantity of an item or remove it if quantity = 1
 	 * 
 	 * @param DataObject $product The product to remove
+	 * @deprecated
 	 */
 	function removeItem(DataObject $product, $quantity = 1) {
 	  

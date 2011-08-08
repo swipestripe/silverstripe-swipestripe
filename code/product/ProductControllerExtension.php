@@ -45,6 +45,12 @@ class ProductControllerExtension extends Extension {
     return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
   }
   
+  /**
+   * Get product options based on current request
+   * 
+   * @see SS_HTTPRequest
+   * @return DataObject 
+   */
   private function getProductOptions() {
     
     $options = new DataObjectSet();
@@ -133,6 +139,12 @@ class ProductControllerExtension extends Extension {
     return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
 	}
 	
+	/**
+	 * 
+	 * @deprecated
+	 * @param unknown_type $quantity
+	 * @param unknown_type $redirectURL
+	 */
   function RemoveFromCartForm($quantity = null, $redirectURL = null) {
     
     //TODO this would need product options in order to remove correct item
@@ -162,6 +174,12 @@ class ProductControllerExtension extends Extension {
     return $fields;
 	}
 	
+	/**
+	 * 
+	 * @deprecated
+	 * @param unknown_type $quantity
+	 * @param unknown_type $redirectURL
+	 */
 	protected function getRemoveProductFields($quantity = null, $redirectURL = null) {
 	  $fields = $this->getProductFields($quantity, $redirectURL);
 

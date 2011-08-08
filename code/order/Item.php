@@ -49,6 +49,8 @@ class Item extends DataObject {
 	
 	/**
 	 * Get unit price for this item including item options price
+	 * 
+	 * @return Money
 	 */
 	public function UnitPrice() {
 
@@ -66,6 +68,8 @@ class Item extends DataObject {
 	/**
 	 * Get unit price for this item including item options price and 
 	 * quantity
+	 * 
+	 * @return Money
 	 */
 	public function Total() {
 	  
