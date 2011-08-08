@@ -1,14 +1,12 @@
 
 <tr  class="itemRow $EvenOdd $FirstLast">
 
-  <td class="title" scope="row">
-	  <% control Item.Object %>  
-	    <% if Link %>
-	      <a href="$Link" target="_blank">$Title</a>
-	    <% else %>
-	      $Title
-	    <% end_if %>
-	  <% end_control %>
+  <td class="title" scope="row"> 
+    <% if Item.Object.Published %>
+      <a href="$Link" target="_blank">$Item.Object.Title</a>
+    <% else %>
+      $Item.Object.Title
+    <% end_if %>
   </td>
 
   <td>

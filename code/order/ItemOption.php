@@ -29,7 +29,8 @@ class ItemOption extends DataObject {
 	 * @return DataObject 
 	 */
 	function Object() {
-	  return Dataobject::get_by_id($this->ObjectClass, $this->ObjectID);
+	  //return Dataobject::get_by_id($this->ObjectClass, $this->ObjectID);
+	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
 	}
 
 }

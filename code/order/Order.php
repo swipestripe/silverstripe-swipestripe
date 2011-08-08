@@ -421,7 +421,7 @@ class Order extends DataObject {
 	  }
 
     //Increment the quantity if this item exists already
-    $item = $this->findIdenticalItem($product->ID, $productOptions);
+    $item = $this->findIdenticalItem($product, $productOptions);
     
     if ($item && $item->exists()) {
       $item->Quantity = $item->Quantity + $quantity;
@@ -457,26 +457,33 @@ class Order extends DataObject {
 	 * Find an identical item in the order/cart, item is identical if the 
 	 * productID and the options for the item are the same.
 	 * 
-	 * @param Int $productID
+	 * @param DatObject $product
 	 * @param DataObjectSet $productOptions
 	 */
-	function findIdenticalItem($productID, DataObjectSet $productOptions) {
-
+	function findIdenticalItem($product, DataObjectSet $productOptions) {
+	  
 	  foreach ($this->Items() as $item) {
 	    
-	    if ($item->ObjectID == $productID) {
+	    SS_Log::log(new Exception(print_r('%%%%%%%%%%%%%%%%%%%%%%%%%%%', true)), SS_Log::NOTICE);
+	    SS_Log::log(new Exception(print_r($product->Version, true)), SS_Log::NOTICE);
+	    SS_Log::log(new Exception(print_r($item->ObjectVersion, true)), SS_Log::NOTICE);
+	    
+	    if ($item->ObjectID == $product->ID && $item->ObjectVersion == $product->Version) {
 	      
   	    $productOptionsMap = array();
   	    $existingOptionsMap = array();
   	    
     	  if ($productOptions) {
-    	    $productOptionsMap = $productOptions->map();
+    	    $productOptionsMap = $productOptions->map('ID', 'Version');
     	  }
 
     	  if ($item) foreach ($item->ItemOptions() as $itemOption) {
     	    $productOption = $itemOption->Object();
-    	    $existingOptionsMap[$productOption->ID] = $productOption->Title;
+    	    $existingOptionsMap[$productOption->ID] = $productOption->Version;
     	  }
+    	  
+    	  SS_Log::log(new Exception(print_r($productOptionsMap, true)), SS_Log::NOTICE);
+    	  SS_Log::log(new Exception(print_r($existingOptionsMap, true)), SS_Log::NOTICE);
     	  
     	  if ($productOptionsMap == $existingOptionsMap) {
     	    return $item;
@@ -510,10 +517,8 @@ class Order extends DataObject {
         $item->write();
       }
     }
-    
     $this->updateTotal();
 	}
-	
 	
 	/**
 	 * Go through items and update cart total
@@ -555,7 +560,6 @@ class Order extends DataObject {
 	  return $virtualItems;
 	}
 	
-	
 	/**
 	 * Retreive products for this order from the order items.
 	 * 
@@ -569,7 +573,6 @@ class Order extends DataObject {
 	  }
 	  return $products;
 	}
-	
 	
 	/**
 	 * Helper to summarize payment status for an order.
@@ -594,7 +597,6 @@ class Order extends DataObject {
 	  }
 	  return $status;
 	}
-	
 	
 	/**
 	 * Testing to add auto increment to table
