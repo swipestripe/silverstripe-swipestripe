@@ -5,9 +5,10 @@ class Item extends DataObject {
 	public static $db = array(
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
+		'ObjectVersion' => 'Int',
 	  'Amount' => 'Money',
 	  'Quantity' => 'Int',
-	  'DownloadCount' => 'Int', //If item represents a downloadable product
+	  'DownloadCount' => 'Int' //If item represents a downloadable product,
 	);
 
 	public static $has_one = array(

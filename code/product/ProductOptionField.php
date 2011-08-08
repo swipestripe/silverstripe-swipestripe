@@ -12,9 +12,15 @@ class ProductOptionField extends DropdownField {
    * @param Form $form
    * @param String $emptyString
    */
-	function __construct($optionClass, $title = null, $source = array(), $value = "", $form = null, $emptyString = null) {
+	function __construct($optionClass, $title = null, $optionSet = null, $value = "", $form = null, $emptyString = null) {
 		
 	  $name = "Options[$optionClass]";
+	  
+	  $source = array();
+	  if ($optionSet) foreach ($optionSet as $option) {
+	    $source[$option->ID] = $option->Title . ' ' . $option->SummaryPrice();
+	  }
+	  
 		parent::__construct($name, $title, $source, $value, $form, $emptyString);
 	}
 	

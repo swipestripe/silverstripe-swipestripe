@@ -11,6 +11,7 @@ class ItemOption extends DataObject {
 	public static $db = array(
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
+	  'ObjectVersion' => 'Int',
 	  'Amount' => 'Money'
 	);
 

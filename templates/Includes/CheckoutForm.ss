@@ -25,8 +25,8 @@
   
       <tr class="gap summary total" id="Total">
         <% control Cart %> 
-        <td scope="row" class="threeColHeader total">Total</td>
-        <td class="right" colspan="4">$Total.Nice ($Total.Currency)</td>
+        <td scope="row" class="threeColHeader total" colspan="4">Total</td>
+        <td class="right">$Total.Nice</td>
         <% end_control %>
       </tr>
     </tbody>

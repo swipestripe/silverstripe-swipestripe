@@ -431,6 +431,7 @@ class Order extends DataObject {
       $item = new Item();
       $item->ObjectID = $product->ID;
       $item->ObjectClass = $product->class;
+      $item->ObjectVersion = $product->Version;
       $item->Amount->setAmount($product->Amount->getAmount());
       $item->Amount->setCurrency($product->Amount->getCurrency());
       $item->Quantity = $quantity;
@@ -441,6 +442,7 @@ class Order extends DataObject {
         $itemOption = new ItemOption();
         $itemOption->ObjectID = $productOption->ID;
         $itemOption->ObjectClass = $productOption->class;
+        $itemOption->ObjectVersion = $productOption->Version;
         $itemOption->Amount->setAmount($productOption->Amount->getAmount());
         $itemOption->Amount->setCurrency($productOption->Amount->getCurrency());
         $itemOption->ItemID = $item->ID;
