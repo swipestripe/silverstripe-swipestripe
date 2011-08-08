@@ -6,6 +6,8 @@
  */
 class ProductDecorator extends DataObjectDecorator {
   
+  public $firstWrite = false;
+  
   /**
    * Currency allowed to be used for products
    * Code match Payment::$site_currency
