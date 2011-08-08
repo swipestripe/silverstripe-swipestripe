@@ -13,16 +13,5 @@ class CheckoutForm extends Form {
   function Cart() {
     return $this->currentOrder;
   }
-  
-  function PopQuantityField() {
-    $fields = $this->Fields();
-    
-    $quantityField = $fields->pop();
-
-    SS_Log::log(new Exception(print_r($quantityField->Name(), true)), SS_Log::NOTICE);
-    SS_Log::log(new Exception(print_r('to here?', true)), SS_Log::NOTICE);
-    
-    return $quantityField;
-  }
 
 }

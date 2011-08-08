@@ -48,17 +48,37 @@ class Item extends DataObject {
 	}
 	
 	/**
-	 * Get total amount for item and including item options and quantity
+	 * Get unit price for this item including item options price
 	 */
-	public function getTotalAmount() {
-	  
-	  $amountPerItem = $this->Amount->getAmount();
-	  
+	public function UnitPrice() {
+
+	  $amount = $this->Amount->getAmount();
 	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amountPerItem += $itemOption->Amount->getAmount();
+	    $amount += $itemOption->Amount->getAmount();
 	  } 
 	  
-	  return $amountPerItem * $this->Quantity;
+	  $unitPrice = new Money();
+	  $unitPrice->setAmount($amount);
+	  $unitPrice->setCurrency($this->Amount->getCurrency());
+	  return $unitPrice;
+	}
+	
+	/**
+	 * Get unit price for this item including item options price and 
+	 * quantity
+	 */
+	public function Total() {
+	  
+	  $amount = $this->Amount->getAmount();
+	  foreach ($this->ItemOptions() as $itemOption) {
+	    $amount += $itemOption->Amount->getAmount();
+	  } 
+	  $amount = $amount * $this->Quantity;
+	  
+	  $subTotal = new Money();
+	  $subTotal->setAmount($amount);
+	  $subTotal->setCurrency($this->Amount->getCurrency());
+	  return $subTotal;
 	}
 	
 	/**

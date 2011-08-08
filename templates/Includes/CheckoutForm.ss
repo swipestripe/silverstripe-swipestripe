@@ -12,8 +12,9 @@
       <tr>
         <th scope="col" class="left">Product</th>
         <th scope="col" class="left">Options</th>
+        <th scope="col" class="left">Unit Price ($Cart.Total.Currency)</th>
         <th scope="col" class="left">Quantity</th>
-        <th scope="col" class="right">Total Price ($Total.Currency)</th>
+        <th scope="col" class="right">Sub Total ($Cart.Total.Currency)</th>
       </tr>
     </thead>
     <tbody>
@@ -25,7 +26,7 @@
       <tr class="gap summary total" id="Total">
         <% control Cart %> 
         <td scope="row" class="threeColHeader total">Total</td>
-        <td class="right" colspan="3">$Total.Nice ($Total.Currency)</td>
+        <td class="right" colspan="4">$Total.Nice ($Total.Currency)</td>
         <% end_control %>
       </tr>
     </tbody>

@@ -519,13 +519,13 @@ class Order extends DataObject {
 	 * $this->Items() was not returning any items after first call
 	 * to $this->addItem().
 	 */
-	private function updateTotal() {
+	public function updateTotal() {
 	  
 	  $total = 0;
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
 	  
 	  if ($items) foreach ($items as $item) {
-	    $total += $item->getTotalAmount();
+	    $total += $item->Total()->Amount;
 	  }
 	  
 	  $this->Total->setAmount($total); 

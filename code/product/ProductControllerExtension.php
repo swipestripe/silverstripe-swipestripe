@@ -134,6 +134,8 @@ class ProductControllerExtension extends Extension {
 	}
 	
   function RemoveFromCartForm($quantity = null, $redirectURL = null) {
+    
+    //TODO this would need product options in order to remove correct item
 
     $fields = $this->getRemoveProductFields($quantity, $redirectURL);
     $actions = new FieldSet(
@@ -175,8 +177,8 @@ class ProductControllerExtension extends Extension {
 	  return new FieldSet(
       new HiddenField('ProductClass', 'ProductClass', $productObject->ClassName),
       new HiddenField('ProductID', 'ProductID', $productObject->ID),
-      new HiddenField('Quantity', 'Quantity', $quantity),
-      new HiddenField('Redirect', 'Redirect', $redirectURL)
+      new HiddenField('Redirect', 'Redirect', $redirectURL),
+      new TextField('Quantity', 'Quantity', $quantity)
     );
 	}
   

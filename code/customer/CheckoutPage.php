@@ -288,12 +288,18 @@ class CheckoutPage_Controller extends Page_Controller {
 
 	}
 	
+	/**
+	 * Form including quantities for items for displaying on the checkout
+	 * 
+	 * TODO validator for positive quantity
+	 * 
+	 * @see CheckoutForm
+	 * @see CheckoutQuantityField
+	 */
 	function CheckoutForm() {
 
-	  //TODO should this be its own CheckoutForm class?
-	  //Go through the items of the cart and get quantity fields for each
-
 	  $fields = new FieldSet();
+	  $validator = new RequiredFields();
 	  $currentOrder = $this->Cart();
 	  $items = $currentOrder->Items();
 	  
@@ -303,22 +309,48 @@ class CheckoutPage_Controller extends Page_Controller {
 	    $quantityField->setItem($item);
 	    
 	    $fields->push($quantityField);
+	    
+	    $validator->addRequiredField('Quantity['.$item->ID.']');
 	  } 
 	  
     $actions = new FieldSet(
       new FormAction('updateCart', 'Update Cart')
     );
     
-    $validator = new RequiredFields(
-    );
-    
-    $checkoutForm = new CheckoutForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
-    
-    return $checkoutForm;
+    return new CheckoutForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
 	}
 	
-	function updateCart() {
+	/**
+	 * Update the current cart quantities
+	 * 
+	 * @param SS_HTTPRequest $data
+	 */
+	function updateCart(SS_HTTPRequest $data) {
+
+	  $currentOrder = $this->Cart();
+	  $quantities = $data->postVar('Quantity');
+
+	  if ($quantities) foreach ($quantities as $itemID => $quantity) {
+	    
+  	  //If quantity not correct throw error
+  	  if (!is_numeric($quantity) || $quantity < 0) {
+  	    user_error("Cannot change quantity, quantity must be a non negative number.", E_USER_WARNING);
+  	  }
+
+	    if ($item = $currentOrder->Items()->find('ID', $itemID)) {
+	      
+  	    if ($quantity == 0) {
+    	    $item->delete();
+    	  }
+    	  else {
+    	    $item->Quantity = $quantity;
+	        $item->write();
+    	  }
+	    }
+	  }
 	  
+	  $currentOrder->updateTotal();
+	  Director::redirectBack();
 	}
 
 }
