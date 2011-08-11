@@ -27,6 +27,11 @@ class ProductOption extends DataObject {
     );
   }
   
+  /**
+   * TODO remove Amount from this class
+   * 
+   * @deprecated
+   */
   public function SummaryPrice() {
     return $this->owner->dbObject('Amount')->Nice();
   }

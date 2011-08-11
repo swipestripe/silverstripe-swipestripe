@@ -126,6 +126,8 @@ class ProductControllerExtension extends Extension {
   }
   
   function AddToCartForm($quantity = null, $redirectURL = null) {
+    
+    //TODO Check if owner is a type of product before returning a form
 
     $fields = $this->getAddProductFields($quantity, $redirectURL);
     $actions = new FieldSet(

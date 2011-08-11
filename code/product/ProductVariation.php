@@ -18,7 +18,9 @@ class ProductVariation extends Page {
   );
   
   public static $defaults = array(
-    'Stock' => -1
+    'Stock' => -1,
+    'ShowInMenus' => false,
+    'ShowInSearch' => false
   );
     
 	function getCMSFields() {
@@ -58,6 +60,14 @@ class ProductVariation extends Page {
         //TODO duplicate the image here
       }
     }
+  }
+  
+  public function inStock() {
+    if ($this->Stock == -1) return true;
+    if ($this->Stock == 0) return false;
+    
+    //TODO need to check what is currently in people's carts
+    if ($this->Stock > 0) return true; 
   }
   
 }
