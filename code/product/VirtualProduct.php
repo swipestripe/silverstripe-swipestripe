@@ -1,12 +1,5 @@
 <?php
-/**
- * Mixin for other data objects that are to represent virtual
- * products, this should be used in conjunction with ProductDecorator,
- * this simply adds some functionality for virtual products.
- * 
- * @author frankmullenger
- */
-class VirutalProductDecorator extends ProductDecorator {
+class VirtualProduct extends Product {
   
   /**
    * Download folder relative to site root
@@ -29,39 +22,30 @@ class VirutalProductDecorator extends ProductDecorator {
    * @var String
    */
   public static $downloadWindow = '1 day';
-  
-  /**
-   * Add fields for virtual products
-   * 
-   * @see DataObjectDecorator::extraStatics()
-   */
-	function extraStatics() {
 
-	  return array_merge_recursive(
-	    parent::extraStatics(),
-	    array(
-  			'db' => array(
-  				'FileLocation' => 'Varchar',
-  		    'TotalDownloadCount' => 'Int'
-  			),
-  			'defaults' => array(
-  			  'TotalDownloadCount' => 0
-  			)
-  		)
-	  );
+  public static $db = array(
+    'FileLocation' => 'Varchar',
+  	'TotalDownloadCount' => 'Int'
+  );
+
+  public static $has_one = array(
+  );
+  
+  public static $has_many = array(
+  );
+  
+  public static $defaults = array(
+    'TotalDownloadCount' => 0
+  );
+    
+	function getCMSFields() {
+    $fields = parent::getCMSFields();
+    
+    $fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product (relative to root)'), 'Content');
+
+    return $fields;
 	}
-	
-	/**
-	 * Update the CMS with form fields for extra db fields above
-	 * 
-	 * @see DataObjectDecorator::updateCMSFields()
-	 */
-	function updateCMSFields(&$fields) {
-	  
-	  parent::updateCMSFields($fields);
-		$fields->addFieldToTab('Root.Content.Main', new TextField('FileLocation', 'Physical location of this virtual product (relative to root)'), 'Content');
-	}
-	
+
 	/**
 	 * Copy the downloadable file to another location on the server and
 	 * redirect browser to that location.
@@ -86,5 +70,7 @@ class VirutalProductDecorator extends ProductDecorator {
 	  }
 	  return false;
 	}
-	
+}
+class VirtualProduct_Controller extends Page_Controller {
+
 }

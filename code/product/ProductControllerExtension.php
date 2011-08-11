@@ -199,5 +199,18 @@ class ProductControllerExtension extends Extension {
       new TextField('Quantity', 'Quantity', $quantity)
     );
 	}
+	
+	/**
+	 * Updates timestamp LastActive on the order, should be called on every request
+	 */
+  public function onBeforeInit() {
+
+    $orderID = Session::get('Cart.OrderID');
+    if ($orderID) {
+      $order = DataObject::get_by_id('Order', $orderID);
+      $order->LastActive = SS_Datetime::now()->getValue();
+      $order->write();
+    }
+  }
   
 }

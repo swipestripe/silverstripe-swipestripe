@@ -24,6 +24,8 @@ class Order extends DataObject {
    * @var String
    */
   const STATUS_DISPATCHED = 'Dispatched';
+  
+  protected static $timeout = 0;
 
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
@@ -31,7 +33,8 @@ class Order extends DataObject {
 	  'Total' => 'Money',
 		'ReceiptSent' => 'Boolean',
 	  'PaidEmailSent' => 'Boolean',
-	  'OrderedOn' => 'SS_Datetime'
+	  'OrderedOn' => 'SS_Datetime',
+	  'LastActive' => 'SS_Datetime'
 	);
 	
 	public static $defaults = array(
@@ -607,5 +610,24 @@ class Order extends DataObject {
 //	  
 	  SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
 	}
-
+	
+	/**
+	 * Set an order timeout, must be less than session timeouts, 
+	 * timeout prevents products in the order being sold out in the mean 
+	 * time 
+	 * 
+	 * @param unknown_type $timeout
+	 */
+  public static function set_timeout($timeout) {
+    
+    //TODO check that session 
+    $ssSessionTimeout = Session::get_timeout();
+    $phpSessionTimeout = session_cache_expire();
+    
+		self::$timeout = intval($timeout);
+	}
+	
+	public static function get_timeout() {
+		return self::$timeout;
+	}
 }
