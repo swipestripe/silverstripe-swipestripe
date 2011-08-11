@@ -25,6 +25,10 @@ class Product extends Page {
     'Images' => 'ProductImage'
   );
   
+  static $allowed_children = array(
+  	'ProductVariation'
+  );
+  
 	/**
 	 * Set the currency for all products.
 	 * Must match site curency
