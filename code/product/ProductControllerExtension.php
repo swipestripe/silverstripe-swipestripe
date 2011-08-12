@@ -193,10 +193,13 @@ class ProductControllerExtension extends Extension {
 	
 	protected function getProductFields($quantity = null, $redirectURL = null) {
 	  
+	  //TODO this should be moved to the product class
+	  
 	  $productObject = $this->owner->data();
 	  return new FieldSet(
-      new HiddenField('ProductClass', 'ProductClass', $productObject->ClassName),
-      new HiddenField('ProductID', 'ProductID', $productObject->ID),
+      new TextField('ProductClass', 'ProductClass', $productObject->ClassName),
+      new TextField('ProductID', 'ProductID', $productObject->ID),
+      new TextField('ProductVariationID', 'ProductVariationID'),
       new HiddenField('Redirect', 'Redirect', $redirectURL),
       new TextField('Quantity', 'Quantity', $quantity)
     );

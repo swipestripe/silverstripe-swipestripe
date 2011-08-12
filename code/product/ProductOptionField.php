@@ -17,8 +17,8 @@ class ProductOptionField extends DropdownField {
 	  $name = "Options[$optionClass]";
 	  
 	  $source = array();
-	  if ($optionSet) foreach ($optionSet as $option) {
-	    $source[$option->ID] = $option->Title . ' ' . $option->SummaryPrice();
+	  if ($optionSet && $optionSet->exists()) foreach ($optionSet as $option) {
+	    $source[$option->ID] = $option->Title;
 	  }
 	  
 		parent::__construct($name, $title, $source, $value, $form, $emptyString);
