@@ -22,11 +22,17 @@ class Product extends Page {
   );
   
   public static $has_many = array(
-    'Images' => 'ProductImage'
+    'Images' => 'ProductImage',
+    'Options' => 'Option',
+    'Variations' => 'Variation'
+  );
+  
+  public static $many_many = array(
+    'Attributes' => 'Attribute'
   );
   
   static $allowed_children = array(
-  	'ProductVariation'
+  	//'ProductVariation'
   );
   
 	/**
@@ -47,6 +53,7 @@ class Product extends Page {
 	function getCMSFields() {
     $fields = parent::getCMSFields();
     
+    //Basic db fields
     $manager = new ImageDataObjectManager(
       $this,
       'Images',
@@ -62,7 +69,71 @@ class Product extends Page {
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
+		
+		
+		//Attributes selection
+		$tablefield = new ManyManyComplexTableField(
+      $this,
+      'Attributes',
+      'Attribute',
+      array('Title' => 'Title'),
+      'getCMSFields'
+    );
+    $tablefield->setPermissions(array());
+    $fields->addFieldToTab("Root.Attributes", $tablefield);
     
+    $variationFieldList = array('ID' => 'ID');
+    
+    //Options selection
+    $attributes = $this->Attributes();
+    if ($attributes && $attributes->exists()) {
+      
+      $fields->addFieldToTab("Root.Content", new TabSet('Options'));
+      $fields->addFieldToTab("Root.Content", new Tab('Variations'));
+
+      foreach ($attributes as $attribute) {
+
+        $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
+
+        //If there aren't any existing options for this attribute on this product,
+        //populate with the default options
+        $defaultOptions = DataObject::get('Option', "ProductID = 0 AND AttributeID = $attribute->ID");
+        $existingOptions = DataObject::get('Option', "ProductID = $this->ID AND AttributeID = $attribute->ID");
+        if (!$existingOptions || !$existingOptions->exists()) {
+          if ($defaultOptions && $defaultOptions->exists()) {
+            foreach ($defaultOptions as $option) {
+              $newOption = $option->duplicate(false);
+              $newOption->ProductID = $this->ID;
+              $newOption->write();
+            }
+          }
+        }
+
+        $fields->addFieldToTab("Root.Content.Options", new Tab($attribute->Title));
+        $manager = new OptionComplexTableField(
+          $this,
+          $attribute->Title,
+          'Option',
+          array(
+            'Title' => 'Title',
+          ),
+          'getCMSFields_forPopup',
+          "AttributeID = $attribute->ID"
+        );
+        $manager->setAttributeID($attribute->ID);
+        $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
+      }
+    }
+
+    $manager = new VariationComplexTableField(
+      $this,
+      'Variations',
+      'Variation',
+      $variationFieldList,
+      'getCMSFields_forPopup'
+    );
+    $fields->addFieldToTab("Root.Content.Variations", $manager);
+
     return $fields;
 	}
 

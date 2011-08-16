@@ -1,5 +1,5 @@
 <?php
-class ProductOptionField extends DropdownField {
+class OptionField extends DropdownField {
 
   /**
    * Create drop down field for a product option, just ensures name of field 
@@ -12,9 +12,11 @@ class ProductOptionField extends DropdownField {
    * @param Form $form
    * @param String $emptyString
    */
-	function __construct($optionClass, $title = null, $optionSet = null, $value = "", $form = null, $emptyString = null) {
+	function __construct($attributeID, $title = null, $optionSet = null, $value = "", $form = null, $emptyString = null) {
+	  
+	  //Pass in the attribute ID
 		
-	  $name = "Options[$optionClass]";
+	  $name = "Options[$attributeID]";
 	  
 	  $source = array();
 	  if ($optionSet && $optionSet->exists()) foreach ($optionSet as $option) {

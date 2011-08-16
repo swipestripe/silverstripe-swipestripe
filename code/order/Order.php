@@ -466,11 +466,7 @@ class Order extends DataObject {
 	function findIdenticalItem($product, DataObjectSet $productOptions) {
 	  
 	  foreach ($this->Items() as $item) {
-	    
-	    SS_Log::log(new Exception(print_r('%%%%%%%%%%%%%%%%%%%%%%%%%%%', true)), SS_Log::NOTICE);
-	    SS_Log::log(new Exception(print_r($product->Version, true)), SS_Log::NOTICE);
-	    SS_Log::log(new Exception(print_r($item->ObjectVersion, true)), SS_Log::NOTICE);
-	    
+
 	    if ($item->ObjectID == $product->ID && $item->ObjectVersion == $product->Version) {
 	      
   	    $productOptionsMap = array();
@@ -484,9 +480,6 @@ class Order extends DataObject {
     	    $productOption = $itemOption->Object();
     	    $existingOptionsMap[$productOption->ID] = $productOption->Version;
     	  }
-    	  
-    	  SS_Log::log(new Exception(print_r($productOptionsMap, true)), SS_Log::NOTICE);
-    	  SS_Log::log(new Exception(print_r($existingOptionsMap, true)), SS_Log::NOTICE);
     	  
     	  if ($productOptionsMap == $existingOptionsMap) {
     	    return $item;

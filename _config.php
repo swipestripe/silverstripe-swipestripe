@@ -27,3 +27,5 @@ Object::add_extension('DummyProductPage', 'ProductDecorator');
 Object::add_extension('DummyVirtualProductPage', 'ProductDecorator');
 Object::add_extension('DummyVirtualProductPage', 'VirutalProductDecorator');
 */
+
+//Object::add_extension('TestProduct', 'TestProductDecorator');
