@@ -44,7 +44,7 @@ class Item extends DataObject {
 	  parent::onBeforeDelete();
 	  
 	  $itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
-	  if ($itemOptions->exists()) foreach ($itemOptions as $itemOption) {
+	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
 	    $itemOption->delete();
 	  } 
 	}

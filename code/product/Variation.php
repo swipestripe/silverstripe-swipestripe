@@ -20,6 +20,10 @@ class Variation extends DataObject {
     'Stock' => -1
   );
   
+  static $extensions = array(
+		"Versioned('Live')",
+	);
+  
   public function __get($property) {
 
     if (strpos($property, 'AttributeValue_') === 0) {
@@ -48,11 +52,12 @@ class Variation extends DataObject {
 	}
 	
   public function getCMSFields_forPopup() {
-    
-    //SS_Log::log(new Exception(print_r($this->Product()->Attributes()->map(), true)), SS_Log::NOTICE);
-    
+
     $fields = new FieldSet();
-    $fields->push(new MoneyField('Amount'));
+    
+    $amountField = new MoneyField('Amount');
+		$amountField->setAllowedCurrencies(Product::$allowed_currency);
+    $fields->push($amountField);
     $fields->push(new NumericField('Stock'));
     
     $product = $this->Product();
@@ -69,14 +74,19 @@ class Variation extends DataObject {
     return $fields;
   }
   
-  protected function onBeforeWrite() {
+  public function SummaryStock() {
+    if ($this->Stock == -1) {
+      return 'unlimited';
+    }
+    return $this->Stock;
+  }
+  
+  public function inStock() {
+    if ($this->Stock == -1) return true;
+    if ($this->Stock == 0) return false;
     
-    parent::onBeforeWrite();
-    /*
-    $controller = Controller::curr();
-    $request = $controller->getRequest();
-    SS_Log::log(new Exception(print_r($request, true)), SS_Log::NOTICE);
-    */
-	}
+    //TODO need to check what is currently in people's carts
+    if ($this->Stock > 0) return true; 
+  }
 
 }

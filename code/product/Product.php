@@ -50,7 +50,7 @@ class Product extends Page {
 	  }
 	}
     
-	function getCMSFields() {
+	public function getCMSFields() {
     $fields = parent::getCMSFields();
     
     //Basic db fields
@@ -82,7 +82,10 @@ class Product extends Page {
     $tablefield->setPermissions(array());
     $fields->addFieldToTab("Root.Attributes", $tablefield);
     
-    $variationFieldList = array('ID' => 'ID');
+    $variationFieldList = array(
+    	'ID' => 'ID',
+    	'SummaryStock' => 'Stock'
+    );
     
     //Options selection
     $attributes = $this->Attributes();
@@ -175,7 +178,153 @@ class Product extends Page {
     $images->sort('SortOrder', 'ASC');
     return $images->First();
   }
+  
+  function AddToCartForm($quantity = null, $redirectURL = null) {
+
+    //$fields = $this->getProductFields($quantity, $redirectURL);
+    $fields = new FieldSet(
+      new TextField('ProductClass', 'ProductClass', $this->ClassName),
+      new TextField('ProductID', 'ProductID', $this->ID),
+      new TextField('ProductVariationID', 'ProductVariationID', 0),
+      new HiddenField('Redirect', 'Redirect', $redirectURL),
+      new TextField('Quantity', 'Quantity', $quantity)
+    );
+
+    //Get the options for this product
+    $optionGroupField = new OptionGroupField('OptionGroup', $this);
+    $fields->push($optionGroupField);
+    
+    $actions = new FieldSet(
+      new FormAction('add', 'Add To Cart')
+    );
+    $validator = new RequiredFields(
+    	'ProductClass', 
+    	'ProductID'
+    );
+    
+    $controller = Controller::curr();
+    return new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
+	}
+	
+  protected function getProductFields($quantity = null, $redirectURL = null) {
+
+	  return new FieldSet(
+      new TextField('ProductClass', 'ProductClass', $this->ClassName),
+      new TextField('ProductID', 'ProductID', $this->ID),
+      new TextField('ProductVariationID', 'ProductVariationID', 0),
+      new HiddenField('Redirect', 'Redirect', $redirectURL),
+      new TextField('Quantity', 'Quantity', $quantity)
+    );
+	}
 }
 class Product_Controller extends Page_Controller {
+  
+  public static $allowed_actions = array (
+  	'add',
+    'options'
+  );
 
+	/**
+   * Add an item to the cart
+   */
+  function add() {
+    
+    SS_Log::log(new Exception(print_r('we are getting into here', true)), SS_Log::NOTICE);
+    
+    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
+    $this->goToNextPage();
+  }
+  
+	/**
+   * Find a product based on current request
+   * 
+   * @see SS_HTTPRequest
+   * @return DataObject 
+   */
+  private function getProduct() {
+    $request = $this->getRequest();
+    return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
+  }
+  
+  /**
+   * Get product options based on current request
+   * 
+   * @see SS_HTTPRequest
+   * @return DataObject 
+   */
+  private function getProductOptions() {
+    
+    $options = new DataObjectSet();
+    $request = $this->getRequest();
+    $options = $request->requestVar('Options');
+
+    if ($options) foreach ($options as $optionClassName => $optionID) {
+      $options->push(DataObject::get_by_id($optionClassName, $optionID));
+    }
+    return $options;
+  }
+  
+  /**
+   * Find the quantity based on current request
+   * 
+   * @return Int
+   */
+  private function getQuantity() {
+    $quantity = $this->getRequest()->requestVar('Quantity');
+    return ($quantity) ?$quantity :1;
+  }
+  
+  /**
+   * Send user to next page based on current request vars,
+   * if no redirect is specified redirect back.
+   * 
+   * TODO make this work with AJAX
+   */
+  private function goToNextPage() {
+    $redirectURL = $this->getRequest()->requestVar('Redirect');
+
+    //Check if on site URL, if so redirect there, else redirect back
+    if ($redirectURL && Director::is_site_url($redirectURL)) Director::redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
+    else Director::redirectBack();
+  }
+  
+	/**
+   * Get the current order from the session, if order does not exist
+   * John Connor it (create a new order)
+   * 
+   * @return Order
+   */
+  static function get_current_order() {
+
+    $orderID = Session::get('Cart.OrderID');
+    
+    if ($orderID) {
+      $order = DataObject::get_by_id('Order', $orderID);
+    }
+    else {
+      $order = new Order();
+      $order->write();
+      Session::set('Cart', array(
+        'OrderID' => $order->ID
+      ));
+      Session::save();
+    }
+    
+    return $order;
+  }
+  
+  /**
+   * AJAX action to get options for a product and return for use in the form
+   */
+  public function options(SS_HTTPRequest $request) {
+    SS_Log::log(new Exception(print_r('getting in to options', true)), SS_Log::NOTICE);
+    SS_Log::log(new Exception(print_r($request, true)), SS_Log::NOTICE);
+    
+    $attributeID = $request->getVar('attributeID');
+    $optionID = $request->getVar('optionID');
+    
+    //Need to get the options for the next attribute basically, don't really know what the next attribute is
+    
+    return 'hello world of options';
+  }
 }

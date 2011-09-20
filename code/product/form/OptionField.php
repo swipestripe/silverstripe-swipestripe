@@ -15,7 +15,6 @@ class OptionField extends DropdownField {
 	function __construct($attributeID, $title = null, $optionSet = null, $value = "", $form = null, $emptyString = null) {
 	  
 	  //Pass in the attribute ID
-		
 	  $name = "Options[$attributeID]";
 	  
 	  $source = array();

@@ -20,15 +20,16 @@ class ProductControllerExtension extends Extension {
 
   /**
    * Add an item to the cart
-   */
+   *
   function add() {
     self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }
+  */
   
   /**
    * Remove an item from the cart
-   */
+   *
   function remove() {
     self::get_current_order()->removeItem($this->getProduct(), $this->getQuantity());
     $this->goToNextPage();
@@ -39,7 +40,7 @@ class ProductControllerExtension extends Extension {
    * 
    * @see SS_HTTPRequest
    * @return DataObject 
-   */
+   *
   private function getProduct() {
     $request = $this->owner->getRequest();
     return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
@@ -50,7 +51,7 @@ class ProductControllerExtension extends Extension {
    * 
    * @see SS_HTTPRequest
    * @return DataObject 
-   */
+   *
   private function getProductOptions() {
     
     $options = new DataObjectSet();
@@ -66,7 +67,7 @@ class ProductControllerExtension extends Extension {
    * Find the quantity based on current request
    * 
    * @return Int
-   */
+   *
   private function getQuantity() {
     $quantity = $this->owner->getRequest()->requestVar('Quantity');
     return ($quantity) ?$quantity :1;
@@ -77,7 +78,7 @@ class ProductControllerExtension extends Extension {
    * if no redirect is specified redirect back.
    * 
    * TODO make this work with AJAX
-   */
+   *
   private function goToNextPage() {
     $redirectURL = $this->owner->getRequest()->requestVar('Redirect');
 
@@ -124,7 +125,7 @@ class ProductControllerExtension extends Extension {
     
     return $order;
   }
-  
+  /*
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
     //TODO Check if owner is a type of product before returning a form
@@ -140,6 +141,7 @@ class ProductControllerExtension extends Extension {
      
     return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
 	}
+	*/
 	
 	/**
 	 * 
@@ -163,6 +165,7 @@ class ProductControllerExtension extends Extension {
     return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
 	}
 	
+	/*
 	protected function getAddProductFields($quantity = null, $redirectURL = null) {
 	  $fields = $this->getProductFields($quantity, $redirectURL);
 	  
@@ -175,6 +178,7 @@ class ProductControllerExtension extends Extension {
     }
     return $fields;
 	}
+	*/
 	
 	/**
 	 * 
@@ -191,6 +195,7 @@ class ProductControllerExtension extends Extension {
     return $fields;
 	}
 	
+	/*
 	protected function getProductFields($quantity = null, $redirectURL = null) {
 	  
 	  //TODO this should be moved to the product class
@@ -204,6 +209,7 @@ class ProductControllerExtension extends Extension {
       new TextField('Quantity', 'Quantity', $quantity)
     );
 	}
+	*/
 	
 	/**
 	 * Updates timestamp LastActive on the order, should be called on every request
