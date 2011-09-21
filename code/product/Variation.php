@@ -61,6 +61,15 @@ class Variation extends DataObject {
 	  return null;
 	}
 	
+	function getOptionSummary() {
+	  $options = $this->Options();
+	  $summary = '';
+	  if ($options && $options->exists()) foreach ($options as $option) {
+	    $summary .= $option->Title .', ';
+	  } 
+	  return $summary;
+	}
+	
   public function getCMSFields_forPopup() {
 
     $fields = new FieldSet();

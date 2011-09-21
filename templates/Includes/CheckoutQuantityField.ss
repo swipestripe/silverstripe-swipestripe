@@ -8,7 +8,14 @@
       $Item.Object.Title
     <% end_if %>
   </td>
+  
+  <td>
+    <% if Item.Variation %>
+      $Item.Variation.OptionSummary
+    <% end_if %>
+  </td>
 
+  <!--  
   <td>
 	  <% control Item.ItemOptions %>
 	    <% control Object %>
@@ -16,6 +23,7 @@
 	    <% end_control %>
 	  <% end_control %>
   </td>
+  -->
   
   <td class="right total">
 	  <% control Item %>   

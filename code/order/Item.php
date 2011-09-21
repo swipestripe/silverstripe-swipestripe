@@ -133,5 +133,21 @@ class Item extends DataObject {
 	function RemainingDownloadLimit() {
 	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}
+	
+	/**
+	 * Get the variation for the item if a Variation exists in the ItemOptions
+	 */
+	function Variation() {
+	  $itemOptions = $this->ItemOptions();
+	  $variation = null;
+	  
+	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
+	    
+	    if ($itemOption->ObjectClass == 'Variation') {
+	      $variation = $itemOption->Object();
+	    }
+	  } 
+	  return $variation;
+	}
 
 }

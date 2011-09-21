@@ -310,6 +310,11 @@ class CheckoutPage_Controller extends Page_Controller {
 	    
 	    $fields->push($quantityField);
 	    
+	    $itemOptions = $item->ItemOptions();
+	    if ($itemOptions && $itemOptions->exists()) foreach($itemOptions as $itemOption) {
+	      //TODO if item option is not a Variation then add it as another row to the checkout
+	    } 
+	    
 	    $validator->addRequiredField('Quantity['.$item->ID.']');
 	  } 
 	  
