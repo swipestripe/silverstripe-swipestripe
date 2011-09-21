@@ -180,8 +180,7 @@ class Product extends Page {
   }
   
   function AddToCartForm($quantity = null, $redirectURL = null) {
-
-    //$fields = $this->getProductFields($quantity, $redirectURL);
+    
     $fields = new FieldSet(
       new TextField('ProductClass', 'ProductClass', $this->ClassName),
       new TextField('ProductID', 'ProductID', $this->ID),
@@ -201,21 +200,12 @@ class Product extends Page {
     	'ProductClass', 
     	'ProductID'
     );
+    $validator->setJavascriptValidationHandler('none'); 
     
     $controller = Controller::curr();
     return new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
 	}
-	
-  protected function getProductFields($quantity = null, $redirectURL = null) {
 
-	  return new FieldSet(
-      new TextField('ProductClass', 'ProductClass', $this->ClassName),
-      new TextField('ProductID', 'ProductID', $this->ID),
-      new TextField('ProductVariationID', 'ProductVariationID', 0),
-      new HiddenField('Redirect', 'Redirect', $redirectURL),
-      new TextField('Quantity', 'Quantity', $quantity)
-    );
-	}
 }
 class Product_Controller extends Page_Controller {
   

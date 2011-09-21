@@ -31,7 +31,6 @@ class OptionGroupField extends CompositeField {
       if ($options) { 
         $optionsField = new OptionField($id, $title, $options);
         $optionsField->setEmptyString('Please select');
-        
         $items->push($optionsField);
       }
     }
@@ -45,28 +44,7 @@ class OptionGroupField extends CompositeField {
 	function FieldHolder() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('simplecart/javascript/OptionGroupField.js');
-		
 		return parent::FieldHolder();
-		
-		/*
-		$fs = $this->FieldSet();
-		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>\n";
-		
-		foreach($fs as $subfield) {
-			if($this->columnCount) {
-				$className = "column{$this->columnCount}";
-				if(!next($fs)) $className .= " lastcolumn";
-				$content .= "\n<div class=\"{$className}\">\n" . $subfield->FieldHolder() . "\n</div>\n";
-			} else if($subfield){
-				$content .= "\n" . $subfield->FieldHolder() . "\n";
-			}
-		}
-		$content .= "</div>\n";
-				
-		return $content;
-		*/
 	}
 	
 }

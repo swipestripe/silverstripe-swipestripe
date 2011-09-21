@@ -5,9 +5,6 @@
     	var $lastSelect = $('div.OptionGroupField select').last();
     	var selects = new Array();
     	
-    	console.log($firstSelect);
-    	console.log($lastSelect);
-    	
     	//This doesn't consider if there are 2 option group fields on the page
     	$('div.OptionGroupField select').each(function() {
 
@@ -41,10 +38,6 @@
 	  					    $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).html('');
 	  					    
 	  					    $.each(dataObj.options, function(index, val) {
-	  					    	console.log('********************');
-	  					    	console.log(index);
-	  					    	console.log(val);
-	  					    	
 	  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID);
 	  					    });
 	  					  }
