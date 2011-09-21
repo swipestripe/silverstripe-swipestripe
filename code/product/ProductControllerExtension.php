@@ -217,8 +217,7 @@ class ProductControllerExtension extends Extension {
   public function onBeforeInit() {
 
     $orderID = Session::get('Cart.OrderID');
-    if ($orderID) {
-      $order = DataObject::get_by_id('Order', $orderID);
+    if ($orderID && $order = DataObject::get_by_id('Order', $orderID)) {
       $order->LastActive = SS_Datetime::now()->getValue();
       $order->write();
     }

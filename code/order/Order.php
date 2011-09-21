@@ -451,6 +451,7 @@ class Order extends DataObject {
         $itemOption->ItemID = $item->ID;
         $itemOption->write();
       }
+      
     }
     
     $this->updateTotal();

@@ -126,17 +126,17 @@ class Product extends Page {
         $manager->setAttributeID($attribute->ID);
         $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
       }
+      
+      $manager = new VariationComplexTableField(
+        $this,
+        'Variations',
+        'Variation',
+        $variationFieldList,
+        'getCMSFields_forPopup'
+      );
+      $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
-
-    $manager = new VariationComplexTableField(
-      $this,
-      'Variations',
-      'Variation',
-      $variationFieldList,
-      'getCMSFields_forPopup'
-    );
-    $fields->addFieldToTab("Root.Content.Variations", $manager);
-
+    
     return $fields;
 	}
 
@@ -221,6 +221,8 @@ class Product_Controller extends Page_Controller {
     
     SS_Log::log(new Exception(print_r('we are getting into here', true)), SS_Log::NOTICE);
     
+    //Maybe we need to actually get the variation here to add the product and variation to the order
+    
     self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }
@@ -237,21 +239,30 @@ class Product_Controller extends Page_Controller {
   }
   
   /**
-   * Get product options based on current request
+   * Get product variations based on current request
    * 
    * @see SS_HTTPRequest
    * @return DataObject 
    */
   private function getProductOptions() {
     
-    $options = new DataObjectSet();
+    $productVariations = new DataObjectSet();
     $request = $this->getRequest();
     $options = $request->requestVar('Options');
-
-    if ($options) foreach ($options as $optionClassName => $optionID) {
-      $options->push(DataObject::get_by_id($optionClassName, $optionID));
+    $product = $this->data();
+    $variations = $product->Variations();
+    
+    if ($variations && $variations->exists()) foreach ($variations as $variation) {
+      
+      $variationOptions = $variation->Options()->map('AttributeID', 'ID');
+      if ($options == $variationOptions) $productVariations->push($variation);
     }
-    return $options;
+    /*
+    if ($options) foreach ($options as $attributeID => $optionID) {
+      $options->push(DataObject::get_by_id('Option', $optionID));
+    }
+    */
+    return $productVariations;
   }
   
   /**
@@ -341,7 +352,8 @@ class Product_Controller extends Page_Controller {
       $data['nextAttributeID'] = $nextAttributeID;
       
       $map = $options->map();
-      array_unshift($map, 'Please Select');
+      //This resets the array counter to 0 which ruins the attribute IDs
+      //array_unshift($map, 'Please Select'); 
       $data['options'] = $map;
     }
     

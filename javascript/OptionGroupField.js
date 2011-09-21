@@ -32,22 +32,24 @@
 	  					  success: function(data) {
 	  						  
 	  						dataObj = $.parseJSON(data);
-	  					    console.log(data);
-	  					    
-	  					    $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).removeAttr('disabled');
-	  					    $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).html('');
-	  					    
-	  					    $.each(dataObj.options, function(index, val) {
-	  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID);
-	  					    });
+	  						
+	  						if(dataObj.options) {
+	  							$('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).removeAttr('disabled');
+		  					    $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).html('');
+		  					    
+		  					    $.each(dataObj.options, function(index, val) {
+		  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID);
+		  					    });
+	  						}
 	  					  }
 	  					});
 	    			}
 	    			
 	    		});
     		}
-    		
     	});
-    	console.log(selects);
+    	
+    	//This is to trigger a change on first item, but need to trigger change on each select with one option or set empty default on those
+    	$firstSelect.change();
     })
 })(jQuery);

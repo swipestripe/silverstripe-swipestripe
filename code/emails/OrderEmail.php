@@ -20,7 +20,7 @@ class OrderEmail extends ProcessedEmail {
 	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'));
 	  }
 	  else {
-	    $css = file_get_contents(Director::getAbsFile('simplecart/css/OrderReport.css'));
+	    $css = file_get_contents(Director::getAbsFile('stripeycart/css/OrderReport.css'));
 	  }
 
     $this->populateTemplate(

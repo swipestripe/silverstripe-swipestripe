@@ -23,14 +23,31 @@ class OptionGroupField extends CompositeField {
 		//Use the product to get the attributes and options and set them to the class
 		$items = new FieldSet();
 	  $attributes = $this->product->Attributes()->map();
+	  
+	  SS_Log::log(new Exception(print_r($attributes, true)), SS_Log::NOTICE);
     
     if ($attributes) foreach ($attributes as $id => $title) {
       
+      /*
       $options = DataObject::get('Option', "ProductID = $product->ID AND AttributeID = $id");
       
       if ($options) { 
         $optionsField = new OptionField($id, $title, $options);
         $optionsField->setEmptyString('Please select');
+        $items->push($optionsField);
+      }
+      */
+      
+      $variations = $product->Variations();
+      $options = new DataObjectSet();
+      if ($variations && $variations->exists()) foreach ($variations as $variation) {
+        $option = $variation->getAttributeOption($id);
+        if ($option) $options->push($option); 
+      }
+      
+      if ($options->exists()) {
+        $optionsField = new OptionField($id, $title, $options);
+        //$optionsField->setEmptyString('Please select');
         $items->push($optionsField);
       }
     }
@@ -43,7 +60,7 @@ class OptionGroupField extends CompositeField {
 	
 	function FieldHolder() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript('simplecart/javascript/OptionGroupField.js');
+		Requirements::javascript('stripeycart/javascript/OptionGroupField.js');
 		return parent::FieldHolder();
 	}
 	

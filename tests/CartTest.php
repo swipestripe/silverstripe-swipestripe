@@ -6,7 +6,7 @@
  */
 class CartTest extends FunctionalTest {
   
-	static $fixture_file = 'simplecart/tests/CartTest.yml';
+	static $fixture_file = 'stripeycart/tests/CartTest.yml';
 	static $disable_themes = false;
 	static $use_draft_site = true;
 	

@@ -6,7 +6,7 @@ class VirtualProduct extends Product {
    * 
    * @var String
    */
-  public static $downloadFolder = 'simplecart/downloads/';
+  public static $downloadFolder = 'stripeycart/downloads/';
   
   /**
    * Number of times the product can be downloaded

@@ -44,8 +44,8 @@ class CheckoutPage_Controller extends Page_Controller {
    */
   function index() {
     
-    Requirements::css('simplecart/css/OrderReport.css');
-    Requirements::css('simplecart/css/Checkout.css');
+    Requirements::css('stripeycart/css/OrderReport.css');
+    Requirements::css('stripeycart/css/Checkout.css');
 
     return array( 
        'Content' => $this->Content, 

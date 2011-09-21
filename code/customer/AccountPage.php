@@ -63,7 +63,7 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function order($request) {
 
-	  Requirements::css('simplecart/css/OrderReport.css');
+	  Requirements::css('stripeycart/css/OrderReport.css');
     
 		$memberID = Member::currentUserID();
 	  if (!Member::currentUserID()) {
