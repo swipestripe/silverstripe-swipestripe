@@ -315,16 +315,46 @@ class Product_Controller extends Page_Controller {
   
   /**
    * AJAX action to get options for a product and return for use in the form
+   * Must get options for nextAttributeID, but these options should be filtered so 
+   * that only the options for the variations that match attributeID and optionID
+   * are returned.
    */
   public function options(SS_HTTPRequest $request) {
-    SS_Log::log(new Exception(print_r('getting in to options', true)), SS_Log::NOTICE);
-    SS_Log::log(new Exception(print_r($request, true)), SS_Log::NOTICE);
     
     $attributeID = $request->getVar('attributeID');
     $optionID = $request->getVar('optionID');
+    $nextAttributeID = $request->getVar('nextAttributeID');
+    $product = $this->data();
     
     //Need to get the options for the next attribute basically, don't really know what the next attribute is
+    //just pick the next attribute in the list for the next one, sound assumption
     
-    return 'hello world of options';
+    $data = array();
+    $options = new DataObjectSet();
+    
+    $variations = $product->Variations();
+    $filteredVariations = new DataObjectSet();
+    
+    //Filter variations to match attribute ID and option ID
+    if ($variations && $variations->exists()) foreach ($variations as $variation) {
+      $attributeOption = $variation->getAttributeOption($attributeID);
+      if ($attributeOption && $attributeOption->ID == $optionID) $filteredVariations->push($variation);
+    }
+    
+    //Find options in filtered variations that match next attribute ID
+    if ($filteredVariations && $filteredVariations->exists()) foreach ($filteredVariations as $variation) {
+      $attributeOption = $variation->getAttributeOption($nextAttributeID);
+      if ($attributeOption) $options->push($attributeOption);
+    }
+    
+    if ($options && $options->exists()) {
+      $data['nextAttributeID'] = $nextAttributeID;
+      
+      $map = $options->map();
+      array_unshift($map, 'Please Select');
+      $data['options'] = $map;
+    }
+    
+    return json_encode($data);
   }
 }
