@@ -2,37 +2,49 @@
 	  <thead>
 	    <tr>
 	      <th scope="col" class="left">Product</th>
+	      <th scope="col" class="left">Options</th>
+	      <th scope="col" class="left">Unit Price ($Total.Currency)</th>
 	      <th scope="col" class="left">Quantity</th>
-	      <th scope="col" class="right">Total Price ($Total.Currency)</th>
+	      <th scope="col" class="right">Sub Total ($Total.Currency)</th>
 	    </tr>
 	  </thead>
 	  <tbody>
 	    <% control Items %>
 	    
-		    <% control Object %>  
-		    <tr  class="itemRow $EvenOdd $FirstLast">
-		      <td class="product title" scope="row">
-		        <% if Link %>
-		          <a href="$Link" target="_blank">$Title</a>
-		        <% else %>
-		          $Title
-		        <% end_if %>
-		      </td>
-		    <% end_control %>
+	      <tr  class="itemRow $EvenOdd $FirstLast">
+	      
+			    <% control Object %>  
+			      <td class="title">
+			        <% if Link %>
+			          <a href="$Link" target="_blank">$Title</a>
+			        <% else %>
+			          $Title
+			        <% end_if %>
+			      </td>
+			    <% end_control %>
+			    
+			    <td>
+				    <% if Variation %>
+				      $Variation.OptionSummary
+				    <% end_if %>
+				  </td>
+				  
+				  <td>
+            $UnitPrice.Nice
+          </td>
 		    
-		      <td class="product title" scope="row">
+		      <td class="title">
 		        $Quantity
 		      </td>
-		      
-		    <% control Object %>   
-		      <td class="right total">$Amount.Nice</td>
+  
+		      <td class="right total">$Object.Amount.Nice</td>
+		    
 		    </tr>
-		    <% end_control %>
 	    <% end_control %>
 	
 	    <tr class="gap summary total" id="Total">
-	      <td scope="row" class="threeColHeader total">Total</td>
-	      <td class="right" colspan="2">$Total.Nice ($Total.Currency)</td>
+	      <td class="threeColHeader total" colspan="4">Total</td>
+	      <td class="right">$Total.Nice ($Total.Currency)</td>
 	    </tr>
 	  </tbody>
 	</table>

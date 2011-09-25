@@ -63,10 +63,12 @@ class Variation extends DataObject {
 	
 	function getOptionSummary() {
 	  $options = $this->Options();
+	  $temp = array();
 	  $summary = '';
 	  if ($options && $options->exists()) foreach ($options as $option) {
-	    $summary .= $option->Title .', ';
+	    $temp[] = $option->Title;
 	  } 
+	  $summary = implode(', ', $temp);
 	  return $summary;
 	}
 	
