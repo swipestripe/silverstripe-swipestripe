@@ -18,7 +18,7 @@ class AccountPage extends Page {
 		if(!DataObject::get_one('AccountPage')) {
 			$page = new AccountPage();
 			$page->Title = 'Account';
-			$page->Content = '<p>This is the account page. It is used for shop users to login and change their member details if they have an account.</p>';
+			$page->Content = '<p>View your previous orders below.</p>';
 			$page->URLSegment = 'account';
 			$page->ShowInMenus = 0;
 			$page->writeToStage('Stage');
@@ -34,7 +34,8 @@ class AccountPage_Controller extends Page_Controller {
   static $allowed_actions = array (
     'order',
     'orders',
-  	'downloadProduct'
+  	'downloadProduct',
+    'logout'
   );
   
   /**
@@ -146,6 +147,11 @@ class AccountPage_Controller extends Page_Controller {
 	  //TODO set an error message
 	  Director::redirectBack();
 	}
+	
+  public function logout() {
+    Security::logout(false);
+    Director::redirect("home/");
+  }
 
 }
 
