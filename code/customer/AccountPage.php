@@ -26,6 +26,18 @@ class AccountPage extends Page {
 
 			DB::alteration_message('Account page \'Account\' created', 'created');
 		}
+		
+		//Create a new group for customers
+		$allGroups = DataObject::get('Group');
+		$existingCustomerGroup = $allGroups->find('Title', 'Customers');
+		if (!$existingCustomerGroup) {
+		  
+		  $customerGroup = new Group();
+		  $customerGroup->Title = 'Customers';
+		  $customerGroup->setCode($customerGroup->Title);
+		  $customerGroup->write();
+		}
+		
 	}
 }
 

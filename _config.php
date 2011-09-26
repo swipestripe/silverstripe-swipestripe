@@ -15,7 +15,11 @@ Object::add_extension('SiteConfig', 'OrderConfigDecorator');
 
 Object::add_extension('Page_Controller', 'ProductControllerExtension');
 
+//Allow product images to be sorted
 SortableDataObject::add_sortable_classes(array('ProductImage'));
+
+//Redirect customers logging in to the account page
+Security::set_default_login_dest('account');
 
 //For cart adding products
 //Object::add_extension('CheckoutPage_Controller', 'ProductControllerExtension');
