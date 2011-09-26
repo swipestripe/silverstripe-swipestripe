@@ -140,12 +140,14 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 
 		//Save or create a new member
-	  if(!$member = DataObject::get_one('Member', "\"Email\" = '".$data['Email']."'")){
+	  if (!$member = DataObject::get_one('Member', "\"Email\" = '".$data['Email']."'")) {
 			$member = new Member();
 			$form->saveInto($member);
+			$member->addToGroupByCode('customers');
 			$member->write();
 			$member->logIn();
-		}else{
+		}
+		else if (Member::currentUser()) {
 		  
 		  if (Member::currentUser()->Email == $data['Email']) {
 		    $member->update($data);
