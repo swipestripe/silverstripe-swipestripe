@@ -56,15 +56,15 @@ interface Modifier_Interface {
   public static function combined_form_fields();
   
   /**
-	 * Get the amount for the modifier option
+	 * Calculate the amount that the order should increase by
 	 * 
 	 * @param Int $optionID
 	 * @return Money
 	 */
-  public function Amount($optionID);
+  public function Amount($optionID, $order);
   
   /**
-	 * Get the description for the modifier option
+	 * Get the description for the modifier option for the order template
 	 * 
 	 * @param Int $optionID
 	 * @return String

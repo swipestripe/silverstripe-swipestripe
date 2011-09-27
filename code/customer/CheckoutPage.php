@@ -78,9 +78,13 @@ class CheckoutPage_Controller extends Page_Controller {
 			new TextField('Address', 'Street Address'),
 			new TextField('AddressLine2', 'Suburb'),
 			new TextField('City', 'City'),
-			new TextField('PostalCode', 'Postal Code'),
-			new DropdownField('Country', 'Country', Geoip::getCountryDropDown(), 'NZ')
+			new TextField('PostalCode', 'Postal Code')
     );
+    
+    //Set country field to country from browser if no member is logged in
+    $countryField = new DropdownField('Country', 'Country', Geoip::getCountryDropDown());
+    if (!$member) $countryField->setValue(Geoip::visitor_country());
+    $memberFields->push($countryField);
     
     $validator = new RequiredFields();
     $validator->addRequiredField('FirstName');

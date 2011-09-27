@@ -51,7 +51,7 @@ class Shipping extends DataObject implements Modifier_Interface {
 	  user_error("Please implement getFormRequirements() on $this->class", E_USER_ERROR);
 	}
 	
-	function Amount($optionID) {
+	function Amount($optionID, $order) {
 	  return;
 	}
 	

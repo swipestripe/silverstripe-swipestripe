@@ -8,7 +8,7 @@
  */
 class FlatFeeShipping extends Shipping implements Modifier_Interface {
 
-  public function Amount($optionID) {
+  public function Amount($optionID, $order) {
     $amount = new Money();
 	  
 	  $currency = Modifier::currency();
@@ -52,9 +52,6 @@ class FlatFeeShipping extends Shipping implements Modifier_Interface {
 	
 	function getFormRequirements() {
 	  return;
-	  
-	  //$validator = new RequiredFields();
-	  //return $validator;
 	}
 	
   public static function combined_form_fields() {
