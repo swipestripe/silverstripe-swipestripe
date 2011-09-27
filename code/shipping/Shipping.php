@@ -6,22 +6,44 @@
  * @author frankmullenger
  *
  */
-class Shipping extends DataObject {
-
-	public static $db = array(
-	);
-
-	public static $has_one = array(
-	);
-	
-	public static $defaults = array(
-	);
+class Shipping extends DataObject implements Modifier_Interface {
 	
 	protected static $supported_methods = array(
-		'FlatFeeShipping' => 'Flat Fee Shipping'
+		//'FlatFeeShipping' => 'Flat Fee Shipping'
 	);
+
+	static function set_supported_methods($methodMap) {
+	  
+	  if (is_array($methodMap)) foreach ($methodMap as $className => $desc) {
+	    if (!class_exists($className)) user_error("Tried to set a shipping method that does not exist.", E_USER_ERROR);
+	  }
+	  
+	  self::$supported_methods = $methodMap;
+	}
 	
-	function getFormFields() {
+	static function combined_form_fields() {
+	  
+	  //Get all the fields from all the shipping modules that are enabled in order
+	  $fields = new FieldSet();
+	  $fields->push(new HeaderField('Shipping'));
+	  
+	  foreach (self::$supported_methods as $className => $description) {
+	    
+	    $method = new $className();
+	    $methodFields = $method->getFormFields();
+	    
+	    if ($methodFields && $methodFields->exists()) foreach ($methodFields as $field) {
+	      $fields->push($field);
+	    } 
+	  }
+	  
+	  //Remove the heading if no other fields added
+	  if ($fields->Count() == 1) $fields = new FieldSet();
+	  
+	  return $fields;
+	}
+	
+  function getFormFields() {
 	  user_error("Please implement getFormFields() on $this->class", E_USER_ERROR);
 	}
 	
@@ -29,69 +51,12 @@ class Shipping extends DataObject {
 	  user_error("Please implement getFormRequirements() on $this->class", E_USER_ERROR);
 	}
 	
-	static function set_supported_methods($methodMap) {
-	  self::$supported_methods = $methodMap;
+	function Amount($optionID) {
+	  return;
 	}
 	
-	static function combined_form_fields() {
-	  
-	  //Get all the fields from all the shipping modules that are enabled in order
-	  
-	  $fields = new FieldSet();
-	  
-	  $fields->push(new LiteralField('Flat Fee', 'Shipping costs $5.00'));
-	  
-	  $fields->push(new OptionsetField(
-	  	'Modifiers[FlatFeeShipping]', 
-	  	'Flat Fee Shipping',
-	  	array(
-	  	  1 => 'Flat Fee Shipping $5',
-	  	  2 => 'Some other shipping that is $5',
-	  	  3 => 'Air shipping $10.95'
-	  	),
-	  	1
-	  ));
-	  
-	  return $fields;
-	}
-	
-	/**
-	 * 
-	 * 
-	 * @param Int $optionID
-	 * @return Money
-	 */
-	static function calculate_amount($optionID) {
-	  
-	  $amount = new Money();
-	  
-	  $currency = Modifier::currency();
-	  $amount->setCurrency($currency);
-	  
-	  $shippingCosts = array(
-	    1 => '5.00',
-	    2 => '5.00',
-	    3 => '10.95'
-	  );
-	  $amount->setAmount($shippingCosts[$optionID]);
-	  
-	  return $amount;
-	}
-	
-	/**
-	 * 
-	 * 
-	 * @param Int $optionID
-	 * @return String
-	 */
-	static function description($optionID) {
-
-	  $shippingDescriptions = array(
-	    1 => 'Flat Fee Shipping',
-	    2 => 'Some Other Shipping',
-	    3 => 'Air Shipping'
-	  );
-	  return $shippingDescriptions[$optionID];
+	function Description($optionID) {
+    return;
 	}
 
 }

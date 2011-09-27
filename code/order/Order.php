@@ -655,8 +655,11 @@ class Order extends DataObject {
 	    $modifier = new Modifier();
 	    $modifier->ModifierClass = $modifierClass;
 	    $modifier->ModifierOptionID = $optionID;
-	    $modifier->Amount = call_user_func(array($modifierClass, 'calculate_amount'), $optionID);
-	    $modifier->Description = call_user_func(array($modifierClass, 'description'), $optionID);
+	    
+	    $modifierInstance = new $modifierClass();
+	    $modifier->Amount = call_user_func(array($modifierInstance, 'Amount'), $optionID);
+	    $modifier->Description = call_user_func(array($modifierInstance, 'Description'), $optionID);
+	    
 	    $modifier->OrderID = $this->ID;
 	    $modifier->write();
 	  }

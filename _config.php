@@ -1,10 +1,11 @@
 <?php
 
+//Decorators
 Object::add_extension('Member', 'CustomerDecorator');
 Object::add_extension('Payment', 'PaymentDecorator');
 Object::add_extension('SiteConfig', 'OrderConfigDecorator');
 
-//TODO get rid of product controller dependency for adding products
+//TODO get rid of product controller dependency?
 Object::add_extension('Page_Controller', 'ProductControllerExtension');
 
 //Allow product images to be sorted
