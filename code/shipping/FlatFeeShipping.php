@@ -36,8 +36,8 @@ class FlatFeeShipping extends Shipping implements Modifier_Interface {
 	  
 	  $fields = new FieldSet();
 
-	  $fields->push(new OptionsetField(
-	  	'Modifiers[FlatFeeShipping]', 
+	  $fields->push(new ModifierSetField(
+	  	'FlatFeeShipping', 
 	  	'Flat Fee Shipping',
 	  	array(
 	  	  1 => 'Flat Fee Shipping $5',
