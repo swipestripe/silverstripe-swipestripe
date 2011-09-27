@@ -41,6 +41,21 @@
 		    
 		    </tr>
 	    <% end_control %>
+	    
+	    <% if Modifiers %>
+	    
+	      <tr class="gap summary total" id="SubTotal">
+          <td class="threeColHeader total" colspan="4">Sub Total</td>
+          <td class="right">$SubTotal.Nice ($SubTotal.Currency)</td>
+        </tr>
+	    
+	      <% control Modifiers %>
+	        <tr class="gap total">
+		        <td class="threeColHeader" colspan="4">$Description</td>
+		        <td class="right">$Amount.Nice ($Amount.Currency)</td>
+		      </tr>
+	      <% end_control %>
+	    <% end_if %>
 	
 	    <tr class="gap summary total" id="Total">
 	      <td class="threeColHeader total" colspan="4">Total</td>

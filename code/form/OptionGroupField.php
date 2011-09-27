@@ -23,8 +23,6 @@ class OptionGroupField extends CompositeField {
 		//Use the product to get the attributes and options and set them to the class
 		$items = new FieldSet();
 	  $attributes = $this->product->Attributes()->map();
-	  
-	  SS_Log::log(new Exception(print_r($attributes, true)), SS_Log::NOTICE);
     
     if ($attributes) foreach ($attributes as $id => $title) {
       

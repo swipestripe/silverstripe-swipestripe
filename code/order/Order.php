@@ -31,6 +31,7 @@ class Order extends DataObject {
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 	  'Total' => 'Money',
+	  'SubTotal' => 'Money',
 		'ReceiptSent' => 'Boolean',
 	  'PaidEmailSent' => 'Boolean',
 	  'OrderedOn' => 'SS_Datetime',
@@ -518,7 +519,7 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Go through items and update cart total
+	 * Go through items and modifiers and update cart total
 	 * 
 	 * Had to use DataObject::get() to retrieve Items because
 	 * $this->Items() was not returning any items after first call
@@ -527,12 +528,21 @@ class Order extends DataObject {
 	public function updateTotal() {
 	  
 	  $total = 0;
+	  $subTotal = 0;
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
+	  $modifiers = DataObject::get('OrderModifier', 'OrderID = '.$this->ID);
 	  
 	  if ($items) foreach ($items as $item) {
 	    $total += $item->Total()->Amount;
+	    $subTotal += $item->Total()->Amount;
+	  }
+
+	  if ($modifiers) foreach ($modifiers as $modifier) {
+	    $total += $modifier->Amount->getAmount();
 	  }
 	  
+    $this->SubTotal->setAmount($subTotal); 
+	  $this->SubTotal->setCurrency(Payment::site_currency());
 	  $this->Total->setAmount($total); 
 	  $this->Total->setCurrency(Payment::site_currency());
     $this->write();
@@ -624,4 +634,14 @@ class Order extends DataObject {
 	public static function get_timeout() {
 		return self::$timeout;
 	}
+	
+	function Modifiers() {
+	  $modifiers = DataObject::get('OrderModifier', 'OrderID = '.$this->ID);
+	  return $modifiers;
+	}
+	
+	function addModifiers() {
+	  
+	}
+	
 }
