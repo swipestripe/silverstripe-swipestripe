@@ -6,7 +6,7 @@
  * @author frankmullenger
  *
  */
-class OrderModifier extends DataObject {
+class Modifier extends DataObject {
 
 	public static $db = array(
 	  'ModifierClass' => 'Varchar',

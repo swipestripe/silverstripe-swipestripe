@@ -49,7 +49,8 @@ class Order extends DataObject {
 
 	public static $has_many = array(
 	  'Items' => 'Item',
-		'Payments' => 'Payment'
+		'Payments' => 'Payment',
+	  'Modifiers' => 'Modifier'
 	);
 	
 	public static $table_overview_fields = array(
@@ -530,7 +531,7 @@ class Order extends DataObject {
 	  $total = 0;
 	  $subTotal = 0;
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
-	  $modifiers = DataObject::get('OrderModifier', 'OrderID = '.$this->ID);
+	  $modifiers = DataObject::get('Modifier', 'OrderID = '.$this->ID);
 	  
 	  if ($items) foreach ($items as $item) {
 	    $total += $item->Total()->Amount;
@@ -635,13 +636,30 @@ class Order extends DataObject {
 		return self::$timeout;
 	}
 	
-	function Modifiers() {
-	  $modifiers = DataObject::get('OrderModifier', 'OrderID = '.$this->ID);
-	  return $modifiers;
-	}
-	
-	function addModifiers() {
+	function addModifiersAtCheckout(Array $data) {
 	  
+	  //Save the order modifiers
+    $existingModifiers = $this->Modifiers();
+	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $optionID) {
+	    
+	    //If the exact modifier exists on this order do not add it again,
+	    //protects against resubmission of checkout form
+	    if ($existingModifiers) foreach ($existingModifiers as $modifier) {
+	      
+	      if ($modifier->ModifierClass == $modifierClass
+	          && $modifier->ModifierOptionID == $optionID) {
+	        continue 2;
+	      }
+	    }
+	    
+	    $modifier = new Modifier();
+	    $modifier->ModifierClass = $modifierClass;
+	    $modifier->ModifierOptionID = $optionID;
+	    $modifier->Amount = call_user_func(array($modifierClass, 'calculate_amount'), $optionID);
+	    $modifier->Description = call_user_func(array($modifierClass, 'description'), $optionID);
+	    $modifier->OrderID = $this->ID;
+	    $modifier->write();
+	  }
+	  $this->updateTotal();
 	}
-	
 }

@@ -185,30 +185,8 @@ class CheckoutPage_Controller extends Page_Controller {
 		  $item->write();
     }
     
-    //TODO refactor to move adding modifiers to Order class
-    
-    //Save the order modifiers
-    $existingModifiers = $order->Modifiers();
-	  foreach ($data['OrderModifiers'] as $modifierClass => $optionID) {
-	    
-	    //If the exact modifier exists on this order do not add it again
-	    if ($existingModifiers) foreach ($existingModifiers as $modifier) {
-	      
-	      if ($modifier->ModifierClass == $modifierClass
-	          && $modifier->ModifierOptionID == $optionID) {
-	        continue 2;
-	      }
-	    }
-	    
-	    $orderModifier = new OrderModifier();
-	    $orderModifier->ModifierClass = $modifierClass;
-	    $orderModifier->ModifierOptionID = $optionID;
-	    $orderModifier->Amount = call_user_func(array($modifierClass, 'calculate_amount'), $optionID);
-	    $orderModifier->Description = call_user_func(array($modifierClass, 'description'), $optionID);
-	    $orderModifier->OrderID = $order->ID;
-	    $orderModifier->write();
-	  }
-	  $order->updateTotal();
+    //Add modifiers to order
+    $order->addModifiersAtCheckout($data);
 
 		Session::clear('Cart.OrderID');
 

@@ -72,24 +72,27 @@ class Product extends Page {
 		
 		
 		//Attributes selection
-		$tablefield = new ManyManyComplexTableField(
-      $this,
-      'Attributes',
-      'Attribute',
-      array('Title' => 'Title'),
-      'getCMSFields'
-    );
-    $tablefield->setPermissions(array());
-    $fields->addFieldToTab("Root.Attributes", $tablefield);
-    
-    $variationFieldList = array(
-    	'ID' => 'ID',
-    	'SummaryStock' => 'Stock'
-    );
-    
+		$anyAttribute = DataObject::get_one('Attribute');
+		if ($anyAttribute && $anyAttribute->exists()) {
+  		$tablefield = new ManyManyComplexTableField(
+        $this,
+        'Attributes',
+        'Attribute',
+        array('Title' => 'Title'),
+        'getCMSFields'
+      );
+      $tablefield->setPermissions(array());
+      $fields->addFieldToTab("Root.Attributes", $tablefield);
+		}
+
     //Options selection
     $attributes = $this->Attributes();
     if ($attributes && $attributes->exists()) {
+      
+      $variationFieldList = array(
+      	'ID' => 'ID',
+      	'SummaryStock' => 'Stock'
+      );
       
       $fields->addFieldToTab("Root.Content", new TabSet('Options'));
       $fields->addFieldToTab("Root.Content", new Tab('Variations'));
@@ -218,11 +221,6 @@ class Product_Controller extends Page_Controller {
    * Add an item to the cart
    */
   function add() {
-    
-    SS_Log::log(new Exception(print_r('we are getting into here', true)), SS_Log::NOTICE);
-    
-    //Maybe we need to actually get the variation here to add the product and variation to the order
-    
     self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }

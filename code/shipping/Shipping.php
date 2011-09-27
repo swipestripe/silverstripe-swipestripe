@@ -42,7 +42,7 @@ class Shipping extends DataObject {
 	  $fields->push(new LiteralField('Flat Fee', 'Shipping costs $5.00'));
 	  
 	  $fields->push(new OptionsetField(
-	  	'OrderModifiers[FlatFeeShipping]', 
+	  	'Modifiers[FlatFeeShipping]', 
 	  	'Flat Fee Shipping',
 	  	array(
 	  	  1 => 'Flat Fee Shipping $5',
@@ -65,7 +65,7 @@ class Shipping extends DataObject {
 	  
 	  $amount = new Money();
 	  
-	  $currency = OrderModifier::currency();
+	  $currency = Modifier::currency();
 	  $amount->setCurrency($currency);
 	  
 	  $shippingCosts = array(
