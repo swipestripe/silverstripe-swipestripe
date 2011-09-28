@@ -19,9 +19,6 @@ class Modifier extends DataObject {
 	  'Order' => 'Order'
 	);
 	
-	public static $defaults = array(
-	);
-	
 	protected static $currency = 'NZD';
 	
 	/**

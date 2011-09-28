@@ -12,26 +12,6 @@ class Shipping extends DataObject {
 		//'FlatFeeShipping',
 		//'PerItemShipping'
 	);
-
-	static function set_supported_methods($methodMap) {
-	  
-	  if (is_array($methodMap)) foreach ($methodMap as $className => $desc) {
-	    if (!class_exists($className)) user_error("Tried to set a shipping method that does not exist.", E_USER_ERROR);
-	  }
-	  
-	  self::$supported_methods = $methodMap;
-	}
-	
-	static function get_product_dependencies() {
-	  
-	  $dependencies = array();
-	  foreach (self::$supported_methods as $dependentFields) {
-	    if (is_array($dependentFields)) foreach ($dependentFields as $fieldName) {
-	      $dependencies[] = $fieldName;
-	    }
-	  }
-	  return $dependencies;
-	}
 	
 	static function combined_form_fields($order) {
 	  

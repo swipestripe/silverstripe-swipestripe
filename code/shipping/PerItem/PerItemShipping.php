@@ -2,13 +2,52 @@
 
 class PerItemShipping extends Shipping {
   
+  /**
+   * For setting configuration, should be called from _config.php files only
+   */
   public static function enable() {
-    //Set all the configuration stuff in here
-    
     Shipping::$supported_methods[] = 'PerItemShipping';
-    
+    Object::add_extension('Product', 'PerItemShippingProductDecorator');
   }
 
+  function getFormFields($order) {
+	  
+	  $fields = new FieldSet();
+	  $orderItems = $order->Items();
+	  
+	  $shippingCost = new Money();
+	  $shippingCost->setCurrency(Modifier::currency());
+	  
+	  if ($orderItems && $orderItems->exists()) foreach ($orderItems as $item) {
+	    
+	    $product = $item->Object();
+	    if ($product) {
+	      
+	      SS_Log::log(new Exception(print_r($product, true)), SS_Log::NOTICE);
+	      
+	      $cost = $product->ShippingCost;
+	      if ($cost && $cost instanceof Money) {
+	        $shippingCost->Amount += $cost->Amount;
+	      } 
+	    }
+	  }
+
+	  $fields->push(new ModifierSetField(
+	  	'ItemShipping', 
+	  	'Shipping per item (total cost)',
+	  	array(
+	  	  1 => 'Total item shipping costs' . $shippingCost->Nice()
+	  	),
+	  	1
+	  ));
+	  
+	  return $fields;
+	}
+	
+	function getFormRequirements() {
+	  return;
+	}
+	
   public function Amount($optionID, $order) {
     $amount = new Money();
 	  
@@ -28,42 +67,5 @@ class PerItemShipping extends Shipping {
 	  );
 	  return $shippingDescriptions[$optionID];
   }
-	
-  function getFormFields($order) {
-	  
-	  $fields = new FieldSet();
-	  $orderItems = $order->Items();
-	  
-	  SS_Log::log(new Exception(print_r($order->Items(), true)), SS_Log::NOTICE);
-	  
-	  $shippingCost = new Money();
-	  $shippingCost->setCurrency(Modifier::currency());
-	  
-	  if ($orderItems && $orderItems->exists()) foreach ($orderItems as $item) {
-	    
-	    $product = $item->Object();
-	    if ($product) {
-	      $cost = $product->ShippingCost;
-	      if ($cost && $cost instanceof Money) {
-	        $shippingCost->Amount += $cost->Amount;
-	      } 
-	    }
-	  }
-
-	  $fields->push(new ModifierSetField(
-	  	'ItemShipping', 
-	  	'Shipping per item',
-	  	array(
-	  	  1 => 'Testing'
-	  	),
-	  	1
-	  ));
-	  
-	  return $fields;
-	}
-	
-	function getFormRequirements() {
-	  return;
-	}
 
 }
