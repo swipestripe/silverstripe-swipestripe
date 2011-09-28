@@ -6,11 +6,11 @@
  * @author frankmullenger
  *
  */
-class Shipping extends DataObject implements Modifier_Interface {
+class Shipping extends DataObject {
 	
 	public static $supported_methods = array(
-		//'FlatFeeShipping' => array(),
-		//'ItemShipping' => array('ShippingCost)
+		//'FlatFeeShipping',
+		//'PerItemShipping'
 	);
 
 	static function set_supported_methods($methodMap) {
@@ -33,16 +33,16 @@ class Shipping extends DataObject implements Modifier_Interface {
 	  return $dependencies;
 	}
 	
-	static function combined_form_fields() {
+	static function combined_form_fields($order) {
 	  
 	  //Get all the fields from all the shipping modules that are enabled in order
 	  $fields = new FieldSet();
 	  $fields->push(new HeaderField('Shipping'));
 	  
-	  foreach (self::$supported_methods as $className => $productDependencies) {
+	  foreach (self::$supported_methods as $className) {
 	    
 	    $method = new $className();
-	    $methodFields = $method->getFormFields();
+	    $methodFields = $method->getFormFields($order);
 	    
 	    if ($methodFields && $methodFields->exists()) foreach ($methodFields as $field) {
 	      $fields->push($field);
@@ -55,7 +55,7 @@ class Shipping extends DataObject implements Modifier_Interface {
 	  return $fields;
 	}
 	
-  function getFormFields() {
+  function getFormFields($order) {
 	  user_error("Please implement getFormFields() on $this->class", E_USER_ERROR);
 	}
 	

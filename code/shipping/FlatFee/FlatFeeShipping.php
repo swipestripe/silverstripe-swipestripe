@@ -6,7 +6,7 @@
  * @author frankmullenger
  *
  */
-class FlatFeeShipping extends Shipping implements Modifier_Interface {
+class FlatFeeShipping extends Shipping {
 
   public function Amount($optionID, $order) {
     $amount = new Money();
@@ -32,7 +32,7 @@ class FlatFeeShipping extends Shipping implements Modifier_Interface {
 	  return $shippingDescriptions[$optionID];
   }
 	
-  function getFormFields() {
+  function getFormFields($order) {
 	  
 	  $fields = new FieldSet();
 
@@ -51,10 +51,6 @@ class FlatFeeShipping extends Shipping implements Modifier_Interface {
 	}
 	
 	function getFormRequirements() {
-	  return;
-	}
-	
-  public static function combined_form_fields() {
 	  return;
 	}
 

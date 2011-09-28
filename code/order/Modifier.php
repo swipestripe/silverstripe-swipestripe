@@ -41,34 +41,3 @@ class Modifier extends DataObject {
 	}
 
 }
-
-/**
- * Attempt to standardize the modifier classes, not perfect,
- * would rather use an abstract class but any class that extends DataObject
- * gets instantiated when site is built, and trying to instantiate an 
- * abstract class throws an error.
- * 
- * @author frankmullenger
- *
- */
-interface Modifier_Interface {
-  
-  public static function combined_form_fields();
-  
-  /**
-	 * Calculate the amount that the order should increase by
-	 * 
-	 * @param Int $optionID
-	 * @return Money
-	 */
-  public function Amount($optionID, $order);
-  
-  /**
-	 * Get the description for the modifier option for the order template
-	 * 
-	 * @param Int $optionID
-	 * @return String
-	 */
-  public function Description($optionID);
-  
-}

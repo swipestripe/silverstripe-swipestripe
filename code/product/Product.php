@@ -15,9 +15,7 @@ class Product extends Page {
   );
 
   public static $db = array(
-    'Amount' => 'Money',
-    'Weight' => 'Decimal',
-    'ShippingCost' => 'Money'
+    'Amount' => 'Money'
   );
 
   public static $has_many = array(
@@ -134,23 +132,7 @@ class Product extends Page {
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
     
-    //Add fields for shipping requirements
-    $this->requiredShippingFields($fields);
-    
     return $fields;
-	}
-	
-	private function requiredShippingFields(&$fields) {
-	  
-	  $requiredFields = Shipping::get_product_dependencies();
-	  
-	  if ($requiredFields) $fields->addFieldToTab("Root.Content", new Tab('Shipping'));
-	  
-	  if (in_array('ShippingCost', $requiredFields)) {
-	    $shippingCostField = new MoneyField('ShippingCost', 'Shipping cost for this product');
-		  $shippingCostField->setAllowedCurrencies(self::$allowed_currency);	
-		  $fields->addFieldToTab('Root.Content.Shipping', $shippingCostField);
-	  }
 	}
 
   function onBeforeWrite() {

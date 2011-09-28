@@ -118,7 +118,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 		
 		//Shipping fields
-		$shippingFields = Shipping::combined_form_fields();
+		$shippingFields = Shipping::combined_form_fields($order);
 		foreach ($shippingFields as $field) {
 		  $rightFields->push($field);
 		}
