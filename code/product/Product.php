@@ -15,12 +15,11 @@ class Product extends Page {
   );
 
   public static $db = array(
-    'Amount' => 'Money'
+    'Amount' => 'Money',
+    'Weight' => 'Decimal',
+    'ShippingCost' => 'Money'
   );
 
-  public static $has_one = array(
-  );
-  
   public static $has_many = array(
     'Images' => 'ProductImage',
     'Options' => 'Option',
@@ -29,10 +28,6 @@ class Product extends Page {
   
   public static $many_many = array(
     'Attributes' => 'Attribute'
-  );
-  
-  static $allowed_children = array(
-  	//'ProductVariation'
   );
   
 	/**
@@ -64,12 +59,11 @@ class Product extends Page {
       ),
       'getCMSFields_forPopup'
     );
-    $fields->addFieldToTab("Root.Content.Gallery",$manager);
+    $fields->addFieldToTab("Root.Content.Gallery", $manager);
     
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
-		
 		
 		//Attributes selection
 		$anyAttribute = DataObject::get_one('Attribute');
@@ -140,7 +134,23 @@ class Product extends Page {
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
     
+    //Add fields for shipping requirements
+    $this->requiredShippingFields($fields);
+    
     return $fields;
+	}
+	
+	private function requiredShippingFields(&$fields) {
+	  
+	  $requiredFields = Shipping::get_product_dependencies();
+	  
+	  if ($requiredFields) $fields->addFieldToTab("Root.Content", new Tab('Shipping'));
+	  
+	  if (in_array('ShippingCost', $requiredFields)) {
+	    $shippingCostField = new MoneyField('ShippingCost', 'Shipping cost for this product');
+		  $shippingCostField->setAllowedCurrencies(self::$allowed_currency);	
+		  $fields->addFieldToTab('Root.Content.Shipping', $shippingCostField);
+	  }
 	}
 
   function onBeforeWrite() {

@@ -8,8 +8,9 @@
  */
 class Shipping extends DataObject implements Modifier_Interface {
 	
-	protected static $supported_methods = array(
-		//'FlatFeeShipping' => 'Flat Fee Shipping'
+	public static $supported_methods = array(
+		//'FlatFeeShipping' => array(),
+		//'ItemShipping' => array('ShippingCost)
 	);
 
 	static function set_supported_methods($methodMap) {
@@ -21,13 +22,24 @@ class Shipping extends DataObject implements Modifier_Interface {
 	  self::$supported_methods = $methodMap;
 	}
 	
+	static function get_product_dependencies() {
+	  
+	  $dependencies = array();
+	  foreach (self::$supported_methods as $dependentFields) {
+	    if (is_array($dependentFields)) foreach ($dependentFields as $fieldName) {
+	      $dependencies[] = $fieldName;
+	    }
+	  }
+	  return $dependencies;
+	}
+	
 	static function combined_form_fields() {
 	  
 	  //Get all the fields from all the shipping modules that are enabled in order
 	  $fields = new FieldSet();
 	  $fields->push(new HeaderField('Shipping'));
 	  
-	  foreach (self::$supported_methods as $className => $description) {
+	  foreach (self::$supported_methods as $className => $productDependencies) {
 	    
 	    $method = new $className();
 	    $methodFields = $method->getFormFields();
