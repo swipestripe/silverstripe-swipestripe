@@ -13,24 +13,7 @@ class PerItemShipping extends Shipping {
   function getFormFields($order) {
 	  
 	  $fields = new FieldSet();
-	  $orderItems = $order->Items();
-	  
-	  $shippingCost = new Money();
-	  $shippingCost->setCurrency(Modifier::currency());
-	  
-	  if ($orderItems && $orderItems->exists()) foreach ($orderItems as $item) {
-	    
-	    $product = $item->Object();
-	    if ($product) {
-	      
-	      SS_Log::log(new Exception(print_r($product, true)), SS_Log::NOTICE);
-	      
-	      $cost = $product->ShippingCost;
-	      if ($cost && $cost instanceof Money) {
-	        $shippingCost->Amount += $cost->Amount;
-	      } 
-	    }
-	  }
+	  $shippingCost = $this->calculateTotal($order);
 
 	  $fields->push(new ModifierSetField(
 	  	'ItemShipping', 
@@ -48,24 +31,32 @@ class PerItemShipping extends Shipping {
 	  return;
 	}
 	
+	public function calculateTotal($order) {
+	  
+	  $orderItems = $order->Items();
+	  $shippingCost = new Money();
+	  $shippingCost->setCurrency(Modifier::currency());
+	  
+	  if ($orderItems && $orderItems->exists()) foreach ($orderItems as $item) {
+	    
+	    $product = $item->Object();
+	    if ($product) {
+	      $cost = $product->ShippingCost;
+	      if ($cost && $cost instanceof Money) $shippingCost->Amount += ($cost->Amount * $item->Quantity);
+	    }
+	  }
+	  
+	  return $shippingCost;
+	}
+	
   public function Amount($optionID, $order) {
-    $amount = new Money();
-	  
-	  $currency = Modifier::currency();
-	  $amount->setCurrency($currency);
-	  
-	  $shippingCosts = array(
-	    1 => '5.00'
-	  );
-	  $amount->setAmount($shippingCosts[$optionID]);
-	  return $amount;
+    
+    return $this->calculateTotal($order);
   }
   
   public function Description($optionID) {
-    $shippingDescriptions = array(
-	    1 => 'Testing'
-	  );
-	  return $shippingDescriptions[$optionID];
+    
+    return 'Total shipping costs (per item)';
   }
 
 }

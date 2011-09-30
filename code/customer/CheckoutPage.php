@@ -85,7 +85,7 @@ class CheckoutPage_Controller extends Page_Controller {
     
     //Set country field to country from browser if no member is logged in
     $countryField = new DropdownField('Country', 'Country', Geoip::getCountryDropDown());
-    if (!$member) $countryField->setValue(Geoip::visitor_country());
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
     $memberFields->push($countryField);
 
     $validator->addRequiredField('FirstName');
@@ -132,7 +132,7 @@ class CheckoutPage_Controller extends Page_Controller {
     );
 
     $form = new Form($this, 'OrderForm', $fields, $actions, $validator);
-    $form->loadDataFrom($member);
+    if (Member::currentUserID()) $form->loadDataFrom($member);
     return $form;
 	}
 	
