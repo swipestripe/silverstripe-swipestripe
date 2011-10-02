@@ -139,7 +139,23 @@ class Product extends Page {
     parent::onBeforeWrite();
     if (!$this->ID) $this->firstWrite = true;
   }
- 
+
+  public function inheritedDatabaseFields() {
+
+		$fields     = array();
+		$currentObj = $this->class;
+		
+		while($currentObj != 'DataObject') {
+			$fields     = array_merge($fields, self::custom_database_fields($currentObj));
+			$currentObj = get_parent_class($currentObj);
+		}
+
+		//Add field names in for Money fields
+		$fields['Amount'] = 0;
+		
+		return (array) $fields;
+	}
+  
   /**
    * Copy the original product options or generate the default product 
    * options

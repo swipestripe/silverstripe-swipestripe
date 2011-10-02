@@ -1,14 +1,8 @@
 <?php
 class CheckoutPage extends Page
 {
-  static $has_many = array (
-  );
   static $db = array(
     'ChequeMessage' => 'HTMLText' //Dependency for ChequePayment::ChequeContent()
-  );
-  static $has_one = array(
-  );
-  static $defaults = array(
   );
 
   public function getCMSFields() {
@@ -232,7 +226,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * TODO validator for positive quantity
 	 * 
 	 * @see CheckoutForm
-	 * @see CheckoutQuantityField
 	 */
 	function CheckoutForm() {
 
@@ -243,7 +236,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  
 	  if ($items) foreach ($items as $item) {
 	    
-	    $quantityField = new CheckoutQuantityField('Quantity['.$item->ID.']', '', $item->Quantity);
+	    $quantityField = new CartQuantityField('Quantity['.$item->ID.']', '', $item->Quantity);
 	    $quantityField->setItem($item);
 	    
 	    $fields->push($quantityField);
@@ -261,7 +254,7 @@ class CheckoutPage_Controller extends Page_Controller {
       new FormAction('updateCart', 'Update Cart')
     );
     
-    return new CheckoutForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
+    return new CartForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
 	}
 	
 	/**

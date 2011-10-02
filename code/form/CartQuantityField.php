@@ -1,12 +1,12 @@
 <?php
-class CheckoutQuantityField extends TextField {
+class CartQuantityField extends TextField {
 
 	/**
 	 * Template for main rendering
 	 *
 	 * @var string
 	 */
-	protected $template = "CheckoutQuantityField";
+	protected $template = "CartQuantityField";
 	
 	protected $item;
 	

@@ -13,6 +13,9 @@ class CustomerDecorator extends DataObjectDecorator {
 				'Country' => 'Varchar',
 				'HomePhone' => 'Varchar(100)',
 				'Notes' => 'HTMLText'
+			),
+			'has_many' => array(
+			  'Addresses' => 'Address'
 			)
 		);
 	}

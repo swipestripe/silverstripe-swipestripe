@@ -50,7 +50,8 @@ class Order extends DataObject {
 	public static $has_many = array(
 	  'Items' => 'Item',
 		'Payments' => 'Payment',
-	  'Modifiers' => 'Modifier'
+	  'Modifiers' => 'Modifier',
+	  'Addresses' => 'Address'
 	);
 	
 	public static $table_overview_fields = array(
