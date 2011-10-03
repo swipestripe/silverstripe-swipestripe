@@ -8,10 +8,31 @@
   <% end_if %>
   
   <fieldset>
-    <% if Legend %><legend>$Legend</legend><% end_if %> 
-    <% control Fields %>
+  
+    <div id="LeftCheckout">
+	    <% control Fields(BillingAddress) %>
+	      $FieldHolder
+	    <% end_control %>
+    </div>
+    
+    <div id="RightCheckout">
+      <% control Fields(ShippingAddress) %>
+        $FieldHolder
+      <% end_control %>
+    </div>
+    
+    <% control Fields(PersonalDetails) %>
       $FieldHolder
     <% end_control %>
+    
+    <% control Cart %>
+      <% include CheckoutFormOrder %>
+    <% end_control %>
+    
+    <% control Fields(Payment) %>
+      $FieldHolder
+    <% end_control %>
+
     <div class="clear"><!-- --></div>
   </fieldset>
 

@@ -61,20 +61,17 @@ class CheckoutPage_Controller extends Page_Controller {
     $billingAddress = $member->BillingAddress();
     $shippingAddress = $member->ShippingAddress();
     
-    SS_Log::log(new Exception(print_r($billingAddress->data(), true)), SS_Log::NOTICE);
-    SS_Log::log(new Exception(print_r($shippingAddress->data(), true)), SS_Log::NOTICE);
-    
     $this->addBillingAddressFields($fields, $validator);
     $this->addShippingAddressFields($fields, $validator);
     $this->addPersonalDetailsFields($fields, $validator, $member);
-    $this->addModifierFields($fields, $validator, $order);
+    //$this->addModifierFields($fields, $validator, $order);
     $this->addPaymentFields($fields, $validator, $order);
 
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')
     );
 
-    $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator);
+    $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
@@ -163,14 +160,18 @@ class CheckoutPage_Controller extends Page_Controller {
 	}
 	
 	private function addModifierFields(&$fields, &$validator, $order) {
-	  $shippingFields = new CompositeField();
+	  
+	  //Need to figure out how to add ModifierSetFields so that they can be displayed in the template
+	  
+	  $shippingFields = new FieldSet();
 	  
 		foreach (Shipping::combined_form_fields($order) as $field) {
 		  $shippingFields->push($field);
+		  //$fields['Modifiers'][] = $field;
 		}
 		
-		$shippingFields->setID('personal-details');
-		$fields['Modifiers'] = $shippingFields;
+		//$shippingFields->setID('shipping');
+		if ($shippingFields->exists()) $fields['Modifiers'] = $shippingFields;
 	}
 	
 	private function addPaymentFields(&$fields, &$validator, $order) {
