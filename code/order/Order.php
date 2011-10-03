@@ -687,7 +687,7 @@ class Order extends DataObject {
 	  
 	  $addresses = $this->Addresses();
 	  if ($addresses && $addresses->exists()) {
-	    $address = $addresses->find('Type', 'Billing');
+	    $address = $addresses->find('Type', 'Shipping');
 	  }
 	  
 	  return $address;

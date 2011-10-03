@@ -58,6 +58,11 @@ class CheckoutPage_Controller extends Page_Controller {
     $validator = new RequiredFields();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
+    $billingAddress = $member->BillingAddress();
+    $shippingAddress = $member->ShippingAddress();
+    
+    SS_Log::log(new Exception(print_r($billingAddress->data(), true)), SS_Log::NOTICE);
+    SS_Log::log(new Exception(print_r($shippingAddress->data(), true)), SS_Log::NOTICE);
     
     $this->addBillingAddressFields($fields, $validator);
     $this->addShippingAddressFields($fields, $validator);
@@ -70,7 +75,11 @@ class CheckoutPage_Controller extends Page_Controller {
     );
 
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator);
-    if (Member::currentUserID()) $form->loadDataFrom($member);
+    
+    if ($member->ID) $form->loadDataFrom($member);
+    if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
+    if ($shippingAddress) $form->loadDataFrom($shippingAddress->getCheckoutFormData('Shipping')); 
+    
     return $form;
 	}
 	
@@ -80,7 +89,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	    new HeaderField('Billing Address', 3),
 			new TextField('Billing[FirstName]', 'First Name'),
 			new TextField('Billing[Surname]', 'Surname'),
-			new TextField('Billing[Company]'),
+			new TextField('Billing[Company]', 'Company'),
 			new TextField('Billing[Address]', 'Address 1'),
 			new TextField('Billing[AddressLine2]', 'Address 2'),
 			new TextField('Billing[City]', 'City'),
@@ -103,7 +112,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	    new CheckboxField('ShipToBillingAddress', 'to same address?'),
 			new TextField('Shipping[FirstName]', 'First Name'),
 			new TextField('Shipping[Surname]', 'Surname'),
-			new TextField('Shipping[Company]'),
+			new TextField('Shipping[Company]', 'Company'),
 			new TextField('Shipping[Address]', 'Address 1'),
 			new TextField('Shipping[AddressLine2]', 'Address 2'),
 			new TextField('Shipping[City]', 'City'),
