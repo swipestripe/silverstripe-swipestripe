@@ -11,7 +11,7 @@
       
       <div id="OrderInformation">
 
-			  <% include OrderMember %>
+			  <% include OrderAddresses %>
       
         <% include Order %>
           

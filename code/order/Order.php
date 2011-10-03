@@ -666,4 +666,30 @@ class Order extends DataObject {
 	  }
 	  $this->updateTotal();
 	}
+	
+	function addAddressesAtCheckout(Array $data) {
+
+	}
+	
+	function BillingAddress() {
+	  $address = null;
+	  
+	  $addresses = $this->Addresses();
+	  if ($addresses && $addresses->exists()) {
+	    $address = $addresses->find('Type', 'Billing');
+	  }
+	  
+	  return $address;
+	}
+	
+  function ShippingAddress() {
+	  $address = null;
+	  
+	  $addresses = $this->Addresses();
+	  if ($addresses && $addresses->exists()) {
+	    $address = $addresses->find('Type', 'Billing');
+	  }
+	  
+	  return $address;
+	}
 }

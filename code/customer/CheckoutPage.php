@@ -53,81 +53,126 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @return Form 
 	 */
 	function OrderForm() {
-	  
-	  $leftFields = new CompositeField();
-		$leftFields->setID('LeftCheckout');
 
-		$rightFields = new CompositeField();
-		$rightFields->setID('RightCheckout');
-		
-		$validator = new RequiredFields();
-  
-		$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
-		
-		//Left fields
-    $memberFields = new CompositeField(
-			new HeaderField('Personal Information', 3),
-			new TextField('FirstName', 'First Name', $member->FirstName),
-			new TextField('Surname', 'Surname'),
-			new TextField('HomePhone', 'Phone'),
-			new EmailField('Email', 'Email'),
-			new TextField('Address', 'Street Address'),
-			new TextField('AddressLine2', 'Suburb'),
-			new TextField('City', 'City'),
-			new TextField('PostalCode', 'Postal Code')
-    );
-    
-    //Set country field to country from browser if no member is logged in
-    $countryField = new DropdownField('Country', 'Country', Geoip::getCountryDropDown());
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
-    $memberFields->push($countryField);
-
-    $validator->addRequiredField('FirstName');
-    $validator->addRequiredField('Email');
-    $validator->addRequiredField('HomePhone');
-    
-    $leftFields->push($memberFields);
-    
-
-    //Right fields
-	  if(!$member->ID || $member->Password == '') {
-			$rightFields->push(new HeaderField(_t('OrderForm.MembershipDetails','Membership Details'), 3));
-			$rightFields->push(new LiteralField(
-				'MemberInfo', 
-				'<p class="message good">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
-			));
-			$rightFields->push(new LiteralField(
-				'AccountInfo', 
-				'<p>Please choose a password, so you can login and check your order history in the future</p>'
-			));
-			$rightFields->push(new FieldGroup(new ConfirmedPasswordField('Password', 'Password')));
-			
-			$validator->addRequiredField('Password');
-		}
-    
+    $fields = array();
+    $validator = new RequiredFields();
+    $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
     
-    //Payment fields
-    $paymentFields = Payment::combined_form_fields($order->Total->getAmount());
-		foreach ($paymentFields as $field) {
-		  $rightFields->push($field);
-		}
-		
-		//Shipping fields
-		$shippingFields = Shipping::combined_form_fields($order);
-		foreach ($shippingFields as $field) {
-		  $rightFields->push($field);
-		}
-		
-		$fields = new FieldSet($leftFields, $rightFields);
+    $this->addBillingAddressFields($fields, $validator);
+    $this->addShippingAddressFields($fields, $validator);
+    $this->addPersonalDetailsFields($fields, $validator, $member);
+    $this->addModifierFields($fields, $validator, $order);
+    $this->addPaymentFields($fields, $validator, $order);
 
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')
     );
 
-    $form = new Form($this, 'OrderForm', $fields, $actions, $validator);
+    $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator);
     if (Member::currentUserID()) $form->loadDataFrom($member);
     return $form;
+	}
+	
+	private function addBillingAddressFields(&$fields, &$validator) {
+	  
+	  $billingAddressFields = new CompositeField(
+	    new HeaderField('Billing Address', 3),
+			new TextField('Billing[FirstName]', 'First Name'),
+			new TextField('Billing[Surname]', 'Surname'),
+			new TextField('Billing[Company]'),
+			new TextField('Billing[Address]', 'Address 1'),
+			new TextField('Billing[AddressLine2]', 'Address 2'),
+			new TextField('Billing[City]', 'City'),
+			new TextField('Billing[PostalCode]', 'Postal Code'),
+			new TextField('Billing[State]', 'State')
+	  );
+
+    $countryField = new DropdownField('Billing[Country]', 'Country', Geoip::getCountryDropDown());
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
+    $billingAddressFields->push($countryField);
+	  
+	  $billingAddressFields->setID('billing-address');
+	  $fields['BillingAddress'] = $billingAddressFields;
+	}
+	
+	private function addShippingAddressFields(&$fields, &$validator) {
+	  
+	  $shippingAddressFields = new CompositeField(
+	    new HeaderField('Shipping Address', 3),
+	    new CheckboxField('ShipToBillingAddress', 'to same address?'),
+			new TextField('Shipping[FirstName]', 'First Name'),
+			new TextField('Shipping[Surname]', 'Surname'),
+			new TextField('Shipping[Company]'),
+			new TextField('Shipping[Address]', 'Address 1'),
+			new TextField('Shipping[AddressLine2]', 'Address 2'),
+			new TextField('Shipping[City]', 'City'),
+			new TextField('Shipping[PostalCode]', 'Postal Code'),
+			new TextField('Shipping[State]', 'State')
+	  );
+
+    $countryField = new DropdownField('Shipping[Country]', 'Country', Geoip::getCountryDropDown());
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
+    $shippingAddressFields->push($countryField);
+	  
+	  $shippingAddressFields->setID('shipping-address');
+	  $fields['ShippingAddress'] = $shippingAddressFields;
+	}
+	
+	private function addPersonalDetailsFields(&$fields, &$validator, $member) {
+	  $personalFields = new CompositeField(
+			new HeaderField('Personal Details', 3),
+			new TextField('FirstName', 'First Name'),
+			new EmailField('Email', 'Email'),
+			new TextField('HomePhone', 'Phone')
+    );
+    
+	  if(!$member->ID || $member->Password == '') {
+			$personalFields->push(new LiteralField(
+				'MemberInfo', 
+				'<p class="message good">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
+			));
+			$personalFields->push(new LiteralField(
+				'AccountInfo', 
+				'<p>Please choose a password, so you can login and check your order history in the future</p>'
+			));
+			$personalFields->push(new FieldGroup(new ConfirmedPasswordField('Password', 'Password')));
+			
+			$validator->addRequiredField('Password');
+		}
+		
+		$validator->addRequiredField('FirstName');
+    $validator->addRequiredField('Email');
+    $validator->addRequiredField('HomePhone');
+    
+    $personalFields->setID('personal-details');
+	  $fields['PersonalDetails'] = $personalFields;
+	}
+	
+	private function addCartFields(&$fields, &$validator, $order) {
+	  
+	}
+	
+	private function addModifierFields(&$fields, &$validator, $order) {
+	  $shippingFields = new CompositeField();
+	  
+		foreach (Shipping::combined_form_fields($order) as $field) {
+		  $shippingFields->push($field);
+		}
+		
+		$shippingFields->setID('personal-details');
+		$fields['Modifiers'] = $shippingFields;
+	}
+	
+	private function addPaymentFields(&$fields, &$validator, $order) {
+	  $paymentFields = new CompositeField();
+	  
+		foreach (Payment::combined_form_fields($order->Total->getAmount()) as $field) {
+		  $paymentFields->push($field);
+		}
+		
+		$paymentFields->setID('payment');
+	  $fields['Payment'] = $paymentFields;
 	}
 	
 	/**
@@ -138,8 +183,11 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function ProcessOrder($data, $form) {
+	  
+	  //SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
+	  //exit('setting the new order form data here');
 
-	  //Get payment type
+	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
 
@@ -188,6 +236,39 @@ class CheckoutPage_Controller extends Page_Controller {
 		  $item->write();
     }
     
+    //Add addresses to order
+    //$order->addAddressesAtCheckout($data);
+    
+    $billingAddress = new Address();
+	  $billingAddress->OrderID = $order->ID;
+	  $billingAddress->MemberID = $member->ID;
+	  $billingAddress->FirstName = $data['Billing']['FirstName'];
+	  $billingAddress->Surname = $data['Billing']['Surname'];
+	  $billingAddress->Company = $data['Billing']['Company'];
+	  $billingAddress->Address = $data['Billing']['Address'];
+	  $billingAddress->AddressLine2 = $data['Billing']['AddressLine2'];
+	  $billingAddress->City = $data['Billing']['City'];
+	  $billingAddress->PostalCode = $data['Billing']['PostalCode'];
+	  $billingAddress->State = $data['Billing']['State'];
+	  $billingAddress->Country = $data['Billing']['Country'];
+	  $billingAddress->Type = 'Billing';
+	  $billingAddress->write();
+	  
+	  $shippingAddress = new Address();
+	  $shippingAddress->OrderID = $order->ID;
+	  $shippingAddress->MemberID = $member->ID;
+	  $shippingAddress->FirstName = $data['Shipping']['FirstName'];
+	  $shippingAddress->Surname = $data['Shipping']['Surname'];
+	  $shippingAddress->Company = $data['Shipping']['Company'];
+	  $shippingAddress->Address = $data['Shipping']['Address'];
+	  $shippingAddress->AddressLine2 = $data['Shipping']['AddressLine2'];
+	  $shippingAddress->City = $data['Shipping']['City'];
+	  $shippingAddress->PostalCode = $data['Shipping']['PostalCode'];
+	  $shippingAddress->State = $data['Shipping']['State'];
+	  $shippingAddress->Country = $data['Shipping']['Country'];
+	  $shippingAddress->Type = 'Shipping';
+	  $shippingAddress->write();
+    
     //Add modifiers to order
     $order->addModifiersAtCheckout($data);
 
@@ -226,6 +307,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * TODO validator for positive quantity
 	 * 
 	 * @see CheckoutForm
+	 * @deprecated
 	 */
 	function CheckoutForm() {
 
@@ -261,6 +343,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * Update the current cart quantities
 	 * 
 	 * @param SS_HTTPRequest $data
+	 * @deprecated
 	 */
 	function updateCart(SS_HTTPRequest $data) {
 
