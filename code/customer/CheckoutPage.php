@@ -117,8 +117,8 @@ class CheckoutPage_Controller extends Page_Controller {
 			new TextField('Shipping[State]', 'State')
 	  );
 
-    $countryField = new DropdownField('Shipping[Country]', 'Country', Geoip::getCountryDropDown());
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
+    $countryField = new DropdownField('Shipping[Country]', 'Country', Shipping::supported_countries());
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
     $shippingAddressFields->push($countryField);
 	  
 	  $shippingAddressFields->setID('shipping-address');
