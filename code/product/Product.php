@@ -214,7 +214,9 @@ class Product extends Page {
     $validator->setJavascriptValidationHandler('none'); 
     
     $controller = Controller::curr();
-    return new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
+    $form = new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
+    $form->disableSecurityToken();
+    return $form;
 	}
 
 }
