@@ -8,6 +8,13 @@ class ModifierSetField extends OptionsetField {
 	protected $disabledItems = array();
 	
 	/**
+	 * Template for main rendering
+	 *
+	 * @var string
+	 */
+	protected $template = "ModifierSetField";
+	
+	/**
 	 * Creates a new optionset field for order modifers with the naming convention
 	 * Modifiers[ClassName] where ClassName is name of modifier class.
 	 * 
@@ -22,4 +29,9 @@ class ModifierSetField extends OptionsetField {
 	  $name = "Modifiers[$name]";
 		parent::__construct($name, $title, $source, $value, $form);
 	}
+	
+  function FieldHolder() {
+		return $this->renderWith($this->template);
+	}
+	
 }

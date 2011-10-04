@@ -64,7 +64,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $this->addBillingAddressFields($fields, $validator);
     $this->addShippingAddressFields($fields, $validator);
     $this->addPersonalDetailsFields($fields, $validator, $member);
-    //$this->addModifierFields($fields, $validator, $order);
+    $this->addModifierFields($fields, $validator, $order);
     $this->addPaymentFields($fields, $validator, $order);
 
     $actions = new FieldSet(
@@ -99,7 +99,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $billingAddressFields->push($countryField);
 	  
 	  $billingAddressFields->setID('billing-address');
-	  $fields['BillingAddress'] = $billingAddressFields;
+	  $fields['BillingAddress'][] = $billingAddressFields;
 	}
 	
 	private function addShippingAddressFields(&$fields, &$validator) {
@@ -122,7 +122,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $shippingAddressFields->push($countryField);
 	  
 	  $shippingAddressFields->setID('shipping-address');
-	  $fields['ShippingAddress'] = $shippingAddressFields;
+	  $fields['ShippingAddress'][] = $shippingAddressFields;
 	}
 	
 	private function addPersonalDetailsFields(&$fields, &$validator, $member) {
@@ -152,7 +152,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $validator->addRequiredField('HomePhone');
     
     $personalFields->setID('personal-details');
-	  $fields['PersonalDetails'] = $personalFields;
+	  $fields['PersonalDetails'][] = $personalFields;
 	}
 	
 	private function addCartFields(&$fields, &$validator, $order) {
@@ -160,18 +160,10 @@ class CheckoutPage_Controller extends Page_Controller {
 	}
 	
 	private function addModifierFields(&$fields, &$validator, $order) {
-	  
-	  //Need to figure out how to add ModifierSetFields so that they can be displayed in the template
-	  
-	  $shippingFields = new FieldSet();
-	  
+
 		foreach (Shipping::combined_form_fields($order) as $field) {
-		  $shippingFields->push($field);
-		  //$fields['Modifiers'][] = $field;
+		  $fields['Modifiers'][] = $field;
 		}
-		
-		//$shippingFields->setID('shipping');
-		if ($shippingFields->exists()) $fields['Modifiers'] = $shippingFields;
 	}
 	
 	private function addPaymentFields(&$fields, &$validator, $order) {
@@ -182,7 +174,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 		
 		$paymentFields->setID('payment');
-	  $fields['Payment'] = $paymentFields;
+	  $fields['Payment'][] = $paymentFields;
 	}
 	
 	/**

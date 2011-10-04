@@ -13,8 +13,23 @@ class CheckoutForm extends Form {
     $this->groupedFields = $groupedFields;
     
     $fields = new FieldSet();
-    if (is_array($groupedFields)) foreach ($groupedFields as $setName => $compositeField) {
-      $fields->push($compositeField);
+    if (is_array($groupedFields)) foreach ($groupedFields as $setName => $setFields) {
+      
+      //SS_Log::log(new Exception(print_r($setFields, true)), SS_Log::NOTICE);
+      
+      foreach ($setFields as $field) {
+        $fields->push($field);
+      }
+      
+      
+      /*
+      if ($field instanceof FieldSet) foreach ($field as $f) {
+        $fields->push($f);
+      }
+      else {
+        $fields->push($field);
+      }
+      */
     }
     else if ($groupedFields instanceof FieldSet) $fields = $groupedFields;
     

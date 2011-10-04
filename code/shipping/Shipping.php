@@ -13,11 +13,13 @@ class Shipping extends DataObject {
 		//'PerItemShipping'
 	);
 	
+	/**
+	 * Get al the fields from all the shipping modules that are enabled
+	 * 
+	 * @param Order $order
+	 */
 	static function combined_form_fields($order) {
-	  
-	  //Get all the fields from all the shipping modules that are enabled in order
 	  $fields = new FieldSet();
-	  $fields->push(new HeaderField('Shipping'));
 	  
 	  foreach (self::$supported_methods as $className) {
 	    
@@ -28,10 +30,6 @@ class Shipping extends DataObject {
 	      $fields->push($field);
 	    } 
 	  }
-	  
-	  //Remove the heading if no other fields added
-	  if ($fields->Count() == 1) $fields = new FieldSet();
-	  
 	  return $fields;
 	}
 	
