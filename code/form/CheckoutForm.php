@@ -53,7 +53,7 @@ class CheckoutForm extends Form {
 
 		$fields = new FieldSet();
 		
-	  foreach($this->getExtraFields() as $field) {
+	  foreach ($this->getExtraFields() as $field) {
 			if (!$this->extraFieldsSet->fieldByName($field->Name())) {
 			  $this->extraFieldsSet->push($field);
 			  $fields->push($field);

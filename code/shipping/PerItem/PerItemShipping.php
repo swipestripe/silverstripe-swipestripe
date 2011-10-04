@@ -19,9 +19,11 @@ class PerItemShipping extends Shipping {
 	  	'ItemShipping', 
 	  	'Shipping per item (total cost)',
 	  	array(
-	  	  1 => 'Total item shipping costs' . $shippingCost->Nice()
+	  	  1 => 'To NZ ' . $shippingCost->Nice()
 	  	),
-	  	1
+	  	1,
+	  	null,
+	  	'Per Item Shipping'
 	  ));
 	  
 	  return $fields;
