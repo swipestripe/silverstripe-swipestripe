@@ -185,9 +185,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function ProcessOrder($data, $form) {
-	  
-	  //SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
-	  //exit('setting the new order form data here');
 
 	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
@@ -301,78 +298,6 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		Director::redirect($order->Link());
 		return true;
-	}
-	
-	/**
-	 * Form including quantities for items for displaying on the checkout
-	 * 
-	 * TODO validator for positive quantity
-	 * 
-	 * @see CheckoutForm
-	 * @deprecated
-	 */
-	function CheckoutForm() {
-
-	  $fields = new FieldSet();
-	  $validator = new RequiredFields();
-	  $currentOrder = $this->Cart();
-	  $items = $currentOrder->Items();
-	  
-	  if ($items) foreach ($items as $item) {
-	    
-	    $quantityField = new CartQuantityField('Quantity['.$item->ID.']', '', $item->Quantity);
-	    $quantityField->setItem($item);
-	    
-	    $fields->push($quantityField);
-	    
-	    $itemOptions = $item->ItemOptions();
-	    if ($itemOptions && $itemOptions->exists()) foreach($itemOptions as $itemOption) {
-	      //TODO if item option is not a Variation then add it as another row to the checkout
-	      //Like gift wrapping as an option perhaps
-	    } 
-	    
-	    $validator->addRequiredField('Quantity['.$item->ID.']');
-	  } 
-	  
-    $actions = new FieldSet(
-      new FormAction('updateCart', 'Update Cart')
-    );
-    
-    return new CartForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
-	}
-	
-	/**
-	 * Update the current cart quantities
-	 * 
-	 * @param SS_HTTPRequest $data
-	 * @deprecated
-	 */
-	function updateCart(SS_HTTPRequest $data) {
-
-	  $currentOrder = $this->Cart();
-	  $quantities = $data->postVar('Quantity');
-
-	  if ($quantities) foreach ($quantities as $itemID => $quantity) {
-	    
-  	  //If quantity not correct throw error
-  	  if (!is_numeric($quantity) || $quantity < 0) {
-  	    user_error("Cannot change quantity, quantity must be a non negative number.", E_USER_WARNING);
-  	  }
-
-	    if ($item = $currentOrder->Items()->find('ID', $itemID)) {
-	      
-  	    if ($quantity == 0) {
-    	    $item->delete();
-    	  }
-    	  else {
-    	    $item->Quantity = $quantity;
-	        $item->write();
-    	  }
-	    }
-	  }
-	  
-	  $currentOrder->updateTotal();
-	  Director::redirectBack();
 	}
 
 }

@@ -1,7 +1,7 @@
 <tr class="gap total">
 
   <td class="threeColHeader" colspan="4">
-    $ModifierType
+    $Title
   </td>
 
   <td class="threeColHeader">

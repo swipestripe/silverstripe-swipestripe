@@ -57,7 +57,6 @@ class PerItemShipping extends Shipping {
   }
   
   public function Description($optionID) {
-    
     return 'Total shipping costs (per item)';
   }
 

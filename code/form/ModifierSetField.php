@@ -14,8 +14,6 @@ class ModifierSetField extends OptionsetField {
 	 */
 	protected $template = "ModifierSetField";
 	
-	protected $modifierType;
-	
 	/**
 	 * Creates a new optionset field for order modifers with the naming convention
 	 * Modifiers[ClassName] where ClassName is name of modifier class.
@@ -26,19 +24,14 @@ class ModifierSetField extends OptionsetField {
 	 * @param value The current value
 	 * @param form The parent form
 	 */
-	function __construct($name, $title = "", $source = array(), $value = "", $form = null, $modifierType = null) {
-	  
-	  $this->modifierType = $modifierType;
+	function __construct($name, $title = "", $source = array(), $value = "", $form = null) {
+
 	  $name = "Modifiers[$name]";
 		parent::__construct($name, $title, $source, $value, $form);
 	}
 	
   function FieldHolder() {
 		return $this->renderWith($this->template);
-	}
-	
-	function ModifierType() {
-	  return $this->modifierType;
 	}
 	
 }
