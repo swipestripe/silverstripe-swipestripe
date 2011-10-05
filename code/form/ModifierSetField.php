@@ -1,6 +1,6 @@
 <?php
 
-class ModifierSetField extends OptionsetField {
+class ModifierSetField extends DropdownField {
 	
 	/**
 	 * @var Array
