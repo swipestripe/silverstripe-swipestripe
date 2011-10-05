@@ -10,7 +10,8 @@ class FlatFeeShippingCountry extends DataObject {
   
   public static $db = array(
     'CountryCode' => 'Varchar(2)', //Two letter country codes for ISO 3166-1 alpha-2
-    'Amount' => 'Money'
+    'Amount' => 'Money',
+    'Description' => 'Varchar'
 	);
 	
 	static $has_one = array (
@@ -27,12 +28,18 @@ class FlatFeeShippingCountry extends DataObject {
     
     $countryField = new DropdownField('CountryCode', 'Country', Shipping::supported_countries());
     $fields->push($countryField);
+    
+    $fields->push(new TextField('Description', 'Description (for displaying on checkout form)'));
 
     return $fields;
   }
   
   public function AmountSummary() {
     return $this->Amount->Nice();
+  }
+  
+  public function DescriptionSummary() {
+    return $this->Description . ' ' . $this->Amount->Nice();
   }
 	
 }

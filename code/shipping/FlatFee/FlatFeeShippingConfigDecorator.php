@@ -31,6 +31,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
       'FlatFeeShippingCountries',
       'FlatFeeShippingCountry',
       array(
+        'Description' => 'Description',
         'CountryCode' => 'Country Code',
         'AmountSummary'=> 'Amount'
       ),

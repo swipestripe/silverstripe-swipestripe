@@ -41,18 +41,18 @@ class FlatFeeShipping extends Shipping {
   }
 	
   function getFormFields($order) {
-	  
+    
+    //TODO use site config to get the countries back, but at the moment
+    //site config ID not being set correctly
+
 	  $fields = new FieldSet();
+	  $flatFeeShippingCountries = DataObject::get('FLatFeeShippingCountry');
 
 	  $fields->push(new ModifierSetField(
 	  	'FlatFeeShipping', 
 	  	'Flat Fee Shipping',
-	  	array(
-	  	  1 => 'Flat Fee Shipping $5',
-	  	  2 => 'Some other shipping that is $5',
-	  	  3 => 'Air shipping $10.95'
-	  	),
-	  	1
+	  	$flatFeeShippingCountries->map('ID', 'DescriptionSummary'),
+	  	$flatFeeShippingCountries->First()->ID
 	  ));
 	  
 	  return $fields;
