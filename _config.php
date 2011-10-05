@@ -3,7 +3,7 @@
 //Decorators
 Object::add_extension('Member', 'CustomerDecorator');
 Object::add_extension('Payment', 'PaymentDecorator');
-Object::add_extension('SiteConfig', 'OrderConfigDecorator');
+Object::add_extension('SiteConfig', 'CartConfigDecorator');
 
 //TODO get rid of product controller dependency?
 Object::add_extension('Page_Controller', 'ProductControllerExtension');

@@ -7,6 +7,14 @@
  *
  */
 class FlatFeeShipping extends Shipping {
+  
+	/**
+   * For setting configuration, should be called from _config.php files only
+   */
+  public static function enable() {
+    Shipping::$supported_methods[] = 'FlatFeeShipping';
+    Object::add_extension('SiteConfig', 'FlatFeeShippingConfigDecorator');
+  }
 
   public function Amount($optionID, $order) {
     $amount = new Money();

@@ -11,7 +11,7 @@ class ProcessedEmail extends Email {
    * Email signature
    * 
    * @var String HTML content from central config for signature
-   * @see OrderConfigDecorator
+   * @see CartConfigDecorator
    */
   public $signature;
 
