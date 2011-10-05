@@ -239,38 +239,8 @@ class CheckoutPage_Controller extends Page_Controller {
     }
     
     //Add addresses to order
-    //$order->addAddressesAtCheckout($data);
-    
-    $billingAddress = new Address();
-	  $billingAddress->OrderID = $order->ID;
-	  $billingAddress->MemberID = $member->ID;
-	  $billingAddress->FirstName = $data['Billing']['FirstName'];
-	  $billingAddress->Surname = $data['Billing']['Surname'];
-	  $billingAddress->Company = $data['Billing']['Company'];
-	  $billingAddress->Address = $data['Billing']['Address'];
-	  $billingAddress->AddressLine2 = $data['Billing']['AddressLine2'];
-	  $billingAddress->City = $data['Billing']['City'];
-	  $billingAddress->PostalCode = $data['Billing']['PostalCode'];
-	  $billingAddress->State = $data['Billing']['State'];
-	  $billingAddress->Country = $data['Billing']['Country'];
-	  $billingAddress->Type = 'Billing';
-	  $billingAddress->write();
-	  
-	  $shippingAddress = new Address();
-	  $shippingAddress->OrderID = $order->ID;
-	  $shippingAddress->MemberID = $member->ID;
-	  $shippingAddress->FirstName = $data['Shipping']['FirstName'];
-	  $shippingAddress->Surname = $data['Shipping']['Surname'];
-	  $shippingAddress->Company = $data['Shipping']['Company'];
-	  $shippingAddress->Address = $data['Shipping']['Address'];
-	  $shippingAddress->AddressLine2 = $data['Shipping']['AddressLine2'];
-	  $shippingAddress->City = $data['Shipping']['City'];
-	  $shippingAddress->PostalCode = $data['Shipping']['PostalCode'];
-	  $shippingAddress->State = $data['Shipping']['State'];
-	  $shippingAddress->Country = $data['Shipping']['Country'];
-	  $shippingAddress->Type = 'Shipping';
-	  $shippingAddress->write();
-    
+    $order->addAddressesAtCheckout($data);
+
     //Add modifiers to order
     $order->addModifiersAtCheckout($data);
 
@@ -305,7 +275,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	
 	function updateOrderFormCart(SS_HTTPRequest $data) {
 	  
-	  SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
+	  //SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
 	  
 	  //gets AJAX request with POST data in it, updates the Order by saving a modifier
 	  //returns the cart view portion
@@ -315,9 +285,17 @@ class CheckoutPage_Controller extends Page_Controller {
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
     
-    $order->addModifiersAtCheckout($data);
+    //Add addresses to order, then when getting the shipping fields use the shipping address to 
+    //filter results
+    $order->addAddressesAtCheckout($data);
     
+    //Need to filter and select the correct modfiers based on 
+    //modifier chosen currently
+    //modifiers that are available for this country
     $this->addModifierFields($fields, $validator, $order);
+    
+    //If modifiers have been restricted, update data before updating order
+    $order->addModifiersAtCheckout($data);
     
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')

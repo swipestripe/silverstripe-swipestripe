@@ -28,8 +28,6 @@
     		
     		//AJAX call to update the cart
     		var values = $('#CheckoutForm_OrderForm').serialize();
-    		console.log(values);
-    		
     		$.ajax({
 			  url: window.location.pathname + '/updateOrderFormCart',
 			  type: 'POST',

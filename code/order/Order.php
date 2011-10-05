@@ -668,7 +668,63 @@ class Order extends DataObject {
 	}
 	
 	function addAddressesAtCheckout(Array $data) {
+	  
+	  $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
+    $order = Product_Controller::get_current_order();
+    
+    //If there is a current billing and shipping address, update them, otherwise create new ones
+    $existingBillingAddress = $this->BillingAddress();
+    $existingShippingAddress = $this->ShippingAddress();
+    
+    if ($existingBillingAddress && $existingBillingAddress->exists()) {
+      $newData = array();
+      if (is_array($data['Billing'])) foreach ($data['Billing'] as $fieldName => $value) {
+        $newData[$fieldName] = $value;
+      }
+      $existingBillingAddress->update($newData);
+      $existingBillingAddress->write();
+    }
+    else {
+      $billingAddress = new Address();
+  	  $billingAddress->OrderID = $order->ID;
+  	  if ($member->ID) $billingAddress->MemberID = $member->ID;
+  	  $billingAddress->FirstName = $data['Billing']['FirstName'];
+  	  $billingAddress->Surname = $data['Billing']['Surname'];
+  	  $billingAddress->Company = $data['Billing']['Company'];
+  	  $billingAddress->Address = $data['Billing']['Address'];
+  	  $billingAddress->AddressLine2 = $data['Billing']['AddressLine2'];
+  	  $billingAddress->City = $data['Billing']['City'];
+  	  $billingAddress->PostalCode = $data['Billing']['PostalCode'];
+  	  $billingAddress->State = $data['Billing']['State'];
+  	  $billingAddress->Country = $data['Billing']['Country'];
+  	  $billingAddress->Type = 'Billing';
+  	  $billingAddress->write();
+    }
 
+    if ($existingShippingAddress && $existingShippingAddress->exists()) {
+      $newData = array();
+      if (is_array($data['Shipping'])) foreach ($data['Shipping'] as $fieldName => $value) {
+        $newData[$fieldName] = $value;
+      }
+      $existingShippingAddress->update($newData);
+      $existingShippingAddress->write();
+    }
+    else {
+  	  $shippingAddress = new Address();
+  	  $shippingAddress->OrderID = $order->ID;
+  	  if ($member->ID) $shippingAddress->MemberID = $member->ID;
+  	  $shippingAddress->FirstName = $data['Shipping']['FirstName'];
+  	  $shippingAddress->Surname = $data['Shipping']['Surname'];
+  	  $shippingAddress->Company = $data['Shipping']['Company'];
+  	  $shippingAddress->Address = $data['Shipping']['Address'];
+  	  $shippingAddress->AddressLine2 = $data['Shipping']['AddressLine2'];
+  	  $shippingAddress->City = $data['Shipping']['City'];
+  	  $shippingAddress->PostalCode = $data['Shipping']['PostalCode'];
+  	  $shippingAddress->State = $data['Shipping']['State'];
+  	  $shippingAddress->Country = $data['Shipping']['Country'];
+  	  $shippingAddress->Type = 'Shipping';
+  	  $shippingAddress->write();
+    }
 	}
 	
 	function BillingAddress() {
