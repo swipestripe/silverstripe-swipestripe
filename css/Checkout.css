@@ -16,13 +16,6 @@
   border: 1px solid green;
 }
 
-#personal-details {
-  width: 100%;
-  border: 1px solid black;
-  float: left;
-  margin-top: 20px;	
-}
-
 #Checkout .Actions {
   text-align: right;	
 }
@@ -49,4 +42,28 @@ h3#Form_OrderForm_HeaderFieldPayment-Type {
 
 div#Amount {
   display: none;	
+}
+
+h3#CheckoutForm_OrderForm_HeaderFieldShipping-Address {
+  float: left;
+}
+
+#Shipping[FirstName] {
+  clear: both;
+  border: 1px solid blue;	
+}
+
+#personal-details {
+  width: 100%;
+  border: 1px solid black;
+  float: left;
+  margin-top: 20px; 
+}
+
+div.shipping-firstname {
+  clear: both;	
+}
+
+input.text, #LeftCheckout.select, #RightCheckout.select {
+  width: 200px;	
 }

@@ -40,6 +40,9 @@ class CheckoutPage_Controller extends Page_Controller {
     
     Requirements::css('stripeycart/css/OrderReport.css');
     Requirements::css('stripeycart/css/Checkout.css');
+    
+    Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript('stripeycart/javascript/CheckoutPage.js');
 
     return array( 
        'Content' => $this->Content, 
@@ -105,10 +108,13 @@ class CheckoutPage_Controller extends Page_Controller {
 	
 	private function addShippingAddressFields(&$fields, &$validator) {
 	  
+	  $shippingFirstNameField = new TextField('Shipping[FirstName]', 'First Name');
+	  $shippingFirstNameField->addExtraClass('shipping-firstname');
+	  
 	  $shippingAddressFields = new CompositeField(
 	    new HeaderField('Shipping Address', 3),
 	    new CheckboxField('ShipToBillingAddress', 'to same address?'),
-			new TextField('Shipping[FirstName]', 'First Name'),
+			$shippingFirstNameField,
 			new TextField('Shipping[Surname]', 'Surname'),
 			new TextField('Shipping[Company]', 'Company'),
 			new TextField('Shipping[Address]', 'Address 1'),
