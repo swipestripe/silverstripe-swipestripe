@@ -14,22 +14,8 @@ class CheckoutForm extends Form {
     
     $fields = new FieldSet();
     if (is_array($groupedFields)) foreach ($groupedFields as $setName => $setFields) {
-      
-      //SS_Log::log(new Exception(print_r($setFields, true)), SS_Log::NOTICE);
-      
-      foreach ($setFields as $field) {
-        $fields->push($field);
-      }
-      
-      
-      /*
-      if ($field instanceof FieldSet) foreach ($field as $f) {
-        $fields->push($f);
-      }
-      else {
-        $fields->push($field);
-      }
-      */
+
+      foreach ($setFields as $field) $fields->push($field);
     }
     else if ($groupedFields instanceof FieldSet) $fields = $groupedFields;
     
@@ -53,6 +39,7 @@ class CheckoutForm extends Form {
 
 		$fields = new FieldSet();
 		
+		//TODO fix this, have to disable security token for now @see CheckoutPage::OrderForm()
 	  foreach ($this->getExtraFields() as $field) {
 			if (!$this->extraFieldsSet->fieldByName($field->Name())) {
 			  $this->extraFieldsSet->push($field);

@@ -16,28 +16,50 @@ class FlatFeeShipping extends Shipping {
     Object::add_extension('SiteConfig', 'FlatFeeShippingConfigDecorator');
   }
 
+  /**
+   * Use the optionID to get the amount for the FlatFeeShippingCountry
+   * 
+   * @see Shipping::Amount()
+   * @param $optionID FlatFeeShippingCountry ID
+   */
   public function Amount($optionID, $order) {
+
     $amount = new Money();
-	  
-	  $currency = Modifier::currency();
+    $currency = Modifier::currency();
 	  $amount->setCurrency($currency);
-	  
-	  $shippingCosts = array(
-	    1 => '5.00',
-	    2 => '5.00',
-	    3 => '10.95'
-	  );
-	  $amount->setAmount($shippingCosts[$optionID]);
+    $flatFeeShippingCountries = DataObject::get('FLatFeeShippingCountry');
+
+    if ($flatFeeShippingCountries && $flatFeeShippingCountries->exists()) {
+      
+      $shippingCountry = $flatFeeShippingCountries->find('ID', $optionID);
+      if ($shippingCountry) {
+        $amount->setAmount($shippingCountry->Amount->getAmount());
+      }
+      else user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
+    }
 	  return $amount;
   }
   
+  /**
+   * Use the optionID to get the description summary for the FlatFeeShippingCountry
+   * 
+   * @see Shipping::Description()
+   * @param $optionID FlatFeeShippingCountry ID
+   */
   public function Description($optionID) {
-    $shippingDescriptions = array(
-	    1 => 'Flat Fee Shipping',
-	    2 => 'Some Other Shipping',
-	    3 => 'Air Shipping'
-	  );
-	  return $shippingDescriptions[$optionID];
+    
+    $description = null;
+    $flatFeeShippingCountries = DataObject::get('FLatFeeShippingCountry');
+    
+    if ($flatFeeShippingCountries && $flatFeeShippingCountries->exists()) {
+      
+      $shippingCountry = $flatFeeShippingCountries->find('ID', $optionID);
+      if ($shippingCountry) {
+        $description = $shippingCountry->DescriptionSummary();
+      }
+      else user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
+    }
+	  return $description;
   }
 	
   function getFormFields($order) {

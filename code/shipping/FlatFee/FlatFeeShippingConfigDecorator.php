@@ -11,11 +11,6 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 		);
 	}
 
-	/**
-	 * Fields for sending receipts for orders basically
-	 * 
-	 * @see DataObjectDecorator::updateCMSFields()
-	 */
   function updateCMSFields(FieldSet &$fields) {
 
     //$fields->addFieldToTab("Root", new TabSet('StripeyCart')); 

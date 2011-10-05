@@ -72,6 +72,7 @@ class CheckoutPage_Controller extends Page_Controller {
     );
 
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
+    $form->disableSecurityToken();
     
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
