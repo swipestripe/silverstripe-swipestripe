@@ -62,13 +62,24 @@ class FlatFeeShipping extends Shipping {
 	  return $description;
   }
 	
-  function getFormFields($order) {
+  function getFormFields(Order $order) {
     
-    //TODO use site config to get the countries back, but at the moment
-    //site config ID not being set correctly
+    //TODO use SiteConfig object to get the countries back, but at the moment
+    //SiteConfig ID not being set correctly on country db rows
 
 	  $fields = new FieldSet();
 	  $flatFeeShippingCountries = DataObject::get('FLatFeeShippingCountry');
+	  
+	  //Filter based on shipping address
+	  $shippingCountry = null;
+	  if ($order && $order->exists()) {
+	    $shippingAddress = $order->ShippingAddress();
+  	  if ($shippingAddress) $shippingCountry = $shippingAddress->Country;
+	  }
+	  
+	  if ($shippingCountry) foreach ($flatFeeShippingCountries as $country) {
+	    if ($country->CountryCode != $shippingCountry) $flatFeeShippingCountries->remove($country);
+	  }
 
 	  $fields->push(new ModifierSetField(
 	  	'FlatFeeShipping', 
