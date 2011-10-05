@@ -47,12 +47,26 @@ class Product extends Page {
     $fields = parent::getCMSFields();
     
     //Basic db fields
+    /*
     $manager = new ImageDataObjectManager(
       $this,
       'Images',
       'ProductImage',
       'Image',
       array(
+        'Caption' => 'Caption'
+      ),
+      'getCMSFields_forPopup'
+    );
+    $fields->addFieldToTab("Root.Content.Gallery", $manager);
+    */
+    
+    $manager = new ComplexTableField(
+      $this,
+      'Images',
+      'ProductImage',
+      array(
+        'ThumbnailSummary' => 'Thumbnail',
         'Caption' => 'Caption'
       ),
       'getCMSFields_forPopup'

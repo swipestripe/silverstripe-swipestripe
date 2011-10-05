@@ -11,9 +11,18 @@ class ProductImage extends DataObject
   );
 
   public function getCMSFields_forPopup() {
-    return new FieldSet(
-      new TextareaField('Caption'),
-      new FileIFrameField('Image')
-    );
+    
+    $fields = new FieldSet();
+    $fields->push(new TextareaField('Caption'));
+    
+    if (class_exists('ImageUploadField')) $fields->push(new ImageUploadField('Image'));
+    else $fields->push(new FileIFrameField('Image'));
+    
+    return $fields;
+  }
+  
+  function ThumbnailSummary() {
+    if ($Image = $this->Image()) return $Image->CMSThumbnail();
+    else return '(No Image)';
   }
 }
