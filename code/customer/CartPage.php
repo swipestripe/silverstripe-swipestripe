@@ -1,8 +1,6 @@
 <?php
 class CartPage extends Page
 {
-  static $db = array(
-  );
 
   public function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -90,7 +88,7 @@ class CartPage_Controller extends Page_Controller {
 	 */
 	function updateCart(SS_HTTPRequest $data) {
 
-	  $currentOrder = $this->Cart();
+	  $currentOrder = Product_Controller::get_current_order();
 	  $quantities = $data->postVar('Quantity');
 
 	  if ($quantities) foreach ($quantities as $itemID => $quantity) {

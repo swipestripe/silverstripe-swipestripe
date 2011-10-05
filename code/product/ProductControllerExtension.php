@@ -3,10 +3,7 @@
 class ProductControllerExtension extends Extension {
   
   public static $allowed_actions = array (
-  	'add',
-    'remove',
     'clear',
-    'AddToCartForm',
     'RemoveFromCartForm'
   );
   
@@ -16,75 +13,6 @@ class ProductControllerExtension extends Extension {
   function clear() {
     Session::clear('Cart.OrderID');
     $this->goToNextPage();
-  }
-
-  /**
-   * Add an item to the cart
-   *
-  function add() {
-    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
-    $this->goToNextPage();
-  }
-  */
-  
-  /**
-   * Remove an item from the cart
-   *
-  function remove() {
-    self::get_current_order()->removeItem($this->getProduct(), $this->getQuantity());
-    $this->goToNextPage();
-  }
-  
-  /**
-   * Find a product based on current request
-   * 
-   * @see SS_HTTPRequest
-   * @return DataObject 
-   *
-  private function getProduct() {
-    $request = $this->owner->getRequest();
-    return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
-  }
-  
-  /**
-   * Get product options based on current request
-   * 
-   * @see SS_HTTPRequest
-   * @return DataObject 
-   *
-  private function getProductOptions() {
-    
-    $options = new DataObjectSet();
-    $request = $this->owner->getRequest();
-
-    foreach ($request->requestVar('Options') as $optionClassName => $optionID) {
-      $options->push(DataObject::get_by_id($optionClassName, $optionID));
-    }
-    return $options;
-  }
-  
-  /**
-   * Find the quantity based on current request
-   * 
-   * @return Int
-   *
-  private function getQuantity() {
-    $quantity = $this->owner->getRequest()->requestVar('Quantity');
-    return ($quantity) ?$quantity :1;
-  }
-  
-  /**
-   * Send user to next page based on current request vars,
-   * if no redirect is specified redirect back.
-   * 
-   * TODO make this work with AJAX
-   *
-  private function goToNextPage() {
-    $redirectURL = $this->owner->getRequest()->requestVar('Redirect');
-
-    //Check if on site URL, if so redirect there, else redirect back
-    if ($redirectURL && Director::is_site_url($redirectURL)) Director::redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
-    else Director::redirectBack();
   }
 
   /**
@@ -125,23 +53,6 @@ class ProductControllerExtension extends Extension {
     
     return $order;
   }
-  /*
-  function AddToCartForm($quantity = null, $redirectURL = null) {
-    
-    //TODO Check if owner is a type of product before returning a form
-
-    $fields = $this->getAddProductFields($quantity, $redirectURL);
-    $actions = new FieldSet(
-      new FormAction('add', 'Add To Cart')
-    );
-    $validator = new RequiredFields(
-    	'ProductClass', 
-    	'ProductID'
-    );
-     
-    return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
-	}
-	*/
 	
 	/**
 	 * 
@@ -165,21 +76,6 @@ class ProductControllerExtension extends Extension {
     return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
 	}
 	
-	/*
-	protected function getAddProductFields($quantity = null, $redirectURL = null) {
-	  $fields = $this->getProductFields($quantity, $redirectURL);
-	  
-	  //Cannot use extend in Extension class because the concrete class 
-    //is not in Object->extension_instances...
-    //$this->owner->extend('updateAddProductFields', $fields);
-
-    if (method_exists($this->owner, 'updateAddProductFields')) {
-      $this->owner->updateAddProductFields($fields);
-    }
-    return $fields;
-	}
-	*/
-	
 	/**
 	 * 
 	 * @deprecated
@@ -194,22 +90,6 @@ class ProductControllerExtension extends Extension {
     }
     return $fields;
 	}
-	
-	/*
-	protected function getProductFields($quantity = null, $redirectURL = null) {
-	  
-	  //TODO this should be moved to the product class
-	  
-	  $productObject = $this->owner->data();
-	  return new FieldSet(
-      new TextField('ProductClass', 'ProductClass', $productObject->ClassName),
-      new TextField('ProductID', 'ProductID', $productObject->ID),
-      new TextField('ProductVariationID', 'ProductVariationID'),
-      new HiddenField('Redirect', 'Redirect', $redirectURL),
-      new TextField('Quantity', 'Quantity', $quantity)
-    );
-	}
-	*/
 	
 	/**
 	 * Updates timestamp LastActive on the order, should be called on every request

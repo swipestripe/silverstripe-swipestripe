@@ -1,5 +1,4 @@
-<h3>Your Order</h3>
-
+<% control Cart %>
 <table id="InformationTable" class="infotable">
   <thead>
     <tr>
@@ -59,3 +58,4 @@
     </tr>
   </tbody>
 </table>
+<% end_control %>

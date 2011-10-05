@@ -21,6 +21,28 @@
         			if (ShippingAddressVals[ID]) $(this).val(ShippingAddressVals[ID]);
         		});
     		}
+    		$('#CheckoutForm_OrderForm_Shipping-Country').change();
     	});
+    	
+    	$('#CheckoutForm_OrderForm_Shipping-Country').live('change', function(){
+    		
+    		//AJAX call to update the cart
+    		var values = $('#CheckoutForm_OrderForm').serialize();
+    		console.log(values);
+    		
+    		$.ajax({
+			  url: window.location.pathname + '/updateOrderFormCart',
+			  type: 'POST',
+			  data: values,
+			  success: function(data){
+				  
+			    //console.log(data);
+			    
+			    $('#InformationTable').replaceWith(data);
+			  }
+			});
+    	});
+    	
+    	//$('#CheckoutForm_OrderForm_Shipping-Country').change();
     })
 })(jQuery);

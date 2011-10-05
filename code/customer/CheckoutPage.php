@@ -162,10 +162,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $fields['PersonalDetails'][] = $personalFields;
 	}
 	
-	private function addCartFields(&$fields, &$validator, $order) {
-	  
-	}
-	
 	private function addModifierFields(&$fields, &$validator, $order) {
 
 		foreach (Shipping::combined_form_fields($order) as $field) {
@@ -305,6 +301,32 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		Director::redirect($order->Link());
 		return true;
+	}
+	
+	function updateOrderFormCart(SS_HTTPRequest $data) {
+	  
+	  SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
+	  
+	  //gets AJAX request with POST data in it, updates the Order by saving a modifier
+	  //returns the cart view portion
+	  
+	  $fields = array();
+    $validator = new RequiredFields();
+    $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
+    $order = Product_Controller::get_current_order();
+    
+    $order->addModifiersAtCheckout($data);
+    
+    $this->addModifierFields($fields, $validator, $order);
+    
+    $actions = new FieldSet(
+      new FormAction('ProcessOrder', 'Proceed to pay')
+    );
+
+    $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
+    $form->disableSecurityToken();
+	  
+	  return $form->renderWith('CheckoutFormOrder');
 	}
 
 }

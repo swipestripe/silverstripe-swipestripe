@@ -25,9 +25,8 @@
       $FieldHolder
     <% end_control %>
     
-    <% control Cart %>
-      <% include CheckoutFormOrder %>
-    <% end_control %>
+    <h3>Your Order</h3>
+    <% include CheckoutFormOrder %>
     
     <% control Fields(Payment) %>
       $FieldHolder
