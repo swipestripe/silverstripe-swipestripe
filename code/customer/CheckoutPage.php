@@ -274,12 +274,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	}
 	
 	function updateOrderFormCart(SS_HTTPRequest $data) {
-	  
-	  //SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
-	  
-	  //gets AJAX request with POST data in it, updates the Order by saving a modifier
-	  //returns the cart view portion
-	  
+
 	  $fields = array();
     $validator = new RequiredFields();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
@@ -289,18 +284,35 @@ class CheckoutPage_Controller extends Page_Controller {
     //filter results
     $order->addAddressesAtCheckout($data);
     
-    //Need to filter and select the correct modfiers based on 
-    //modifier chosen currently
-    //modifiers that are available for this country
+    //Add modifier fields
     $this->addModifierFields($fields, $validator, $order);
-    
-    //If modifiers have been restricted, update data before updating order
-    $order->addModifiersAtCheckout($data);
+ 
+    //Modifier fields might have changed, so update the order with new defaults
+    //by getting the new modifier field values and passing to addModifiersAtCheckout()
+    //Also check to set the fields to the same values as passed by POSTed data
+    $modifierData = $data->postVar('Modifiers');
+    foreach ($fields['Modifiers'] as $field) {
+      
+      $name = str_replace(array('[', ']'), array('#', ''), $field->Name());
+      $nameParts = explode('#', $name);
+      $modifierType = (isset($nameParts[1])) ?$nameParts[1] :null;
+
+      if ($modifierType && isset($modifierData[$modifierType])) {
+        
+        //Set the field value to what was passed in POST if possible
+        $optionVals = array_keys($field->getSource());
+        if (in_array($modifierData[$modifierType], $optionVals)) {
+          $field->setValue($modifierData[$modifierType]);
+        }
+        
+        $modifierData[$modifierType] = $field->Value();
+      }
+    }
+    $order->addModifiersAtCheckout(array('Modifiers' => $modifierData));
     
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')
     );
-
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
 	  

@@ -33,13 +33,28 @@
 			  type: 'POST',
 			  data: values,
 			  success: function(data){
-				  
-			    //console.log(data);
-			    
 			    $('#InformationTable').replaceWith(data);
 			  }
 			});
     	});
+    	
+    	$('#CheckoutForm_OrderForm_Modifiers-FlatFeeShipping').live('change', function() {
+    		
+    		//AJAX call to update the cart
+    		var values = $('#CheckoutForm_OrderForm').serialize();
+    		$.ajax({
+			  url: window.location.pathname + '/updateOrderFormCart',
+			  type: 'POST',
+			  data: values,
+			  success: function(data){
+			    $('#InformationTable').replaceWith(data);
+			  }
+			});
+    	});
+    	
+    	var updateOrderFormCartAJAX = function() {
+    		
+    	}
     	
     	//$('#CheckoutForm_OrderForm_Shipping-Country').change();
     })

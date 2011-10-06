@@ -638,7 +638,7 @@ class Order extends DataObject {
 	}
 	
 	function addModifiersAtCheckout(Array $data) {
-	  
+
 	  //Save the order modifiers
     $existingModifiers = $this->Modifiers();
 	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $optionID) {
@@ -647,8 +647,19 @@ class Order extends DataObject {
 	    //protects against resubmission of checkout form
 	    if ($existingModifiers) foreach ($existingModifiers as $modifier) {
 	      
-	      if ($modifier->ModifierClass == $modifierClass
-	          && $modifier->ModifierOptionID == $optionID) {
+	      if ($modifier->ModifierClass == $modifierClass) {
+	          //&& $modifier->ModifierOptionID == $optionID) {
+          
+          //Update the current modifier
+          $modifier->ModifierOptionID = $optionID;
+	    
+          $modifierInstance = new $modifierClass();
+          $modifier->Amount = call_user_func(array($modifierInstance, 'Amount'), $optionID, $this);
+          $modifier->Description = call_user_func(array($modifierInstance, 'Description'), $optionID);
+          
+          $modifier->OrderID = $this->ID;
+          $modifier->write();
+	            
 	        continue 2;
 	      }
 	    }
