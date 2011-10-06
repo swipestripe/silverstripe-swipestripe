@@ -224,7 +224,8 @@ class Product_Controller extends Page_Controller {
   
   public static $allowed_actions = array (
   	'add',
-    'options'
+    'options',
+    'AddToCartForm'
   );
 
 	/**

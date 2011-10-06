@@ -52,6 +52,8 @@ class CartPage_Controller extends Page_Controller {
 	 * @see CheckoutForm
 	 */
 	function CartForm() {
+	  
+	  SS_Log::log(new Exception(print_r('I think this may be called...', true)), SS_Log::NOTICE);
 
 	  $fields = new FieldSet();
 	  $validator = new RequiredFields();
@@ -75,21 +77,43 @@ class CartPage_Controller extends Page_Controller {
 	  } 
 	  
     $actions = new FieldSet(
-      new FormAction('updateCart', 'Update Cart')
+      new FormAction('updateCart', 'Update Cart'),
+      new FormAction('goToCheckout', 'Go To Checkout')
     );
     
-    return new CartForm($this, 'updateCart', $fields, $actions, $validator, $currentOrder);
+    return new CartForm($this, 'CartForm', $fields, $actions, $validator, $currentOrder);
 	}
 	
 	/**
 	 * Update the current cart quantities
 	 * 
-	 * @param SS_HTTPRequest $data
+	 * @param Array $data
+	 * @param Form $form
 	 */
-	function updateCart(SS_HTTPRequest $data) {
-
+	function updateCart(Array $data, Form $form) {
+	  $this->saveCart($data);
+	  $this->redirectBack();
+	}
+	
+	/**
+	 * Update the current cart quantities and redirect to checkout
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 */
+	function goToCheckout(Array $data, Form $form) {
+	  $this->saveCart($data);
+	  
+	  if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
+	    $this->redirect($checkoutPage->AbsoluteLink());
+	  }
+	  else user_error("Cannot go to checkout page because it does not exist.", E_USER_WARNING);
+	}
+	
+	private function saveCart(Array $data) {
+	  
 	  $currentOrder = Product_Controller::get_current_order();
-	  $quantities = $data->postVar('Quantity');
+	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 
 	  if ($quantities) foreach ($quantities as $itemID => $quantity) {
 	    
@@ -111,7 +135,6 @@ class CartPage_Controller extends Page_Controller {
 	  }
 	  
 	  $currentOrder->updateTotal();
-	  Director::redirectBack();
 	}
 
 }

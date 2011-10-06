@@ -17,7 +17,7 @@ class CheckoutPage extends Page
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
-		if(!DataObject::get_one('CheckoutPage')) {
+		if (!DataObject::get_one('CheckoutPage')) {
 			$page = new CheckoutPage();
 			$page->Title = 'Checkout';
 			$page->Content = '<p>This is the checkout page, it is used for customers to complete their order.</p>';

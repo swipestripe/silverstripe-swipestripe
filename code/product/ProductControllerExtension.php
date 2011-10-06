@@ -4,7 +4,8 @@ class ProductControllerExtension extends Extension {
   
   public static $allowed_actions = array (
     'clear',
-    'RemoveFromCartForm'
+    'RemoveFromCartForm',
+    //'AddToCartForm'
   );
   
   /**

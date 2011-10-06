@@ -56,6 +56,6 @@
     		
     	}
     	
-    	//$('#CheckoutForm_OrderForm_Shipping-Country').change();
+    	$('#CheckoutForm_OrderForm_Shipping-Country').change();
     })
 })(jQuery);
