@@ -28,7 +28,7 @@
   margin-bottom: 15px;	
 }
 
-#Checkout span.error {
+#Checkout span.error, #Checkout span.required, #Checkout span.validation {
     color: red;
     font-size: 14px;
     font-style: italic;

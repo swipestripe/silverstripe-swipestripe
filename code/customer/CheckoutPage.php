@@ -100,66 +100,109 @@ class CheckoutPage_Controller extends Page_Controller {
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
     
+    //Need to disable the js validation because not using custom validation messages
+    $validator->setJavascriptValidationHandler('none');
+    
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
     if ($shippingAddress) $form->loadDataFrom($shippingAddress->getCheckoutFormData('Shipping')); 
-    
+
     return $form;
 	}
 	
 	private function addBillingAddressFields(&$fields, &$validator) {
 	  
+	  $firstNameField = new TextField('Billing[FirstName]', 'First Name');
+	  $firstNameField->setCustomValidationMessage('Please enter your first name.');
+	  
+	  $surnameField = new TextField('Billing[Surname]', 'Surname');
+	  $surnameField->setCustomValidationMessage('Please enter your surname.');
+	  
+	  $addressField = new TextField('Billing[Address]', 'Address 1');
+	  $addressField->setCustomValidationMessage('Please enter your address.');
+	  
+	  $cityField = new TextField('Billing[City]', 'City');
+	  $cityField->setCustomValidationMessage('Please enter your city.');
+	  
+	  $countryField = new DropdownField('Billing[Country]', 'Country', Geoip::getCountryDropDown());
+	  $countryField->setCustomValidationMessage('Please enter your country.');
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
+	  
 	  $billingAddressFields = new CompositeField(
 	    new HeaderField('Billing Address', 3),
-			new TextField('Billing[FirstName]', 'First Name'),
-			new TextField('Billing[Surname]', 'Surname'),
+			$firstNameField,
+			$surnameField,
 			new TextField('Billing[Company]', 'Company'),
-			new TextField('Billing[Address]', 'Address 1'),
+			$addressField,
 			new TextField('Billing[AddressLine2]', 'Address 2'),
-			new TextField('Billing[City]', 'City'),
+			$cityField,
 			new TextField('Billing[PostalCode]', 'Postal Code'),
-			new TextField('Billing[State]', 'State')
+			new TextField('Billing[State]', 'State'),
+			$countryField
 	  );
 
-    $countryField = new DropdownField('Billing[Country]', 'Country', Geoip::getCountryDropDown());
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
-    $billingAddressFields->push($countryField);
-	  
 	  $billingAddressFields->setID('billing-address');
 	  $fields['BillingAddress'][] = $billingAddressFields;
+	  
+	  $validator->addRequiredField('Billing[FirstName]');
+	  $validator->addRequiredField('Billing[Surname]');
+	  $validator->addRequiredField('Billing[Address]');
+	  $validator->addRequiredField('Billing[City]');
+	  $validator->addRequiredField('Billing[Country]');
 	}
 	
 	private function addShippingAddressFields(&$fields, &$validator) {
 	  
-	  $shippingFirstNameField = new TextField('Shipping[FirstName]', 'First Name');
-	  $shippingFirstNameField->addExtraClass('shipping-firstname');
+	  $firstNameField = new TextField('Shipping[FirstName]', 'First Name');
+	  $firstNameField->addExtraClass('shipping-firstname');
+	  $firstNameField->setCustomValidationMessage('Please enter a first name.');
+	  
+	  $surnameField = new TextField('Shipping[Surname]', 'Surname');
+	  $surnameField->setCustomValidationMessage('Please enter a surname.');
+	  
+	  $addressField = new TextField('Shipping[Address]', 'Address 1');
+	  $addressField->setCustomValidationMessage('Please enter an address.');
+	  
+	  $cityField = new TextField('Shipping[City]', 'City');
+	  $cityField->setCustomValidationMessage('Please enter a city.');
+	  
+	  $countryField = new DropdownField('Shipping[Country]', 'Country', Shipping::supported_countries());
+	  $countryField->setCustomValidationMessage('Please enter a country.');
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
 	  
 	  $shippingAddressFields = new CompositeField(
 	    new HeaderField('Shipping Address', 3),
 	    new CheckboxField('ShipToBillingAddress', 'to same address?'),
-			$shippingFirstNameField,
-			new TextField('Shipping[Surname]', 'Surname'),
+			$firstNameField,
+			$surnameField,
 			new TextField('Shipping[Company]', 'Company'),
-			new TextField('Shipping[Address]', 'Address 1'),
+			$addressField,
 			new TextField('Shipping[AddressLine2]', 'Address 2'),
-			new TextField('Shipping[City]', 'City'),
+			$cityField,
 			new TextField('Shipping[PostalCode]', 'Postal Code'),
-			new TextField('Shipping[State]', 'State')
+			new TextField('Shipping[State]', 'State'),
+			$countryField
 	  );
-
-    $countryField = new DropdownField('Shipping[Country]', 'Country', Shipping::supported_countries());
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
-    $shippingAddressFields->push($countryField);
 	  
 	  $shippingAddressFields->setID('shipping-address');
 	  $fields['ShippingAddress'][] = $shippingAddressFields;
+	  
+	  $validator->addRequiredField('Shipping[FirstName]');
+	  $validator->addRequiredField('Shipping[Surname]');
+	  $validator->addRequiredField('Shipping[Address]');
+	  $validator->addRequiredField('Shipping[City]');
+	  $validator->addRequiredField('Shipping[Country]');
 	}
 	
 	private function addPersonalDetailsFields(&$fields, &$validator, $member) {
+	  
+	  $emailField = new EmailField('Email', 'Email');
+	  $emailField->setCustomValidationMessage('Please enter your email address.');
+	  $validator->addRequiredField('Email');
+	  
 	  $personalFields = new CompositeField(
 			new HeaderField('Personal Details', 3),
-			//new TextField('FirstName', 'First Name'),
-			new EmailField('Email', 'Email'),
+			$emailField,
 			new TextField('HomePhone', 'Phone')
     );
     
@@ -173,14 +216,9 @@ class CheckoutPage_Controller extends Page_Controller {
 				'<p>Please choose a password, so you can login and check your order history in the future</p>'
 			));
 			$personalFields->push(new FieldGroup(new ConfirmedPasswordField('Password', 'Password')));
-			
 			$validator->addRequiredField('Password');
 		}
-		
-		//$validator->addRequiredField('FirstName');
-    $validator->addRequiredField('Email');
-    //$validator->addRequiredField('HomePhone');
-    
+
     $personalFields->setID('personal-details');
 	  $fields['PersonalDetails'][] = $personalFields;
 	}

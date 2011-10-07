@@ -12,7 +12,7 @@ class CustomerDecorator extends DataObjectDecorator {
 				'State' => 'Varchar(100)',
 				'Country' => 'Varchar',
 				'HomePhone' => 'Varchar(100)',
-				'Notes' => 'HTMLText'
+				'Notes' => 'HTMLText' //TODO remove? Is this necessary for Payment class or something?
 			),
 			'has_many' => array(
 			  'Addresses' => 'Address'

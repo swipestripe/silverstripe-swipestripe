@@ -14,7 +14,6 @@ class CheckoutForm extends Form {
     
     $fields = new FieldSet();
     if (is_array($groupedFields)) foreach ($groupedFields as $setName => $setFields) {
-
       foreach ($setFields as $field) $fields->push($field);
     }
     else if ($groupedFields instanceof FieldSet) $fields = $groupedFields;
@@ -37,24 +36,28 @@ class CheckoutForm extends Form {
 	 */
 	function Fields($set = null) {
 
-		$fields = new FieldSet();
+	  if ($set) {
+	    $fields = new FieldSet();
 		
-		//TODO fix this, have to disable security token for now @see CheckoutPage::OrderForm()
-	  foreach ($this->getExtraFields() as $field) {
-			if (!$this->extraFieldsSet->fieldByName($field->Name())) {
-			  $this->extraFieldsSet->push($field);
-			  $fields->push($field);
-			}
-		}
-
-		if ($set && isset($this->groupedFields[$set])) {
-
-		  if (is_array($this->groupedFields[$set])) foreach ($this->groupedFields[$set] as $field) {
-		    $fields->push($field);
-		  }
-		  else $fields->push($this->groupedFields[$set]);
-		}
-		return $fields;
+  		//TODO fix this, have to disable security token for now @see CheckoutPage::OrderForm()
+  	  foreach ($this->getExtraFields() as $field) {
+  			if (!$this->extraFieldsSet->fieldByName($field->Name())) {
+  			  $this->extraFieldsSet->push($field);
+  			  $fields->push($field);
+  			}
+  		}
+  
+  		if ($set && isset($this->groupedFields[$set])) {
+  
+  		  if (is_array($this->groupedFields[$set])) foreach ($this->groupedFields[$set] as $field) {
+  		    $fields->push($field);
+  		  }
+  		  else $fields->push($this->groupedFields[$set]);
+  		}
+  		return $fields;
+	  }
+	  else return parent::Fields(); //For the validator to get fields
+		
 	}
 
 }
