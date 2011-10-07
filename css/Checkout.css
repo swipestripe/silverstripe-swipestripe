@@ -53,11 +53,17 @@ h3#CheckoutForm_OrderForm_HeaderFieldShipping-Address {
   border: 1px solid blue;	
 }
 
-#personal-details {
+#PersonalDetails {
   width: 100%;
   border: 1px solid black;
   float: left;
   margin-top: 20px; 
+}
+
+#PersonalDetails .CompositeField {
+	float: left;
+	padding: 10px;
+	width: 45%;
 }
 
 div.shipping-firstname {

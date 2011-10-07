@@ -141,7 +141,7 @@ class CheckoutPage_Controller extends Page_Controller {
 			$countryField
 	  );
 
-	  $billingAddressFields->setID('billing-address');
+	  $billingAddressFields->setID('BillingAddress');
 	  $fields['BillingAddress'][] = $billingAddressFields;
 	  
 	  $validator->addRequiredField('Billing[FirstName]');
@@ -184,7 +184,7 @@ class CheckoutPage_Controller extends Page_Controller {
 			$countryField
 	  );
 	  
-	  $shippingAddressFields->setID('shipping-address');
+	  $shippingAddressFields->setID('ShippingAddress');
 	  $fields['ShippingAddress'][] = $shippingAddressFields;
 	  
 	  $validator->addRequiredField('Shipping[FirstName]');
@@ -201,25 +201,33 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $validator->addRequiredField('Email');
 	  
 	  $personalFields = new CompositeField(
-			new HeaderField('Personal Details', 3),
-			$emailField,
-			new TextField('HomePhone', 'Phone')
+	    new HeaderField('Personal Details', 3),
+	    new CompositeField(
+  			$emailField,
+  			new TextField('HomePhone', 'Phone')
+	    )
     );
     
 	  if(!$member->ID || $member->Password == '') {
-			$personalFields->push(new LiteralField(
-				'MemberInfo', 
-				'<p class="message good">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
-			));
-			$personalFields->push(new LiteralField(
-				'AccountInfo', 
-				'<p>Please choose a password, so you can login and check your order history in the future</p>'
-			));
-			$personalFields->push(new FieldGroup(new ConfirmedPasswordField('Password', 'Password')));
+	    
+	    $personalFields->push(
+	      new CompositeField(
+	      new FieldGroup(
+	        new ConfirmedPasswordField('Password', 'Password')
+	      ),
+        new LiteralField(
+  				'MemberInfo', 
+  				'<p class="message good">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
+  			),
+  			new LiteralField(
+  				'AccountInfo', 
+  				'<p>Please choose a password, so you can login and check your order history in the future</p>'
+  			)
+	    ));
 			$validator->addRequiredField('Password');
 		}
 
-    $personalFields->setID('personal-details');
+    $personalFields->setID('PersonalDetails');
 	  $fields['PersonalDetails'][] = $personalFields;
 	}
 	
@@ -237,7 +245,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		  $paymentFields->push($field);
 		}
 		
-		$paymentFields->setID('payment');
+		$paymentFields->setID('PaymentFields');
 	  $fields['Payment'][] = $paymentFields;
 	}
 	
