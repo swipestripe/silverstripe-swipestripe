@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Sent to website owner when new Order is made.
+ * 
+ * @author frankmullenger
+ *
+ */
 class OrderEmail extends ProcessedEmail {
 
 	/**

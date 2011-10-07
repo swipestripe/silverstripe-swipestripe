@@ -37,7 +37,29 @@ class AccountPage extends Page {
 		  $customerGroup->setCode($customerGroup->Title);
 		  $customerGroup->write();
 		}
-		
+	}
+	
+  function canCreate($member = null) {
+	  return false;
+	}
+	
+	function canDelete($member = null) {
+	  return false;
+	}
+	
+  function canDeleteFromLive($member = null) {
+	  return false;
+	}
+	
+	/**
+	 * To remove the unpublish button from the CMS, as this page must always be published
+	 * 
+	 * @see SiteTree::getCMSActions()
+	 */
+	function getCMSActions() {
+	  $actions = parent::getCMSActions();
+	  $actions->removeByName('action_unpublish');
+	  return $actions;
 	}
 }
 

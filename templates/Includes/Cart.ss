@@ -1,4 +1,3 @@
-<h2>Cart is here</h2>
 
 <% control Cart %>
   <ul>

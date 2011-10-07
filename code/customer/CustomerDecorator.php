@@ -23,14 +23,16 @@ class CustomerDecorator extends DataObjectDecorator {
 	function updateCMSFields($fields) {
 		$fields->removeByName('Country');
 		$fields->addFieldToTab('Root.Main', new DropdownField('Country', 'Country', Geoip::getCountryDropDown()));
+		$fields->removeByName('Notes');
 	}
 	
   function BillingAddress() {
 	  $address = null;
-	  
+
 	  $addresses = $this->owner->Addresses();
-	  if ($addresses && $addresses->exists()) {
-	    $address = $addresses->find('Type', 'Billing');
+	  $addresses->sort('Created', 'ASC');
+	  if ($addresses && $addresses->exists()) foreach ($addresses as $billingAddress) {
+	    if ($billingAddress->Type == 'Billing') $address = $billingAddress; 
 	  }
 	  
 	  return $address;
@@ -38,12 +40,12 @@ class CustomerDecorator extends DataObjectDecorator {
 	
   function ShippingAddress() {
 	  $address = null;
-	  
+
 	  $addresses = $this->owner->Addresses();
-	  if ($addresses && $addresses->exists()) {
-	    $address = $addresses->find('Type', 'Shipping');
+	  $addresses->sort('Created', 'ASC');
+	  if ($addresses && $addresses->exists()) foreach ($addresses as $shippingAddress) {
+	    if ($shippingAddress->Type == 'Shipping') $address = $shippingAddress; 
 	  }
-	  
 	  return $address;
 	}
 

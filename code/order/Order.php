@@ -284,6 +284,7 @@ class Order extends DataObject {
 	/**
 	 * Generate the URL for viewing this order on the frontend
 	 * 
+	 * @see PaypalExpressCheckoutaPayment_Handler::doRedirect()
 	 * @return String URL for viewing this order
 	 */
 	function Link() {
@@ -358,22 +359,21 @@ class Order extends DataObject {
 
 	  //Send a receipt to customer
 		if(!$this->ReceiptSent){
+		  
+		  //TODO Need some kind of payment completed flag because 
+		  //this is being sent too soon, before payment details have been filled out
 			$receipt = new ReceiptEmail($this->Member(), $this);
   		if ($receipt->send()) {
-  		  
-  		  //Prevent another paid confirmation email being sent
-  		  if ($this->getPaid()) {
-  		    $this->PaidEmailSent = true;
-  		  }
-  		  
-  		  //Send a notification to website owner
-    		$orderEmail = new OrderEmail($this->Member(), $this);
-    		$orderEmail->send();
-  		  
   	    $this->ReceiptSent = true;
   	    $this->write();
   	  }
+  	  
+  	  //Send a notification to website owner
+  		$orderEmail = new OrderEmail($this->Member(), $this);
+  		$orderEmail->send();
 		}
+		
+		//TODO if payment Status = Failure send a payment email?
 	}
 	
 	/**
@@ -388,14 +388,6 @@ class Order extends DataObject {
 	    $this->PaymentStatus = 'Paid';
 	    $this->Status = self::STATUS_PROCESSING;
 	    $this->write();
-	    
-	    if (!$this->PaidEmailSent) {
-  	    $paidEmail = new PaidEmail($this->Member(), $this);
-    		if ($paidEmail->send()) {
-    	    $this->PaidEmailSent = true;
-    	    $this->write();
-    	  }
-	    }
 	  }
 	  else {
 	    $this->PaymentStatus = 'Unpaid';
@@ -406,6 +398,7 @@ class Order extends DataObject {
 	
 	/**
 	 * If the order has been totally paid
+	 * This is the most important function in the module.
 	 * 
 	 * @return Boolean
 	 */

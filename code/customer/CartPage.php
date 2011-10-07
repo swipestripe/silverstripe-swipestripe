@@ -26,6 +26,29 @@ class CartPage extends Page
 			DB::alteration_message("Cart page 'Cart' created", 'created');
 		}
 	}
+	
+  function canCreate($member = null) {
+	  return false;
+	}
+	
+	function canDelete($member = null) {
+	  return false;
+	}
+	
+  function canDeleteFromLive($member = null) {
+	  return false;
+	}
+	
+	/**
+	 * To remove the unpublish button from the CMS, as this page must always be published
+	 * 
+	 * @see SiteTree::getCMSActions()
+	 */
+	function getCMSActions() {
+	  $actions = parent::getCMSActions();
+	  $actions->removeByName('action_unpublish');
+	  return $actions;
+	}
 }
 
 class CartPage_Controller extends Page_Controller {
@@ -52,9 +75,6 @@ class CartPage_Controller extends Page_Controller {
 	 * @see CheckoutForm
 	 */
 	function CartForm() {
-	  
-	  SS_Log::log(new Exception(print_r('I think this may be called...', true)), SS_Log::NOTICE);
-
 	  $fields = new FieldSet();
 	  $validator = new RequiredFields();
 	  $currentOrder = $this->Cart();

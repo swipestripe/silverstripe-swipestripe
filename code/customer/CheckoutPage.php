@@ -29,6 +29,29 @@ class CheckoutPage extends Page
 			DB::alteration_message('Checkout page \'Checkout\' created', 'created');
 		}
 	}
+	
+	function canCreate($member = null) {
+	  return false;
+	}
+	
+	function canDelete($member = null) {
+	  return false;
+	}
+	
+	function canDeleteFromLive($member = null) {
+	  return false;
+	}
+	
+	/**
+	 * To remove the unpublish button from the CMS, as this page must always be published
+	 * 
+	 * @see SiteTree::getCMSActions()
+	 */
+	function getCMSActions() {
+	  $actions = parent::getCMSActions();
+	  $actions->removeByName('action_unpublish');
+	  return $actions;
+	}
 }
 
 class CheckoutPage_Controller extends Page_Controller {
@@ -135,7 +158,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	private function addPersonalDetailsFields(&$fields, &$validator, $member) {
 	  $personalFields = new CompositeField(
 			new HeaderField('Personal Details', 3),
-			new TextField('FirstName', 'First Name'),
+			//new TextField('FirstName', 'First Name'),
 			new EmailField('Email', 'Email'),
 			new TextField('HomePhone', 'Phone')
     );
@@ -154,9 +177,9 @@ class CheckoutPage_Controller extends Page_Controller {
 			$validator->addRequiredField('Password');
 		}
 		
-		$validator->addRequiredField('FirstName');
+		//$validator->addRequiredField('FirstName');
     $validator->addRequiredField('Email');
-    $validator->addRequiredField('HomePhone');
+    //$validator->addRequiredField('HomePhone');
     
     $personalFields->setID('personal-details');
 	  $fields['PersonalDetails'][] = $personalFields;
@@ -198,9 +221,35 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 
 		//Save or create a new member
+		
+		//TODO use the billing address info for the member
+		//Save billing address info to Member for Payment class to work
+
+		$memberData = array(
+		  'FirstName' => $data['Billing']['FirstName'],
+		  'Surname' => $data['Billing']['Surname'],
+			'Address' => $data['Billing']['Address'],
+		  'AddressLine2' => $data['Billing']['AddressLine2'],
+			'City' => $data['Billing']['City'],
+		  'State' => $data['Billing']['State'],
+			'Country' => $data['Billing']['Country'],
+		  'PostalCode' => $data['Billing']['PostalCode']
+		);
+
 	  if (!$member = DataObject::get_one('Member', "\"Email\" = '".$data['Email']."'")) {
 			$member = new Member();
-			$form->saveInto($member);
+			
+			//$form->saveInto($member);
+			//$member->update($memberData);
+			$member->FirstName = $data['Billing']['FirstName'];
+			$member->Surname = $data['Billing']['Surname'];
+			$member->Address = $data['Billing']['Address'];
+			$member->AddressLine2 = $data['Billing']['AddressLine2'];
+			$member->City = $data['Billing']['City'];
+			$member->State = $data['Billing']['State'];
+			$member->Country = $data['Billing']['Country'];
+			$member->PostalCode = $data['Billing']['PostalCode'];
+			
 			$member->addToGroupByCode('customers');
 			$member->write();
 			$member->logIn();
@@ -221,11 +270,10 @@ class CheckoutPage_Controller extends Page_Controller {
 		  }
 		}
 		
-		//Get the order and items in the order
+		//Save the order
 		$order = Product_Controller::get_current_order();
 		$items = $order->Items();
 
-		//Save the order
 		$form->saveInto($order);
 		$order->MemberID = $member->ID;
 		$order->Status = Order::STATUS_PENDING;

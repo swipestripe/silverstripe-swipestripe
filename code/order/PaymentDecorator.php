@@ -102,7 +102,7 @@ class PaymentDecorator extends DataObjectDecorator {
 
 	  $order = $this->owner->PaidObject();
 
-		if ($order) {
+		if ($order && $order instanceof Order) {
 		  $order->onAfterPayment();
 		}
 	}
