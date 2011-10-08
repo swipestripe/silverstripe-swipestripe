@@ -10,39 +10,47 @@
     </tr>
   </thead>
   <tbody>
-    <% control Items %>
-    
-      <tr  class="itemRow $EvenOdd $FirstLast">
-      
-		    <% control Object %>  
-		      <td class="title">
-		        <% if Link %>
-		          <a href="$Link" target="_blank">$Title</a>
-		        <% else %>
-		          $Title
-		        <% end_if %>
-		      </td>
-		    <% end_control %>
+    <% if Items %>
+	    <% control Items %>
+	      <tr  class="itemRow $EvenOdd $FirstLast">
+	      
+			    <% control Object %>  
+			      <td class="title">
+			        <% if Link %>
+			          <a href="$Link" target="_blank">$Title</a>
+			        <% else %>
+			          $Title
+			        <% end_if %>
+			      </td>
+			    <% end_control %>
+			    
+			    <td>
+				    <% if Variation %>
+				      $Variation.OptionSummary
+				    <% end_if %>
+				  </td>
+				  
+				  <td>
+	           $UnitPrice.Nice
+	         </td>
 		    
-		    <td>
-			    <% if Variation %>
-			      $Variation.OptionSummary
-			    <% end_if %>
-			  </td>
-			  
-			  <td>
-           $UnitPrice.Nice
-         </td>
-	    
-	      <td class="title">
-	        $Quantity
-	      </td>
- 
-	      <td class="right total">$Object.Amount.Nice</td>
-	    
-	    </tr>
-    <% end_control %>
-    
+		      <td class="title">
+		        $Quantity
+		      </td>
+	 
+		      <td class="right total">$Object.Amount.Nice</td>
+		    
+		    </tr>
+	    <% end_control %>
+    <% else %>
+      <tr  class="itemRow">
+      
+        <td colspan="5">
+          <span class="error">There are no items in your cart.</span>
+        </td>
+
+      </tr>
+    <% end_if %>
     <tr class="gap summary total" id="SubTotal">
       <td class="threeColHeader total" colspan="4">Sub Total</td>
       <td class="right">$SubTotal.Nice ($SubTotal.Currency)</td>

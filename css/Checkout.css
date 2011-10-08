@@ -73,3 +73,8 @@ div.shipping-firstname {
 input.text, #LeftCheckout.select, #RightCheckout.select {
   width: 200px;	
 }
+
+ul#CheckoutForm_OrderForm_PaymentMethod li {
+  padding: 5px;
+  margin: 10px 0px 0px 0px;
+}
