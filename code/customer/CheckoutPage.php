@@ -91,6 +91,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $this->addShippingAddressFields($fields, $validator);
     $this->addPersonalDetailsFields($fields, $validator, $member);
     $this->addModifierFields($fields, $validator, $order);
+    $this->addNotesField($fields, $validator);
     $this->addPaymentFields($fields, $validator, $order);
 
     $actions = new FieldSet(
@@ -236,6 +237,10 @@ class CheckoutPage_Controller extends Page_Controller {
 		foreach (Shipping::combined_form_fields($order) as $field) {
 		  $fields['Modifiers'][] = $field;
 		}
+	}
+	
+	private function addNotesField(&$fields, &$validator) {
+	  $fields['Notes'][] = new TextareaField('Notes');
 	}
 	
 	private function addPaymentFields(&$fields, &$validator, $order) {

@@ -35,7 +35,8 @@ class Order extends DataObject {
 		'ReceiptSent' => 'Boolean',
 	  'PaidEmailSent' => 'Boolean',
 	  'OrderedOn' => 'SS_Datetime',
-	  'LastActive' => 'SS_Datetime'
+	  'LastActive' => 'SS_Datetime',
+	  'Notes' => 'Text'
 	);
 	
 	public static $defaults = array(
@@ -169,7 +170,12 @@ class Order extends DataObject {
 	    'ReceiptSent',
 	    'PaidEmailSent',
 	    'OrderedOn',
-	    'PaymentStatus'
+	    'PaymentStatus',
+	    'Modifiers',
+	    'Addresses',
+	    'SubTotal',
+	    'LastActive',
+	    'Notes'
 	  );
 	  foreach($toBeRemoved as $field) {
 			$fields->removeByName($field);
@@ -208,19 +214,21 @@ class Order extends DataObject {
 		}
 		
 		//TODO move this to virtual products
-	  $fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
-		$fields->addFieldToTab('Root.Actions', new LiteralField(
-			'UpdateDownloadLimit', 
-			'<p>Reset the download count for items below, can be used to allow customers to download items more times.</p>'
-		));
-		foreach ($this->Downloads() as $item) {
-		  $fields->addFieldToTab('Root.Actions', new TextField(
-		  	'DownloadCountItem['.$item->ID.']', 
-		  	'Download Count for '.$item->Object()->Title.' (download limit = '.$item->getDownloadLimit() .')', 
-		    $item->DownloadCount
-		  ));
+		if ($this->Downloads() && $this->Downloads()->exists()) {
+  		$fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
+  		$fields->addFieldToTab('Root.Actions', new LiteralField(
+  			'UpdateDownloadLimit', 
+  			'<p>Reset the download count for items below, can be used to allow customers to download items more times.</p>'
+  		));
+  		foreach ($this->Downloads() as $item) {
+  		  $fields->addFieldToTab('Root.Actions', new TextField(
+  		  	'DownloadCountItem['.$item->ID.']', 
+  		  	'Download Count for '.$item->Object()->Title.' (download limit = '.$item->getDownloadLimit() .')', 
+  		    $item->DownloadCount
+  		  ));
+  		}
 		}
-
+		
 	  return $fields;
 	}
 	

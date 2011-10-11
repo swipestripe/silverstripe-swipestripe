@@ -28,6 +28,10 @@
     <h3>Your Order</h3>
     <% include CheckoutFormOrder %>
     
+    <% control Fields(Notes) %>
+      $FieldHolder
+    <% end_control %>
+    
     <% control Fields(Payment) %>
       $FieldHolder
     <% end_control %>

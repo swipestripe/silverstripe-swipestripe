@@ -209,7 +209,8 @@ class Product extends Page {
     );
     $validator = new RequiredFields(
     	'ProductClass', 
-    	'ProductID'
+    	'ProductID',
+      'Quantity'
     );
     $validator->setJavascriptValidationHandler('none'); 
     

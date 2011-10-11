@@ -78,3 +78,7 @@ ul#CheckoutForm_OrderForm_PaymentMethod li {
   padding: 5px;
   margin: 10px 0px 0px 0px;
 }
+
+#CheckoutForm_OrderForm_Notes {
+  width: 100%;	
+}
