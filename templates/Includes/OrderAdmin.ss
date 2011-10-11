@@ -6,6 +6,8 @@
 
 <div id="OrderInformation">
 
+  $MemberEmail
+
   <% include OrderAddresses %>
 
   <% include Order %>

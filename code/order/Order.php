@@ -180,8 +180,10 @@ class Order extends DataObject {
 	  foreach($toBeRemoved as $field) {
 			$fields->removeByName($field);
 		}
-		
-		$htmlSummary = $this->renderWith("OrderAdmin");
+
+		$htmlSummary = $this->customise(array(
+			'MemberEmail' => $this->Member()->Email
+		))->renderWith("OrderAdmin");
 		$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 		
 		$fields->removeFieldFromTab("Root", "Payments");
