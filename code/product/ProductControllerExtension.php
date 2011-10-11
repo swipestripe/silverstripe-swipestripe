@@ -3,9 +3,7 @@
 class ProductControllerExtension extends Extension {
   
   public static $allowed_actions = array (
-    'clear',
-    'RemoveFromCartForm',
-    //'AddToCartForm'
+    'clear'
   );
   
   /**
@@ -54,43 +52,6 @@ class ProductControllerExtension extends Extension {
     
     return $order;
   }
-	
-	/**
-	 * 
-	 * @deprecated
-	 * @param unknown_type $quantity
-	 * @param unknown_type $redirectURL
-	 */
-  function RemoveFromCartForm($quantity = null, $redirectURL = null) {
-    
-    //TODO this would need product options in order to remove correct item
-
-    $fields = $this->getRemoveProductFields($quantity, $redirectURL);
-    $actions = new FieldSet(
-      new FormAction('remove', 'Remove From Cart')
-    );
-    $validator = new RequiredFields(
-    	'ProductClass', 
-    	'ProductID'
-    );
-     
-    return new Form($this->owner, 'AddToCartForm', $fields, $actions, $validator);
-	}
-	
-	/**
-	 * 
-	 * @deprecated
-	 * @param unknown_type $quantity
-	 * @param unknown_type $redirectURL
-	 */
-	protected function getRemoveProductFields($quantity = null, $redirectURL = null) {
-	  $fields = $this->getProductFields($quantity, $redirectURL);
-
-    if (method_exists($this->owner, 'updateRemoveProductFields')) {
-      $this->owner->updateRemoveProductFields($fields);
-    }
-    return $fields;
-	}
 	
 	/**
 	 * Updates timestamp LastActive on the order, should be called on every request

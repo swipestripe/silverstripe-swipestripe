@@ -81,10 +81,7 @@ class Product extends Page {
     $attributes = $this->Attributes();
     if ($attributes && $attributes->exists()) {
       
-      $variationFieldList = array(
-      	'ID' => 'ID',
-      	'SummaryStock' => 'Stock'
-      );
+      $variationFieldList = array();
       
       $fields->addFieldToTab("Root.Content", new TabSet('Options'));
       $fields->addFieldToTab("Root.Content", new Tab('Variations'));
@@ -121,6 +118,8 @@ class Product extends Page {
         $manager->setAttributeID($attribute->ID);
         $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
       }
+      
+      $variationFieldList['SummaryStock'] = 'Stock';
       
       $manager = new VariationComplexTableField(
         $this,
