@@ -24,19 +24,14 @@
 	    			
 	    			var attributeID = e.currentTarget.id.replace(/Form_AddToCartForm_Options-/i, '');
 	    			var optionID = e.currentTarget.value;
-	    			
-	    			//TODO need to take the form data and figure this out properly for 3 or more options
-	    			
-	    			
+
 	    			
 	    			//If the next select exists, then call the AJAX to update it
 	    			if ($('#'+nextID).length) {
 	    				
 	    				var values = $('#Form_AddToCartForm').serialize();
 	    				var nextAttributeID = selects[position + 1].replace(/Form_AddToCartForm_Options-/i, '');
-	    				
 	    				values += '&NextAttributeID='+nextAttributeID;
-	    				console.log(values);
 	    				
 	    				$.ajax({
 	  					  url: window.location.pathname + 'options/',
@@ -45,10 +40,6 @@
 	  					  success: function(data) {
 	  						  
 	  						dataObj = $.parseJSON(data);
-	  						console.log(dataObj);
-	  						console.log(dataObj.options);
-	  						
-	  						$('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).removeAttr('disabled');
 	  						
 	  						if(dataObj.options) {
 	  							$('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).removeAttr('disabled');
@@ -58,9 +49,9 @@
 		  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID);
 		  					    });
 		  					  
-		  					  if (dataObj.count == 1) {
-		  						$('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).change();
-		  					  }
+		  					    if (dataObj.count == 1) {
+		  						  $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).change();
+		  					    }
 	  						}
 	  					  }
 	  					});
