@@ -15,7 +15,7 @@ class AccountPage extends Page {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
-		if(!DataObject::get_one('AccountPage')) {
+		if (!DataObject::get_one('AccountPage')) {
 			$page = new AccountPage();
 			$page->Title = 'Account';
 			$page->Content = '<p>View your previous orders below.</p>';

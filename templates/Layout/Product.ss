@@ -1,15 +1,19 @@
-<h2>$Title</h2>
+<div style="float: left; padding: 10px;">
 
-<p>$Amount.Nice</p>
+	<h2>$Title</h2>
+	
+	<p>$Amount.Nice</p>
 
-<a href="$AddToCartLink(1, /checkout)">Add to Cart</a>
+	<% control FirstImage %>
+	  $Image.CroppedImage(137,145)
+	<% end_control %>
 
-$AddToCartForm(1)
+</div>
 
-<% control FirstImage %>
-  $Image.CroppedImage(137,145)
-<% end_control %>
+<div style="float: left; padding: 10px;">
 
-$Content
+	$AddToCartForm(1)
+	
+	$Content
 
-<br /><br />
+</div>

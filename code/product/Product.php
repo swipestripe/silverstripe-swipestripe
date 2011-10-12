@@ -192,9 +192,9 @@ class Product extends Page {
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
     $fields = new FieldSet(
-      new TextField('ProductClass', 'ProductClass', $this->ClassName),
-      new TextField('ProductID', 'ProductID', $this->ID),
-      new TextField('ProductVariationID', 'ProductVariationID', 0),
+      new HiddenField('ProductClass', 'ProductClass', $this->ClassName),
+      new HiddenField('ProductID', 'ProductID', $this->ID),
+      new HiddenField('ProductVariationID', 'ProductVariationID', 0),
       new HiddenField('Redirect', 'Redirect', $redirectURL),
       new TextField('Quantity', 'Quantity', $quantity)
     );

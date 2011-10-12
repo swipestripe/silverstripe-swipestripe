@@ -8,6 +8,9 @@ class ProductControllerExtension extends Extension {
   
   /**
    * Clear the cart by clearing the session
+   * TODO is this in the right place?
+   * 
+   * @deprecated
    */
   function clear() {
     Session::clear('Cart.OrderID');
@@ -65,4 +68,26 @@ class ProductControllerExtension extends Extension {
     }
   }
   
+  /**
+   * Get links to cart pages
+   * 
+   * @param String $type
+   */
+  public function CartLink($type = 'Cart') {
+    switch ($type) {
+      case 'Account':
+        if ($page = DataObject::get_one('AccountPage')) return $page->Link();
+        else break;
+      case 'Checkout':
+        if ($page = DataObject::get_one('CheckoutPage')) return $page->Link();
+        else break;
+      case 'Logout':
+        if ($page = DataObject::get_one('AccountPage')) return $page->Link() . 'logout';
+        else break;
+      case 'Cart':
+      default:
+        if ($page = DataObject::get_one('CartPage')) return $page->Link();
+        else break;
+    }
+  }
 }
