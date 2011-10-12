@@ -102,6 +102,10 @@ class Variation extends DataObject {
     return $this->Stock;
   }
   
+  public function SummaryPrice() {
+    return $this->Amount->Nice();
+  }
+  
   public function inStock() {
     if ($this->Stock == -1) return true;
     if ($this->Stock == 0) return false;

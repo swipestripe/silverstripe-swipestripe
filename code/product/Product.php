@@ -120,6 +120,7 @@ class Product extends Page {
       }
       
       //$variationFieldList['SummaryStock'] = 'Stock';
+      $variationFieldList['SummaryPrice'] = 'Price Difference';
       
       $manager = new VariationComplexTableField(
         $this,
@@ -225,7 +226,8 @@ class Product_Controller extends Page_Controller {
   public static $allowed_actions = array (
   	'add',
     'options',
-    'AddToCartForm'
+    'AddToCartForm',
+    'variationprice'
   );
 
 	/**
@@ -373,6 +375,52 @@ class Product_Controller extends Page_Controller {
       $data['nextAttributeID'] = $nextAttributeID;
     }
 
+    return json_encode($data);
+  }
+  
+  /**
+   * TODO return the total here as well
+   * TODO format with a + or - prefix
+   * 
+   * @param unknown_type $request
+   */
+  function variationprice(SS_HTTPRequest $request) {
+    
+    $data = array();
+    $product = $this->data();
+    $variations = $product->Variations();
+    
+    $attributeOptions = $request->postVar('Options');
+    
+    //Filter variations to match attribute ID and option ID
+    $variationOptions = array();
+    if ($variations && $variations->exists()) foreach ($variations as $variation) {
+
+      $options = $variation->Options();
+      if ($options) foreach ($options as $option) {
+        $variationOptions[$variation->ID][$option->AttributeID] = $option->ID;
+      }
+    }
+    
+    $variation = null;
+    foreach ($variationOptions as $variationID => $options) {
+      
+      if ($options == $attributeOptions) {
+        $variation = $variations->find('ID', $variationID);
+        break;
+      }
+    }
+    
+    if ($variation) {
+      
+      if ($variation->Amount->getAmount() == 0) {
+        $data['priceDifference'] = 0;
+      }
+      else {
+        $data['priceDifference'] = $variation->Amount->Nice();
+      }
+    }
+    
     return json_encode($data);
   }
 }

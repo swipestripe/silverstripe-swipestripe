@@ -2,7 +2,7 @@
 
 	<h2>$Title</h2>
 	
-	<p>$Amount.Nice</p>
+	<p>$Amount.Nice <span id="VariationPrice"></span></p>
 
 	<% control FirstImage %>
 	  $Image.CroppedImage(137,145)
