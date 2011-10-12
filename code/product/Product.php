@@ -119,7 +119,7 @@ class Product extends Page {
         $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
       }
       
-      $variationFieldList['SummaryStock'] = 'Stock';
+      //$variationFieldList['SummaryStock'] = 'Stock';
       
       $manager = new VariationComplexTableField(
         $this,

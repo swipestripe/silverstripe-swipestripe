@@ -79,7 +79,7 @@ class Variation extends DataObject {
     $amountField = new MoneyField('Amount');
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
-    $fields->push(new NumericField('Stock'));
+    //$fields->push(new NumericField('Stock'));
     
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -88,7 +88,7 @@ class Variation extends DataObject {
       $options = DataObject::get('Option', "ProductID = $product->ID AND AttributeID = $attribute->ID");
       $currentOptionID = ($currentOption = $this->Options()->find('AttributeID', $attribute->ID)) ?$currentOption->ID :null;
       $optionField = new OptionField($attribute->ID, $attribute->Title, $options, $currentOptionID);
-      $optionField->setHasEmptyDefault(true);
+      $optionField->setHasEmptyDefault(false);
       $fields->push($optionField);
     }
     

@@ -5,7 +5,7 @@
     	var $lastSelect = $('div.OptionGroupField select').last();
     	var selects = new Array();
     	
-    	//This doesn't consider if there are 2 option group fields on the page
+    	//TODO This doesn't consider if there are 2 option group fields on the page
     	$('div.OptionGroupField select').each(function() {
 
     		var $self = $(this);
@@ -25,6 +25,8 @@
 	    			var nextAttributeID = selects[position + 1].replace(/Form_AddToCartForm_Options-/i, '');
 	    			var optionID = e.currentTarget.value;
 	    			
+	    			//TODO need to take the form data and figure this out properly for 3 or more options
+	    			
 	    			//If the next select exists, then call the AJAX to update it
 	    			if ($('#'+nextID).length) {
 	    				$.ajax({
@@ -40,6 +42,7 @@
 		  					    $.each(dataObj.options, function(index, val) {
 		  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID);
 		  					    });
+		  					  $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).change();
 	  						}
 	  					  }
 	  					});
