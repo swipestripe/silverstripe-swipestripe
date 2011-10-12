@@ -330,25 +330,30 @@ class Product_Controller extends Page_Controller {
    * are returned.
    */
   public function options(SS_HTTPRequest $request) {
-    
-    $attributeID = $request->getVar('attributeID');
-    $optionID = $request->getVar('optionID');
-    $nextAttributeID = $request->getVar('nextAttributeID');
-    $product = $this->data();
-    
-    //Need to get the options for the next attribute basically, don't really know what the next attribute is
-    //just pick the next attribute in the list for the next one, sound assumption
-    
+
     $data = array();
+    $product = $this->data();
     $options = new DataObjectSet();
-    
     $variations = $product->Variations();
     $filteredVariations = new DataObjectSet();
     
+    $attributeOptions = $request->postVar('Options');
+    $nextAttributeID = $request->postVar('NextAttributeID');
+    
     //Filter variations to match attribute ID and option ID
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
-      $attributeOption = $variation->getAttributeOption($attributeID);
-      if ($attributeOption && $attributeOption->ID == $optionID) $filteredVariations->push($variation);
+
+      $variationOptions = array();
+      if ($attributeOptions && is_array($attributeOptions)) foreach ($attributeOptions as $attributeID => $optionID) {
+        
+        //Get option for attribute ID, if this variation has options for every attribute in the array then add it to filtered
+        $attributeOption = $variation->getAttributeOption($attributeID);
+        if ($attributeOption && $attributeOption->ID == $optionID) $variationOptions[$attributeID] = $optionID;
+      }
+      
+      if ($variationOptions == $attributeOptions) {
+        $filteredVariations->push($variation);
+      }
     }
     
     //Find options in filtered variations that match next attribute ID
@@ -358,14 +363,16 @@ class Product_Controller extends Page_Controller {
     }
     
     if ($options && $options->exists()) {
-      $data['nextAttributeID'] = $nextAttributeID;
-      
+
       $map = $options->map();
       //This resets the array counter to 0 which ruins the attribute IDs
       //array_unshift($map, 'Please Select'); 
       $data['options'] = $map;
+      
+      $data['count'] = count($map);
+      $data['nextAttributeID'] = $nextAttributeID;
     }
-    
+
     return json_encode($data);
   }
 }
