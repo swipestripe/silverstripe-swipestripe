@@ -23,6 +23,10 @@ class StripeyCartAdmin extends ModelAdmin {
   public $showImportForm = false;
   
   static $menu_priority = 7;
+  
+  protected $resultsTableClassName = 'TableListField';
+  
+  public static $page_length = 20;
 	
 	public function init() {
 	    parent::init();

@@ -18,6 +18,10 @@ class Attribute extends DataObject {
     'Products' => 'Product'
   );
   
+  public static $searchable_fields = array(
+	  'Title'
+	);
+  
   function getCMSFields() {
     $fields = parent::getCMSFields();
     $fields->removeByName('Products');

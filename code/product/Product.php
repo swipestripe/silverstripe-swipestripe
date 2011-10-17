@@ -28,6 +28,15 @@ class Product extends Page {
     'Attributes' => 'Attribute'
   );
   
+  public static $summary_fields = array(
+    'FirstImage' => 'Image',
+	  'Title' => 'Title'
+	);
+	
+	public static $searchable_fields = array(
+	  'Title'
+	);
+  
 	/**
 	 * Set the currency for all products.
 	 * Must match site curency

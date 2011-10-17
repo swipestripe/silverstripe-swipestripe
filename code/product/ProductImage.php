@@ -25,4 +25,9 @@ class ProductImage extends DataObject
     if ($Image = $this->Image()) return $Image->CMSThumbnail();
     else return '(No Image)';
   }
+  
+  function fortemplate() {
+    if ($Image = $this->Image()) return $Image->CroppedImage(40,40)->forTemplate();
+    else return '(No Image)';
+  }
 }
