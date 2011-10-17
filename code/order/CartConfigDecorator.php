@@ -52,5 +52,16 @@ class CartConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab('Root.StripeyCart.Emails.OrderEmail', new TextField('OrderSubject', 'Order email subject line'));
     $fields->addFieldToTab('Root.StripeyCart.Emails.OrderEmail', new HtmlEditorField('OrderBody', 'Order email body', 15));
 	}
+	
+	static function viewing_cart_admin() {
+	  
+	  $curr = Controller::curr();
+    $request = $curr->getRequest();
+
+    if (stristr($request->getURL(), 'stripeycart/SiteConfig/') !== false) {
+      return true;
+    }
+    return false;
+	}
 
 }

@@ -7,6 +7,9 @@
     		dateFormat: 'yy-m-d'
     	});
     	
+    	console.log($('#Form_SearchForm_Order_OrderedOn'));
+    	
+    	/*
        //Submit the search form
        var doList = function() {
 	     $("#Form_SearchForm_Order").submit();
@@ -50,8 +53,6 @@
        $('#Form_EditForm_Status').live('change', function() {
     	   var self = this;
     	   
-    	   console.log('there was a change in the matrix');
-    	   
     	   $('input[name="status"]').each(function() {
     		   if ($(this).val() == $(self).val()) {
     			   $(this).attr('checked', 'checked');
@@ -61,6 +62,6 @@
     		   }
     	   });
        });
-       
+       */
     })
 })(jQuery);

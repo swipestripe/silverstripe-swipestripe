@@ -71,8 +71,6 @@
     		//Get price difference for the current variation selected
     		$(this).change(function(e) {
     			
-    			return;
-    			
     			var values = $('#Form_AddToCartForm').serialize();
     			
     			$.ajax({

@@ -58,6 +58,7 @@ class CheckoutPage_Controller extends Page_Controller {
   
   /**
    * Include some CSS for the checkout page
+   * TODO why didn't I use init() here?
    */
   function index() {
     
@@ -300,14 +301,15 @@ class CheckoutPage_Controller extends Page_Controller {
 			$member->State = $data['Billing']['State'];
 			$member->Country = $data['Billing']['Country'];
 			$member->PostalCode = $data['Billing']['PostalCode'];
-			
-			$member->addToGroupByCode('customers');
+			$member->Email = $data['Email'];
+
 			$member->write();
+			$member->addToGroupByCode('customers');
 			$member->logIn();
 		}
-		else if (Member::currentUser()) {
+		else {
 		  
-		  if (Member::currentUser()->Email == $data['Email']) {
+		  if (Member::currentUser() && Member::currentUser()->Email == $data['Email']) {
 		    $member->update($data);
 			  $member->write();
 		  }

@@ -412,12 +412,15 @@ class Product_Controller extends Page_Controller {
     }
     
     if ($variation) {
-      
+
       if ($variation->Amount->getAmount() == 0) {
         $data['priceDifference'] = 0;
       }
+      else if ($variation->Amount->getAmount() > 0) {
+        $data['priceDifference'] = '(+' . $variation->Amount->Nice() . ')';
+      }
       else {
-        $data['priceDifference'] = $variation->Amount->Nice();
+        $data['priceDifference'] = '(' . $variation->Amount->Nice() . ')';
       }
     }
     

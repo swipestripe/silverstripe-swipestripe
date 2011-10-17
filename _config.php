@@ -14,6 +14,9 @@ SortableDataObject::add_sortable_classes(array('ProductImage'));
 //Redirect customers logging in to the account page
 Security::set_default_login_dest('account');
 
+//TODO is this necessary?
+LeftAndMain::require_css('stripeycart/css/StripeyCartAdmin.css');
+
 //For unit testing
 /*
 Object::add_extension('DummyProductPage', 'ProductDecorator');

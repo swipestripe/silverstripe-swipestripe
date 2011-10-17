@@ -1,0 +1,31 @@
+/* clearfix */
+.clr:after, .clearfix:after { content:" "; display:block; height:0; clear:both; visibility:hidden; font-size:0; }
+* html .clr, * html .clearfix { zoom:1; } /* ie6 */
+*:first-child+html .clr, *:first-child+html .clearfix { zoom:1; } /* ie7 */
+
+input#Form_ResultsForm_action_goForward {display:none;}
+
+#ModelClassSelector select {font-size:14px !important;width:100%;}
+#ModelClassSelector select option {font-size:14px;height:1.5em;}
+
+#sitetree_ul li.nositetree {display:none;}
+
+button#list_view { font-size:12px; padding:4px 6px; border:1px solid #aaa; border-top-color:#bbb; border-left-color:#bbb; background:#ccc; color:#555; font-weight:700; cursor:pointer; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; }
+button#list_view:hover { background-color:#bbb; }
+
+.modelpagenav { padding:0 0 10px; }
+.modelpagenav button { float:left; }
+
+.publishpreviews { float:left; margin:0 0 0 20px; font-size:12px; font-weight:700; line-height:22px; }
+.publishpreviews a { margin:0 0 0 7px; }
+
+
+/* Stripey Cart */
+.right form .ComplexTableField .middleColumn {
+	background: none;
+}
+
+body.ModelAdmin #left {
+    width: 307px !important;
+}
+
