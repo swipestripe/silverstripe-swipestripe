@@ -28,6 +28,10 @@ class Product extends Page {
     'Attributes' => 'Attribute'
   );
   
+  static $belongs_many_many = array(    
+    'ProductCategories' => 'ProductCategory'
+  );
+  
   public static $summary_fields = array(
     'FirstImage' => 'Image',
 	  'Title' => 'Title'
@@ -140,6 +144,17 @@ class Product extends Page {
       );
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
+    
+    //Product categories
+    $manager = new ManyManyComplexTableField(
+      $this,
+      'ProductCategories',
+      'ProductCategory',
+      array(),
+      'getCMSFields_forPopup'
+    );
+    $manager->setPermissions(array());
+    $fields->addFieldToTab("Root.Content.Categories", $manager);
     
     return $fields;
 	}
