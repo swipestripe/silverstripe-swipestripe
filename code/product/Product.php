@@ -34,11 +34,14 @@ class Product extends Page {
   
   public static $summary_fields = array(
     'FirstImage' => 'Image',
-	  'Title' => 'Name'
+	  'Title' => 'Name',
+    'Status' => 'Status',
+    'CategoriesSummary' => 'Categories'
 	);
 	
 	public static $searchable_fields = array(
-	  'Title'
+	  'Title',
+	  'Status'
 	);
   
 	/**
@@ -242,6 +245,17 @@ class Product extends Page {
     $form = new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
     $form->disableSecurityToken();
     return $form;
+	}
+	
+	function CategoriesSummary() {
+	  $summary = array();
+	  $categories = $this->ProductCategories();
+	  
+	  if ($categories) foreach ($categories as $productCategory) {
+	    $summary[] = $productCategory->Title;
+	  } 
+	  
+	  return implode(', ', $summary);
 	}
 
 }
