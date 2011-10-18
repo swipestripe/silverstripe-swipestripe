@@ -112,24 +112,20 @@ class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
 		
 		if(is_subclass_of($this->currentRecord->class, "SiteTree")) {
 
-			$live_link = Controller::join_links($this->currentRecord->Link(),'?stage=Live');
-			$stage_link = Controller::join_links($this->currentRecord->Link(),'?stage=Stage');
-	
-			
 			$form->setActions($this->currentRecord->getCMSActions());
 			
-			$form->Fields()->insertFirst(
-			  new LiteralField('view','<div class="publishpreviews clr">'._t('StripeyCartAdmin.VIEW','View Page').': <a target="_blank" href="'.$live_link.'">'._t('StripeyCartAdmin.VIEWLIVE','Live Site').'</a> <a target="_blank" href="'.$stage_link.'">'._t('StripeyCartAdmin.VIEWDRAFT','Draft Site').'</a></div></div>'
-			));
-	
-			if($parent = $this->parentController->parentController->getParentPage()) {
-				$form->Fields()->push(new HiddenField('ParentID','', $parent->ID));
-			}
-			elseif($parent_class = $this->parentController->stat('parent_page_type')) {
-				$form->Fields()->push(new SimpleTreeDropdownField('ParentID', _t('StripeyCartAdmin.PARENTPAGE','Parent page'), $parent_class));
-			}
+			$live_link = Controller::join_links($this->currentRecord->Link(),'?stage=Live');
+			$stage_link = Controller::join_links($this->currentRecord->Link(),'?stage=Stage');
 			
-		  $form->Fields()->insertFirst(new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button>'));		
+			$form->Fields()->insertFirst(
+			  new LiteralField('view','<div class="publishpreviews clr">'._t('StripeyCartAdmin.VIEW','View Page').': <a target="_blank" href="'.$live_link.'">'._t('StripeyCartAdmin.VIEWLIVE','Live Site').'</a> <a target="_blank" href="'.$stage_link.'">'._t('StripeyCartAdmin.VIEWDRAFT','Draft Site').'</a></div></div>')
+			);
+			$form->Fields()->insertFirst(
+			  new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button>')
+			);		
+			
+			//Remove products from the site tree in CMS
+			$form->Fields()->push(new HiddenField('ParentID', '', -1));
 		}	
 		else {
 		  $form->Fields()->insertFirst(new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button></div>'));		

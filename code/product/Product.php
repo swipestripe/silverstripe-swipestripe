@@ -34,7 +34,7 @@ class Product extends Page {
   
   public static $summary_fields = array(
     'FirstImage' => 'Image',
-	  'Title' => 'Title'
+	  'Title' => 'Name'
 	);
 	
 	public static $searchable_fields = array(

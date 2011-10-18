@@ -8,6 +8,10 @@ class ProductCategory extends Page {
 	public static $many_many = array(
     'Products' => 'Product'
   );
+  
+  public static $summary_fields = array(
+	  'MenuTitle' => 'Name'
+	);
     
 	function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -36,20 +40,18 @@ class ProductCategory_Controller extends Page_Controller {
 	}
   
   public function Products() {
-    
-    return;
-    
-    
+
     if(!isset($_GET['start']) || !is_numeric($_GET['start']) || (int)$_GET['start'] < 1) $_GET['start'] = 0;
       
     $SQL_start = (int)$_GET['start'];
-    $doSet = DataObject::get(
-      $callerClass = "Product",
-      $filter = "`ParentID` = '".$this->ID."'",
-      $sort = "",
-      $join = "",
-      $limit = "{$SQL_start}, 2"
-    );
+
+    $doSet = DataObject::get( 
+       'Product', 
+       "`ProductCategory_Products`.`ProductCategoryID` = '".$this->ID."'", 
+       "", 
+       "LEFT JOIN `ProductCategory_Products` ON `ProductCategory_Products`.`ProductID` = `Product`.`ID`",
+       "{$SQL_start}, 2"
+    ); 
    
     return $doSet ? $doSet : false;
   }
