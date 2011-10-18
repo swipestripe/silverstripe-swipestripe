@@ -10,8 +10,9 @@ class OptionSetSearchFilter extends SearchFilter {
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
 		$values = $this->getValue();
-		if(count($values)) {
-			foreach($values as $value) {
+		
+		if (count($values)) {
+			foreach ($values as $value) {
 				$matches[] = sprintf("%s LIKE '%s%%'",
 					$this->getDbName(),
 					Convert::raw2sql(str_replace("'", '', $value))
@@ -30,6 +31,7 @@ class OptionSetSearchFilter extends SearchFilter {
 	 * @see SearchFilter::isEmpty()
 	 */
 	public function isEmpty() {
+
 		if(is_array($this->getValue())) {
 			return count($this->getValue()) == 0;
 		}

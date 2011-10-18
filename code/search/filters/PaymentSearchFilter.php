@@ -14,7 +14,7 @@ class PaymentSearchFilter extends SearchFilter {
 			return $query->innerJoin(
 				$table = "Payment", // framework already applies quotes to table names here!
 				$onPredicate = "\"Payment\".\"OrderID\" = \"Order\".\"ID\"",
-				$tableAlias=null
+				$tableAlias = null
 			);
 		}
 	}

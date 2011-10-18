@@ -40,9 +40,67 @@ class Product extends Page {
 	);
 	
 	public static $searchable_fields = array(
-	  'Title',
-	  'Status'
+	  'Title' => array(
+			'field' => 'TextField',
+			'filter' => 'PartialMatchFilter',
+			'title' => 'Name'
+		),
+		'Status' => array(
+			'filter' => 'PublishedStatusSearchFilter',
+			'title' => 'Status'
+		),
+		'Category' => array(
+  		'filter' => 'ProductCategorySearchFilter',
+  	)
 	);
+	
+	public static $casting = array(
+		'Category' => 'Varchar'
+	);
+	
+	/**
+	 * Filter for order admin area search.
+	 * 
+	 * @see DataObject::scaffoldSearchFields()
+	 */
+  function scaffoldSearchFields(){
+		$fieldSet = parent::scaffoldSearchFields();
+
+		$statusField = new DropdownField('Status', 'Status', array(
+		  1 => "published", 
+		  2 => "not published"
+		));
+		$statusField->setHasEmptyDefault(true);
+		$fieldSet->push($statusField);
+		
+		$categories = DataObject::get('ProductCategory');
+		$categoryOptions = array();
+		if ($categories) foreach ($categories as $productCategory) {
+		  $categoryOptions[$productCategory->ID] = $productCategory->MenuTitle;
+		}
+
+		if ($categoryOptions) {
+		  $fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
+		}
+
+		return $fieldSet;
+	}
+	
+	/**
+	 * Get a new date range search context for filtering
+	 * the search results in OrderAdmin
+	 * 
+	 * @see DataObject::getDefaultSearchContext()
+	 *
+  public function getDefaultSearchContext() {
+
+  	return new DateRangeSearchContext(
+  		$this->class,
+  		$this->scaffoldSearchFields(),
+  		$this->defaultSearchFilters()
+  	);
+  }
+  */
   
 	/**
 	 * Set the currency for all products.
