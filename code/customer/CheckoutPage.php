@@ -20,7 +20,7 @@ class CheckoutPage extends Page
 		if (!DataObject::get_one('CheckoutPage')) {
 			$page = new CheckoutPage();
 			$page->Title = 'Checkout';
-			$page->Content = '<p>This is the checkout page, it is used for customers to complete their order.</p>';
+			$page->Content = '';
 			$page->URLSegment = 'checkout';
 			$page->ShowInMenus = 0;
 			$page->writeToStage('Stage');
