@@ -32,7 +32,7 @@ class StripeyCartAdmin extends ModelAdmin {
 	    parent::init();
 	    
 	    //For managing Orders
-	    Requirements::css('stripeycart/css/OrderReport.css');
+	    Requirements::css('stripeycart/css/StripeyCart.css');
     	Requirements::css('stripeycart/css/StripeyCartAdmin.css');
     	
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');

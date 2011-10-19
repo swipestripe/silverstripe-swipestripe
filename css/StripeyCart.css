@@ -1,3 +1,5 @@
+/* Order Report */
+
 h1.title {
 display:block;
 text-align:right;
@@ -185,4 +187,90 @@ font-style:italic;
 
 #OrderInformation {
 margin:5px 0 20px;
+}
+
+/* Checkout */
+#Checkout {
+margin-top:15px;
+}
+
+#LeftCheckout {
+float:left;
+width:48%;
+padding:5px;
+border:1px solid red;
+}
+
+#RightCheckout {
+float:right;
+width:48%;
+padding:5px;
+border:1px solid green;
+}
+
+#Checkout .Actions {
+text-align:right;
+}
+
+#Checkout ul {
+list-style-type:none;
+}
+
+#Checkout h3 {
+margin-bottom:15px;
+}
+
+#Checkout span.error,#Checkout span.required,#Checkout span.validation {
+color:red;
+font-size:14px;
+font-style:italic;
+margin-bottom:5px;
+width:100%;
+}
+
+h3#Form_OrderForm_HeaderFieldPayment-Type {
+margin-top:45px;
+}
+
+div#Amount {
+display:none;
+}
+
+h3#CheckoutForm_OrderForm_HeaderFieldShipping-Address {
+float:left;
+}
+
+#Shipping[FirstName] {
+clear:both;
+border:1px solid blue;
+}
+
+#PersonalDetails {
+width:100%;
+border:1px solid #000;
+float:left;
+margin-top:20px;
+}
+
+#PersonalDetails .CompositeField {
+float:left;
+padding:10px;
+width:45%;
+}
+
+div.shipping-firstname {
+clear:both;
+}
+
+input.text,#LeftCheckout.select,#RightCheckout.select {
+width:200px;
+}
+
+ul#CheckoutForm_OrderForm_PaymentMethod li {
+padding:5px;
+margin:10px 0 0;
+}
+
+#CheckoutForm_OrderForm_Notes {
+width:100%;
 }

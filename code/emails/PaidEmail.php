@@ -17,11 +17,11 @@ class PaidEmail extends ProcessedEmail {
 
 	  //Get css for Email by reading css file and put css inline for emogrification
 	  $this->setTemplate('Order_PaidEmail');
-	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'))) {
-	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/OrderReport.css'));
+	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/StripeyCart.css'))) {
+	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/StripeyCart.css'));
 	  }
 	  else {
-	    $css = file_get_contents(Director::getAbsFile('stripeycart/css/OrderReport.css'));
+	    $css = file_get_contents(Director::getAbsFile('stripeycart/css/StripeyCart.css'));
 	  }
 
     $this->populateTemplate(

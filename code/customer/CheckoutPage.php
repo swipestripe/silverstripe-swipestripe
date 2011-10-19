@@ -62,8 +62,7 @@ class CheckoutPage_Controller extends Page_Controller {
    */
   function index() {
     
-    Requirements::css('stripeycart/css/OrderReport.css');
-    Requirements::css('stripeycart/css/Checkout.css');
+    Requirements::css('stripeycart/css/StripeyCart.css');
     
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('stripeycart/javascript/CheckoutPage.js');
