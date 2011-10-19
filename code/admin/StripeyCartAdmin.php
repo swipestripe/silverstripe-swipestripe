@@ -109,6 +109,22 @@ class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
 
 	public function EditForm() {
 		$form = parent::EditForm();
+
+		if ($this->currentRecord instanceof Product || is_subclass_of($this->currentRecord->class, 'Product')) {
+		  
+		  //Allow products to be added to the site tree, or remain disconnected from it
+		  $product = $this->currentRecord;
+			$pages = DataObject::get('SiteTree', 'ParentID > -1 AND SiteTree.ID != ' . $product->ID);
+			$pageMapPrefix = array(
+			  -1 => 'Not part of site tree navigation',
+			  0 => 'Root'
+			);
+			$pageMap = $pages->map('ID', 'MenuTitle');
+			$pagesMap = $pageMapPrefix + $pageMap;
+
+			$treeField = new DropdownField('ParentID', 'Parent page', $pagesMap, $product->ParentID);
+			$form->Fields()->addFieldToTab('Root.Behaviour', $treeField);
+		}
 		
 		if(is_subclass_of($this->currentRecord->class, "SiteTree")) {
 
@@ -123,14 +139,6 @@ class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
 			$form->Fields()->insertFirst(
 			  new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button>')
 			);	
-
-			//Remove products from the site tree in CMS
-			$form->Fields()->push(new HiddenField('ParentID', '', -1));
-			
-			//TODO keep parent IDs for products that are part of site tree
-			//$treeField = new SimpleTreeDropdownField("ParentID", "Parent page", "SiteTree");
-			//$treeField->setEmptyString('None');
-			//$form->Fields()->push($treeField);
 		}	
 		else {
 		  $form->Fields()->insertFirst(new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button></div>'));		
