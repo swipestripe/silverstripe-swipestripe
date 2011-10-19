@@ -34,6 +34,7 @@ class StripeyCartAdmin extends ModelAdmin {
 	    //For managing Orders
 	    Requirements::css('stripeycart/css/OrderReport.css');
     	Requirements::css('stripeycart/css/OrderAdmin.css');
+    	Requirements::css('stripeycart/css/StripeyCartAdmin.css');
     	
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.datepicker.css');
@@ -42,15 +43,14 @@ class StripeyCartAdmin extends ModelAdmin {
     	Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.core.js');
     	Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.datepicker.js');
     	Requirements::javascript('stripeycart/javascript/libs/daterangepicker.jquery.js');
-    	//Requirements::javascript('stripeycart/javascript/OrderAdmin.js');
-	    
+    	
+    	Requirements::javascript('stripeycart/javascript/StripeyCartAdmin.js');
 	    
 	    // Remove all the junk that will break ModelAdmin
 	    $config = HtmlEditorConfig::get_active();
 	    $buttons = array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','spellchecker','separator','sslink','unlink','anchor','separator','advcode','search','replace','selectall','visualaid','separator');
 	    $config->setButtonsForLine(2,$buttons);
-	    Requirements::javascript('stripeycart/javascript/StripeyCartAdmin.js');
-	    Requirements::css('stripeycart/css/StripeyCartAdmin.css');
+	    
 	}
 
 	/**
@@ -122,10 +122,15 @@ class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
 			);
 			$form->Fields()->insertFirst(
 			  new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button>')
-			);		
-			
+			);	
+
 			//Remove products from the site tree in CMS
 			$form->Fields()->push(new HiddenField('ParentID', '', -1));
+			
+			//TODO keep parent IDs for products that are part of site tree
+			//$treeField = new SimpleTreeDropdownField("ParentID", "Parent page", "SiteTree");
+			//$treeField->setEmptyString('None');
+			//$form->Fields()->push($treeField);
 		}	
 		else {
 		  $form->Fields()->insertFirst(new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button></div>'));		

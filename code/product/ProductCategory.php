@@ -2,7 +2,6 @@
 class ProductCategory extends Page {
 
 	public static $db = array(
-	  //'Test' => 'Varchar'
 	);
 
 	public static $many_many = array(

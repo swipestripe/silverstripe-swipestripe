@@ -32,6 +32,10 @@ class Product extends Page {
     'ProductCategories' => 'ProductCategory'
   );
   
+  public static $defaults = array(
+    'ParentID' => -1
+  );
+  
   public static $summary_fields = array(
     'FirstImage' => 'Image',
 	  'Title' => 'Name',
@@ -85,22 +89,6 @@ class Product extends Page {
 
 		return $fieldSet;
 	}
-	
-	/**
-	 * Get a new date range search context for filtering
-	 * the search results in OrderAdmin
-	 * 
-	 * @see DataObject::getDefaultSearchContext()
-	 *
-  public function getDefaultSearchContext() {
-
-  	return new DateRangeSearchContext(
-  		$this->class,
-  		$this->scaffoldSearchFields(),
-  		$this->defaultSearchFilters()
-  	);
-  }
-  */
   
 	/**
 	 * Set the currency for all products.
@@ -275,6 +263,13 @@ class Product extends Page {
     return $images->First();
   }
   
+  /**
+   * Add to cart form for products
+   * TODO validation broken due to overriding the Actions
+   * 
+   * @param unknown_type $quantity
+   * @param unknown_type $redirectURL
+   */
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
     $fields = new FieldSet(
@@ -302,6 +297,10 @@ class Product extends Page {
     $controller = Controller::curr();
     $form = new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
     $form->disableSecurityToken();
+    
+    //Change the action to accommodate product pages not in the site tree (ParentID = -1)
+	  $form->setFormAction('/product/'.$this->URLSegment.'/add');
+    
     return $form;
 	}
 	
@@ -315,6 +314,14 @@ class Product extends Page {
 	  
 	  return implode(', ', $summary);
 	}
+	
+	function Link($action = null) {
+	  
+	  if ($this->ParentID > -1) {
+	    return parent::Link($action);
+	  }
+	  return Controller::join_links(Director::baseURL() . 'product/', $this->RelativeLink($action));
+	}
 
 }
 class Product_Controller extends Page_Controller {
@@ -323,9 +330,38 @@ class Product_Controller extends Page_Controller {
   	'add',
     'options',
     'AddToCartForm',
-    'variationprice'
+    'variationprice',
+    'show'
   );
 
+  public static $url_handlers = array( 
+    '$ID!/add' => 'add',
+    '$ID!/options' => 'options',
+    '$ID!/variationprice' => 'variationprice',
+  	'$ID!' => 'show'
+  );
+  
+  function init() {
+    parent::init();
+    
+    //Get current product page for products that are not part of the site tree
+    //and do not have a ParentID set, they are accessed via this controller using
+    //Director rules
+    if ($this->dataRecord->ID == -1) {
+      
+      $params = $this->getURLParams();
+      
+      if ($urlSegment = $params['ID']) {
+        $product = DataObject::get_one('Product', "URLSegment = '" . convert::raw2sql($urlSegment) . "'");
+        
+        if ($product && $product->exists()) {
+          $this->dataRecord = $product; 
+          $this->failover = $this->dataRecord;
+        }
+      }
+    }
+  }
+  
 	/**
    * Add an item to the cart
    */
@@ -481,7 +517,7 @@ class Product_Controller extends Page_Controller {
    * @param unknown_type $request
    */
   function variationprice(SS_HTTPRequest $request) {
-    
+
     $data = array();
     $product = $this->data();
     $variations = $product->Variations();
@@ -521,5 +557,25 @@ class Product_Controller extends Page_Controller {
     }
     
     return json_encode($data);
+  }
+  
+  function show(SS_HTTPRequest $request) {
+    
+    $product = $this->data();
+
+    if ($product && $product->exists()) {
+      $data = array(
+      	'Product' => $product,
+        //'Content' => $this->Content, 
+       	//'Form' => $this->Form 
+      );
+ 
+      $ssv = new SSViewer("Page"); 
+      $ssv->setTemplateFile("Layout", "Product_show"); 
+      return $this->Customise($data)->renderWith($ssv); 
+    }
+    else {
+      return $this->httpError(404, 'Sorry that product could not be found');
+    }
   }
 }
