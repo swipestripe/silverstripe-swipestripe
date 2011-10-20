@@ -420,7 +420,7 @@ class Product_Controller extends Page_Controller {
    */
   private function getQuantity() {
     $quantity = $this->getRequest()->requestVar('Quantity');
-    return ($quantity) ?$quantity :1;
+    return (isset($quantity)) ?$quantity :1;
   }
   
   /**

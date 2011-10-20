@@ -7,6 +7,8 @@
  * add product to cart
  * change quantity of product in cart
  * update product and add it to cart again checking version number
+ * add negative quantity to cart
+ * add 0 quantity to cart
  * 
  * add product variation
  * change quantity of variation
@@ -16,7 +18,7 @@
  * add product and variation to cart and check version
  * add variation to cart with price change
  * check variation options on product page
- * add negative quantity to cart
+ * 
  * submit checkout without necessary details
  * submit checkout without specifying payment gateway
  * submit checkout without products in cart
@@ -54,6 +56,7 @@ class CartTest extends FunctionalTest {
 	 * Add the same product with different quantity
 	 * Publish same product and add again to check that new item added to cart with different version
 	 * Adding products with negative quantity should not work
+	 * Adding products with 0 quantity should have no effect on the cart items
 	 */
   function testAddItemToCart() {
 	  
@@ -170,6 +173,39 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $secondItem->Quantity);
 
 	  
+	  //Adding a product with 0 quantity has no effect on the cart
+	  $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+		
+		$this->assertEquals(2, $items->Count());
+	  $this->assertEquals(2, $items->TotalItems());
+	  
+	  $secondItem = $items->Last();
+	  $this->assertInstanceOf('Item', $secondItem);
+	  $this->assertEquals(2, $secondItem->Quantity);
+	  
+	  
+	  $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 0
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+
+	  $this->assertEquals(2, $items->Count());
+	  $this->assertEquals(2, $items->TotalItems());
+	  
+	  $secondItem = $items->Last();
+	  $this->assertInstanceOf('Item', $secondItem);
+	  $this->assertEquals(2, $secondItem->Quantity);
 	}
 	
 	/**
