@@ -1,6 +1,6 @@
 <div style="float: left; padding: 10px;">
 
-	<h2>$Title in the module</h2>
+	<h2>$Title</h2>
 	
 	<p>$Amount.Nice <span id="VariationPrice"></span></p>
 

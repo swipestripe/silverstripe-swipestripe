@@ -240,7 +240,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	}
 	
 	private function addNotesField(&$fields, &$validator) {
-	  $fields['Notes'][] = new TextareaField('Notes');
+	  $fields['Notes'][] = new TextareaField('Notes', 'Notes about this order', 5, 20, '');
 	}
 	
 	private function addPaymentFields(&$fields, &$validator, $order) {

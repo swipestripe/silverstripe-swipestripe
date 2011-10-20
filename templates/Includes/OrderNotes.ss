@@ -1,4 +1,4 @@
-<table id="ShippingTable" class="infotable">
+<table class="infotable">
   <tr>
     <th>Notes</th>
   </tr>

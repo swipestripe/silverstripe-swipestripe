@@ -173,7 +173,7 @@ table.infotable .left,table.infotable th {
 text-align:left;
 }
 
-#ShippingTable td,#ShippingTable th {
+#ShippingTable td, #ShippingTable th {
 width:50%;
 }
 
@@ -335,4 +335,113 @@ padding: 5px;
 text-align: right;
 }
 
+#CartForm_CartForm input.text {
+width:200px;
+padding:5px;
+color:#333;
+border:1px solid #CDDDDD;
+}
 
+#CartForm_CartForm .cartquantity input.text {
+width: 30px;	
+}
+
+
+/* 
+  Account ========================================
+*/
+#Orders {
+color: #777;	
+}
+
+#Orders h4 {
+color: #333;
+font-size: 14px;
+}
+
+#Orders li {
+list-style-type: none;
+border-bottom: 1px solid #CFCFCF;
+padding: 15px 10px;
+}
+
+#Orders li.LastOrder {
+border: none;	
+}
+
+#Orders li p {
+margin-left: 10px;	
+}
+
+/* 
+  Product ========================================
+*/
+#Product {
+float: left;
+padding: 10px 0px;
+width: 100%;
+}
+
+#FirstImage img {
+border: 1px solid #999;
+padding: 2px;
+float: left;
+margin: 0px 10px 10px 0px;
+}
+
+#ProductPrice {
+font-size: 22px;
+margin-bottom: 15px;
+color: #555;
+}
+
+#Product input.text {
+width:200px;
+padding:5px;
+color:#333;
+border:1px solid #CDDDDD;
+}
+
+#Product label {
+color: #777;
+float: left;
+margin: 5px;
+min-width: 60px;
+}
+
+#Product div.field {
+clear: both;	
+}
+
+#Quantity input.text {
+width: 30px;
+}
+
+#Quantity .middleColumn {
+float: left;
+}
+
+#Form_AddToCartForm {
+}
+
+#Form_AddToCartForm fieldset, #Form_AddToCartForm .Actions {
+}
+
+#Form_AddToCartForm .Actions {
+padding: 15px;	
+}
+
+#ProductAdd {
+float: left;
+min-width: 300px;
+}
+
+#ProductDescription {
+float: left;
+padding: 5px;
+clear: left;
+}
+
+#VariationPrice {
+font-size: 14px;	
+}

@@ -276,13 +276,14 @@ class Product extends Page {
       new HiddenField('ProductClass', 'ProductClass', $this->ClassName),
       new HiddenField('ProductID', 'ProductID', $this->ID),
       new HiddenField('ProductVariationID', 'ProductVariationID', 0),
-      new HiddenField('Redirect', 'Redirect', $redirectURL),
-      new TextField('Quantity', 'Quantity', $quantity)
+      new HiddenField('Redirect', 'Redirect', $redirectURL)
     );
 
     //Get the options for this product
     $optionGroupField = new OptionGroupField('OptionGroup', $this);
     $fields->push($optionGroupField);
+    
+    $fields->push(new TextField('Quantity', 'Quantity', $quantity));
     
     $actions = new FieldSet(
       new FormAction('add', 'Add To Cart')
@@ -343,6 +344,8 @@ class Product_Controller extends Page_Controller {
   
   function init() {
     parent::init();
+    
+    Requirements::css('stripeycart/css/StripeyCart.css');
     
     //Get current product page for products that are not part of the site tree
     //and do not have a ParentID set, they are accessed via this controller using

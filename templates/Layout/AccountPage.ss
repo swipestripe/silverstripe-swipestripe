@@ -6,7 +6,7 @@ $Content
 <% if Orders %>
 	<ul id="Orders">
 	<% control Orders %>
-	  <li>
+	  <li <% if Last %>class="LastOrder"<% end_if %>>
 	    <div>
 	      <h4><a href="$Link">Order #$ID - $Status <span class="payment_status">($PaymentStatus)</span></a></h4>
 	      <p>
