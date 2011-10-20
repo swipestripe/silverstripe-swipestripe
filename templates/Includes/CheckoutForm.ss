@@ -9,28 +9,38 @@
   
   <fieldset>
   
-    <div id="LeftCheckout">
-	    <% control Fields(BillingAddress) %>
-	      $FieldHolder
-	    <% end_control %>
+    <div id="Addresses">
+	    <div id="LeftCheckout">
+		    <% control Fields(BillingAddress) %>
+		      $FieldHolder
+		    <% end_control %>
+	    </div>
+	    
+	    <div id="RightCheckout">
+	      <% control Fields(ShippingAddress) %>
+	        $FieldHolder
+	      <% end_control %>
+	    </div>
     </div>
     
-    <div id="RightCheckout">
-      <% control Fields(ShippingAddress) %>
-        $FieldHolder
-      <% end_control %>
-    </div>
+    <span class="seperator"></span>
     
     <% control Fields(PersonalDetails) %>
       $FieldHolder
     <% end_control %>
     
-    <h3>Your Order</h3>
-    <% include CheckoutFormOrder %>
+    <span class="seperator"></span>
+    
+    <div id="Order">
+	    <h3>Your Order</h3>
+	    <% include CheckoutFormOrder %>
+    </div>
     
     <% control Fields(Notes) %>
       $FieldHolder
     <% end_control %>
+    
+    <span class="seperator"></span>
     
     <% control Fields(Payment) %>
       $FieldHolder

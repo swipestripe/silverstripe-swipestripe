@@ -216,13 +216,13 @@ class CheckoutPage_Controller extends Page_Controller {
 	      new FieldGroup(
 	        new ConfirmedPasswordField('Password', 'Password')
 	      ),
-        new LiteralField(
-  				'MemberInfo', 
-  				'<p class="message good">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
-  			),
   			new LiteralField(
   				'AccountInfo', 
-  				'<p>Please choose a password, so you can login and check your order history in the future</p>'
+  				'<p class="password-message">Please choose a password, so you can login and check your order history in the future</p>'
+  			),
+  			new LiteralField(
+  				'MemberInfo', 
+  				'<p class="password-message">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
   			)
 	    ));
 			$validator->addRequiredField('Password');

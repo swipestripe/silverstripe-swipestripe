@@ -195,6 +195,10 @@ margin:5px 0 20px;
   Checkout ========================================
 */
 
+h2, h3 {
+color: #333;	
+}
+
 #Checkout {
 margin-top:15px;
 }
@@ -203,18 +207,17 @@ margin-top:15px;
 float:left;
 width:48%;
 padding:5px;
-border:1px solid red;
 }
 
 #RightCheckout {
 float:right;
 width:48%;
 padding:5px;
-border:1px solid green;
 }
 
 #Checkout .Actions {
 text-align:right;
+margin: 15px 0;
 }
 
 #Checkout ul {
@@ -231,6 +234,7 @@ font-size:14px;
 font-style:italic;
 margin-bottom:5px;
 width:100%;
+float: left;
 }
 
 h3#Form_OrderForm_HeaderFieldPayment-Type {
@@ -250,16 +254,15 @@ clear:both;
 border:1px solid blue;
 }
 
-#PersonalDetails {
-width:100%;
-border:1px solid #000;
-float:left;
-margin-top:20px;
+#Addresses, #PersonalDetails, #Order, #Notes, #PaymentFields {
+float: left;
+width: 100%;
+margin: 10px 0;
 }
 
 #PersonalDetails .CompositeField {
 float:left;
-padding:10px;
+padding:0 5px;
 width:45%;
 }
 
@@ -267,8 +270,11 @@ div.shipping-firstname {
 clear:both;
 }
 
-input.text,#LeftCheckout.select,#RightCheckout.select {
+#Checkout input.text, #Checkout textarea, #LeftCheckout.select, #RightCheckout.select {
 width:200px;
+padding:5px;
+color:#333;
+border:1px solid #CDDDDD;
 }
 
 ul#CheckoutForm_OrderForm_PaymentMethod li {
@@ -276,9 +282,47 @@ padding:5px;
 margin:10px 0 0;
 }
 
-#CheckoutForm_OrderForm_Notes {
-width:100%;
+#Checkout textarea#CheckoutForm_OrderForm_Notes {
+width: 500px;
 }
+
+#Checkout label.left {
+color: #777;
+float: left;
+clear: left;
+margin: 5px 0;
+}
+
+#Checkout label {
+color: #777;	
+}
+
+#Checkout .middleColumn {
+float: left;
+width: 100%;
+}
+
+p#ShipToBillingAddress {
+float: left;
+margin-left: 15px;
+padding: 2px;
+}
+
+span.seperator {
+width: 100%;
+height: 1px;
+border-top: 1px solid #CFCFCF;
+display: block;
+margin: 10px 0;
+float: left;
+}
+
+p.password-message {
+color: #666;
+float: left;
+font-style: italic;
+}
+
 
 /*
   Cart ==============================================
