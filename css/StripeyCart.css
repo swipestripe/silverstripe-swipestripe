@@ -346,6 +346,14 @@ border:1px solid #CDDDDD;
 width: 30px;	
 }
 
+#Cart span.error,#Cart span.required,#Cart span.validation {
+color:red;
+font-size:14px;
+font-style:italic;
+margin-bottom:5px;
+width:100%;
+float: left;
+}
 
 /* 
   Account ========================================
@@ -419,6 +427,11 @@ width: 30px;
 
 #Quantity .middleColumn {
 float: left;
+}
+
+#Product .option select {
+padding: 2px;
+min-width: 100px;
 }
 
 #Form_AddToCartForm {

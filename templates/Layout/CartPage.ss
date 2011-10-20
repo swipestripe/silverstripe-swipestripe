@@ -1,4 +1,4 @@
-<div class="typography">
+<div id="Cart">
 
 	<h2>$Title</h2>
 	$Content 

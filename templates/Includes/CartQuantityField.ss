@@ -14,16 +14,6 @@
       $Item.Variation.OptionSummary
     <% end_if %>
   </td>
-
-  <!--  
-  <td>
-	  <% control Item.ItemOptions %>
-	    <% control Object %>
-	      $Title
-	    <% end_control %>
-	  <% end_control %>
-  </td>
-  -->
   
   <td class="right total">
 	  <% control Item %>   

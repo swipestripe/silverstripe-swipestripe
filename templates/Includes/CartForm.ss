@@ -19,27 +19,42 @@
     </thead>
     <tbody>
       
-      <% control Fields %>
-	      $FieldHolder
-	    <% end_control %>
-  
-      <tr class="gap summary total" id="Total">
-        <% control Cart %> 
-        <td scope="row" class="threeColHeader total" colspan="4">Total</td>
-        <td class="right">$Total.Nice</td>
-        <% end_control %>
-      </tr>
+	    <% if Cart.Items %>
+	    
+	      <% control Fields %>
+	        $FieldHolder
+	      <% end_control %>
+	      
+	      <tr class="gap summary total" id="Total">
+	        <% control Cart %> 
+	        <td scope="row" class="threeColHeader total" colspan="4">Total</td>
+	        <td class="right">$Total.Nice</td>
+	        <% end_control %>
+	      </tr>
+	    
+	    <% else %>
+	      <tr  class="itemRow">
+      
+	        <td colspan="5">
+	          <span class="error">There are no items in your cart.</span>
+	        </td>
+	
+	      </tr>
+	    <% end_if %>
+
     </tbody>
   </table>
 
-
-	<% if Actions %>
-	<div class="Actions">
-		<% control Actions %>
-			$Field
-		<% end_control %>
-	</div>
+  <% if Cart.Items %>
+		<% if Actions %>
+		<div class="Actions">
+			<% control Actions %>
+				$Field
+			<% end_control %>
+		</div>
+		<% end_if %>
 	<% end_if %>
+	
 <% if IncludeFormTag %>
 </form>
 <% end_if %>

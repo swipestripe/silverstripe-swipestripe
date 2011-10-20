@@ -49,13 +49,16 @@
     <div class="clear"><!-- --></div>
   </fieldset>
 
-  <% if Actions %>
-  <div class="Actions">
-    <% control Actions %>
-      $Field
-    <% end_control %>
-  </div>
+  <% if Cart.Items %>
+	  <% if Actions %>
+	  <div class="Actions">
+	    <% control Actions %>
+	      $Field
+	    <% end_control %>
+	  </div>
+	  <% end_if %>
   <% end_if %>
+  
 <% if IncludeFormTag %>
 </form>
 <% end_if %>

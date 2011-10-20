@@ -1,19 +1,24 @@
-<div style="float: left; padding: 10px;">
 
-	<h2>$Title</h2>
-	
-	<p>$Amount.Nice <span id="VariationPrice"></span></p>
+<% control Product %>
+<div id="Product">
 
-	<% control FirstImage %>
-	  $Image.CroppedImage(137,145)
-	<% end_control %>
+  <% control FirstImage %>
+    <div id="FirstImage">
+      $Image.CroppedImage(250,250)
+    </div>
+  <% end_control %>
+
+  <h1>$Title</h1>
+  
+  <p id="ProductPrice">$Amount.Nice <span id="VariationPrice"></span></p>
+
+  <div id="ProductAdd">
+    $AddToCartForm(1)
+  </div>
+  
+  <div id="ProductDescription">
+    $Content
+  </div>
 
 </div>
-
-<div style="float: left; padding: 10px;">
-
-	$AddToCartForm(1)
-	
-	$Content
-
-</div>
+<% end_control %>
