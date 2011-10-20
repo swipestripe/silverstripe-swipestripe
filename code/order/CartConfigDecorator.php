@@ -34,7 +34,7 @@ class CartConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab("Root.StripeyCart.Emails", 
       new Tab('Email'),
       new Tab('ReceiptEmail'),
-      new Tab('PaidEmail'),
+      //new Tab('PaidEmail'),
       new Tab('OrderEmail')
     );
     
@@ -44,9 +44,9 @@ class CartConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab('Root.StripeyCart.Emails.ReceiptEmail', new TextField('ReceiptSubject', 'Receipt email subject line'));
     $fields->addFieldToTab('Root.StripeyCart.Emails.ReceiptEmail', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
     
-    $fields->addFieldToTab('Root.StripeyCart.Emails.PaidEmail', new EmailField('PaidFrom', 'Paid email sender'));
-    $fields->addFieldToTab('Root.StripeyCart.Emails.PaidEmail', new TextField('PaidSubject', 'Paid email subject line'));
-    $fields->addFieldToTab('Root.StripeyCart.Emails.PaidEmail', new HtmlEditorField('PaidBody', 'Paid email body', 15));
+    //$fields->addFieldToTab('Root.StripeyCart.Emails.PaidEmail', new EmailField('PaidFrom', 'Paid email sender'));
+    //$fields->addFieldToTab('Root.StripeyCart.Emails.PaidEmail', new TextField('PaidSubject', 'Paid email subject line'));
+    //$fields->addFieldToTab('Root.StripeyCart.Emails.PaidEmail', new HtmlEditorField('PaidBody', 'Paid email body', 15));
     
     $fields->addFieldToTab('Root.StripeyCart.Emails.OrderEmail', new EmailField('OrderTo', 'Order email recipient'));
     $fields->addFieldToTab('Root.StripeyCart.Emails.OrderEmail', new TextField('OrderSubject', 'Order email subject line'));
