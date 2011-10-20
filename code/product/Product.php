@@ -102,6 +102,8 @@ class Product extends Page {
 	  }
 	  else {
 	    user_error("Cannot set allowed currency. Currency must match: ".Payment::site_currency(), E_USER_WARNING);
+	    //TODO return meaningful error to browser in case error not shown
+	    return;
 	  }
 	}
     

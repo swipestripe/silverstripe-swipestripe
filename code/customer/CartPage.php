@@ -139,6 +139,8 @@ class CartPage_Controller extends Page_Controller {
   	  //If quantity not correct throw error
   	  if (!is_numeric($quantity) || $quantity < 0) {
   	    user_error("Cannot change quantity, quantity must be a non negative number.", E_USER_WARNING);
+  	    //TODO return meaningful error to browser in case error not shown
+  	    return;
   	  }
 
 	    if ($item = $currentOrder->Items()->find('ID', $itemID)) {

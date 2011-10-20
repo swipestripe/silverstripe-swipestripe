@@ -6,6 +6,8 @@
  * TODO tests
  * add product to cart
  * change quantity of product in cart
+ * update product and add it to cart again checking version number
+ * 
  * add product variation
  * change quantity of variation
  * add different variations for same product
@@ -38,7 +40,7 @@ class CartTest extends FunctionalTest {
 	}
 
 	/**
-	 * Creating a product and checking price and currency
+	 * Create product and check basic attributes
 	 */
   function testProductAttributes() {
     
@@ -48,7 +50,10 @@ class CartTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Adding an item to the cart and checking item exists
+	 * Add an item to the cart for a basic product
+	 * Add the same product with different quantity
+	 * Publish same product and add again to check that new item added to cart with different version
+	 * Adding products with negative quantity should not work
 	 */
   function testAddItemToCart() {
 	  
@@ -56,20 +61,115 @@ class CartTest extends FunctionalTest {
 	  
 	  //Add product A to cart
 	  $productA = $this->objFromFixture('Product', 'productA');
+	  $firstVersion = $productA->Version;
 	  
-	  /*
-	  $addLink = $productA->AddToCartLink();
-	  $this->get(Director::makeRelative($addLink)); 
-	  
-	  $order = CartController::get_current_order();
+	  $addToCartForm = $productA->AddToCartForm(1);
+	  $this->assertInstanceOf('Form', $addToCartForm);
+
+	  $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1
+	  ));
+
+	  $order = ProductControllerExtension::get_current_order();
 	  $items = $order->Items();
-	  $this->assertInstanceOf('ComponentSet', $items);
-	  $this->assertEquals(1, $items->TotalItems());
 	  
-	  $firstProduct = $items->First()->Object();
-	  $this->assertInstanceOf('DummyProductPage', $firstProduct);
-	  $this->assertEquals($productA, $firstProduct);
-	  */
+	  $firstItem = $items->First();
+	  $this->assertInstanceOf('ComponentSet', $items);
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(1, $items->TotalItems());
+	  $this->assertInstanceOf('Item', $firstItem);
+	  $this->assertEquals(1, $firstItem->Quantity);
+	  
+	  //Check that the correct product has been added
+	  $firstProduct = $firstItem->Object();
+	  $this->assertInstanceOf('Product', $firstProduct);
+	  $this->assertEquals($productA->Title, $firstProduct->Title);
+	  $this->assertEquals($productA->dbObject('Amount')->getAmount(), $firstProduct->dbObject('Amount')->getAmount());
+	  $this->assertEquals($firstVersion, $firstProduct->Version);
+	  
+
+	  //Add the product again and check the quantity
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 2
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  
+	  $firstItem = $items->First();
+	  $this->assertInstanceOf('ComponentSet', $items);
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(1, $items->TotalItems());
+	  $this->assertInstanceOf('Item', $firstItem);
+	  $this->assertEquals(3, $firstItem->Quantity);
+	  
+	  $firstProduct = $firstItem->Object();
+	  $this->assertInstanceOf('Product', $firstProduct);
+	  $this->assertEquals($productA->Title, $firstProduct->Title);
+	  $this->assertEquals($productA->dbObject('Amount')->getAmount(), $firstProduct->dbObject('Amount')->getAmount());
+	  $this->assertEquals($firstVersion, $firstProduct->Version);
+	  
+	  
+	  //Update the product and add it again, should have new item in cart 
+	  //because product version has changed
+	  $productA->writeToStage('Stage');
+		$productA->publish('Stage', 'Live');
+		$secondVersion = $productA->Version;
+		
+		$productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+		
+		$this->assertEquals(2, $items->Count());
+	  $this->assertEquals(2, $items->TotalItems());
+	  
+	  $firstItem = $items->First();
+	  $this->assertInstanceOf('Item', $firstItem);
+	  $this->assertEquals(3, $firstItem->Quantity);
+
+	  $firstProduct = $firstItem->Object();
+	  $this->assertInstanceOf('Product', $firstProduct);
+	  $this->assertEquals($productA->Title, $firstProduct->Title);
+	  $this->assertEquals($productA->dbObject('Amount')->getAmount(), $firstProduct->dbObject('Amount')->getAmount());
+	  $this->assertEquals($firstVersion, $firstProduct->Version);
+	  
+	  $secondItem = $items->Last();
+	  $this->assertInstanceOf('Item', $secondItem);
+	  $this->assertEquals(1, $secondItem->Quantity);
+	  
+	  $secondProduct = $secondItem->Object();
+	  $this->assertInstanceOf('Product', $secondProduct);
+	  $this->assertEquals($productA->Title, $secondProduct->Title);
+	  $this->assertEquals($productA->dbObject('Amount')->getAmount(), $secondProduct->dbObject('Amount')->getAmount());
+	  $this->assertEquals($secondVersion, $secondProduct->Version);
+	  
+	  
+	  //Add product with negative quantity should have no effect
+	  $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => -1
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+		
+		$this->assertEquals(2, $items->Count());
+	  $this->assertEquals(2, $items->TotalItems());
+	  
+	  $secondItem = $items->Last();
+	  $this->assertInstanceOf('Item', $secondItem);
+	  $this->assertEquals(1, $secondItem->Quantity);
+
+	  
 	}
 	
 	/**

@@ -424,9 +424,11 @@ class Order extends DataObject {
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
 
-	  //If quantity not correct throw error
+	  //If quantity not correct throw warning
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
 	    user_error("Cannot add item to cart, quantity must be a positive number.", E_USER_WARNING);
+	    //TODO return meaningful error to browser in case error not shown
+	    return;
 	  }
 
     //Increment the quantity if this item exists already
@@ -503,9 +505,13 @@ class Order extends DataObject {
 	 */
 	function removeItem(DataObject $product, $quantity = 1) {
 	  
+	  return;
+	  
 	  //If quantity not correct throw error
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
 	    user_error("Cannot remove item from cart, quantity must be a positive number.", E_USER_WARNING);
+	    //TODO return meaningful error to browser in case error not shown
+	    return;
 	  }
 
 	  //Update order items

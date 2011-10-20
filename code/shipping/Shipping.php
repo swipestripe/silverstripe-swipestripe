@@ -67,7 +67,11 @@ class Shipping extends DataObject {
       if ($countryName = Geoip::countryCode2name($countryCode)) {
         self::$supported_countries[$countryCode] = $countryName;
       }
-      else user_error("Cannot set allowed country, it must be a country code supported by Geoip class.", E_USER_WARNING);
+      else {
+        user_error("Cannot set allowed country, it must be a country code supported by Geoip class.", E_USER_WARNING);
+        //TODO return meaningful error to browser in case error not shown
+        return; 
+      }
     }
 	}
 	

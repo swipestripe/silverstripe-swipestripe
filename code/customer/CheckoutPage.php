@@ -269,6 +269,8 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		if(!($payment && $payment instanceof Payment)) {
 			user_error(get_class($payment) . ' is not a valid Payment object!', E_USER_ERROR);
+			//TODO return meaningful error to browser in case error not shown
+			return;
 		}
 
 		//Save or create a new member

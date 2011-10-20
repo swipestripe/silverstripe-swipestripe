@@ -35,7 +35,11 @@ class FlatFeeShipping extends Shipping {
       if ($shippingCountry) {
         $amount->setAmount($shippingCountry->Amount->getAmount());
       }
-      else user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
+      else {
+        user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
+        //TODO return meaningful error to browser in case error not shown
+        return;
+      }
     }
 	  return $amount;
   }
@@ -57,7 +61,11 @@ class FlatFeeShipping extends Shipping {
       if ($shippingCountry) {
         $description = $shippingCountry->DescriptionSummary();
       }
-      else user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
+      else {
+        user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
+        //TODO return meaningful error to browser in case error not shown
+        return; 
+      }
     }
 	  return $description;
   }
