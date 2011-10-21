@@ -10,6 +10,9 @@
  * add negative quantity to cart
  * add 0 quantity to cart
  * 
+ * unpublish product after it is in the cart
+ * delete product after it is in the cart
+ * change product price after it is in the cart
  * add product variation
  * change quantity of variation
  * add different variations for same product
@@ -44,11 +47,31 @@ class CartTest extends FunctionalTest {
 	/**
 	 * Create product and check basic attributes
 	 */
-  function testProductAttributes() {
+  function testProduct() {
     
-		$product = $this->objFromFixture('Product', 'productA');
-		$this->assertEquals($product->dbObject('Amount')->getAmount(), 500.00, 'The price of Product A should be 500.');
-		$this->assertEquals($product->dbObject('Amount')->getCurrency(), 'NZD', 'The currency of Product A should be NZD.');
+		$productA = $this->objFromFixture('Product', 'productA');
+		$this->assertEquals($productA->dbObject('Amount')->getAmount(), 500.00, 'The price of Product A should be 500.');
+		$this->assertEquals($productA->dbObject('Amount')->getCurrency(), 'NZD', 'The currency of Product A should be NZD.');
+	}
+	
+	function testProductAttributes() {
+	  
+	  $attributeSize = $this->objFromFixture('Attribute', 'attrSize');
+	  $options = $attributeSize->Options();
+	  
+	  //Remove all the attribute options that have ProductID > 0, these are not default options
+	  foreach ($options as $option) {
+	    if ($option->ProductID != 0) {
+	      $options->remove($option);
+	    }
+	  }
+	  
+	  $this->assertInstanceOf('ComponentSet', $options);
+	  $this->assertEquals(3, $options->Count());
+	  $this->assertEquals(3, $options->TotalItems());
+	  
+	  $optionSmall = $options->find('Title', 'Small');
+	  $this->assertInstanceOf('Option', $optionSmall);
 	}
 	
 	/**
@@ -58,7 +81,7 @@ class CartTest extends FunctionalTest {
 	 * Adding products with negative quantity should not work
 	 * Adding products with 0 quantity should have no effect on the cart items
 	 */
-  function testAddItemToCart() {
+  function testAddProductToCart() {
 	  
 	  $this->loginAs('buyer');
 	  
@@ -173,7 +196,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $secondItem->Quantity);
 
 	  
-	  //Adding a product with 0 quantity has no effect on the cart
+	  //Adding a product with 0 quantity should have no effect on the cart
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
 	  $this->submitForm('Form_AddToCartForm', null, array(
@@ -206,6 +229,10 @@ class CartTest extends FunctionalTest {
 	  $secondItem = $items->Last();
 	  $this->assertInstanceOf('Item', $secondItem);
 	  $this->assertEquals(2, $secondItem->Quantity);
+	}
+	
+	function testAddProductVariationToCart() {
+	  
 	}
 	
 	/**

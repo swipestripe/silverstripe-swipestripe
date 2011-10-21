@@ -1,17 +1,125 @@
+# ------------------------------------------
+# Products
+# ------------------------------------------
 Product:
   productA:
+    ID: 1
     Title: Product A
     URLSegment: product-a
     AmountAmount: 500
     AmountCurrency: NZD
     Date: 2011-02-17 18:45:00
   productB:
+    ID: 2
     Title: Product B
     URLSegment: product-b
     AmountAmount: 19.95
     AmountCurrency: NZD 
     Date: 2011-01-31 20:48:00
+  teeshirtA:
+    ID: 3
+    Title: Stripey Tee
+    URLSegment: stripey-tee
+    AmountAmount: 14.99
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:49:00
+
+# ------------------------------------------
+# Attributes
+# ------------------------------------------
+Attribute:
+  attrSize:
+    ID: 1
+    Title: Size
+    Description:
+    Created: 2011-10-10 15:48:20
+    LastEdited: 2011-10-10 15:48:54
+  attrColor:
+    ID: 2
+    Title: Color
+    Description:
+    Created: 2011-10-12 15:33:19
+    LastEdited: 2011-10-12 15:33:19
+  attrMaterial:
+    ID: 3
+    Title: Material
+    Description:
+    Created: 2011-10-12 15:34:18
+    LastEdited: 2011-10-12 15:34:18
  
+# ------------------------------------------
+# Options
+# ------------------------------------------ 
+Option:
+
+# Default Options
+# ------------------
+  optSmallDefault:
+    Title: Small
+    Description: Small
+    AttributeID: 1
+    ProductID: 0
+  optMediumDefault:
+    Title: Medium
+    Description: Medium
+    AttributeID: 1
+    ProductID: 0
+  optLargeDefault:
+    Title: Large
+    Description: Large
+    AttributeID: 1
+    ProductID: 0
+  optRedDefault:
+    Title: Red
+    Description: Red
+    AttributeID: 2
+    ProductID: 0
+  optBlueDefault:
+    Title: Blue
+    Description: Blue
+    AttributeID: 2
+    ProductID: 0
+  optGreenDefault:
+    Title: Green
+    Description: Green
+    AttributeID: 2
+    ProductID: 0 
+  optCottonDefault:
+    Title: Cotton
+    Description: Cotton
+    AttributeID: 3
+    ProductID: 0
+  optPolyesterDefault:
+    Title: Polyester
+    Description: Polyester
+    AttributeID: 3
+    ProductID: 0
+    
+# Teeshirt Options
+# ------------------
+  optSmallTeeshirt:
+    Title: Small
+    Description: Small
+    AttributeID: 1
+    ProductID: 3
+   
+# ------------------------------------------
+# Product Attributes
+# ------------------------------------------ 
+Product_Attributes:
+  teeshirtSizeAttr:
+    ProductID: 3
+    AttributeID: 1
+  teeshirtColorAttr:
+    ProductID: 3
+    AttributeID: 2
+  teeshirtMaterialAttr:
+    ProductID: 3
+    AttributeID: 3
+  
+# ------------------------------------------
+# Cart pages
+# ------------------------------------------  
 CheckoutPage:
   checkout:
     Title: Checkout
@@ -21,7 +129,15 @@ AccountPage:
   account:
     Title: Account Page
     URLSegment: account
-      
+    
+CartPage:
+  cart:
+    Title: Cart
+    URLSegment: cart
+ 
+# ------------------------------------------
+# Members
+# ------------------------------------------     
 Member:
   admin:
     FirstName: Admin
