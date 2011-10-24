@@ -29,7 +29,9 @@
  * submit checkout with shipping option that does not match shipping country
  * add product to cart and change price
  * add variation to cart and change price
- *
+ * when last item deleted from the cart, remove order modifiers also
+ * variations with some attributes with empty options
+ * 
  */
 class CartTest extends FunctionalTest {
   

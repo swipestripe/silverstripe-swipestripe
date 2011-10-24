@@ -185,6 +185,7 @@ class Product extends Page {
       
       //$variationFieldList['SummaryStock'] = 'Stock';
       $variationFieldList['SummaryPrice'] = 'Price Difference';
+      $variationFieldList['Status'] = 'Status';
       
       $manager = new VariationComplexTableField(
         $this,
@@ -246,6 +247,19 @@ class Product extends Page {
       if ($original) {
         $images = $original->Images();
         $this->duplicateProductImages($images);
+      }
+    }
+    
+    //TODO check the variations, if variation exists
+    //Missing an option for one or more of the required attributes, disable
+    //Has non-existent option for one or more of the required attributes, disable
+    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
+
+    if ($variations) foreach ($variations as $variation) {
+      
+      if (!$variation->isValid()) {
+        $variation->Status = 'Disabled';
+        $variation->write();
       }
     }
   }

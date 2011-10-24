@@ -125,7 +125,7 @@ class VariationComplexTableField_ItemRequest extends ComplexTableField_ItemReque
   			}
 			}
 			
-		} catch(ValidationException $e) {
+		} catch (ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			return Director::redirectBack();
 		}

@@ -4,7 +4,8 @@ class Variation extends DataObject {
 
   public static $db = array(
     'Amount' => 'Money',
-    'Stock' => 'Int'
+    'Stock' => 'Int',
+  	'Status' => "Enum('Enabled,Disabled','Enabled')",
   );
 
   public static $has_one = array(
@@ -113,5 +114,111 @@ class Variation extends DataObject {
     //TODO need to check what is currently in people's carts
     if ($this->Stock > 0) return true; 
   }
+  
+  public function isValid() {
+    //TODO check if the variation is compised of entirely valid options for particular product
+    
+    //Get the options for the product
+    //Get the attributes for the product
+    //Each variation should have a valid option for each attribute
+    
+    $productAttributeOptions = array();
+    $productOptions = $this->Product()->Options();
+    
+    if ($productOptions) foreach ($productOptions as $option) {
+      $productAttributeOptions[$option->AttributeID][] = $option->ID;
+    }
+
+    $variationAttributeOptions = array();
+    $variationOptions = $this->Options();
+    
+    if (!$variationOptions || !$variationOptions->exists()) return false;
+    foreach ($variationOptions as $option) {
+      $variationAttributeOptions[$option->AttributeID] = $option->ID;
+    }
+    
+    //If attributes are not equal between product and variation, variation is invalid
+    if (array_diff_key($productAttributeOptions, $variationAttributeOptions)
+     || array_diff_key($variationAttributeOptions, $productAttributeOptions)) {
+      return false;
+    }
+    
+    foreach ($productAttributeOptions as $attributeID => $validOptionIDs) {
+      if (!in_array($variationAttributeOptions[$attributeID], $validOptionIDs)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+  
+  public function isDuplicate() {
+    
+    $curr = Controller::curr();
+    $request = $curr->getRequest();
+    $variationAttributeOptions = ($request) ? $request->requestVar('Options') : null;
+    
+    if ($variationAttributeOptions) {
+
+      $product = $this->Product();
+      $variations = DataObject::get('Variation', "Variation.ProductID = " . $product->ID . " AND Variation.ID != " . $this->ID);
+      
+      if ($variations) foreach ($variations as $variation) {
+  
+        $tempAttrOptions = array();
+        if ($variation->Options()) foreach ($variation->Options() as $option) {
+          $tempAttrOptions[$option->AttributeID] = $option->ID;
+        } 
+  
+        if ($tempAttrOptions == $variationAttributeOptions) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+
+    /*
+    //Get the variations for this product that do not share the same ID
+    //If a variation matches then duplicate return true
+    $product = $this->Product();
+    $variations = DataObject::get('Variation', "Variation.ProductID = " . $product->ID . " AND Variation.ID != " . $this->ID);
+
+    $variationAttributeOptions = array();
+    $variationOptions = $this->Options();
+    
+    
+    foreach ($variationOptions as $option) {
+      $variationAttributeOptions[$option->AttributeID] = $option->ID;
+    }
+
+    if ($variations) foreach ($variations as $variation) {
+
+      $tempAttrOptions = array();
+      if ($variation->Options()) foreach ($variation->Options() as $option) {
+        $tempAttrOptions[$option->AttributeID] = $option->ID;
+      } 
+
+      if ($tempAttrOptions == $variationAttributeOptions) {
+        return true;
+      }
+    }
+    return false;
+    */
+    
+  }
+
+  protected function validate() {
+
+    if (!$this->isValid()) {
+      return new ValidationResult(false, 'Options are not set for this product variation.');
+    }
+    
+    if ($this->isDuplicate()) {
+      return new ValidationResult(false, 'Duplicate variation for this product.');
+    }
+    
+		return new ValidationResult();
+	}
 
 }

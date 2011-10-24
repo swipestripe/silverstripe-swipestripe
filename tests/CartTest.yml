@@ -55,52 +55,106 @@ Option:
 # Default Options
 # ------------------
   optSmallDefault:
+    ID: 1
     Title: Small
     Description: Small
     AttributeID: 1
     ProductID: 0
   optMediumDefault:
+    ID: 2
     Title: Medium
     Description: Medium
     AttributeID: 1
     ProductID: 0
   optLargeDefault:
+    ID: 3
     Title: Large
     Description: Large
     AttributeID: 1
     ProductID: 0
   optRedDefault:
+    ID: 4
     Title: Red
     Description: Red
     AttributeID: 2
     ProductID: 0
   optBlueDefault:
+    ID: 5
     Title: Blue
     Description: Blue
     AttributeID: 2
     ProductID: 0
   optGreenDefault:
+    ID: 6
     Title: Green
     Description: Green
     AttributeID: 2
     ProductID: 0 
   optCottonDefault:
+    ID: 7
     Title: Cotton
     Description: Cotton
     AttributeID: 3
     ProductID: 0
   optPolyesterDefault:
+    ID: 8
     Title: Polyester
     Description: Polyester
     AttributeID: 3
     ProductID: 0
     
 # Teeshirt Options
+# Sizes: Small, Medium, Extra Large
+# Colors: Red, Purple
+# Materials: Cotton, Polyester, Silk
 # ------------------
   optSmallTeeshirt:
+    ID: 9
     Title: Small
     Description: Small
     AttributeID: 1
+    ProductID: 3
+  optMediumTeeshirt:
+    ID: 10
+    Title: Medium
+    Description: Medium
+    AttributeID: 1
+    ProductID: 3
+  optExtraLargeTeeshirt:
+    ID: 11
+    Title: Extra Large
+    Description: Extra Large
+    AttributeID: 1
+    ProductID: 3
+  optRedTeeshirt:
+    ID: 12
+    Title: Red
+    Description: Red
+    AttributeID: 2
+    ProductID: 3
+  optPurpleTeeshirt:
+    ID: 13
+    Title: Purple
+    Description: Purple
+    AttributeID: 2
+    ProductID: 3
+  optCottonTeeshirt:
+    ID: 14
+    Title: Cotton
+    Description: Cotton
+    AttributeID: 3
+    ProductID: 3
+  optPolyesterTeeshirt:
+    ID: 15
+    Title: Polyester
+    Description: Polyester
+    AttributeID: 3
+    ProductID: 3
+  optSilkTeeshirt:
+    ID: 16
+    Title: Silk
+    Description: Silk
+    AttributeID: 3
     ProductID: 3
    
 # ------------------------------------------
@@ -108,14 +162,48 @@ Option:
 # ------------------------------------------ 
 Product_Attributes:
   teeshirtSizeAttr:
+    ID: 1
     ProductID: 3
     AttributeID: 1
   teeshirtColorAttr:
+    ID: 2
     ProductID: 3
     AttributeID: 2
   teeshirtMaterialAttr:
+    ID: 3
     ProductID: 3
     AttributeID: 3
+    
+# ------------------------------------------
+# Product Variations
+# ------------------------------------------ 
+Variation:
+
+# Teeshirt Variations
+# Small, Red
+# Small, Purple
+# Small, Red, Cotton
+# Small, Red, Polyester
+# Medium, Purple, Cotton
+# Medium, Purple, Silk
+# Extra Large, , Cotton
+# Extra Large, Red
+# Extra Large, Red, Cotton
+# Extra Large, Red, Polyester
+# Extra Large, Purple
+# ------------------
+  teeshirtSmallRed:
+    ID: 1
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+  teeshirtSmallRed:
+    ID: 1
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00  
   
 # ------------------------------------------
 # Cart pages

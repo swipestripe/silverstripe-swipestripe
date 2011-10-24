@@ -268,7 +268,6 @@ class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
 	 */
 	function doSave($data, $form, $request) {
 	  
-	  
 	  //Set the status of payments for Orders
 	  if (isset($data['Payments'])) {
 	  
