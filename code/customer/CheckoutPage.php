@@ -381,10 +381,10 @@ class CheckoutPage_Controller extends Page_Controller {
     $validator = new RequiredFields();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
-    
+
     //Add addresses to order, then when getting the shipping fields use the shipping address to 
     //filter results
-    $order->addAddressesAtCheckout($data);
+    $order->addAddressesAtCheckout($data->requestVars());
     
     //Add modifier fields
     $this->addModifierFields($fields, $validator, $order);
@@ -417,7 +417,7 @@ class CheckoutPage_Controller extends Page_Controller {
     );
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
-	  
+
 	  return $form->renderWith('CheckoutFormOrder');
 	}
 
