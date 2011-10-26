@@ -57,7 +57,7 @@ class CartPage_Controller extends Page_Controller {
    * Include some CSS for the cart page
    */
   function index() {
-    
+
     Requirements::css('stripeycart/css/StripeyCart.css');
 
     return array( 
@@ -84,7 +84,7 @@ class CartPage_Controller extends Page_Controller {
 	    $quantityField = new CartQuantityField('Quantity['.$item->ID.']', '', $item->Quantity);
 	    $quantityField->setItem($item);
 	    
-	    $fields->push($quantityField);
+	    $fields->push($quantityField); 
 	    
 	    $itemOptions = $item->ItemOptions();
 	    if ($itemOptions && $itemOptions->exists()) foreach($itemOptions as $itemOption) {
