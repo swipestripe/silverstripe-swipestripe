@@ -671,16 +671,13 @@ class CartTest extends FunctionalTest {
 	function testAddVariationWithPriceChanged() {
 	  
 	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
-
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedPolyester'); 
+	  
     $this->logInAs('admin');
-	  $teeshirtAVariation->Amount->setAmount(1.00);
-	  $teeshirtAVariation->write();
 	  $teeshirtA->doPublish();
 	  $this->logOut();
-	  
-	  SS_Log::log(new Exception(print_r($teeshirtA->Amount->getAmount(), true)), SS_Log::NOTICE);
-	  SS_Log::log(new Exception(print_r($teeshirtAVariation->Amount->getAmount(), true)), SS_Log::NOTICE);
+
+	  $expectedAmount = $teeshirtA->Amount->getAmount() + $teeshirtAVariation->Amount->getAmount();
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
@@ -688,12 +685,12 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    'Options[3]' => 15, //Polyester
 	  ));
 	  
 	  $order = ProductControllerExtension::get_current_order();
-	  
-	  SS_Log::log(new Exception(print_r($order->Total->getAmount(), true)), SS_Log::NOTICE);
+
+	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
 	}
 	
 	/**

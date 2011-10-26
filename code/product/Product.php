@@ -394,7 +394,7 @@ class Product_Controller extends Page_Controller {
       //TODO return meaningful error to browser in case error not shown
       return null;
     }
-    
+
     self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $productOptions);
     $this->goToNextPage();
   }

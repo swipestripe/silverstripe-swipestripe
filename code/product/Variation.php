@@ -116,8 +116,7 @@ class Variation extends DataObject {
   }
   
   public function isValid() {
-    //TODO check if the variation is compised of entirely valid options for particular product
-    
+
     //Get the options for the product
     //Get the attributes for the product
     //Each variation should have a valid option for each attribute

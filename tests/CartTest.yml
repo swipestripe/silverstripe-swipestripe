@@ -317,7 +317,7 @@ Variation:
     ProductID: 3
     Stock: -1
     AmountCurrency: NZD
-    AmountAmount: 0.00 
+    AmountAmount: 1.05 
   teeshirtSmallPurpleCotton:
     ID: 3
     ProductID: 3

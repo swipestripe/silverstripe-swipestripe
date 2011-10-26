@@ -68,13 +68,12 @@ class Item extends DataObject {
 	}
 	
 	/**
-	 * Get unit price for this item including item options price and 
-	 * quantity
+	 * Get unit price for this item including item options price and quantity
 	 * 
 	 * @return Money
 	 */
 	public function Total() {
-	  
+
 	  $amount = $this->Amount->getAmount();
 	  foreach ($this->ItemOptions() as $itemOption) {
 	    $amount += $itemOption->Amount->getAmount();

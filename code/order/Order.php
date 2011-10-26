@@ -425,7 +425,7 @@ class Order extends DataObject {
 	 * @param DataObjectSet $productOptions The product variations to be added, usually just one
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
-	
+
 	  //Check that the product is published
 	  if (!$product->isPublished()) {
 	    user_error("Cannot add item to cart, product is not published.", E_USER_WARNING);
@@ -560,7 +560,7 @@ class Order extends DataObject {
 	  if ($modifiers) foreach ($modifiers as $modifier) {
 	    $total += $modifier->Amount->getAmount();
 	  }
-	  
+
     $this->SubTotal->setAmount($subTotal); 
 	  $this->SubTotal->setCurrency(Payment::site_currency());
 	  $this->Total->setAmount($total); 
