@@ -38,7 +38,7 @@
 		        $Quantity
 		      </td>
 	 
-		      <td class="right total">$Object.Amount.Nice</td>
+		      <td class="right total">$Total.Nice</td>
 		    
 		    </tr>
 	    <% end_control %>
