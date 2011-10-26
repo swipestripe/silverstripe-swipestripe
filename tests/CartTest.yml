@@ -104,9 +104,9 @@ Option:
     ProductID: 0
     
 # Teeshirt Options
-# Sizes: Small, Medium, Extra Large
-# Colors: Red, Purple
-# Materials: Cotton, Polyester, Silk
+# Sizes: Small 9, Medium 10, Extra Large 11
+# Colors: Red 12, Purple 13
+# Materials: Cotton 14, Polyester 15, Silk 16
 # ------------------
   optSmallTeeshirt:
     ID: 9
@@ -180,30 +180,186 @@ Product_Attributes:
 Variation:
 
 # Teeshirt Variations
-# Small, Red
-# Small, Purple
 # Small, Red, Cotton
 # Small, Red, Polyester
+# Small, Purple, Cotton
+# Small, Purple, Polyester
+#
 # Medium, Purple, Cotton
 # Medium, Purple, Silk
-# Extra Large, , Cotton
-# Extra Large, Red
+#
 # Extra Large, Red, Cotton
-# Extra Large, Red, Polyester
-# Extra Large, Purple
+# Extra Large, Red, Cotton (Duplicate variation for testing)
+# Extra Large, Purple, -Cotton (Removed cotton for testing)
 # ------------------
-  teeshirtSmallRed:
+  teeshirtSmallRedCotton:
     ID: 1
     ProductID: 3
     Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
-  teeshirtSmallRed:
-    ID: 1
+  teeshirtSmallRedPolyester:
+    ID: 2
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtSmallPurpleCotton:
+    ID: 3
     ProductID: 3
     Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00  
+  teeshirtSmallPurplePolyester:
+    ID: 4
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtMediumPurpleCotton:
+    ID: 5
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtMediumPurpleSilk:
+    ID: 6
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtExtraLargeRedCotton:
+    ID: 7
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtExtraLargeRedCottonDuplicate:
+    ID: 8
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtExtraLargePurpleCotton:
+    ID: 9
+    ProductID: 3
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+
+# ------------------------------------------
+# Variation options
+# ------------------------------------------ 
+# Teeshirt Options
+# Sizes: Small 9, Medium 10, Extra Large 11
+# Colors: Red 12, Purple 13
+# Materials: Cotton 14, Polyester 15, Silk 16
+ 
+Variation_Options:
+  variationOneOptionRed:
+    ID: 1
+    VariationID: 1
+    OptionID: 12
+  variationOneOptionSmall:
+    ID: 2
+    VariationID: 1
+    OptionID: 9
+  variationOneOptionCotton:
+    ID: 3
+    VariationID: 1
+    OptionID: 14
+  variationTwoOptionRed:
+    ID: 4
+    VariationID: 2
+    OptionID: 12
+  variationTwoOptionSmall:
+    ID: 5
+    VariationID: 2
+    OptionID: 9
+  variationTwoOptionPolyester:
+    ID: 6
+    VariationID: 2
+    OptionID: 15
+  variationThreeOptionSmall:
+    ID: 7
+    VariationID: 3
+    OptionID: 9
+  variationThreeOptionPurple:
+    ID: 8
+    VariationID: 3
+    OptionID: 13
+  variationThreeOptionCotton:
+    ID: 9
+    VariationID: 3
+    OptionID: 14
+  variationFourOptionSmall:
+    ID: 10
+    VariationID: 4
+    OptionID: 9
+  variationFourOptionPurple:
+    ID: 11
+    VariationID: 4
+    OptionID: 13
+  variationFourOptionPolyester:
+    ID: 12
+    VariationID: 4
+    OptionID: 15
+  variationFiveOptionMedium:
+    ID: 13
+    VariationID: 5
+    OptionID: 10
+  variationFiveOptionPurple:
+    ID: 14
+    VariationID: 5
+    OptionID: 13
+  variationFiveOptionCotton:
+    ID: 15
+    VariationID: 5
+    OptionID: 14
+  variationSixOptionMedium:
+    ID: 16
+    VariationID: 6
+    OptionID: 10
+  variationSixOptionPurple:
+    ID: 17
+    VariationID: 6
+    OptionID: 13
+  variationSixOptionSilk:
+    ID: 18
+    VariationID: 6
+    OptionID: 16
+  variationSevenOptionExtraLarge:
+    ID: 19
+    VariationID: 7
+    OptionID: 11
+  variationSevenOptionRed:
+    ID: 20
+    VariationID: 7
+    OptionID: 12
+  variationSevenOptionCotton:
+    ID: 21
+    VariationID: 7
+    OptionID: 14
+  variationEightOptionExtraLarge:
+    ID: 22
+    VariationID: 8
+    OptionID: 11
+  variationEightOptionRed:
+    ID: 23
+    VariationID: 8
+    OptionID: 12
+  variationEightOptionCotton:
+    ID: 24
+    VariationID: 8
+    OptionID: 14
+  variationNineOptionExtraLarge:
+    ID: 25
+    VariationID: 9
+    OptionID: 11
+  variationNineOptionPurple:
+    ID: 26
+    VariationID: 9
+    OptionID: 13
   
 # ------------------------------------------
 # Cart pages
@@ -222,17 +378,30 @@ CartPage:
   cart:
     Title: Cart
     URLSegment: cart
+    
+# ------------------------------------------
+# Groups
+# ------------------------------------------
+Group:
+  admin:
+    Title: Administrators
+  customers:
+    Title: Customers
+    Code: customers
  
 # ------------------------------------------
 # Members
 # ------------------------------------------     
 Member:
   admin:
+    ID: 1
     FirstName: Admin
     Surname: Admin
     Email: admin@test.com
     Password: password
+    Groups: =>Group.admin
   buyer:
+    ID: 2
     FirstName: Test
     Surname: Buyer
     Email: test_buyer@example.com
@@ -243,3 +412,15 @@ Member:
     City: Christchurch
     PostalCode: 8014
     Country: NZ
+    Groups: =>Group.customers
+
+# ------------------------------------------
+# Permissions
+# ------------------------------------------      
+Permission:
+   admin:
+      Code: ADMIN
+      GroupID: =>Group.admin
+
+
+

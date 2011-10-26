@@ -153,11 +153,18 @@ class Variation extends DataObject {
   }
   
   public function isDuplicate() {
-    
-    $curr = Controller::curr();
-    $request = $curr->getRequest();
-    $variationAttributeOptions = ($request) ? $request->requestVar('Options') : null;
-    
+
+    //Hacky way to get new option IDs from $this->record because $this->Options() returns existing options
+    //not the new ones passed in POST data    
+    $attributeIDs = $this->Product()->Attributes()->map();
+    if ($attributeIDs) foreach ($attributeIDs as $attributeID => $title) {
+      
+      $attributeOptionID = $this->record['Options[' . $attributeID .']'];
+      if (isset($attributeOptionID)) {
+        $variationAttributeOptions[$attributeID] = $attributeOptionID;
+      }
+    }
+
     if ($variationAttributeOptions) {
 
       $product = $this->Product();
@@ -169,43 +176,13 @@ class Variation extends DataObject {
         if ($variation->Options()) foreach ($variation->Options() as $option) {
           $tempAttrOptions[$option->AttributeID] = $option->ID;
         } 
-  
+
         if ($tempAttrOptions == $variationAttributeOptions) {
           return true;
         }
       }
     }
-    
     return false;
-
-    /*
-    //Get the variations for this product that do not share the same ID
-    //If a variation matches then duplicate return true
-    $product = $this->Product();
-    $variations = DataObject::get('Variation', "Variation.ProductID = " . $product->ID . " AND Variation.ID != " . $this->ID);
-
-    $variationAttributeOptions = array();
-    $variationOptions = $this->Options();
-    
-    
-    foreach ($variationOptions as $option) {
-      $variationAttributeOptions[$option->AttributeID] = $option->ID;
-    }
-
-    if ($variations) foreach ($variations as $variation) {
-
-      $tempAttrOptions = array();
-      if ($variation->Options()) foreach ($variation->Options() as $option) {
-        $tempAttrOptions[$option->AttributeID] = $option->ID;
-      } 
-
-      if ($tempAttrOptions == $variationAttributeOptions) {
-        return true;
-      }
-    }
-    return false;
-    */
-    
   }
 
   protected function validate() {

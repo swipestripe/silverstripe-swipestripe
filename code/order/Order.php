@@ -423,6 +423,13 @@ class Order extends DataObject {
 	 * @param DataObject $product The product to be represented by this order item
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
+	  
+	  //Check that the product is published
+	  if (!$product->isPublished()) {
+	    user_error("Cannot add item to cart, product is not published.", E_USER_WARNING);
+	    //TODO return meaningful error to browser in case error not shown
+	    return;
+	  }
 
 	  //If quantity not correct throw warning
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
