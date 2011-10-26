@@ -23,6 +23,20 @@ Product:
     AmountAmount: 14.99
     AmountCurrency: NZD 
     Date: 2011-01-31 20:49:00
+  shortsA:
+    ID: 4
+    Title: Checked Shorts
+    URLSegment: checked-shorts
+    AmountAmount: 24.95
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:49:00
+  brokenProduct:
+    ID: 5
+    Title: Broken Product
+    URLSegment: broken-product
+    AmountAmount: 22.09
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:49:00
 
 # ------------------------------------------
 # Attributes
@@ -103,7 +117,7 @@ Option:
     AttributeID: 3
     ProductID: 0
     
-# Teeshirt Options
+# TeeshirtA Options
 # Sizes: Small 9, Medium 10, Extra Large 11
 # Colors: Red 12, Purple 13
 # Materials: Cotton 14, Polyester 15, Silk 16
@@ -156,11 +170,87 @@ Option:
     Description: Silk
     AttributeID: 3
     ProductID: 3
+    
+# ShortsA Options
+# Sizes: Small, Medium, Large
+# Colors: Red, Green
+# Materials: Cotton, Polyester
+# ------------------
+  optSmallShorts:
+    ID: 17
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.shortsA
+  optMediumShorts:
+    ID: 18
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.shortsA
+  optLargeShorts:
+    ID: 19
+    Title: Large
+    Description: Large
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.shortsA
+  optRedShorts:
+    ID: 20
+    Title: Red
+    Description: Red
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.shortsA
+  optGreenShorts:
+    ID: 21
+    Title: Green
+    Description: Green
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.shortsA
+  optCottonShorts:
+    ID: 22
+    Title: Cotton
+    Description: Cotton
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.shortsA
+  optPolyesterShorts:
+    ID: 23
+    Title: Polyester
+    Description: Polyester
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.shortsA
+
+# Broken Product Options
+# Sizes: Small, Medium
+# Colors: Red, Green
+# ------------------ 
+  optSmallBroken:
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.brokenProduct
+  optMediumBroken:
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.brokenProduct 
+  optRedBroken:
+    Title: Red
+    Description: Red
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.brokenProduct
+  optGreenBroken:
+    Title: Green
+    Description: Green
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.brokenProduct
    
 # ------------------------------------------
 # Product Attributes
 # ------------------------------------------ 
 Product_Attributes:
+
+# TeeshirtA
+# ------------------
   teeshirtSizeAttr:
     ID: 1
     ProductID: 3
@@ -173,6 +263,30 @@ Product_Attributes:
     ID: 3
     ProductID: 3
     AttributeID: 3
+  
+# ShortsA
+# ------------------  
+  shortsSizeAttr:
+    ID: 4
+    ProductID: =>Product.shortsA
+    AttributeID: =>Attribute.attrSize
+  shortsColorAttr:
+    ID: 5
+    ProductID: =>Product.shortsA
+    AttributeID: =>Attribute.attrColor
+  shortsMaterialAttr:
+    ID: 6
+    ProductID: =>Product.shortsA
+    AttributeID: =>Attribute.attrMaterial
+    
+# BrokenProduct
+# ------------------  
+  brokenSizeAttr:
+    ProductID: =>Product.brokenProduct
+    AttributeID: =>Attribute.attrSize
+  brokenColorAttr:
+    ProductID: =>Product.brokenProduct
+    AttributeID: =>Attribute.attrColor
     
 # ------------------------------------------
 # Product Variations
@@ -189,8 +303,8 @@ Variation:
 # Medium, Purple, Silk
 #
 # Extra Large, Red, Cotton
-# Extra Large, Red, Cotton (Duplicate variation for testing)
-# Extra Large, Purple, -Cotton (Removed cotton for testing)
+# Extra Large, Red, Polyester
+# Extra Large, Purple, Cotton
 # ------------------
   teeshirtSmallRedCotton:
     ID: 1
@@ -234,7 +348,7 @@ Variation:
     Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
-  teeshirtExtraLargeRedCottonDuplicate:
+  teeshirtExtraLargeRedPolyester:
     ID: 8
     ProductID: 3
     Stock: -1
@@ -246,16 +360,54 @@ Variation:
     Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
+     
+# Shorts Variations
+# Small, Red, Cotton
+# Small, Red, Polyester (todo)
+#
+# Medium, Red, Cotton (todo)
+# Medium, Green, Silk (todo)
+#
+# Large, Red, Cotton
+# ------------------
+  shortsSmallRedCotton:
+    ProductID: =>Product.shortsA
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    
+# Broken product Variations
+# Small, Red
+# Small, Red (Duplicates)
+#
+# Medium, (Missing an option for an attribute)
+# ------------------
+  brokenSmallRed:
+    ProductID: =>Product.brokenProduct
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+  brokenSmallRedDuplicate:
+    ProductID: =>Product.brokenProduct
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+  brokenMedium:
+    ProductID: =>Product.brokenProduct
+    Stock: -1
+    AmountCurrency: NZD
+    AmountAmount: 0.00
 
 # ------------------------------------------
 # Variation options
 # ------------------------------------------ 
+Variation_Options:
+
 # Teeshirt Options
 # Sizes: Small 9, Medium 10, Extra Large 11
 # Colors: Red 12, Purple 13
 # Materials: Cotton 14, Polyester 15, Silk 16
- 
-Variation_Options:
+# ------------------------------------------ 
   variationOneOptionRed:
     ID: 1
     VariationID: 1
@@ -348,10 +500,10 @@ Variation_Options:
     ID: 23
     VariationID: 8
     OptionID: 12
-  variationEightOptionCotton:
+  variationEightOptionPolyester:
     ID: 24
     VariationID: 8
-    OptionID: 14
+    OptionID: 15
   variationNineOptionExtraLarge:
     ID: 25
     VariationID: 9
@@ -360,6 +512,48 @@ Variation_Options:
     ID: 26
     VariationID: 9
     OptionID: 13
+  variationNineOptionCotton:
+    ID: 27
+    VariationID: 9
+    OptionID: 14
+    
+# Shorts Options
+# Sizes: Small, Medium, Large
+# Colors: Red, Green
+# Materials: Cotton, Polyester
+# ------------------------------------------ 
+  variation_shortsSmallRedCotton_Small:
+    VariationID: =>Variation.shortsSmallRedCotton
+    OptionID: =>Option.optSmallShorts
+  variation_shortsSmallRedCotton_Red:
+    VariationID: =>Variation.shortsSmallRedCotton
+    OptionID: =>Option.optRedShorts
+  variation_shortsSmallRedCotton_Cotton:
+    VariationID: =>Variation.shortsSmallRedCotton
+    OptionID: =>Option.optCottonShorts
+    
+# Broken product Options
+# Sizes: Small, Medium
+# Colors: Red, Green
+# ------------------------------------------ 
+  variation_brokenSmallRed_Small:
+    VariationID: =>Variation.brokenSmallRed
+    OptionID: =>Option.optSmallBroken
+  variation_brokenSmallRed_Red:
+    VariationID: =>Variation.brokenSmallRed
+    OptionID: =>Option.optRedBroken
+
+  variation_brokenSmallRedDuplicate_Small:
+    VariationID: =>Variation.brokenSmallRedDuplicate
+    OptionID: =>Option.optSmallBroken
+  variation_brokenSmallRedDuplicate_Red:
+    VariationID: =>Variation.brokenSmallRedDuplicate
+    OptionID: =>Option.optRedBroken 
+
+  variation_brokenMedium_Red:
+    VariationID: =>Variation.brokenMedium
+    OptionID: =>Option.optRedBroken 
+
   
 # ------------------------------------------
 # Cart pages

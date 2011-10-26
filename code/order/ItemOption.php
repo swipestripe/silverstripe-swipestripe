@@ -1,4 +1,4 @@
-<?php
+-<?php
 /**
  * 
  * Item options for items in the order
@@ -23,8 +23,7 @@ class ItemOption extends DataObject {
 	);
 	
 	/**
-	 * Retrieve the object this item represents (Product)
-	 * TODO serialize product object data and save in item row
+	 * Retrieve the object this item represents (Variation)
 	 * 
 	 * @return DataObject 
 	 */
@@ -32,5 +31,4 @@ class ItemOption extends DataObject {
 	  //return Dataobject::get_by_id($this->ObjectClass, $this->ObjectID);
 	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
 	}
-
 }

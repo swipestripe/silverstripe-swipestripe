@@ -11,33 +11,50 @@
  * add 0 quantity to cart
  * try saving duplicate variations
  * try saving variation without full set of options
- * 
- * unpublish product after it is in the cart cannot checkout
- * delete product after it is in the cart cannot checkout
- * 
  * change product price after it is in the cart
+ * cannot add non-published product to the cart
+ * customer members can add stuff to carts
+ * website visitors can add stuff to carts
+ * add product to cart and change price
  * add product variation
  * change quantity of variation
  * add different variations for same product
- * add variation to cart then delete variation
- * add product to cart then delete product
  * add product and variation to cart and check version
  * add variation to cart with price change
- * check variation options on product page
  * 
+ * 
+ * Checkout testing
+ * unpublish product after it is in the cart cannot checkout
+ * delete product after it is in the cart cannot checkout
+ * add variation to cart then delete variation cannot checkout
  * submit checkout without necessary details
  * submit checkout without specifying payment gateway
  * submit checkout without products in cart
+ * 
+ * unpublish product, does not appear on website
+ * 
+ * check cart total
+ * check cart subtotal
+ * 
  * add shipping options to checkout
  * submit checkout with shipping option that does not match shipping country
- * add product to cart and change price
  * add variation to cart and change price
  * when last item deleted from the cart, remove order modifiers also
  * variations with some attributes with empty options
  * 
  * delete product, staging versions all up to date and still exist
- * cannot add non-published product to the cart
- * only customer members can add stuff to carts
+ * 
+ * 
+ * TEST:
+ * Order
+ * Order addresses
+ * Order modifiers
+ * Shipping
+ * Product Categories
+ * Account page
+ * Product 
+ * Checkout
+ * Payment
  * 
  */
 class CartTest extends FunctionalTest {
@@ -325,88 +342,364 @@ class CartTest extends FunctionalTest {
 	
 	/**
 	 * Change product price after it is in the cart, check that price has not changed in cart
+	 * TODO remove? this is kinda stupid
 	 */
 	function testAddProductToCartChangePrice() {
 	  
-	  $this->loginAs('admin');
-	  
-	  //Add product A to cart
 	  $productA = $this->objFromFixture('Product', 'productA');
+
+	  $this->logInAs('admin');
 	  $productA->doPublish();
-	  $firstVersion = $productA->Version;
-
-	  $addToCartForm = $productA->AddToCartForm(1);
-	  $this->assertInstanceOf('Form', $addToCartForm);
-
+	  $this->logOut();
+	  
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
 	  $this->submitForm('Form_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
-
+	  
 	  $order = ProductControllerExtension::get_current_order();
 	  $items = $order->Items();
-	  
 	  $firstItem = $items->First();
-	  $this->assertInstanceOf('ComponentSet', $items);
+	  $firstProduct = clone $productA;
+	  
+	  $this->assertEquals(1, $order->Items()->Count());
+	  $this->assertEquals($productA->Amount->getAmount(), $firstItem->Amount->getAmount());
+	  $this->assertEquals($productA->Amount->getCurrency(), $firstItem->Amount->getCurrency());
+	  
+	  $newAmount = new Money();
+	  $newAmount->setAmount(72.34);
+	  $newAmount->setCurrency('NZD');
+	  
+	  $this->logInAs('admin');
+	  $productA->Amount->setValue($newAmount); 
+	  $productA->doPublish();
+	  $this->logOut();
+	  
+	  $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+
+	  $firstItem = $items->First();
+	  $secondItem = $items->Last();
+
+	  $this->assertEquals(2, $order->Items()->Count());
+	  
+	  $this->assertEquals($firstProduct->Amount->getAmount(), $firstItem->Amount->getAmount());
+	  $this->assertEquals($firstProduct->Amount->getCurrency(), $firstItem->Amount->getCurrency());
+	  
+	  $this->assertEquals($newAmount->getAmount(), $secondItem->Amount->getAmount());
+	  $this->assertEquals($newAmount->getCurrency(), $secondItem->Amount->getCurrency());
+	}
+	
+	/**
+	 * Add a product variaiton to the cart
+	 */
+	function testAddProductVariationToCart() {
+    $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton');
+	  $this->assertEquals('Enabled', $teeshirtAVariation->Status);
+	  
+	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
+	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
+	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $firstItem = $items->First();
+	  $itemOptions = $firstItem->ItemOptions();
+	  $variation = $itemOptions->First()->Object();
+	  
+	  $this->assertEquals(1, $itemOptions->Count());
+	  $this->assertEquals($teeshirtAVariation->ID, $variation->ID);
+	  $this->assertEquals($teeshirtAVariation->Version, $variation->Version);
+	  $this->assertEquals($teeshirtAVariation->Status, $variation->Status);
+	  $this->assertEquals($teeshirtAVariation->ProductID, $variation->ProductID);
+	  $this->assertEquals('Variation', $variation->ClassName);
+	}
+	
+	/**
+	 * Add disabled product variation to cart should not work
+	 */
+	function testAddDisabledProductVariationToCart() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $teeshirtAVariation->Status = 'Disabled';
+	  $teeshirtAVariation->write();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+
+	  $this->assertEquals('Disabled', $teeshirtAVariation->Status);
+	  
+	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
+	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
+	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+
+	  $this->assertEquals(0, $items->Count());
+	}
+	
+	/**
+	 * Add invalid product variation to cart should not work
+	 */
+	function testAddInvalidProductVariationToCart() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+
+	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
+	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
+	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
+
+	  //Note to self: Cannot set values for POST that are not valid on the form
+	  
+	  //Submit with incorrect variation values, for Medium, Red, Cotton
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 10,  //Medium
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+
+	  $this->assertEquals(0, $items->Count());
+	}
+	
+	/**
+	 * Add product variations and check quantities
+	 */
+  function testAddProductVariationQuantity() {
+	  
+    $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $firstItem = $items->First();
+
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals(1, $items->TotalItems());
-	  $this->assertInstanceOf('Item', $firstItem);
 	  $this->assertEquals(1, $firstItem->Quantity);
 	  
-	  //Unpublish the product and check the version is still in the cart
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 2,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
 	  
-	  
-	  
-	  //$productA->writeToStage('Stage');
-		//$productA->publish('Stage', 'Live');
-		//$secondVersion = $productA->Version;
-		
-		//SS_Log::log(new Exception(print_r($productA->latestPublished(), true)), SS_Log::NOTICE);
-		
-		//$published = Versioned::get_by_stage('Product', 'Live');
-		//SS_Log::log(new Exception(print_r($published, true)), SS_Log::NOTICE);
-		
-		//$admin = $this->objFromFixture('Member', 'admin'); 
-		//$adminGroup = $this->objFromFixture('Group', 'admin');
-		
-		//$admin->addToGroupByCode('admin');
-		
-		//SS_Log::log(new Exception(print_r('########@@@@@@@@@@@@@@@@##########', true)), SS_Log::NOTICE);
-		//SS_Log::log(new Exception(print_r($admin->Groups(), true)), SS_Log::NOTICE);
-		
-		//SS_Log::log(new Exception(print_r(Permission::permissions_for_member($admin->ID), true)), SS_Log::NOTICE);
-		
-		//SS_Log::log(new Exception(print_r(Permission::get_groups_by_permission('ADMIN'), true)), SS_Log::NOTICE);
-		
-		//SS_Log::log(new Exception(print_r($adminGroup->Members(), true)), SS_Log::NOTICE);
-		
-		$result = DB::query("SELECT \"Title\" FROM \"SiteTree_Live\" WHERE \"ID\" = $productA->ID")->value();
-		SS_Log::log(new Exception(print_r($result, true)), SS_Log::NOTICE);
-	  
-	  $productA->doUnpublish();
-	  
-	  $result = DB::query("SELECT \"Title\" FROM \"SiteTree_Live\" WHERE \"ID\" = $productA->ID")->value();
-	  SS_Log::log(new Exception(print_r($result, true)), SS_Log::NOTICE);
-	  
-	  //$published = Versioned::get_by_stage('Product', 'Live');
-		//SS_Log::log(new Exception(print_r($published, true)), SS_Log::NOTICE);
-	  
-	  //Unpublish product, cannot add to cart, cannot purchase
-	  //Delete product, unpublished but versions exist, cannot add to cart, cannot purchase
-	  //Delete product, versions remain but unpublished, does not display on site
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $firstItem = $items->First();
 
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(3, $firstItem->Quantity);
 	}
 	
-	function testAddProductVariationToCart() {
+	/**
+	 * Add different product variations for the same product
+	 */
+	function testAddProductVariations() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
 
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $firstItem = $items->First();
+
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(1, $firstItem->Quantity);
+	  
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 15, //Polyester
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+
+	  $this->assertEquals(2, $items->Count());
+	  $this->assertEquals(1, $items->First()->Quantity);
+	  $this->assertEquals(1, $items->Last()->Quantity);
 	}
 	
+	/**
+	 * Add product variations and check version correct
+	 */
+	function testAddVariationWithVersion() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $teeshirtAVariation->Amount->setAmount(1.00);
+	  $teeshirtAVariation->write();
+	  $this->logOut();
+
+	  $firstVersion = $teeshirtAVariation->Version;
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $firstItem = $items->First();
+	  $itemOptions = $firstItem->ItemOptions();
+	  $firstItemOption = $itemOptions->First();
+	  $variation = $firstItemOption->Object();
+
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(1, $firstItem->Quantity);
+	  $this->assertEquals($firstVersion, $firstItemOption->ObjectVersion);
+	  
+	  
+	  $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $teeshirtAVariation->Amount->setAmount(0.00);
+	  $teeshirtAVariation->write();
+	  $this->logOut();
+	  
+	  $secondVersion = $teeshirtAVariation->Version;
+	  $this->assertTrue($secondVersion > $firstVersion);
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $lastItemOption = $items->Last()->ItemOptions()->Last();
+
+	  $this->assertEquals(2, $items->Count());
+	  $this->assertEquals(1, $items->Last()->Quantity);
+	  $this->assertEquals($secondVersion, $lastItemOption->ObjectVersion);
+	  
+	}
+	
+	/**
+	 * Add product variation with different price and check order total
+	 */
+	function testAddVariationWithPriceChanged() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtAVariation->Amount->setAmount(1.00);
+	  $teeshirtAVariation->write();
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+	  
+	  SS_Log::log(new Exception(print_r($teeshirtA->Amount->getAmount(), true)), SS_Log::NOTICE);
+	  SS_Log::log(new Exception(print_r($teeshirtAVariation->Amount->getAmount(), true)), SS_Log::NOTICE);
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1,
+	    'Options[1]' => 9,  //Small
+	    'Options[2]' => 12, //Red
+	    'Options[3]' => 14, //Cotton
+	  ));
+	  
+	  $order = ProductControllerExtension::get_current_order();
+	  
+	  SS_Log::log(new Exception(print_r($order->Total->getAmount(), true)), SS_Log::NOTICE);
+	}
 	
 	/**
 	 * Get product attribute and test options associated with it
 	 */
-	function testProductAttributes() {
+	function testProductAttributeOptions() {
 	  
 	  $attributeSize = $this->objFromFixture('Attribute', 'attrSize');
 	  $options = $attributeSize->Options();
@@ -426,12 +719,9 @@ class CartTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Get variation test options
-	 * Remove option and try saving variation
-	 * Change options to be duplicate with another variation and try save
-	 * TODO Add attribute to product and save, make sure variations without that attribute are all disabled
+	 * Get variation options and test that they are correct
 	 */
-	function testProductVariations() {
+	function testProductVariationOptions() {
 	  
 	  $smallRedCotton = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton');
 	  
@@ -446,49 +736,66 @@ class CartTest extends FunctionalTest {
 	    12 => 'Red',
 	    9  => 'Small'
 	  ), $options->map('ID', 'Title'));
-	  
-	  //Try saving variation with an option missing
-	  $xlargePurple = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
-	  $options = $xlargePurple->Options();
+	}
+	
+	/**
+	 * Test saving variation without all options set
+	 */
+	function testSaveInvalidProductVariation() {
+
+	  //This variation only has 1 option instead of 2
+	  $brokenProductVariation = $this->objFromFixture('Variation', 'brokenMedium');
+	  $options = $brokenProductVariation->Options();
 	  $this->assertInstanceOf('ComponentSet', $options);
-	  $this->assertEquals(2, $options->Count());
+	  $this->assertEquals(1, $options->Count());
 	  
 	  $e = null;
 	  try {
-	    $xlargePurple->write();
+	    $brokenProductVariation->write();
 	  }
 	  catch (ValidationException $e) {
 	    $message = $e->getMessage();
 	  }
 	  $this->assertInstanceOf('ValidationException', $e);
+	}
+	
+	/**
+	 * Test saving duplicate product variations
+	 */
+	function testSaveDuplicateProductVariation() {
+
+	  $brokenSmallRed = $this->objFromFixture('Variation', 'brokenSmallRed');
+	  $brokenSmallRedDuplicate = $this->objFromFixture('Variation', 'brokenSmallRedDuplicate');
 	  
-	  //Try saving duplicate variations
-	  $xlargeRedCotton = $this->objFromFixture('Variation', 'teeshirtExtraLargeRedCotton');
-	  $xlargeRedCottonDuplicate = $this->objFromFixture('Variation', 'teeshirtExtraLargeRedCottonDuplicate');
-	  
-	  $firstOptions = $xlargeRedCotton->Options()->map();
-	  $secondOptions = $xlargeRedCottonDuplicate->Options()->map();
+	  $firstOptions = $brokenSmallRed->Options()->map();
+	  $secondOptions = $brokenSmallRedDuplicate->Options()->map();
 
 	  $this->assertEquals($firstOptions, $secondOptions);
 	  
 	  //Hacky way to add attribute options to the record for Variation::isDuplicate()
-	  foreach ($xlargeRedCottonDuplicate->Options() as $option) {
-	    $xlargeRedCottonDuplicate->setField('Options['.$option->AttributeID.']', $option->ID);
+	  foreach ($brokenSmallRedDuplicate->Options() as $option) {
+	    $brokenSmallRedDuplicate->setField('Options['.$option->AttributeID.']', $option->ID);
 	  }
 
 	  $e = null;
 	  try {
-	    $xlargeRedCottonDuplicate->write();
+	    $brokenSmallRedDuplicate->write();
 	  }
 	  catch (ValidationException $e) {
 	    $message = $e->getMessage();
 	  }
 	  $this->assertInstanceOf('ValidationException', $e);
-	  
-	  //TODO Add another attribute to the product and save, all existing variations should be disabled
-	  //Probably should do this in the YAML
-	  
 	}
+
+	
+	/**
+	 * Test saving a product with a new attribute, existing variations without this attribute should be disabled
+	 */
+	function testSaveProductWithExtraAttribute() {
+	  //TODO create a product with one too many attributes in YAML fixture
+	}
+	
+	
 	
 	/**
 	 * Adding items to the cart and setting quantity

@@ -184,6 +184,10 @@ class Variation extends DataObject {
     }
     return false;
   }
+  
+  public function isEnabled() {
+    return $this->Status == 'Enabled';
+  }
 
   protected function validate() {
 

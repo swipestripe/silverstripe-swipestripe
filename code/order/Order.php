@@ -237,6 +237,7 @@ class Order extends DataObject {
 	/**
 	 * Trying something for pending options UI in admin area 
 	 * 
+	 * @deprecated
 	 * @return unknown
 	 */
 	public function PendingOptions() {
@@ -421,9 +422,10 @@ class Order extends DataObject {
 	 * if an item for this product exists increase the quantity
 	 * 
 	 * @param DataObject $product The product to be represented by this order item
+	 * @param DataObjectSet $productOptions The product variations to be added, usually just one
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
-	  
+	
 	  //Check that the product is published
 	  if (!$product->isPublished()) {
 	    user_error("Cannot add item to cart, product is not published.", E_USER_WARNING);
@@ -474,7 +476,7 @@ class Order extends DataObject {
 	
 	/**
 	 * Find an identical item in the order/cart, item is identical if the 
-	 * productID and the options for the item are the same.
+	 * productID, version and the options for the item are the same.
 	 * 
 	 * @param DatObject $product
 	 * @param DataObjectSet $productOptions

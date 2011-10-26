@@ -385,7 +385,17 @@ class Product_Controller extends Page_Controller {
    * Add an item to the cart
    */
   function add() {
-    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
+    
+    try {
+      $productOptions = $this->getProductOptions();
+    }
+    catch (Exception $e) {
+      user_error("Product variation does not exist for the options used.", E_USER_WARNING);
+      //TODO return meaningful error to browser in case error not shown
+      return null;
+    }
+    
+    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $productOptions);
     $this->goToNextPage();
   }
   
@@ -401,7 +411,8 @@ class Product_Controller extends Page_Controller {
   }
   
   /**
-   * Get product variations based on current request
+   * Get product variations based on current request, check that options in request
+   * correspond to a variation
    * 
    * @see SS_HTTPRequest
    * @return DataObject 
@@ -413,17 +424,25 @@ class Product_Controller extends Page_Controller {
     $options = $request->requestVar('Options');
     $product = $this->data();
     $variations = $product->Variations();
-    
+
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
       
       $variationOptions = $variation->Options()->map('AttributeID', 'ID');
-      if ($options == $variationOptions) $productVariations->push($variation);
+      if ($options == $variationOptions && $variation->isEnabled()) {
+        $productVariations->push($variation);
+      }
     }
     /*
     if ($options) foreach ($options as $attributeID => $optionID) {
       $options->push(DataObject::get_by_id('Option', $optionID));
     }
     */
+
+    //If options are not empty but we cannot find a variation that matches
+    if (is_array($options) && !empty($options)) {
+      if (!$productVariations->exists()) throw new Exception('Product variation does not exist for the options passed.');
+    }
+
     return $productVariations;
   }
   
@@ -504,7 +523,7 @@ class Product_Controller extends Page_Controller {
         if ($attributeOption && $attributeOption->ID == $optionID) $variationOptions[$attributeID] = $optionID;
       }
       
-      if ($variationOptions == $attributeOptions) {
+      if ($variationOptions == $attributeOptions && $variation->isEnabled()) {
         $filteredVariations->push($variation);
       }
     }
