@@ -95,13 +95,13 @@ class Product extends Page {
 	 * 
 	 * @see SiteTree::onAfterDelete()
 	 */
-	function onAfterDelete() {
-	  parent::onAfterDelete();
-
-	  if ($this->isPublished()) {
-	    $this->doUnpublish();
-	  }
-	}
+  function onAfterDelete() {
+    parent::onAfterDelete();
+  
+    if ($this->isPublished()) {
+      $this->doUnpublish();
+    }
+  }
   
 	/**
 	 * Set the currency for all products.

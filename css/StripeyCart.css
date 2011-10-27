@@ -458,3 +458,52 @@ clear: left;
 #VariationPrice {
 font-size: 14px;	
 }
+
+/* 
+  Security ========================================
+*/
+
+#Security input.text, #Security textarea {
+width:200px;
+padding:5px;
+color:#333;
+border:1px solid #CDDDDD;
+}
+
+#Security label.left {
+color: #777;
+float: left;
+clear: left;
+margin: 5px 0;
+}
+
+#Security label {
+color: #777;
+}
+
+#Security .middleColumn {
+float: left;
+width: 100%;
+}
+
+#Security .checkbox {
+float: left;
+margin: 15px 0 0 0;
+}
+
+#Security .Actions {
+margin: 15px 0;
+}
+
+#Security .Actions input {
+float: left;
+margin-right: 15px;
+}	
+
+#Security p.bad {
+color:red;
+font-size:14px;
+font-style:italic;
+margin-bottom:5px;
+}
+
