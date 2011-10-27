@@ -1,9 +1,8 @@
 <?php
 
-class ProductControllerExtension extends Extension {
+class CartControllerExtension extends Extension {
   
   public static $allowed_actions = array (
-    'clear'
   );
   
   /**
@@ -13,6 +12,9 @@ class ProductControllerExtension extends Extension {
    * @deprecated
    */
   function clear() {
+    
+    return;
+    
     Session::clear('Cart.OrderID');
     $this->goToNextPage();
   }

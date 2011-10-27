@@ -1,4 +1,4 @@
-<tr class="gap total">
+<tr class="gap total ModifierSetField">
 
   <td class="threeColHeader" colspan="4">
     $Title

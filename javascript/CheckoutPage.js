@@ -51,7 +51,7 @@
 			});
     	}
     	$('#CheckoutForm_OrderForm_Shipping-Country').live('change', updateOrderFormCartAJAX).change();
-    	$('#CheckoutForm_OrderForm_Modifiers-FlatFeeShipping').live('change', updateOrderFormCartAJAX);
+    	$('.ModifierSetField select').live('change', updateOrderFormCartAJAX);
 
     })
 })(jQuery);

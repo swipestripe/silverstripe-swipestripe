@@ -107,7 +107,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  
 	  $firstItem = $items->First();
@@ -138,7 +138,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
     
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(0, $items->Count());
@@ -161,7 +161,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -170,7 +170,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 2
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(3, $items->First()->Quantity);
@@ -193,7 +193,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -202,7 +202,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => -1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -225,7 +225,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -234,7 +234,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 0
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -260,7 +260,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  
@@ -281,7 +281,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(2, $items->Count());
 	  
@@ -309,7 +309,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $this->assertEquals(1, $order->Items()->Count());
 	}
 	
@@ -338,7 +338,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $this->assertEquals(1, $order->Items()->Count());
 	}
 	
@@ -360,7 +360,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $firstProduct = clone $productA;
@@ -384,7 +384,7 @@ class CartTest extends FunctionalTest {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 
 	  $firstItem = $items->First();
@@ -425,7 +425,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $itemOptions = $firstItem->ItemOptions();
@@ -468,7 +468,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 
 	  $this->assertEquals(0, $items->Count());
@@ -502,7 +502,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 
 	  $this->assertEquals(0, $items->Count());
@@ -529,7 +529,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 
@@ -543,7 +543,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 
@@ -572,7 +572,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 
@@ -596,7 +596,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 15, //Polyester
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 
 	  $this->assertEquals(2, $items->Count());
@@ -629,7 +629,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $itemOptions = $firstItem->ItemOptions();
@@ -657,7 +657,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 14, //Cotton
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $lastItemOption = $items->Last()->ItemOptions()->Last();
 
@@ -690,7 +690,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 15, //Polyester
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
 	}
@@ -810,7 +810,7 @@ class CartTest extends FunctionalTest {
 	    'Options[3]' => 15, //Polyester
 	  ));
 	  
-	  $order = ProductControllerExtension::get_current_order();
+	  $order = CartControllerExtension::get_current_order();
 
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
 	  $this->assertEquals($expectedAmount, $order->SubTotal->getAmount());

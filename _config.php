@@ -6,7 +6,7 @@ Object::add_extension('Payment', 'PaymentDecorator');
 Object::add_extension('SiteConfig', 'CartConfigDecorator');
 
 //TODO get rid of product controller dependency?
-Object::add_extension('Page_Controller', 'ProductControllerExtension');
+Object::add_extension('Page_Controller', 'CartControllerExtension');
 
 //Allow product images to be sorted
 SortableDataObject::add_sortable_classes(array('ProductImage'));
