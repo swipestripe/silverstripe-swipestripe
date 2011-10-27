@@ -816,9 +816,8 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals($expectedAmount, $order->SubTotal->getAmount());
 	}
 
-	
 	/**
-	 * Test saving a product with a new attribute, existing variations without this attribute should be disabled
+	 * TODO Test saving a product with a new attribute, existing variations without this attribute should be disabled
 	 */
 	function testSaveProductWithExtraAttribute() {
 	  //TODO create a product with one too many attributes in YAML fixture
