@@ -89,6 +89,19 @@ class Product extends Page {
 
 		return $fieldSet;
 	}
+	
+	/**
+	 * Unpublish products if they get deleted, such as in product admin area
+	 * 
+	 * @see SiteTree::onAfterDelete()
+	 */
+	function onAfterDelete() {
+	  parent::onAfterDelete();
+
+	  if ($this->isPublished()) {
+	    $this->doUnpublish();
+	  }
+	}
   
 	/**
 	 * Set the currency for all products.
