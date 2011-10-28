@@ -81,7 +81,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	function OrderForm() {
 
     $fields = array();
-    $validator = new RequiredFields();
+    $validator = new OrderFormValidator();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
     $billingAddress = $member->BillingAddress();
@@ -90,6 +90,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $this->addBillingAddressFields($fields, $validator);
     $this->addShippingAddressFields($fields, $validator);
     $this->addPersonalDetailsFields($fields, $validator, $member);
+    $this->addItemFields($fields, $validator, $order);
     $this->addModifierFields($fields, $validator, $order);
     $this->addNotesField($fields, $validator);
     $this->addPaymentFields($fields, $validator, $order);
@@ -230,6 +231,18 @@ class CheckoutPage_Controller extends Page_Controller {
 
     $personalFields->setID('PersonalDetails');
 	  $fields['PersonalDetails'][] = $personalFields;
+	}
+	
+	private function addItemFields(&$fields, &$validator, $order) {
+	  
+	  $items = $order->Items();
+	  
+	  if ($items) foreach ($items as $item) {
+
+	    $fields['Items'][] = new OrderItemField($item);
+	    
+	    //$validator->addItemField('OrderItem' . $item->ID);
+	  }
 	}
 	
 	private function addModifierFields(&$fields, &$validator, $order) {

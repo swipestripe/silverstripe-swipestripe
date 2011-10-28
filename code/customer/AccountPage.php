@@ -138,12 +138,13 @@ class AccountPage_Controller extends Page_Controller {
 	 * @return DataObjectSet 
 	 */
 	function orders() {
-	  $memberID = Member::currentUserID();
-	  if (!Member::currentUserID()) {
+
+	  $member = Member::currentUser();
+	  if (!$member || !$member->ID) {
       return Security::permissionFailure($this, 'You must be logged in to view this page.');
     }
     
-	  return DataObject::get('Order', "`MemberID` = $memberID AND `Order`.`Status` != 'Cart'", "`Created` DESC");
+    return $member->Orders();
 	}
 	
 	/**

@@ -30,7 +30,7 @@
     <% end_control %>
     
     <span class="seperator"></span>
-    
+
     <div id="Order">
 	    <h3>Your Order</h3>
 	    <% include CheckoutFormOrder %>

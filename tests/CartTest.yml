@@ -616,5 +616,65 @@ Permission:
       Code: ADMIN
       GroupID: =>Group.admin
 
+# ------------------------------------------
+# Orders
+# ------------------------------------------ 
+Order:
+  orderOne:
+    Status: Pending
+    PaymentStatus: Unpaid
+    ReceiptSent: 1
+    TotalCurrency: NZD
+    TotalAmount: 500
+    SubTotalCurrency: NZD
+    SubTotalAmount: 500
+    MemberID: =>Member.buyer
+    Notes: Some notes about order one.
 
-
+# ------------------------------------------
+# Order items
+# ------------------------------------------
+Item:
+  orderOneItemOne:
+    OrderID: =>Order.orderOne
+    ObjectID: =>Product.productA
+    ObjectClass: Product
+    ObjectVersion: 2
+    Quantity: 1
+    AmountCurrency: NZD
+    AmountAmount: 500
+    
+# ------------------------------------------
+# Addresses
+# ------------------------------------------   
+Address:
+  orderOneBillingAddress:
+    OrderID: =>Order.orderOne     
+    MemberID: =>Member.buyer
+    Type: Billing
+    FirstName: Test
+    Surname: Buyer
+    Company: Silver Stripes
+    Address: 4 Leafy Lane
+    AddressLine2: Sydenham
+    City: Christchurch
+    PostalCode: 8014
+    State: Canterbury
+    Country: NZ
+  orderOneShippingAddress:
+    OrderID: =>Order.orderOne     
+    MemberID: =>Member.buyer
+    Type: Shipping
+    FirstName: Jane
+    Surname: Doe
+    Company: 
+    Address: 91 Shortland St
+    AddressLine2: North Shore
+    City: Auckland
+    PostalCode: 1111
+    State: Auckland
+    Country: NZ
+  
+    
+    
+    

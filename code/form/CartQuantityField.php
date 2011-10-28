@@ -10,6 +10,12 @@ class CartQuantityField extends TextField {
 	
 	protected $item;
 	
+  function __construct($name, $title = null, $value = "", $maxLength = null, $form = null, $item = null){
+
+		$this->item = $item;
+		parent::__construct($name, $title, $value, $maxLength, $form);
+	}
+	
   function FieldHolder() {
 		return $this->renderWith($this->template);
 	}

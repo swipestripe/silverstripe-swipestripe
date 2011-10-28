@@ -59,5 +59,36 @@ class CheckoutForm extends Form {
 	  else return parent::Fields(); //For the validator to get fields
 		
 	}
+	
+	/**
+	 * Set up current form errors in session to
+	 * the current form if appropriate.
+	 *
+	function setupFormErrors() {
+	  
+	  parent::setupFormErrors();
+	  
+		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
+		
+		SS_Log::log(new Exception(print_r($errorInfo, true)), SS_Log::NOTICE);
+		
+		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])) {
+		  
+		  $order = CartControllerExtension::get_current_order();
+		  
+			foreach($errorInfo['errors'] as $error) {
+			  
+			  if (isset($error['itemID'])) {
+			    $item = DataObject::get_one('Item', 'Item.ID = ' . Convert::raw2sql($error['itemID']) . ' AND Item.OrderID = ' . $order->ID);
+			    
+			    if ($item) {
+			      $item->setError($error['message'], $error['messageType']);
+			    }
+			  }
+			}
+		}
+
+	}
+	*/
 
 }

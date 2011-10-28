@@ -352,6 +352,16 @@ class Product extends Page {
 	  }
 	  return Controller::join_links(Director::baseURL() . 'product/', $this->RelativeLink($action));
 	}
+	
+	/**
+   * A product is required to be added to a cart with a variation if it has attributes
+   * 
+   * @return Boolean
+   */
+  public function requiresVariation() {
+    $attributes = $this->Attributes();
+    return $attributes && $attributes->exists();
+  }
 
 }
 class Product_Controller extends Page_Controller {
@@ -398,17 +408,7 @@ class Product_Controller extends Page_Controller {
    * Add an item to the cart
    */
   function add() {
-    
-    try {
-      $productOptions = $this->getProductOptions();
-    }
-    catch (Exception $e) {
-      user_error("Product variation does not exist for the options used.", E_USER_WARNING);
-      //TODO return meaningful error to browser in case error not shown
-      return null;
-    }
-
-    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $productOptions);
+    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }
   
@@ -445,17 +445,6 @@ class Product_Controller extends Page_Controller {
         $productVariations->push($variation);
       }
     }
-    /*
-    if ($options) foreach ($options as $attributeID => $optionID) {
-      $options->push(DataObject::get_by_id('Option', $optionID));
-    }
-    */
-
-    //If options are not empty but we cannot find a variation that matches
-    if (is_array($options) && !empty($options)) {
-      if (!$productVariations->exists()) throw new Exception('Product variation does not exist for the options passed.');
-    }
-
     return $productVariations;
   }
   
@@ -486,6 +475,8 @@ class Product_Controller extends Page_Controller {
 	/**
    * Get the current order from the session, if order does not exist
    * John Connor it (create a new order)
+   * 
+   * TODO move this to CartControllerExtension
    * 
    * @return Order
    */

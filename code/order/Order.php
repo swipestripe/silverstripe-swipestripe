@@ -425,6 +425,13 @@ class Order extends DataObject {
 	 * @param DataObjectSet $productOptions The product variations to be added, usually just one
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
+	  
+	  //Check that product options exist if product requires them
+	  if ((!$productOptions || !$productOptions->exists()) && $product->requiresVariation()) {
+	    user_error("Cannot add item to cart, product options are required.", E_USER_WARNING);
+	    //TODO return meaningful error to browser in case error not shown
+	    return;
+	  }
 
 	  //Check that the product is published
 	  if (!$product->isPublished()) {
@@ -777,4 +784,51 @@ class Order extends DataObject {
 	  
 	  return $address;
 	}
+	
+	/**
+	 * Check if this order has only published products and only enabled variations.
+	 * 
+	 * @return Boolean 
+	 */
+	function isValid() {
+	  
+	  $items = $this->Items();
+	  
+	  if (!$items || !$items->exists()) {
+	    return false;
+	  }
+	  
+	  foreach ($items as $item) {
+	    $product = $item->Object();
+
+	    if (!$product->isPublished()) {
+	      return false;
+	    }
+	    
+	    $itemOptions = $item->ItemOptions();
+	    if ((!$itemOptions || !$itemOptions->exists()) && $product->requiresVariation()) {
+	      return false;
+	    }
+	    
+	    foreach ($itemOptions as $option) {
+	      $variation = $option->Object();
+	      
+	      if ($variation instanceof Variation && !$variation->isEnabled()) {
+	        return false;
+	      }
+	    }
+	  }
+	  return true;
+	}
+	
+	/*
+  protected function validate() {
+    
+    SS_Log::log(new Exception(print_r('validating the Order', true)), SS_Log::NOTICE);
+    
+    return new ValidationResult(false, 'One of the products in your cart has been unpublished.');
+    
+		return new ValidationResult();
+	}
+	*/
 }

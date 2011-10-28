@@ -11,16 +11,21 @@
   </thead>
   <tbody>
     <% if Items %>
+    
+      <% control Top.Fields(Items) %>
+	      $FieldHolder
+	    <% end_control %>
+    
 	    <% control Items %>
 	      <tr  class="itemRow $EvenOdd $FirstLast">
 	      
 			    <% control Object %>  
 			      <td class="title">
-			        <% if Link %>
-			          <a href="$Link" target="_blank">$Title</a>
-			        <% else %>
-			          $Title
-			        <% end_if %>
+			        <% if isPublished %>
+					      <a href="$Link" target="_blank">$Title</a>
+					    <% else %>
+					      $Title
+					    <% end_if %>
 			      </td>
 			    <% end_control %>
 			    
@@ -42,6 +47,7 @@
 		    
 		    </tr>
 	    <% end_control %>
+	    
     <% else %>
       <tr  class="itemRow">
       

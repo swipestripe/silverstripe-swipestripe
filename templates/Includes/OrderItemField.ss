@@ -15,20 +15,16 @@
     <% end_if %>
   </td>
   
-  <td class="right total">
-	  <% control Item %>   
-	    $UnitPrice.Nice
-	  <% end_control %>
+  <td class="total">
+	  $Item.UnitPrice.Nice
   </td>
 
   <td class="title" scope="row">
-    <div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock</div>
+    $Item.Quantity
   </td>
   
-  <td class="right total">
-	  <% control Item %>   
-	    $Total.Nice
-	  <% end_control %>
+  <td class="right total"> 
+	  $Item.Total.Nice
   </td>
 
 </tr>

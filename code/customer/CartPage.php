@@ -81,8 +81,7 @@ class CartPage_Controller extends Page_Controller {
 	  
 	  if ($items) foreach ($items as $item) {
 	    
-	    $quantityField = new CartQuantityField('Quantity['.$item->ID.']', '', $item->Quantity);
-	    $quantityField->setItem($item);
+	    $quantityField = new CartQuantityField('Quantity['.$item->ID.']', '', $item->Quantity, null, null, $item);
 	    
 	    $fields->push($quantityField); 
 	    

@@ -15,7 +15,8 @@ class CustomerDecorator extends DataObjectDecorator {
 				'Notes' => 'HTMLText' //TODO remove? Is this necessary for Payment class or something?
 			),
 			'has_many' => array(
-			  'Addresses' => 'Address'
+			  'Addresses' => 'Address',
+			  'Orders' => 'Order'
 			)
 		);
 	}
@@ -47,6 +48,13 @@ class CustomerDecorator extends DataObjectDecorator {
 	    if ($shippingAddress->Type == 'Shipping') $address = $shippingAddress; 
 	  }
 	  return $address;
+	}
+	
+	/**
+	 * Overload getter to return only non-cart orders
+	 */
+	function Orders() {
+	  return DataObject::get('Order', "`MemberID` = " . $this->owner->ID . " AND `Order`.`Status` != 'Cart'", "`Created` DESC");
 	}
 
 }

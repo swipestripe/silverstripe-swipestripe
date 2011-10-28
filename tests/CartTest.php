@@ -24,40 +24,6 @@
  * add variation to cart with price change
  * check cart totals
  * 
- * TODO
- * ----
- * variation versions in cart with changed price
- * 
- * Checkout testing
- * unpublish product after it is in the cart cannot checkout
- * delete product after it is in the cart cannot checkout
- * add variation to cart then delete variation cannot checkout
- * submit checkout without necessary details
- * submit checkout without specifying payment gateway
- * submit checkout without products in cart
- * when last item deleted from the cart, remove order modifiers also
- * add shipping options to checkout
- * submit checkout with shipping option that does not match shipping country
- * process payment
- * send receipt
- * 
- * 
- * Product Category
- * unpublish product, does not appear on website
- * delete product, staging versions all up to date and still exist
- * 
- * 
- * TEST:
- * Order
- * Order addresses
- * Order modifiers
- * Shipping
- * Product Categories
- * Account page
- * Product 
- * Checkout
- * Payment
- * 
  */
 class CartTest extends FunctionalTest {
   
