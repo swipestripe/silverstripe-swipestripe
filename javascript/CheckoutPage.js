@@ -38,9 +38,7 @@
     	 * Update the order form cart via AJAX
     	 */
     	function updateOrderFormCartAJAX() {
-    		
-    		return;
-    		
+
     		//AJAX call to update the cart
     		var values = $('#CheckoutForm_OrderForm').serialize();
     		$.ajax({

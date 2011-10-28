@@ -234,13 +234,10 @@ class CheckoutPage_Controller extends Page_Controller {
 	}
 	
 	private function addItemFields(&$fields, &$validator, $order) {
-	  
 	  $items = $order->Items();
 	  
 	  if ($items) foreach ($items as $item) {
-
 	    $fields['Items'][] = new OrderItemField($item);
-	    
 	    //$validator->addItemField('OrderItem' . $item->ID);
 	  }
 	}
@@ -398,6 +395,9 @@ class CheckoutPage_Controller extends Page_Controller {
     //Add addresses to order, then when getting the shipping fields use the shipping address to 
     //filter results
     $order->addAddressesAtCheckout($data->requestVars());
+    
+    //Add order item fields
+    $this->addItemFields($fields, $validator, $order);
     
     //Add modifier fields
     $this->addModifierFields($fields, $validator, $order);

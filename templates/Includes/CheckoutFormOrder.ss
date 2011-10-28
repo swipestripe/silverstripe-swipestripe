@@ -15,38 +15,6 @@
       <% control Top.Fields(Items) %>
 	      $FieldHolder
 	    <% end_control %>
-    
-	    <% control Items %>
-	      <tr  class="itemRow $EvenOdd $FirstLast">
-	      
-			    <% control Object %>  
-			      <td class="title">
-			        <% if isPublished %>
-					      <a href="$Link" target="_blank">$Title</a>
-					    <% else %>
-					      $Title
-					    <% end_if %>
-			      </td>
-			    <% end_control %>
-			    
-			    <td>
-				    <% if Variation %>
-				      $Variation.OptionSummary
-				    <% end_if %>
-				  </td>
-				  
-				  <td>
-	           $UnitPrice.Nice
-	         </td>
-		    
-		      <td class="title">
-		        $Quantity
-		      </td>
-	 
-		      <td class="right total">$Total.Nice</td>
-		    
-		    </tr>
-	    <% end_control %>
 	    
     <% else %>
       <tr  class="itemRow">
