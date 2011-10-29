@@ -1,5 +1,4 @@
 
-<% control Product %>
 <div id="Product">
 
   <% control FirstImage %>
@@ -21,4 +20,3 @@
   </div>
 
 </div>
-<% end_control %>
