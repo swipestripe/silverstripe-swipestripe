@@ -189,11 +189,11 @@ class Variation extends DataObject {
   }
 
   protected function validate() {
-
+    /*
     if (!$this->isValid()) {
       return new ValidationResult(false, 'Options are not set for this product variation.');
     }
-    
+    */
     if ($this->isDuplicate()) {
       return new ValidationResult(false, 'Duplicate variation for this product.');
     }
