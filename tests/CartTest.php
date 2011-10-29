@@ -705,7 +705,8 @@ class CartTest extends FunctionalTest {
 	
 	/**
 	 * Test saving variation without all options set
-	 */
+	 * Disabled validation for product variations because preventing disabling a variation
+	 *
 	function testSaveInvalidProductVariation() {
 
 	  //This variation only has 1 option instead of 2
@@ -723,6 +724,7 @@ class CartTest extends FunctionalTest {
 	  }
 	  $this->assertInstanceOf('ValidationException', $e);
 	}
+	*/
 	
 	/**
 	 * Test saving duplicate product variations

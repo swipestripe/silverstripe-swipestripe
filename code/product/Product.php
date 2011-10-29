@@ -263,7 +263,6 @@ class Product extends Page {
       }
     }
     
-    //TODO check the variations, if variation exists
     //Missing an option for one or more of the required attributes, disable
     //Has non-existent option for one or more of the required attributes, disable
     $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");

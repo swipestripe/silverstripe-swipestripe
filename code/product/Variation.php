@@ -93,6 +93,8 @@ class Variation extends DataObject {
       $fields->push($optionField);
     }
     
+    $fields->push(new DropdownField('Status', 'Status', $this->dbObject('Status')->enumValues()));
+    
     return $fields;
   }
   
@@ -116,6 +118,8 @@ class Variation extends DataObject {
   }
   
   public function isValid() {
+    
+    SS_Log::log(new Exception(print_r('is this being run in here??', true)), SS_Log::NOTICE);
 
     //Get the options for the product
     //Get the attributes for the product
@@ -123,9 +127,19 @@ class Variation extends DataObject {
     
     $productAttributeOptions = array();
     $productOptions = $this->Product()->Options();
-    
+    $productAttributesMap = $this->Product()->Attributes()->map();
+
     if ($productOptions) foreach ($productOptions as $option) {
-      $productAttributeOptions[$option->AttributeID][] = $option->ID;
+      
+      $attribute = $option->Attribute();
+      
+      if (!array_key_exists($option->AttributeID, $productAttributesMap)) {
+        continue;
+      }
+      
+      if ($attribute) {
+        $productAttributeOptions[$option->AttributeID][] = $option->ID;
+      }
     }
 
     $variationAttributeOptions = array();
