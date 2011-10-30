@@ -22,16 +22,10 @@ class OrderItemField extends FormField {
 	}
 	
 	function Item() {
-	  
-	  SS_Log::log(new Exception(print_r('########################', true)), SS_Log::NOTICE);
-	  SS_Log::log(new Exception(print_r($this->item->Object(), true)), SS_Log::NOTICE);
-	  SS_Log::log(new Exception(print_r($this->item->Object()->isPublished(), true)), SS_Log::NOTICE);
-	  
 	  return $this->item;
 	}
 	
 	function setItem(Item $item) {
 	  $this->item = $item;
 	}
-	
 }

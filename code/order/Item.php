@@ -148,5 +148,13 @@ class Item extends DataObject {
 	  } 
 	  return $variation;
 	}
+	
+	function isValid() {
+	  //Item is valid if it has a product as its Object
+	  //The itemOption should be a vairation if the Product requires a variation
+	  //The variation should be valid as well
+	  
+	  $valid = true;
+	}
 
 }

@@ -493,6 +493,7 @@ margin: 15px 0 0 0;
 
 #Security .Actions {
 margin: 15px 0;
+float: left;
 }
 
 #Security .Actions input {

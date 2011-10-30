@@ -24,6 +24,9 @@
  * add variation to cart with price change
  * check cart totals
  * 
+ * TODO
+ * ----
+ * remove options from product and variaiton when the attribute is deleted
  */
 class CartTest extends FunctionalTest {
   

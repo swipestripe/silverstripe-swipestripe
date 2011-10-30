@@ -62,6 +62,8 @@ class CheckoutPage_Controller extends Page_Controller {
    */
   function index() {
     
+    //SS_Log::log(new Exception(print_r(Session::get('FormInfo.CheckoutForm_OrderForm'), true)), SS_Log::NOTICE);
+    
     Requirements::css('stripeycart/css/StripeyCart.css');
     
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
@@ -79,7 +81,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @return Form 
 	 */
 	function OrderForm() {
-
     $fields = array();
     $validator = new OrderFormValidator();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
@@ -235,10 +236,10 @@ class CheckoutPage_Controller extends Page_Controller {
 	
 	private function addItemFields(&$fields, &$validator, $order) {
 	  $items = $order->Items();
-	  
+
 	  if ($items) foreach ($items as $item) {
 	    $fields['Items'][] = new OrderItemField($item);
-	    //$validator->addItemField('OrderItem' . $item->ID);
+	    $validator->addItemField('OrderItem' . $item->ID);
 	  }
 	}
 	
@@ -272,6 +273,9 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function ProcessOrder($data, $form) {
+	  
+	  Director::redirectBack();
+	  return;
 
 	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
@@ -388,7 +392,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	function updateOrderFormCart(SS_HTTPRequest $data) {
 
 	  $fields = array();
-    $validator = new RequiredFields();
+    $validator = new OrderFormValidator();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
 

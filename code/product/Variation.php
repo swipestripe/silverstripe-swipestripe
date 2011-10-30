@@ -118,8 +118,6 @@ class Variation extends DataObject {
   }
   
   public function isValid() {
-    
-    SS_Log::log(new Exception(print_r('is this being run in here??', true)), SS_Log::NOTICE);
 
     //Get the options for the product
     //Get the attributes for the product
