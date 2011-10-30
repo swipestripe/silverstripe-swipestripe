@@ -375,6 +375,7 @@ Variation:
     Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
+    Status: Enabled
     
 # Broken product Variations
 # Small, Red

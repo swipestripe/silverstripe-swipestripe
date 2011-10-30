@@ -792,43 +792,19 @@ class Order extends DataObject {
 	 */
 	function isValid() {
 	  
+	  $valid = true;
 	  $items = $this->Items();
 	  
 	  if (!$items || !$items->exists()) {
-	    return false;
+	    $valid = false;
 	  }
 	  
-	  foreach ($items as $item) {
-	    $product = $item->Object();
-
-	    if (!$product->isPublished()) {
-	      return false;
-	    }
-	    
-	    $itemOptions = $item->ItemOptions();
-	    if ((!$itemOptions || !$itemOptions->exists()) && $product->requiresVariation()) {
-	      return false;
-	    }
-	    
-	    foreach ($itemOptions as $option) {
-	      $variation = $option->Object();
-	      
-	      if ($variation instanceof Variation && !$variation->isEnabled()) {
-	        return false;
-	      }
+	  if ($items) foreach ($items as $item) {
+	    if (!$item->isValid()) {
+	      $valid = false;
 	    }
 	  }
-	  return true;
+	  
+	  return $valid;
 	}
-	
-	/*
-  protected function validate() {
-    
-    SS_Log::log(new Exception(print_r('validating the Order', true)), SS_Log::NOTICE);
-    
-    return new ValidationResult(false, 'One of the products in your cart has been unpublished.');
-    
-		return new ValidationResult();
-	}
-	*/
 }

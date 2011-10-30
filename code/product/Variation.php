@@ -123,6 +123,14 @@ class Variation extends DataObject {
       $valid = false;
     }
 
+    if (!$this->isEnabled()) {
+      $valid = false;
+    }
+    
+    if ($this->isDeleted()) {
+      $valid = false;
+    }
+
     return $valid;
   }
   
@@ -204,8 +212,28 @@ class Variation extends DataObject {
     return false;
   }
   
+  /**
+   * If current variation is enabled, checks lastest version of variation because status is saved
+   * in versions. So a variation can be saved as enabled, the version can be added to cart, then
+   * the variation is disabled but the previous version stays enabled.
+   * 
+   * @return Boolean
+   */
   public function isEnabled() {
-    return $this->Status == 'Enabled';
+
+    $latestVersion = Versioned::get_latest_version('Variation', $this->ID);
+    return $latestVersion->Status == 'Enabled';
+  }
+  
+  /**
+   * Check if the variation has been deleted, need to check the actual variation and not just this version.
+   * 
+   * @return Boolean
+   */
+  public function isDeleted() {
+    
+    $latest = DataObject::get_by_id('Variation', $this->ID);
+    return (!$latest || !$latest->exists());
   }
 
   protected function validate() {

@@ -135,6 +135,7 @@ class Item extends DataObject {
 	
 	/**
 	 * Get the variation for the item if a Variation exists in the ItemOptions
+	 * This assumes only one variation per item
 	 */
 	function Variation() {
 	  $itemOptions = $this->ItemOptions();
@@ -155,9 +156,9 @@ class Item extends DataObject {
 	 */
 	function isValid() {
 	  //Item is valid if it has a product as its Object
-	  //The itemOption should be a vairation if the Product requires a variation
+	  //The item should have a Variation if the Product requires a variation
 	  //The variation should be valid as well
-	  //chck product is published
+	  //check product is published
 	  
 	  $valid = true;
 	  $product = $this->Object();
@@ -168,15 +169,10 @@ class Item extends DataObject {
 	    $valid = false;
 	  }
 	  
-	  if ($product && $product->requiresVariation() && !$variation) {
+	  if ($product && $product->requiresVariation() && (!$variation || !$variation->isValid())) {
       $valid = false;
 	  }
-	  
-	  if ($variation) {
-	    if (!$variation->isValid()) {
-	      $valid = false;
-	    }
-	  }
+
 	  return $valid;
 	}
 }
