@@ -74,7 +74,7 @@ class OrderFormValidator extends RequiredFields {
 		  //Get current order invalid products and add a validationError for each product
 		}
 		*/
-		
+
 		return $valid;
 	}
 }

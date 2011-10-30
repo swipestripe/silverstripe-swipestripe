@@ -273,9 +273,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function ProcessOrder($data, $form) {
-	  
-	  Director::redirectBack();
-	  return;
 
 	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;

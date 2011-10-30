@@ -5,17 +5,18 @@
  * 
  * Summary of tests:
  * -----------------
- * 
+ * checkout published product
+ * unpublish product after it is in the cart cannot checkout
  * 
  * TODO
  * ----
  * variation versions in cart with changed price
  * 
  * Checkout testing
- * unpublish product after it is in the cart cannot checkout
  * checkout with product that has attributes, without a variation set
  * delete product after it is in the cart cannot checkout
  * add variation to cart then delete variation cannot checkout
+ * add variation then disable the variation, cannot checkout
  * submit checkout without necessary details
  * submit checkout without specifying payment gateway
  * submit checkout without products in cart
@@ -147,6 +148,58 @@ class CheckoutTest extends FunctionalTest {
 	  $this->logOut();
 	  
 	  $this->assertEquals(false, $productA->isPublished());
+	  $this->assertEquals(false, $order->isValid());
+	  
+	  //Log in as buyer again and try to checkout
+	  $this->loginAs('buyer');
+	  $checkoutPage = DataObject::get_one('CheckoutPage');
+	  $this->get(Director::makeRelative($checkoutPage->Link()));
+
+	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	    'Notes' => 'This order should fail.'
+	  ));
+	  
+	  $orders = $buyer->Orders();
+	  $this->assertEquals(1, $orders->Count());
+	}
+	
+/**
+	 * Try to checkout a deleted product
+	 */
+	function testCheckoutWithDeletedProduct() {
+	  
+	  $productA = $this->objFromFixture('Product', 'productA');
+
+	  $this->loginAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+	  
+	  $this->assertTrue($productA->isPublished());
+
+	  //Add product to cart, buyer has one Order existing from fixture
+	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->assertEquals(1, $buyer->Orders()->Count());
+	  
+	  $this->loginAs('buyer');
+
+	  $this->get(Director::makeRelative($productA->Link())); 
+	  $this->submitForm('Form_AddToCartForm', null, array(
+	    'Quantity' => 1
+	  ));
+
+	  $order = CartControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals($productA->ID, $items->First()->Object()->ID);
+	  $this->logOut();
+	  
+	  //Delete the product thats in the cart
+	  $this->loginAs('admin');
+	  $productA->delete();
+	  $this->logOut();
+	  
+	  $this->assertEquals(false, $productA->isInDB());
 	  $this->assertEquals(false, $order->isValid());
 	  
 	  //Log in as buyer again and try to checkout
