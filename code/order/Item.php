@@ -149,12 +149,34 @@ class Item extends DataObject {
 	  return $variation;
 	}
 	
+	/**
+	 * 
+	 * @return Boolean
+	 */
 	function isValid() {
 	  //Item is valid if it has a product as its Object
 	  //The itemOption should be a vairation if the Product requires a variation
 	  //The variation should be valid as well
+	  //chck product is published
 	  
 	  $valid = true;
+	  $product = $this->Object();
+	  $variation = $this->Variation();
+	  
+	  //Check that product is published and exists
+	  if (!$product || !$product->exists() || !$product->isPublished()) {
+	    $valid = false;
+	  }
+	  
+	  if ($product && $product->requiresVariation() && !$variation) {
+      $valid = false;
+	  }
+	  
+	  if ($variation) {
+	    if (!$variation->isValid()) {
+	      $valid = false;
+	    }
+	  }
+	  return $valid;
 	}
-
 }

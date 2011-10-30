@@ -24,7 +24,7 @@
  * submit checkout with shipping option that does not match shipping country
  * process payment
  * send receipt
- * 
+ * checkout addresses correct
  * 
  * Product Category
  * unpublish product, does not appear on website
@@ -71,7 +71,7 @@ class CheckoutTest extends FunctionalTest {
 
 	/**
 	 * Create product and check basic attributes
-	 *
+	 */
   function testCheckoutWithPublishedProduct() {
 
 		$productA = $this->objFromFixture('Product', 'productA');
@@ -111,12 +111,8 @@ class CheckoutTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Check that previous addresses are auto filled into form
+	 * Try to checkout an unpublished product
 	 */
-	function testCheckoutAddresses() {
-	  
-	}
-	
 	function testCheckoutWithUnpublishedProduct() {
 	  
 	  $productA = $this->objFromFixture('Product', 'productA');

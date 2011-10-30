@@ -30,15 +30,9 @@ class Variation extends DataObject {
     if (strpos($property, 'AttributeValue_') === 0) {
       return $this->getAttributeOptionValue(str_replace('AttributeValue_', '', $property));
     }
-    elseif ($this->hasMethod($method = "get$property")) {
-			return $this->$method();
-		} 
-		elseif ($this->hasField($property)) {
-			return $this->getField($property);
-		} 
-		elseif ($this->failover) {
-			return $this->failover->$property;
-		}
+    else {
+      return parent::__get($property);
+    }
 	}
 	
 	public function getAttributeOptionValue($attributeID) {
@@ -117,8 +111,22 @@ class Variation extends DataObject {
     if ($this->Stock > 0) return true; 
   }
   
+  /**
+   * 
+   * @return Boolean
+   */
   public function isValid() {
 
+    $valid = true;
+    
+    if (!$this->hasValidOptions()) {
+      $valid = false;
+    }
+
+    return $valid;
+  }
+  
+  public function hasValidOptions() {
     //Get the options for the product
     //Get the attributes for the product
     //Each variation should have a valid option for each attribute
@@ -201,11 +209,7 @@ class Variation extends DataObject {
   }
 
   protected function validate() {
-    /*
-    if (!$this->isValid()) {
-      return new ValidationResult(false, 'Options are not set for this product variation.');
-    }
-    */
+
     if ($this->isDuplicate()) {
       return new ValidationResult(false, 'Duplicate variation for this product.');
     }

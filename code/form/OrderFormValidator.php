@@ -1,5 +1,4 @@
 <?php
-
 class OrderFormValidator extends RequiredFields {
   
   protected $items;
@@ -18,16 +17,8 @@ class OrderFormValidator extends RequiredFields {
 	 */
 	function php($data) {
 
-	  //Order can be invalid
-	  //Each item can be invalid
-	  //Shipping could be invalid according to shipping country
-	  
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();
-		
-		//TODO Validate the current order, if some items are not valid then put errors into the session for 
-		//corresponding item fields in the checkout form
-		//Can apply the same approach to order modifier fields
 		
 		$currentOrder = CartControllerExtension::get_current_order();
 		$items = $currentOrder->Items();
@@ -44,34 +35,37 @@ class OrderFormValidator extends RequiredFields {
 		     $item = $items->find('ID', $itemID);
 		  }
 		  
+		  //Check that item exists
 		  if (!$item || !$item->exists()) {
 		    
-		    $errorMessage = _t('Form.ITEM_IS_NOT_IN_ORDER', 'This item is not in the Order.');
-				if($msg = $formField->getCustomValidationMessage()) {
+		    $errorMessage = _t('Form.ITEM_IS_NOT_IN_ORDER', 'This product is not in the Order.');
+				if ($msg = $formField->getCustomValidationMessage()) {
 					$errorMessage = $msg;
 				}
 		    
 		    $this->validationError(
 					$fieldName,
 					$errorMessage,
-					"required"
+					"error"
 				);
 				$valid = false;
 		  }
 		  
-		  
-		  $errorMessage = _t('Form.ITEM_IS_NOT_IN_ORDER', 'This item is not in the Order.');
-			if($msg = $formField->getCustomValidationMessage()) {
-				$errorMessage = $msg;
-			}
-	    
-	    $this->validationError(
-				$fieldName,
-				$errorMessage,
-				"required"
-			);
-			$valid = false;
-
+		  //Check item is valid
+		  if (!$item->isValid()) {
+		    
+		    $errorMessage = _t('Form.ITEM_IS_NOT_VALID', 'Sorry, this product is no longer available.');
+				if ($msg = $formField->getCustomValidationMessage()) {
+					$errorMessage = $msg;
+				}
+		    
+		    $this->validationError(
+					$fieldName,
+					$errorMessage,
+					"error"
+				);
+				$valid = false;
+		  }
 		}
 		
 		/*
@@ -83,5 +77,4 @@ class OrderFormValidator extends RequiredFields {
 		
 		return $valid;
 	}
-
 }
