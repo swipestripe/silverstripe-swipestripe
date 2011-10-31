@@ -228,7 +228,7 @@ list-style-type:none;
 margin-bottom:15px;
 }
 
-#Checkout span.error,#Checkout span.required,#Checkout span.validation {
+#Checkout span.error,#Checkout span.required,#Checkout span.validation,#Checkout p.message {
 color:red;
 font-size:14px;
 font-style:italic;

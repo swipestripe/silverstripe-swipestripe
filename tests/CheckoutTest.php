@@ -9,7 +9,6 @@
  * unpublish product after it is in the cart cannot checkout
  * delete product after it is in the cart cannot checkout
  * add variation then disable the variation, cannot checkout
- * 
  * add variation to cart then delete variation cannot checkout
  * 
  * TODO
@@ -320,6 +319,35 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  //Log in as buyer again and try to checkout
 	  $this->loginAs('buyer');
+	  $checkoutPage = DataObject::get_one('CheckoutPage');
+	  $this->get(Director::makeRelative($checkoutPage->Link()));
+
+	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	    'Notes' => 'This order should fail.'
+	  ));
+	  
+	  $orders = $buyer->Orders();
+	  $this->assertEquals(1, $orders->Count());
+	}
+	
+	/**
+	 * Try to checkout without products added to the order
+	 */
+	function testCheckoutWithoutProducts() {
+	  
+	  //Add product to cart, buyer has one Order existing from fixture
+	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->assertEquals(1, $buyer->Orders()->Count());
+	  
+	  //Log in as buyer again and try to checkout
+	  $this->loginAs('buyer');
+	  
+	  $order = CartControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  $this->assertEquals(0, $items->Count());
+	  
+	  $this->assertEquals(false, $order->isValid());
+	  
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 

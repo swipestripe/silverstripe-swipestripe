@@ -68,12 +68,18 @@ class OrderFormValidator extends RequiredFields {
 		  }
 		}
 		
-		/*
+		//Check the order is valid
 		$currentOrder = CartControllerExtension::get_current_order();
 	  if (!$currentOrder || !$currentOrder->isValid()) {
-		  //Get current order invalid products and add a validationError for each product
+
+	    $this->form->sessionMessage(
+  		  _t('Form.ORDER_IS_NOT_VALID', 'There seems to be a problem with your order, are there products in your cart?'),
+  		  'bad'
+  		);
+  		
+  		$this->errors[] = true;
+  		$valid = false;
 		}
-		*/
 
 		return $valid;
 	}
