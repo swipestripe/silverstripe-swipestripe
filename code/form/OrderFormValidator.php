@@ -77,6 +77,7 @@ class OrderFormValidator extends RequiredFields {
   		  'bad'
   		);
   		
+  		//Have to set an error for Form::validate()
   		$this->errors[] = true;
   		$valid = false;
 		}

@@ -608,8 +608,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $firstItem->Quantity);
 	  $this->assertEquals($firstVersion, $firstItemOption->ObjectVersion);
-	  
-	  
+
 	  $this->logInAs('admin');
 	  $teeshirtA->doPublish();
 	  $teeshirtAVariation->Amount->setAmount(0.00);
@@ -633,7 +632,6 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(2, $items->Count());
 	  $this->assertEquals(1, $items->Last()->Quantity);
 	  $this->assertEquals($secondVersion, $lastItemOption->ObjectVersion);
-	  
 	}
 	
 	/**

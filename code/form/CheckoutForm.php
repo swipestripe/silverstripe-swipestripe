@@ -59,6 +59,12 @@ class CheckoutForm extends Form {
 	  else return parent::Fields(); //For the validator to get fields
 	}
 	
+	/**
+	 * Overloaded so that form error messages are displayed.
+	 * 
+	 * @see OrderFormValidator::php()
+	 * @see Form::validate()
+	 */
   function validate(){
 		if($this->validator){
 			$errors = $this->validator->validate();

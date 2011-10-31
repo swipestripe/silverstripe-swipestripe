@@ -258,11 +258,22 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $paymentFields = new CompositeField();
 	  
 		foreach (Payment::combined_form_fields($order->Total->getAmount()) as $field) {
+
+		  //Bit of a nasty hack to customize validation error message
+		  if ($field->Name() == 'PaymentMethod') {
+		    $field->setCustomValidationMessage('Please select a payment method.');
+		  }
+
 		  $paymentFields->push($field);
 		}
 		
 		$paymentFields->setID('PaymentFields');
 	  $fields['Payment'][] = $paymentFields;
+	  
+	  //TODO need to check required payment fields
+	  //$requiredPaymentFields = Payment::combined_form_requirements();
+	  
+	  $validator->addRequiredField('PaymentMethod');
 	}
 	
 	/**
@@ -279,7 +290,14 @@ class CheckoutPage_Controller extends Page_Controller {
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
 
 		if(!($payment && $payment instanceof Payment)) {
-			user_error(get_class($payment) . ' is not a valid Payment object!', E_USER_ERROR);
+		  
+		  Debug::friendlyError(
+		    403,
+		    'Sorry, that is not a valid payment method.',
+		    'Please go back and try again.'
+		  );
+		  
+			//user_error(get_class($payment) . ' is not a valid Payment object!', E_USER_ERROR);
 			//TODO return meaningful error to browser in case error not shown
 			return;
 		}
