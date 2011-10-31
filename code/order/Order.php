@@ -807,4 +807,13 @@ class Order extends DataObject {
 	  
 	  return $valid;
 	}
+	
+	/**
+	 * TODO validate Item before write()
+	 * 
+	 * @see DataObject::validate()
+	 */
+	function validate() {
+	  return parent::validate();
+	}
 }

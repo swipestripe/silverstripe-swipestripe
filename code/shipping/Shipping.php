@@ -47,7 +47,12 @@ class Shipping extends DataObject {
 	  user_error("Please implement getFormFields() on $this->class", E_USER_ERROR);
 	}
 	
+	static function combined_form_requirements($order) {
+	  //TODO is this really needed? all modifier fields go into Validation as required to perform validation on
+	}
+	
 	function getFormRequirements() {
+	  //TODO is this really needed?
 	  user_error("Please implement getFormRequirements() on $this->class", E_USER_ERROR);
 	}
 	

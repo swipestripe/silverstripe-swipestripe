@@ -36,5 +36,14 @@ class Modifier extends DataObject {
 	public static function currency() {
 		return self::$currency;
 	}
+	
+	/**
+	 * TODO validate before write()
+	 * 
+	 * @see DataObject::validate()
+	 */
+	function validate() {
+	  return parent::validate();
+	}
 
 }

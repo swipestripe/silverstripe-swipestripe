@@ -1,11 +1,15 @@
 <?php
 class OrderFormValidator extends RequiredFields {
   
-  protected $items;
-  protected $modifiers;
+  protected $items = array();
+  protected $modifiers = array();
   
   function addItemField($field) {
 		$this->items[] = $field;
+	}
+	
+	function addModifierField($field) {
+	  $this->modifiers[] = $field;
 	}
 
 	/**
@@ -23,6 +27,7 @@ class OrderFormValidator extends RequiredFields {
 		$currentOrder = CartControllerExtension::get_current_order();
 		$items = $currentOrder->Items();
 
+		//Check the validity of item fields
 		foreach ($this->items as $fieldName) {
 
 		  $formField = $fields->dataFieldByName($fieldName);
@@ -30,6 +35,8 @@ class OrderFormValidator extends RequiredFields {
 		  //Make sure item is in the order
 		  //make sure the item is valid
 		  $itemID  = str_replace('OrderItem', '', $fieldName);
+		  
+		  //TODO use OrderItemField->getItemID();
 		  
 		  if ($itemID && is_numeric($itemID)) {
 		     $item = $items->find('ID', $itemID);
@@ -67,6 +74,22 @@ class OrderFormValidator extends RequiredFields {
 				$valid = false;
 		  }
 		}
+		
+		//Check the validity of order modifiers
+		foreach ($this->modifiers as $fieldName) {
+		  
+		  $formField = $fields->dataFieldByName($fieldName);
+		  
+		  //TODO use ModifierSetField->getClassName();
+		  
+		  //$className = str_replace('OrderItem', '', $fieldName);
+		  
+		  SS_Log::log(new Exception(print_r($fieldName, true)), SS_Log::NOTICE);
+		  SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
+		}
+		
+		$this->errors[] = true;
+		$valid = false;
 		
 		//Check the order is valid
 		$currentOrder = CartControllerExtension::get_current_order();

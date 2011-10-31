@@ -43,5 +43,14 @@ class Address extends DataObject {
 	  
 	  return $formattedData;
 	}
+	
+	/**
+	 * TODO validate before write()
+	 * 
+	 * @see DataObject::validate()
+	 */
+	function validate() {
+	  return parent::validate();
+	}
 
 }

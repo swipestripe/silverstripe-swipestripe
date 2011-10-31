@@ -247,6 +247,7 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		foreach (Shipping::combined_form_fields($order) as $field) {
 		  $fields['Modifiers'][] = $field;
+		  $validator->addModifierField($field->Name());
 		}
 	}
 	

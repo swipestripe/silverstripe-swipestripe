@@ -31,4 +31,13 @@ class ItemOption extends DataObject {
 	  //return DataObject::get_by_id($this->ObjectClass, $this->ObjectID);
 	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
 	}
+	
+	/**
+	 * TODO validate before write()
+	 * 
+	 * @see DataObject::validate()
+	 */
+	function validate() {
+	  return parent::validate();
+	}
 }

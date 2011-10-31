@@ -175,4 +175,13 @@ class Item extends DataObject {
 
 	  return $valid;
 	}
+	
+	/**
+	 * TODO validate before write()
+	 * 
+	 * @see DataObject::validate()
+	 */
+	function validate() {
+	  return parent::validate();
+	}
 }
