@@ -20,6 +20,10 @@ class Address extends DataObject {
 	  'Member' => 'Member'
 	);
 	
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=InnoDB'
+	);
+	
 	/**
 	 * Return data in an Array with keys formatted to match the field names
 	 * on the checkout form.

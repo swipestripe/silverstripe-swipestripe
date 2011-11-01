@@ -103,9 +103,18 @@ class CartTest extends FunctionalTest {
     
     $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
-	    'Quantity' => 1
-	  ));
+	  
+	  $message = null;
+	  try {
+  	  $this->submitForm('Form_AddToCartForm', null, array(
+  	    'Quantity' => 1
+  	  ));
+	  }
+	  catch (Exception $e) {
+	    $message = $e->getMessage();
+	  }
+	  
+	  $this->assertStringEndsWith('Object not written.', $message);
     
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
@@ -167,9 +176,17 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
-	    'Quantity' => -1
-	  ));
+	  $message = null;
+	  try {
+  	  $this->submitForm('Form_AddToCartForm', null, array(
+  	    'Quantity' => -1
+  	  ));
+	  }
+	  catch (Exception $e) {
+	    $message = $e->getMessage();
+	  }
+	  
+	  $this->assertStringEndsWith('Object not written.', $message);
 	  
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
@@ -369,7 +386,7 @@ class CartTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Add a product variaiton to the cart
+	 * Add a product variation to the cart
 	 */
 	function testAddProductVariationToCart() {
     $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
@@ -425,6 +442,7 @@ class CartTest extends FunctionalTest {
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 
 	  $this->assertEquals('Disabled', $teeshirtAVariation->Status);
+	  $this->assertFalse($teeshirtAVariation->isEnabled());
 	  
 	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
 	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);

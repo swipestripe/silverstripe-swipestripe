@@ -19,7 +19,8 @@ class ItemOption extends DataObject {
 	  'Item' => 'Item'
 	);
 	
-	public static $defaults = array(
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 	
 	/**

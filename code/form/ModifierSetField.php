@@ -14,6 +14,8 @@ class ModifierSetField extends DropdownField {
 	 */
 	protected $template = "ModifierSetField";
 	
+	private $className;
+	
 	/**
 	 * Creates a new optionset field for order modifers with the naming convention
 	 * Modifiers[ClassName] where ClassName is name of modifier class.
@@ -29,12 +31,17 @@ class ModifierSetField extends DropdownField {
 	  //TODO force the use of class name for the name field of modifier fields
 	  //e.g: FlatFeeShipping
 
+	  $this->className = $name;
 	  $name = "Modifiers[$name]";
 		parent::__construct($name, $title, $source, $value, $form);
 	}
 	
   function FieldHolder() {
 		return $this->renderWith($this->template);
+	}
+	
+	function getModifierClass() {
+	  return $this->className;
 	}
 	
 }

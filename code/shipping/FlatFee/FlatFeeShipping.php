@@ -104,9 +104,5 @@ class FlatFeeShipping extends Shipping {
 	function getFormRequirements() {
 	  return;
 	}
-	
-	function isValid() {
-	  
-	}
 
 }

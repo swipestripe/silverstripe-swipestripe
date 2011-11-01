@@ -24,20 +24,20 @@ class OrderFormValidator extends RequiredFields {
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();
 		
-		$currentOrder = CartControllerExtension::get_current_order();
-		$items = $currentOrder->Items();
+		//$currentOrder = CartControllerExtension::get_current_order();
+		//$items = $currentOrder->Items();
 
 		//Check the validity of item fields
+		/*
 		foreach ($this->items as $fieldName) {
 
 		  $formField = $fields->dataFieldByName($fieldName);
 		  
+		  //TODO wrap this validation up in the OrderItemField
+		  
 		  //Make sure item is in the order
 		  //make sure the item is valid
-		  $itemID  = str_replace('OrderItem', '', $fieldName);
-		  
-		  //TODO use OrderItemField->getItemID();
-		  
+		  $itemID = $formField->getItemID();
 		  if ($itemID && is_numeric($itemID)) {
 		     $item = $items->find('ID', $itemID);
 		  }
@@ -74,25 +74,42 @@ class OrderFormValidator extends RequiredFields {
 				$valid = false;
 		  }
 		}
+		*/
 		
-		//Check the validity of order modifiers
-		foreach ($this->modifiers as $fieldName) {
-		  
-		  $formField = $fields->dataFieldByName($fieldName);
-		  
-		  //TODO use ModifierSetField->getClassName();
-		  
-		  //$className = str_replace('OrderItem', '', $fieldName);
-		  
-		  SS_Log::log(new Exception(print_r($fieldName, true)), SS_Log::NOTICE);
-		  SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
-		}
-		
+		/*
 		$this->errors[] = true;
 		$valid = false;
+		*/
 		
 		//Check the order is valid
 		$currentOrder = CartControllerExtension::get_current_order();
+		if (!$currentOrder) {
+		  $this->form->sessionMessage(
+  		  _t('Form.ORDER_IS_NOT_VALID', 'Your cart seems to be empty, please add an item from the shop'),
+  		  'bad'
+  		);
+  		
+  		//Have to set an error for Form::validate()
+  		$this->errors[] = true;
+  		$valid = false;
+		}
+		else {
+		  $validation = $currentOrder->validateForCart();
+		  
+		  if (!$validation->valid()) {
+		    
+		    $this->form->sessionMessage(
+    		  _t('Form.ORDER_IS_NOT_VALID', 'There seems to be a problem with your order. ' . $validation->message()),
+    		  'bad'
+    		);
+    		
+    		//Have to set an error for Form::validate()
+    		$this->errors[] = true;
+    		$valid = false;
+		  }
+		}
+		
+    /*
 	  if (!$currentOrder || !$currentOrder->isValid()) {
 
 	    $this->form->sessionMessage(
@@ -104,6 +121,7 @@ class OrderFormValidator extends RequiredFields {
   		$this->errors[] = true;
   		$valid = false;
 		}
+		*/
 
 		return $valid;
 	}

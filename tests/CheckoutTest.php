@@ -172,7 +172,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->logOut();
 	  
 	  $this->assertEquals(false, $productA->isPublished());
-	  $this->assertEquals(false, $order->isValid());
+	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
 	  $this->loginAs('buyer');
@@ -224,7 +224,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->logOut();
 	  
 	  $this->assertEquals(false, $productA->isInDB());
-	  $this->assertEquals(false, $order->isValid());
+	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
 	  $this->loginAs('buyer');
@@ -283,7 +283,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->logOut();
 
 	  $this->assertEquals('Disabled', $shortsAVariation->Status);
-	  $this->assertEquals(false, $order->isValid());
+	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
 	  $this->loginAs('buyer');
@@ -341,7 +341,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->logOut();
 
 	  $this->assertEquals(false, $shortsAVariation->isInDB());
-	  $this->assertEquals(false, $order->isValid());
+	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
 	  $this->loginAs('buyer');
@@ -372,7 +372,7 @@ class CheckoutTest extends FunctionalTest {
 	  $items = $order->Items();
 	  $this->assertEquals(0, $items->Count());
 	  
-	  $this->assertEquals(false, $order->isValid());
+	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
@@ -429,7 +429,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->logOut();
 	  
 	  $this->assertEquals(false, $variation->isInDB());
-	  $this->assertEquals(false, $order->isValid());
+	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
 	  $this->loginAs('buyer');
@@ -531,5 +531,4 @@ class CheckoutTest extends FunctionalTest {
 
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	}
-	
 }

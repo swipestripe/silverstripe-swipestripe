@@ -21,6 +21,10 @@ class Modifier extends DataObject {
 	
 	protected static $currency = 'NZD';
 	
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=InnoDB'
+	);
+	
 	/**
 	 * Set the currency code that this site uses.
 	 * @param string $currency Currency code. e.g. "NZD"
@@ -44,6 +48,10 @@ class Modifier extends DataObject {
 	 */
 	function validate() {
 	  return parent::validate();
+	}
+	
+	function Object() {
+	  return DataObject::get_by_id($this->ModifierClass, $this->ModifierOptionID);
 	}
 
 }

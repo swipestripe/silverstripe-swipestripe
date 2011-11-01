@@ -114,7 +114,8 @@ class Variation extends DataObject {
   /**
    * 
    * @return Boolean
-   */
+   * @deprecated
+   *
   public function isValid() {
 
     $valid = true;
@@ -133,11 +134,41 @@ class Variation extends DataObject {
 
     return $valid;
   }
+  */
+  
+  function validateForCart() {
+    
+    $result = new ValidationResult(); 
+	  
+	  if (!$this->hasValidOptions()) {
+	    $result->error(
+	      'This product does not have valid options set',
+	      'VariationValidOptionsError'
+	    );
+	  }
+	  
+    if (!$this->isEnabled()) {
+	    $result->error(
+	      'These product options are not available sorry, please choose again',
+	      'VariationValidOptionsError'
+	    );
+	  }
+	  
+    if ($this->isDeleted()) {
+	    $result->error(
+	      'These product options have been deleted sorry, please choose again',
+	      'VariationDeltedError'
+	    );
+	  }
+	  
+	  return $result;
+  }
   
   public function hasValidOptions() {
     //Get the options for the product
     //Get the attributes for the product
     //Each variation should have a valid option for each attribute
+    //Each variation should have only attributes that match the product
     
     $productAttributeOptions = array();
     $productOptions = $this->Product()->Options();
@@ -237,12 +268,17 @@ class Variation extends DataObject {
   }
 
   protected function validate() {
+    
+    $result = new ValidationResult(); 
 
     if ($this->isDuplicate()) {
-      return new ValidationResult(false, 'Duplicate variation for this product.');
+      $result->error(
+	      'Duplicate variation for this product',
+	      'VariationDuplicateError'
+	    );
     }
     
-		return new ValidationResult();
+    return $result;
 	}
 
 }

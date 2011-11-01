@@ -24,6 +24,10 @@ class Item extends DataObject {
 	  'DownloadCount' => 0
 	);
 	
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=InnoDB'
+	);
+	
 	/**
 	 * Retrieve the object this item represents (Product)
 	 * TODO serialize product object data and save in item row
@@ -151,9 +155,11 @@ class Item extends DataObject {
 	}
 	
 	/**
+	 * TODO move this to validate() I think
 	 * 
 	 * @return Boolean
-	 */
+	 * @deprecated
+	 *
 	function isValid() {
 	  //Item is valid if it has a product as its Object
 	  //The item should have a Variation if the Product requires a variation
@@ -169,19 +175,67 @@ class Item extends DataObject {
 	    $valid = false;
 	  }
 	  
-	  if ($product && $product->requiresVariation() && (!$variation || !$variation->isValid())) {
+	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid())) {
       $valid = false;
 	  }
 
 	  return $valid;
 	}
+	*/
+	
+	function validateForCart() {
+	  return $this->validate();
+	}
 	
 	/**
-	 * TODO validate before write()
+	 * Validate that product exists and is published, variation exists for product if necessary
+	 * and quantity is greater than 0
+	 * 
+	 * TODO remove the check for $firstWrite when transactions are implemented
 	 * 
 	 * @see DataObject::validate()
 	 */
 	function validate() {
-	  return parent::validate();
+
+	  $result = new ValidationResult(); 
+	  $firstWrite = !$this->ID;
+	  
+	  $product = $this->Object();
+	  $variation = $this->Variation();
+	  $quantity = $this->Quantity;
+	  
+	  //Check that product is published and exists
+	  if (!$product || !$product->exists() || !$product->isPublished()) {
+	    $result->error(
+	      'Product is not published, cannot add item to cart',
+	      'ProductExistsError'
+	    );
+	  }
+	  
+	  //TODO need to change checks for variation so that variation is checked properly when transactions are implemented
+	  //Check that variation exists if required, not on first write when ItemOption hasn't had a chance to be written
+	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid()) && !$firstWrite) {
+      $result->error(
+	      'Product options are required, cannot add item to cart',
+	      'VariationExistsError'
+	    );
+	  }
+	  //If a variation does exist, check that it is valid
+	  if ($variation && !$variation->validateForCart()->valid()) {
+	    $result->error(
+	      'Product options are incorrect, cannot add item to cart',
+	      'VariationIncorrectError'
+	    );
+	  }
+	  
+	  //Check that quantity is correct
+	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
+	    $result->error(
+	      'Quantity for this product needs to be greater than 0, cannot add item to cart',
+	      'QuantityError'
+	    );
+	  }
+
+	  return $result;
 	}
 }

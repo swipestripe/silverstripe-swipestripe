@@ -262,14 +262,13 @@ class Product extends Page {
         $this->duplicateProductImages($images);
       }
     }
-    
-    //Missing an option for one or more of the required attributes, disable
-    //Has non-existent option for one or more of the required attributes, disable
+
+    //If the variation does not have a complete set of valid options, then disable it
     $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
 
     if ($variations) foreach ($variations as $variation) {
       
-      if (!$variation->isValid()) {
+      if (!$variation->hasValidOptions()) {
         $variation->Status = 'Disabled';
         $variation->write();
       }

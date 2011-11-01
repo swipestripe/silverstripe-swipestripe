@@ -102,6 +102,10 @@ class Order extends DataObject {
 		'HasPayment' => 'Money'
 	);
 	
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=InnoDB'
+	);
+	
 	/**
 	 * Filter for order admin area search.
 	 * 
@@ -425,25 +429,12 @@ class Order extends DataObject {
 	 * @param DataObjectSet $productOptions The product variations to be added, usually just one
 	 */
 	function addItem(DataObject $product, $quantity = 1, DataObjectSet $productOptions = null) {
-	  
+
 	  //Check that product options exist if product requires them
+	  //TODO perform this validation in Item->validate(), cannot at this stage because Item is written before ItemOption, no transactions, chicken/egg problem
 	  if ((!$productOptions || !$productOptions->exists()) && $product->requiresVariation()) {
 	    user_error("Cannot add item to cart, product options are required.", E_USER_WARNING);
-	    //TODO return meaningful error to browser in case error not shown
-	    return;
-	  }
-
-	  //Check that the product is published
-	  if (!$product->isPublished()) {
-	    user_error("Cannot add item to cart, product is not published.", E_USER_WARNING);
-	    //TODO return meaningful error to browser in case error not shown
-	    return;
-	  }
-
-	  //If quantity not correct throw warning
-	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-	    user_error("Cannot add item to cart, quantity must be a positive number.", E_USER_WARNING);
-	    //TODO return meaningful error to browser in case error not shown
+	    //Debug::friendlyError();
 	    return;
 	  }
 
@@ -455,6 +446,8 @@ class Order extends DataObject {
       $item->write();
     }
     else {
+
+      //TODO this needs transactions for Item->validate() to check that ItemOptions exist for Item before it is written
       $item = new Item();
       $item->ObjectID = $product->ID;
       $item->ObjectClass = $product->class;
@@ -464,7 +457,7 @@ class Order extends DataObject {
       $item->Quantity = $quantity;
       $item->OrderID = $this->ID;
       $item->write();
-      
+
       if ($productOptions && $productOptions->exists()) foreach ($productOptions as $productOption) {
         $itemOption = new ItemOption();
         $itemOption->ObjectID = $productOption->ID;
@@ -475,7 +468,6 @@ class Order extends DataObject {
         $itemOption->ItemID = $item->ID;
         $itemOption->write();
       }
-      
     }
     
     $this->updateTotal();
@@ -789,7 +781,8 @@ class Order extends DataObject {
 	 * Check if this order has only published products and only enabled variations.
 	 * 
 	 * @return Boolean 
-	 */
+	 * @deprecated
+	 *
 	function isValid() {
 	  
 	  $valid = true;
@@ -798,14 +791,41 @@ class Order extends DataObject {
 	  if (!$items || !$items->exists()) {
 	    $valid = false;
 	  }
-	  
+
 	  if ($items) foreach ($items as $item) {
 	    if (!$item->isValid()) {
 	      $valid = false;
 	    }
 	  }
-	  
 	  return $valid;
+	}
+	*/
+	
+	function validateForCart() {
+	  
+	  $result = new ValidationResult(); 
+	  $items = $this->Items();
+	  
+	  if (!$items || !$items->exists()) {
+	    $result->error(
+	      'There are no items in this order',
+	      'ItemExistsError'
+	    );
+	  }
+	  
+	  if ($items) foreach ($items as $item) {
+	    
+	    $validation = $item->validateForCart();
+	    if (!$validation->valid()) {
+
+	      $result->error(
+  	      'The items in this order are no longer available',
+  	      'ItemValidationError'
+  	    );
+	    }
+	  }
+	  
+	  return $result;
 	}
 	
 	/**
