@@ -9,24 +9,6 @@
  * checkout with deleted flat fee shipping option
  * checkout with wrong flat fee shipping option compared to shipping country
  * 
- * TODO
- * ----
- * 
- * Product Category
- * delete product, does not appear on website
- * delete product, staging versions all up to date and still exist
- * 
- * TEST:
- * Order
- * Order addresses
- * Order modifiers
- * Shipping
- * Product Categories
- * Account page
- * Product 
- * Checkout
- * Payment
- * 
  */
 class OrderModifierTest extends FunctionalTest {
   
