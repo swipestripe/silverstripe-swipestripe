@@ -372,8 +372,8 @@ class Order extends DataObject {
 	  
 	  $this->updatePaymentStatus();
 
-	  //Send a receipt to customer
-		if(!$this->ReceiptSent){
+	  //Send a receipt to customer if payment has been completed
+		if(!$this->ReceiptSent && $this->PaymentStatus == 'Paid'){
 		  
 		  //TODO Need some kind of payment completed flag because 
 		  //this is being sent too soon, before payment details have been filled out
@@ -388,6 +388,7 @@ class Order extends DataObject {
   		$orderEmail->send();
 		}
 		
+		//TODO if payment is processing send an email too?
 		//TODO if payment Status = Failure send a payment email?
 	}
 	
@@ -412,13 +413,12 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * If the order has been totally paid
-	 * This is the most important function in the module.
+	 * If the order has been totally paid.
 	 * 
 	 * @return Boolean
 	 */
 	public function getPaid() {
-	  return ($this->TotalPaid()->getAmount() == $this->Total->getAmount());
+	  return $this->TotalPaid()->getAmount() == $this->Total->getAmount();
 	}
 	
 	/**

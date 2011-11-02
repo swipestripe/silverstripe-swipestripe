@@ -374,7 +374,7 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		Session::clear('Cart.OrderID');
 
-		// Save payment data from form and process payment
+		//Save payment data from form and process payment
 		$form->saveInto($payment);
 		$payment->OrderID = $order->ID;
 		$payment->PaidByID = $member->ID;
@@ -385,18 +385,32 @@ class CheckoutPage_Controller extends Page_Controller {
 		$payment->Amount->setCurrency($order->Total->getCurrency());
 		$payment->write();
 		
-		// Process payment, get the result back
+		//Process payment, get the result back
 		$result = $payment->processPayment($data, $form);
 
-		// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
-		if($result->isProcessing()) {
+    //If instant payment success
+		if ($result->isSuccess()) {
+		  //TODO Need to update order status here
+		  //TODO send a receipt
+		}
+		
+	  //If payment is being processed
+	  //e.g long payment process redirected to another website (PayPal, DPS)
+		if ($result->isProcessing()) {
+		  
+		  SS_Log::log(new Exception(print_r('We are processing this payment right now.', true)), SS_Log::NOTICE);
+		  
+		  //Update payment status, do not send receipt yet
 			return $result->getValue();
 		}
-
-		if($result->isSuccess()) {
-		  //TODO Need to update order status here
+		
+		//If payment failed
+		if (!$result->isSuccess() && !$result->isProcessing()) {
+		  
+		  //Send a failure email
 		}
 
+		//Fallback
 		Director::redirect($order->Link());
 		return true;
 	}

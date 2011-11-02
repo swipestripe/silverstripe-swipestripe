@@ -171,6 +171,27 @@ class ProductTest extends FunctionalTest {
 	 * Try getting options for a product, must be valid options for product variations
 	 */
   function testValidProductOptions() {
-    
+
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+
+	  $this->loginAs('admin');
+    $teeshirtA->doPublish();	  
+	  $this->logOut();
+	  
+	  $this->loginAs('buyer');
+
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  echo $this->mainSession->lastContent();
+	  
+	  //Check that first option select has valid options in it
+	  
+	  //Post data of first option to Product->options() and check the result
+	  
+	  //Post data of first and second option and check the result
+	  
+	  //Change first option value, post data and check the result
+	  
+	  //Change second option value, post data and check the result
   }
 }
