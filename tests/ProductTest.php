@@ -5,17 +5,17 @@
  * 
  * Summary of tests:
  * -----------------
+ * delete product, is unpublished, versions still exist
  * 
  * 
  * TODO
  * ----
  * 
- * Product Category
- * delete product, does not appear on website
- * delete product, staging versions all up to date and still exist
  * new version of product created when amount changed
  * variations disabled when new attribute added
  * add new variation
+ * add product to parent page
+ * add product to multiple categories?
  * 
  */
 class ProductTest extends FunctionalTest {
@@ -60,6 +60,38 @@ class ProductTest extends FunctionalTest {
 	  else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
 	  
 	  return $data;
+	}
+	
+	/**
+	 * Try to delete a product, make sure it is unpublished but that versions remain the same
+	 */
+	function testDeleteProduct() {
+	  
+	  $this->loginAs('admin');
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $productID = $productA->ID; 
+	  
+	  //Publish
+	  $productA->doPublish();
+	  $this->assertTrue($productA->isPublished());
+
+	  $versions = DB::query('SELECT * FROM "Product_versions" WHERE "RecordID" = ' . $productID);
+	  $versionsAfterPublished = array();
+	  foreach ($versions as $versionRow) $versionsAfterPublished[] = $versionRow;
+
+	  
+    //Delete
+	  $productA->delete();
+	  $this->assertTrue(!$productA->isPublished());
+
+	  $versions = DB::query('SELECT * FROM "Product_versions" WHERE "RecordID" = ' . $productID);
+	  $versionsAfterDelete = array();
+	  foreach ($versions as $versionRow) $versionsAfterDelete[] = $versionRow;
+	  
+	  $this->assertTrue($versionsAfterPublished == $versionsAfterDelete);
+	  
+	  
+	  //$versions = DB::query('SELECT * FROM "SiteTree_Live" WHERE "ID" = ' . $productID);
 	}
 
 }
