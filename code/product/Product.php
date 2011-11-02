@@ -167,6 +167,8 @@ class Product extends Page {
 
         $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
 
+        //TODO refactor, this is a really dumb place to be writing default options I think
+        
         //If there aren't any existing options for this attribute on this product,
         //populate with the default options
         $defaultOptions = DataObject::get('Option', "ProductID = 0 AND AttributeID = $attribute->ID");

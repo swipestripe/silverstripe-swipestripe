@@ -45,21 +45,19 @@ Attribute:
   attrSize:
     ID: 1
     Title: Size
-    Description:
-    Created: 2011-10-10 15:48:20
-    LastEdited: 2011-10-10 15:48:54
+    Description: Basic sizes
   attrColor:
     ID: 2
     Title: Color
-    Description:
-    Created: 2011-10-12 15:33:19
-    LastEdited: 2011-10-12 15:33:19
+    Description: Basic colors
   attrMaterial:
     ID: 3
     Title: Material
-    Description:
-    Created: 2011-10-12 15:34:18
-    LastEdited: 2011-10-12 15:34:18
+    Description: Basic materials
+  attrCut:
+    ID: 4
+    Title: Cut
+    Description: Basic cuts
  
 # ------------------------------------------
 # Options
@@ -115,6 +113,18 @@ Option:
     Title: Polyester
     Description: Polyester
     AttributeID: 3
+    ProductID: 0
+  optVeeNeckDefault:
+    ID: 100
+    Title: V Neck
+    Description: V Neck Cut
+    AttributeID: =>Attribute.attrCut
+    ProductID: 0
+  optCrewDefault:
+    ID: 101
+    Title: Crew
+    Description: Crew Cut
+    AttributeID: =>Attribute.attrCut
     ProductID: 0
     
 # TeeshirtA Options

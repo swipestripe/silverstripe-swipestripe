@@ -149,6 +149,7 @@ class Variation extends DataObject {
     $productOptions = $this->Product()->Options();
     $productAttributesMap = $this->Product()->Attributes()->map();
 
+    //Only add attributes that have options for this product
     if ($productOptions) foreach ($productOptions as $option) {
       
       $attribute = $option->Attribute();
