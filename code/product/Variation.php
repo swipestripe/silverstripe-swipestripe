@@ -111,31 +111,6 @@ class Variation extends DataObject {
     if ($this->Stock > 0) return true; 
   }
   
-  /**
-   * 
-   * @return Boolean
-   * @deprecated
-   *
-  public function isValid() {
-
-    $valid = true;
-    
-    if (!$this->hasValidOptions()) {
-      $valid = false;
-    }
-
-    if (!$this->isEnabled()) {
-      $valid = false;
-    }
-    
-    if ($this->isDeleted()) {
-      $valid = false;
-    }
-
-    return $valid;
-  }
-  */
-  
   function validateForCart() {
     
     $result = new ValidationResult(); 

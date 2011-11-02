@@ -15,31 +15,11 @@
  * submit checkout without necessary details
  * submit checkout without specifying payment gateway
  * 
- * 
  * TODO
  * ----
- * when last item deleted from the cart, remove order modifiers also
- * add shipping options to checkout
- * submit checkout with shipping option that does not match shipping country (validate)
  * process payment
  * send receipt
  * checkout addresses correct
- * 
- * Product Category
- * delete product, does not appear on website
- * delete product, staging versions all up to date and still exist
- * 
- * TEST:
- * Order
- * Order addresses
- * Order modifiers
- * Shipping
- * Product Categories
- * Account page
- * Product 
- * Checkout
- * Payment
- * 
  */
 class CheckoutTest extends FunctionalTest {
   
@@ -52,7 +32,7 @@ class CheckoutTest extends FunctionalTest {
 
 		//Check that payment module is installed
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
-		$this->assertTrue(class_exists('ChequePayment'), 'Cheque Payment module is installed.');
+		$this->assertTrue(class_exists('ChequePayment'), 'Cheque Payment is installed.');
 		
 		//Force payment method to be basic cheque payment
 		Payment::set_supported_methods(array(

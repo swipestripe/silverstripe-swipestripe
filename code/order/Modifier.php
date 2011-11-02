@@ -27,6 +27,9 @@ class Modifier extends DataObject {
 	
 	/**
 	 * Set the currency code that this site uses.
+	 * 
+	 * TODO pick up currency from a central location
+	 * 
 	 * @param string $currency Currency code. e.g. "NZD"
 	 */
 	public static function set_currency($currency) {
@@ -50,6 +53,9 @@ class Modifier extends DataObject {
 	  return parent::validate();
 	}
 	
+	/**
+	 * This might return empty if the modifier has been deleted
+	 */
 	function Object() {
 	  return DataObject::get_by_id($this->ModifierClass, $this->ModifierOptionID);
 	}

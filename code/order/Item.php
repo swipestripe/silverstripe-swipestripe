@@ -154,35 +154,6 @@ class Item extends DataObject {
 	  return $variation;
 	}
 	
-	/**
-	 * TODO move this to validate() I think
-	 * 
-	 * @return Boolean
-	 * @deprecated
-	 *
-	function isValid() {
-	  //Item is valid if it has a product as its Object
-	  //The item should have a Variation if the Product requires a variation
-	  //The variation should be valid as well
-	  //check product is published
-	  
-	  $valid = true;
-	  $product = $this->Object();
-	  $variation = $this->Variation();
-	  
-	  //Check that product is published and exists
-	  if (!$product || !$product->exists() || !$product->isPublished()) {
-	    $valid = false;
-	  }
-	  
-	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid())) {
-      $valid = false;
-	  }
-
-	  return $valid;
-	}
-	*/
-	
 	function validateForCart() {
 	  return $this->validate();
 	}

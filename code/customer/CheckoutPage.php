@@ -239,7 +239,6 @@ class CheckoutPage_Controller extends Page_Controller {
 
 	  if ($items) foreach ($items as $item) {
 	    $fields['Items'][] = new OrderItemField($item);
-	    $validator->addItemField('OrderItem' . $item->ID);
 	  }
 	}
 	
@@ -247,7 +246,6 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		foreach (Shipping::combined_form_fields($order) as $field) {
 		  $fields['Modifiers'][] = $field;
-		  $validator->addModifierField($field->Name());
 		}
 	}
 	
@@ -304,9 +302,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 
 		//Save or create a new member
-		
-		//TODO use the billing address info for the member
-		//Save billing address info to Member for Payment class to work
+		//Need to save billing address info to Member for Payment class to work
 
 		$memberData = array(
 		  'FirstName' => $data['Billing']['FirstName'],

@@ -676,6 +676,29 @@ Address:
     State: Auckland
     Country: NZ
   
-    
+# ------------------------------------------
+# Flat fee shipping countries
+# ------------------------------------------    
+FlatFeeShippingCountry:
+  MainCentreNewZealand:
+    ClassName: FlatFeeShippingCountry
+    CountryCode: NZ
+    AmountCurrency: NZD
+    AmountAmount: 10.00
+    Description: To Any Main Centre In New Zealand
+  RuralNewZealand:
+    ClassName: FlatFeeShippingCountry
+    CountryCode: NZ
+    AmountCurrency: NZD
+    AmountAmount: 15.00
+    Description: To Any Rural Address In New Zealand
+  MainCentreAustralia:
+    ClassName: FlatFeeShippingCountry
+    CountryCode: AU
+    AmountCurrency: NZD
+    AmountAmount: 25.00
+    Description: To Any Main Centre in Australia
+  
+  
     
     

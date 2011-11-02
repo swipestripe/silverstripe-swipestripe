@@ -3,18 +3,19 @@
 class ModifierSetField extends DropdownField {
 	
 	/**
-	 * @var Array
-	 */
-	protected $disabledItems = array();
-	
-	/**
 	 * Template for main rendering
 	 *
 	 * @var string
 	 */
 	protected $template = "ModifierSetField";
+
+	/**
+	 * To hold the modifier that will set the value for the Modifier
+	 * 
+	 * @var Object
+	 */
+	protected $modifier;
 	
-	private $className;
 	
 	/**
 	 * Creates a new optionset field for order modifers with the naming convention
@@ -26,13 +27,11 @@ class ModifierSetField extends DropdownField {
 	 * @param value The current value
 	 * @param form The parent form
 	 */
-	function __construct($name, $title = "", $source = array(), $value = "", $form = null) {
-	  
-	  //TODO force the use of class name for the name field of modifier fields
-	  //e.g: FlatFeeShipping
+	function __construct($modifier, $title = "", $source = array(), $value = "", $form = null) {
 
-	  $this->className = $name;
-	  $name = "Modifiers[$name]";
+	  $name = "Modifiers[$modifier->ClassName]";
+	  $this->modifier = $modifier;
+
 		parent::__construct($name, $title, $source, $value, $form);
 	}
 	
@@ -40,8 +39,8 @@ class ModifierSetField extends DropdownField {
 		return $this->renderWith($this->template);
 	}
 	
-	function getModifierClass() {
-	  return $this->className;
+	function validate($validator){
+	  return true;
 	}
 	
 }

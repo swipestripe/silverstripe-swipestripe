@@ -777,30 +777,6 @@ class Order extends DataObject {
 	  return $address;
 	}
 	
-	/**
-	 * Check if this order has only published products and only enabled variations.
-	 * 
-	 * @return Boolean 
-	 * @deprecated
-	 *
-	function isValid() {
-	  
-	  $valid = true;
-	  $items = $this->Items();
-	  
-	  if (!$items || !$items->exists()) {
-	    $valid = false;
-	  }
-
-	  if ($items) foreach ($items as $item) {
-	    if (!$item->isValid()) {
-	      $valid = false;
-	    }
-	  }
-	  return $valid;
-	}
-	*/
-	
 	function validateForCart() {
 	  
 	  $result = new ValidationResult(); 

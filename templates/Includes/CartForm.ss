@@ -25,12 +25,12 @@
 	        $FieldHolder
 	      <% end_control %>
 	      
-	      <tr class="gap summary total" id="Total">
-	        <% control Cart %> 
-	        <td scope="row" class="threeColHeader total" colspan="4">Total</td>
-	        <td class="right">$Total.Nice</td>
-	        <% end_control %>
-	      </tr>
+	      <% control Cart %>
+	      <tr class="gap summary total" id="SubTotal">
+		      <td class="threeColHeader total" colspan="4">Sub Total</td>
+		      <td class="right">$SubTotal.Nice ($SubTotal.Currency)</td>
+		    </tr>
+		    <% end_control %>
 	    
 	    <% else %>
 	      <tr  class="itemRow">

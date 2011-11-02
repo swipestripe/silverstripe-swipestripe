@@ -31,6 +31,8 @@ class OrderItemField extends FormField {
 	
 	function validate($validator) {
 	  
+	  //TODO need to check that item is correct in here maybe
+	  
 	  $valid = true;
 	  $item = $this->Item();
 	  $currentOrder = CartControllerExtension::get_current_order();
@@ -69,60 +71,6 @@ class OrderItemField extends FormField {
   			);
   	    $valid = false;
 	    }
-
-	    /*
-	    //These checks are very similar to Item->validate()
-  	  $product = $item->Object();
-  	  $variation = $item->Variation();
-  	  $quantity = $item->Quantity;
-  	  
-  	  //Check that product is published and exists
-  	  if (!$product || !$product->exists() || !$product->isPublished()) {
-  	    
-    	  $errorMessage = _t('Form.ITEM_IS_NOT_VALID', 'Sorry, this product is no longer available.');
-  			if ($msg = $this->getCustomValidationMessage()) {
-  				$errorMessage = $msg;
-  			}
-  			
-  			$validator->validationError(
-  				$this->Name(),
-  				$errorMessage,
-  				"error"
-  			);
-  	    $valid = false;
-  	  }
-  	  
-  	  //Check that product variation exists if it is required
-  	  if ($product && $product->requiresVariation() && (!$variation || !$variation->isValid())) {
-  	    
-        $errorMessage = _t('Form.ITEM_IS_NOT_VALID', 'Sorry, this product is no longer available.');
-  			if ($msg = $this->getCustomValidationMessage()) {
-  				$errorMessage = $msg;
-  			}
-  			
-  			$validator->validationError(
-  				$this->Name(),
-  				$errorMessage,
-  				"error"
-  			);
-  	    $valid = false;
-  	  }
-  	  
-  	  //Check that quantity is greater than 0
-  	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-  	    $errorMessage = _t('Form.ITEM_IS_NOT_VALID', 'Quantity of this product should be greater than zero.');
-  			if ($msg = $this->getCustomValidationMessage()) {
-  				$errorMessage = $msg;
-  			}
-  			
-  			$validator->validationError(
-  				$this->Name(),
-  				$errorMessage,
-  				"error"
-  			);
-  	    $valid = false;
-  	  }
-  	  */
 	  }
 	  
 	  return $valid;

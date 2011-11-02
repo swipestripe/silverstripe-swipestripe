@@ -46,7 +46,9 @@ class FlatFeeShipping extends Shipping {
   
   /**
    * Use the optionID to get the description summary for the FlatFeeShippingCountry
+   * This is used as the description of the modifier in the Order, so it should be descriptive 
    * 
+   * @see Order::addModifiersAtCheckout()
    * @see Shipping::Description()
    * @param $optionID FlatFeeShippingCountry ID
    */
@@ -67,7 +69,7 @@ class FlatFeeShipping extends Shipping {
         return; 
       }
     }
-	  return $description;
+	  return 'Shipping ' . $description;
   }
 	
   function getFormFields(Order $order) {
@@ -90,8 +92,8 @@ class FlatFeeShipping extends Shipping {
   	    if ($country->CountryCode != $shippingCountry) $flatFeeShippingCountries->remove($country);
   	  }
   
-  	  $fields->push(new ModifierSetField(
-  	  	'FlatFeeShipping', 
+  	  $fields->push(new FlatFeeShippingField(
+  	    $this,
   	  	'Flat Fee Shipping',
   	  	$flatFeeShippingCountries->map('ID', 'DescriptionSummary'),
   	  	$flatFeeShippingCountries->First()->ID
