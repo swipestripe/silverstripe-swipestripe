@@ -23,19 +23,12 @@ class OptionGroupField extends CompositeField {
 		//Use the product to get the attributes and options and set them to the class
 		$items = new FieldSet();
 	  $attributes = $this->product->Attributes()->map();
-    
+	  
     if ($attributes) foreach ($attributes as $id => $title) {
       
+      $options = $this->product->getOptionsForAttribute($id);
+      
       /*
-      $options = DataObject::get('Option', "ProductID = $product->ID AND AttributeID = $id");
-      
-      if ($options) { 
-        $optionsField = new OptionField($id, $title, $options);
-        $optionsField->setEmptyString('Please select');
-        $items->push($optionsField);
-      }
-      */
-      
       $variations = $product->Variations();
       $options = new DataObjectSet();
       if ($variations && $variations->exists()) foreach ($variations as $variation) {
@@ -45,6 +38,7 @@ class OptionGroupField extends CompositeField {
           if ($option) $options->push($option); 
         }
       }
+      */
       
       if ($options->exists()) {
         $optionsField = new OptionField($id, $title, $options);

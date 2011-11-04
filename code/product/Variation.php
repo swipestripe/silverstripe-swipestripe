@@ -46,9 +46,15 @@ class Variation extends DataObject {
 	  return null;
 	}
 	
+	/**
+	 * TODO refactor this to getOptionForAttribute()
+	 * 
+	 * @param unknown_type $attributeID
+	 */
 	public function getAttributeOption($attributeID) {
 	  $options = $this->Options();
 	  if ($options && $options->exists()) foreach ($options as $option) {
+	    
 	    if ($option->AttributeID == $attributeID) {
 	      return $option;
 	    }

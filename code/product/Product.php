@@ -363,6 +363,21 @@ class Product extends Page {
     $attributes = $this->Attributes();
     return $attributes && $attributes->exists();
   }
+  
+  public function getOptionsForAttribute($attributeID) {
+    
+    $options = new DataObjectSet();
+    $variations = $this->Variations();
+    
+    if ($variations && $variations->exists()) foreach ($variations as $variation) {
+
+      if ($variation->isEnabled()) {
+        $option = $variation->getAttributeOption($attributeID);
+        if ($option) $options->push($option); 
+      }
+    }
+    return $options;
+  }
 
 }
 class Product_Controller extends Page_Controller {
@@ -518,10 +533,12 @@ class Product_Controller extends Page_Controller {
     $nextAttributeID = $request->postVar('NextAttributeID');
     
     //Filter variations to match attribute ID and option ID
+    //Variations need to have the same option for each attribute ID in POST data to be considered
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
       $variationOptions = array();
-      if ($attributeOptions && is_array($attributeOptions)) foreach ($attributeOptions as $attributeID => $optionID) {
+      //if ($attributeOptions && is_array($attributeOptions)) 
+      foreach ($attributeOptions as $attributeID => $optionID) {
         
         //Get option for attribute ID, if this variation has options for every attribute in the array then add it to filtered
         $attributeOption = $variation->getAttributeOption($attributeID);
@@ -534,6 +551,7 @@ class Product_Controller extends Page_Controller {
     }
     
     //Find options in filtered variations that match next attribute ID
+    //All variations must have options for all attributes so this is belt and braces really
     if ($filteredVariations && $filteredVariations->exists()) foreach ($filteredVariations as $variation) {
       $attributeOption = $variation->getAttributeOption($nextAttributeID);
       if ($attributeOption) $options->push($attributeOption);

@@ -8,7 +8,7 @@
  * delete product, is unpublished, versions still exist
  * new version of product created when amount changed
  * variations disabled when new attribute added
- * correct options for variations returned on product page
+ * correct options for variations returned on product page on first, second and third attribute dropdowns
  * 
  * TODO
  * ----
@@ -168,30 +168,162 @@ class ProductTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Try getting options for a product, must be valid options for product variations
+	 * Load the project page and test the first select for correct product options
+	 * 
+	 * # Teeshirt Variations
+	 * # Small, Red, Cotton
+	 * # Small, Red, Polyester
+	 * # Small, Purple, Cotton
+	 * # Small, Purple, Polyester
+	 * #
+	 * # Medium, Purple, Cotton
+	 * # Medium, Purple, Silk
+	 * #
+	 * # Extra Large, Red, Cotton
+	 * # Extra Large, Red, Polyester
+	 * # Extra Large, Purple, Cotton
 	 */
-  function testValidProductOptions() {
+  function testProductOptionsFirstSet() {
 
 	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-
+	  $attributes = $teeshirtA->Attributes();
+	  $options = $teeshirtA->Options();
+	  $variations = $teeshirtA->Variations();
+	  
 	  $this->loginAs('admin');
     $teeshirtA->doPublish();	  
 	  $this->logOut();
 	  
 	  $this->loginAs('buyer');
-
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  echo $this->mainSession->lastContent();
+	  //Check that options fields exist for each attribute
+	  $attributeOptionsMap = array();
+	  $firstAttributeID = null;
+	  foreach ($attributes as $attribute) {
+	    
+	    if (!$firstAttributeID) $firstAttributeID = $attribute->ID;
+	    
+	    $this->assertPartialMatchBySelector('#Options['.$attribute->ID.']', 1);
+	    
+	    $options = $teeshirtA->getOptionsForAttribute($attribute->ID);
+	    $attributeOptionsMap[$attribute->ID] = $options->map();
+	  }
+    
 	  
 	  //Check that first option select has valid options in it
+	  $tempAttributeOptionsMap = $attributeOptionsMap;
+	  $firstAttributeOptions = array_shift($tempAttributeOptionsMap);
 	  
-	  //Post data of first option to Product->options() and check the result
+	  $productPage = new DOMDocument();
+	  $productPage->loadHTML($this->mainSession->lastContent());
+	  //echo $productPage->saveHTML();
+
+	  //Find the options for the first attribute select
+	  $selectFinder = new DomXPath($productPage);
+	  $firstAttributeSelectID = 'Form_AddToCartForm_Options-'.$firstAttributeID;
+	  $firstSelect = $selectFinder->query("//select[@id='$firstAttributeSelectID']");
 	  
-	  //Post data of first and second option and check the result
-	  
-	  //Change first option value, post data and check the result
-	  
-	  //Change second option value, post data and check the result
+	  foreach ($firstSelect as $node) {
+
+	    $tmp_doc = new DOMDocument(); 
+      $tmp_doc->appendChild($tmp_doc->importNode($node, true));        
+      $innerHTML = $tmp_doc->saveHTML();
+
+      $optionFinder = new DomXPath($tmp_doc);
+
+  	  if ($firstAttributeOptions) foreach ($firstAttributeOptions as $optionID => $optionTitle) {
+  	    $options = $optionFinder->query("//option[@value='$optionID']");
+  	    $this->assertEquals(1, $options->length);
+  	  }
+	  }
   }
+  
+  /**
+   * Post add to cart form and retreive second set of product options
+   */
+  function testProductOptionsSecondSet() {
+    
+    $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $attributes = $teeshirtA->Attributes();
+	  $options = $teeshirtA->Options();
+	  $variations = $teeshirtA->Variations();
+	  
+	  $this->loginAs('admin');
+    $teeshirtA->doPublish();	  
+	  $this->logOut();
+	  
+	  $this->loginAs('buyer');
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+	  $data = $this->getFormData('Form_AddToCartForm');
+	  unset($data['Options[2]']);
+	  unset($data['Options[3]']);
+	  unset($data['Options[1]']);
+	  
+	  $data['Options'][2] = 12;
+	  $data['NextAttributeID'] = 3;
+	  
+	  $this->post(
+	    Director::absoluteURL($teeshirtA->Link() . '/options/'),
+	    $data
+	  );
+	  
+	  $decoded = json_decode($this->mainSession->lastContent());
+	  
+	  $expected = array(
+	    '14' => 'Cotton',
+	    '15' => 'Polyester'
+	  );
+	  $actual = array();
+	  foreach ($decoded->options as $optionID => $optionName) {
+	    $actual[$optionID] = $optionName;
+	  }
+	  $this->assertEquals($expected, $actual);
+  }
+  
+  /**
+   * Post add to cart form and retreive third set of product options
+   */
+  function testProductOptionsThirdSet() {
+    
+    $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $attributes = $teeshirtA->Attributes();
+	  $options = $teeshirtA->Options();
+	  $variations = $teeshirtA->Variations();
+	  
+	  $this->loginAs('admin');
+    $teeshirtA->doPublish();	  
+	  $this->logOut();
+	  
+	  $this->loginAs('buyer');
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  
+    $data = $this->getFormData('Form_AddToCartForm');
+	  unset($data['Options[2]']);
+	  unset($data['Options[3]']);
+	  unset($data['Options[1]']);
+	  
+	  $data['Options'][2] = 12;
+	  $data['Options'][3] = 14;
+	  $data['NextAttributeID'] = 1;
+	  
+	  $this->post(
+	    Director::absoluteURL($teeshirtA->Link() . '/options/'),
+	    $data
+	  );
+	  
+	  $decoded = json_decode($this->mainSession->lastContent());
+	  
+	  $expected = array(
+	    '9' => 'Small',
+	    '11' => 'Extra Large'
+	  );
+	  $actual = array();
+	  foreach ($decoded->options as $optionID => $optionName) {
+	    $actual[$optionID] = $optionName;
+	  }
+	  $this->assertEquals($expected, $actual);
+  }
+	
 }
