@@ -105,7 +105,7 @@ class CheckoutPage_Controller extends Page_Controller {
     
     //Need to disable the js validation because not using custom validation messages
     $validator->setJavascriptValidationHandler('none');
-    
+
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
     if ($shippingAddress) $form->loadDataFrom($shippingAddress->getCheckoutFormData('Shipping')); 
@@ -460,6 +460,13 @@ class CheckoutPage_Controller extends Page_Controller {
     );
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
+    
+    //TODO this is not putting in error messages when validating
+    
+    SS_Log::log(new Exception(print_r('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', true)), SS_Log::NOTICE);
+    SS_Log::log(new Exception(print_r($modifierData, true)), SS_Log::NOTICE);
+    SS_Log::log(new Exception(print_r($data->requestVars(), true)), SS_Log::NOTICE);
+    $form->validate();
 
 	  return $form->renderWith('CheckoutFormOrder');
 	}

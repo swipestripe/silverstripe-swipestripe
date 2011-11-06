@@ -178,7 +178,7 @@ class Item extends DataObject {
 	  //Check that product is published and exists
 	  if (!$product || !$product->exists() || !$product->isPublished()) {
 	    $result->error(
-	      'Product is not published, cannot add item to cart',
+	      'Sorry this product is no longer available',
 	      'ProductExistsError'
 	    );
 	  }
@@ -187,14 +187,14 @@ class Item extends DataObject {
 	  //Check that variation exists if required, not on first write when ItemOption hasn't had a chance to be written
 	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid()) && !$firstWrite) {
       $result->error(
-	      'Product options are required, cannot add item to cart',
+	      'Sorry, product options are incorrect',
 	      'VariationExistsError'
 	    );
 	  }
 	  //If a variation does exist, check that it is valid
 	  if ($variation && !$variation->validateForCart()->valid()) {
 	    $result->error(
-	      'Product options are incorrect, cannot add item to cart',
+	      'Sorry, product options are incorrect',
 	      'VariationIncorrectError'
 	    );
 	  }
@@ -202,7 +202,7 @@ class Item extends DataObject {
 	  //Check that quantity is correct
 	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
 	    $result->error(
-	      'Quantity for this product needs to be greater than 0, cannot add item to cart',
+	      'Quantity for this product needs to be greater than 0',
 	      'QuantityError'
 	    );
 	  }

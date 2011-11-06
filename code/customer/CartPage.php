@@ -1,6 +1,5 @@
 <?php
-class CartPage extends Page
-{
+class CartPage extends Page {
 
   public function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -75,7 +74,7 @@ class CartPage_Controller extends Page_Controller {
 	 */
 	function CartForm() {
 	  $fields = new FieldSet();
-	  $validator = new RequiredFields();
+	  $validator = new CartFormValidator();
 	  $currentOrder = $this->Cart();
 	  $items = $currentOrder->Items();
 	  
@@ -109,7 +108,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function updateCart(Array $data, Form $form) {
-	  $this->saveCart($data);
+	  $this->saveCart($data, $form);
 	  $this->redirectBack();
 	}
 	
@@ -125,36 +124,26 @@ class CartPage_Controller extends Page_Controller {
 	  if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
 	    $this->redirect($checkoutPage->AbsoluteLink());
 	  }
-	  else user_error("Cannot go to checkout page because it does not exist.", E_USER_WARNING);
+	  else Debug::friendlyError(500);
 	}
 	
-	private function saveCart(Array $data) {
-	  
+	private function saveCart(Array $data, Form $form) {
+
 	  $currentOrder = Product_Controller::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 
 	  if ($quantities) foreach ($quantities as $itemID => $quantity) {
-	    
-  	  //If quantity not correct throw error
-  	  if (!is_numeric($quantity) || $quantity < 0) {
-  	    user_error("Cannot change quantity, quantity must be a non negative number.", E_USER_WARNING);
-  	    //TODO return meaningful error to browser in case error not shown
-  	    return;
-  	  }
 
 	    if ($item = $currentOrder->Items()->find('ID', $itemID)) {
-	      
   	    if ($quantity == 0) {
     	    $item->delete();
     	  }
     	  else {
     	    $item->Quantity = $quantity;
-	        $item->write();
+  	      $item->write();
     	  }
 	    }
 	  }
-	  
 	  $currentOrder->updateTotal();
 	}
-
 }

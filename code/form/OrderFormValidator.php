@@ -40,7 +40,7 @@ class OrderFormValidator extends RequiredFields {
     		$valid = false;
 		  }
 		}
-
+		
 		return $valid;
 	}
 	

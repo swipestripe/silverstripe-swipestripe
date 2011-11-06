@@ -30,9 +30,7 @@ class OrderItemField extends FormField {
 	}
 	
 	function validate($validator) {
-	  
-	  //TODO need to check that item is correct in here maybe
-	  
+
 	  $valid = true;
 	  $item = $this->Item();
 	  $currentOrder = CartControllerExtension::get_current_order();

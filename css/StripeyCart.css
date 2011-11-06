@@ -228,13 +228,21 @@ list-style-type:none;
 margin-bottom:15px;
 }
 
-#Checkout span.error,#Checkout span.required,#Checkout span.validation,#Checkout p.message {
+#Checkout span.error,#Checkout span.required,#Checkout span.validation,#Checkout #Order p.message {
 color:red;
 font-size:14px;
 font-style:italic;
 margin-bottom:5px;
 width:100%;
 float: left;
+}
+
+#Checkout p.message {
+color:red;
+font-size:14px;
+font-style:italic;
+margin-bottom:5px;
+width:100%;
 }
 
 h3#Form_OrderForm_HeaderFieldPayment-Type {
