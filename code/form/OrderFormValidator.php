@@ -9,6 +9,8 @@ class OrderFormValidator extends RequiredFields {
 	 *              FALSE.
 	 */
 	function php($data) {
+	  
+	  //TODO move the form error messages to CheckoutForm::validate()
 
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();

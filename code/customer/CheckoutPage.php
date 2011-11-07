@@ -421,9 +421,8 @@ class CheckoutPage_Controller extends Page_Controller {
     $validator = new OrderFormValidator();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = Product_Controller::get_current_order();
-
-    //Add addresses to order, then when getting the shipping fields use the shipping address to 
-    //filter results
+    
+    //Add addresses to order, when getting the shipping fields use the shipping address to filter results
     $order->addAddressesAtCheckout($data->requestVars());
     
     //Add order item fields
@@ -431,7 +430,7 @@ class CheckoutPage_Controller extends Page_Controller {
     
     //Add modifier fields
     $this->addModifierFields($fields, $validator, $order);
- 
+
     //Modifier fields might have changed, so update the order with new defaults
     //by getting the new modifier field values and passing to addModifiersAtCheckout()
     //Also check to set the fields to the same values as passed by POSTed data
@@ -446,6 +445,7 @@ class CheckoutPage_Controller extends Page_Controller {
         
         //Set the field value to what was passed in POST if possible
         $optionVals = array_keys($field->getSource());
+        
         if (in_array($modifierData[$modifierType], $optionVals)) {
           $field->setValue($modifierData[$modifierType]);
         }
@@ -455,19 +455,14 @@ class CheckoutPage_Controller extends Page_Controller {
     }
     $order->addModifiersAtCheckout(array('Modifiers' => $modifierData));
     
+    
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')
     );
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
-    
-    //TODO this is not putting in error messages when validating
-    
-    SS_Log::log(new Exception(print_r('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', true)), SS_Log::NOTICE);
-    SS_Log::log(new Exception(print_r($modifierData, true)), SS_Log::NOTICE);
-    SS_Log::log(new Exception(print_r($data->requestVars(), true)), SS_Log::NOTICE);
-    $form->validate();
 
+    $form->validate();
 	  return $form->renderWith('CheckoutFormOrder');
 	}
 

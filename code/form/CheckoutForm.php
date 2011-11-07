@@ -66,22 +66,28 @@ class CheckoutForm extends Form {
 	 * @see Form::validate()
 	 */
   function validate(){
-    
+
 		if($this->validator){
 			$errors = $this->validator->validate();
+			
+			//TODO errors seem to be getting populated with every error after form submission with one error
+			//SS_Log::log(new Exception(print_r($errors, true)), SS_Log::NOTICE);
 
-			if($errors){
-				if(Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
-					FormResponse::status_message(_t('Form.VALIDATIONFAILED', 'Validation failed'), 'bad');
-					foreach($errors as $error) {
-						FormResponse::add(sprintf(
-							"validationError('%s', '%s', '%s');\n",
-							Convert::raw2js($error['fieldName']),
-							Convert::raw2js($error['message']),
-							Convert::raw2js($error['messageType'])
-						));
-					}
-				} else {
+			if ($errors){
+
+				if (Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
+				  
+				  //Set error messages to form fields for display after form is rendered
+				  $fields = $this->Fields();
+
+				  foreach ($errors as $errorData) {
+				    $field = $fields->dataFieldByName($errorData['fieldName']);
+				    $field->setError($errorData['message'], $errorData['messageType']);
+				    $fields->replaceField($errorData['fieldName'], $field);
+				  }
+				} 
+				else {
+				
 					$data = $this->getData();
 
 					$formError = array();
@@ -103,5 +109,5 @@ class CheckoutForm extends Form {
 		}
 		return true;
 	}
-
 }
+

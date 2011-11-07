@@ -795,7 +795,7 @@ class Order extends DataObject {
 	    if (!$validation->valid()) {
 
 	      $result->error(
-  	      'The items in this order are no longer available',
+  	      'Some of the items in this order are no longer available, please go to the cart and remove them.',
   	      'ItemValidationError'
   	    );
 	    }
