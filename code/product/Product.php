@@ -291,49 +291,10 @@ class Product extends Page {
     $images->sort('SortOrder', 'ASC');
     return $images->First();
   }
-  
-  /**
-   * Add to cart form for products
-   * TODO validation broken due to overriding the Actions
-   * 
-   * @param unknown_type $quantity
-   * @param unknown_type $redirectURL
-   */
-  function AddToCartForm($quantity = null, $redirectURL = null) {
-    
-    $fields = new FieldSet(
-      new HiddenField('ProductClass', 'ProductClass', $this->ClassName),
-      new HiddenField('ProductID', 'ProductID', $this->ID),
-      new HiddenField('ProductVariationID', 'ProductVariationID', 0),
-      new HiddenField('Redirect', 'Redirect', $redirectURL)
-    );
-
-    //Get the options for this product
-    $optionGroupField = new OptionGroupField('OptionGroup', $this);
-    $fields->push($optionGroupField);
-    
-    $fields->push(new TextField('Quantity', 'Quantity', $quantity));
-    
-    $actions = new FieldSet(
-      new FormAction('add', 'Add To Cart')
-    );
-    $validator = new RequiredFields(
-    	'ProductClass', 
-    	'ProductID',
-      'Quantity'
-    );
-    $validator->setJavascriptValidationHandler('none'); 
-    
-    $controller = Controller::curr();
-    $form = new Form($controller, 'AddToCartForm', $fields, $actions, $validator);
-    $form->disableSecurityToken();
-    
-    //Change the action to accommodate product pages not in the site tree (ParentID = -1)
-	  $form->setFormAction('/product/'.$this->URLSegment.'/add');
-    
-    return $form;
-	}
 	
+	/**
+	 * Summary of product categories for convenience
+	 */
 	function CategoriesSummary() {
 	  $summary = array();
 	  $categories = $this->ProductCategories();
@@ -383,6 +344,7 @@ class Product extends Page {
 class Product_Controller extends Page_Controller {
   
   public static $allowed_actions = array (
+    'AddToCartForm',
   	'add',
     'options',
     'AddToCartForm',
@@ -391,6 +353,7 @@ class Product_Controller extends Page_Controller {
   );
 
   public static $url_handlers = array( 
+    '$ID!/AddToCartForm' => 'AddToCartForm',
     '$ID!/add' => 'add',
     '$ID!/options' => 'options',
     '$ID!/variationprice' => 'variationprice',
@@ -415,15 +378,63 @@ class Product_Controller extends Page_Controller {
         if ($product && $product->exists()) {
           $this->dataRecord = $product; 
           $this->failover = $this->dataRecord;
+          
+          $this->customise(array(
+            'Product' => $this->data()
+          ));
         }
       }
     }
   }
   
 	/**
+   * Add to cart form for products
+   * TODO validation broken due to overriding the Actions
+   * 
+   * @param unknown_type $quantity
+   * @param unknown_type $redirectURL
+   */
+  function AddToCartForm($quantity = null, $redirectURL = null) {
+    
+    $product = $this->data();
+    
+    $fields = new FieldSet(
+      new HiddenField('ProductClass', 'ProductClass', $product->ClassName),
+      new HiddenField('ProductID', 'ProductID', $product->ID),
+      //new HiddenField('ProductVariationID', 'ProductVariationID', 0),
+      new HiddenField('Redirect', 'Redirect', $redirectURL)
+    );
+
+    //Get the options for this product
+    $optionGroupField = new OptionGroupField('OptionGroup', $product);
+    $fields->push($optionGroupField);
+    
+    $fields->push(new QuantityField('Quantity', 'Quantity', $quantity));
+    
+    $actions = new FieldSet(
+      new FormAction('add', 'Add To Cart')
+    );
+    $validator = new AddToCartFormValidator(
+    	'ProductClass', 
+    	'ProductID',
+      'Quantity'
+    );
+    $validator->setJavascriptValidationHandler('none'); 
+    
+    $controller = Controller::curr();
+    $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);
+    //$form->disableSecurityToken();
+    
+    //Change the action to accommodate product pages not in the site tree (ParentID = -1)
+	  //$form->setFormAction('/product/'.$this->URLSegment.'/add');
+    
+    return $form;
+	}
+  
+	/**
    * Add an item to the cart
    */
-  function add() {
+  function add(Array $data, Form $form) {
     self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }
@@ -628,7 +639,7 @@ class Product_Controller extends Page_Controller {
       $data = array(
       	'Product' => $product,
         //'Content' => $this->Content, 
-       	//'Form' => $this->Form 
+       	'Form' => $this->AddToCartForm() 
       );
  
       $ssv = new SSViewer("Page"); 

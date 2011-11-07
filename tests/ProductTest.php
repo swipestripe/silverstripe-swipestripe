@@ -221,7 +221,7 @@ class ProductTest extends FunctionalTest {
 
 	  //Find the options for the first attribute select
 	  $selectFinder = new DomXPath($productPage);
-	  $firstAttributeSelectID = 'Form_AddToCartForm_Options-'.$firstAttributeID;
+	  $firstAttributeSelectID = 'AddToCartForm_AddToCartForm_Options-'.$firstAttributeID;
 	  $firstSelect = $selectFinder->query("//select[@id='$firstAttributeSelectID']");
 	  
 	  foreach ($firstSelect as $node) {
@@ -256,7 +256,7 @@ class ProductTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $data = $this->getFormData('Form_AddToCartForm');
+	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
 	  unset($data['Options[2]']);
 	  unset($data['Options[3]']);
 	  unset($data['Options[1]']);
@@ -299,7 +299,7 @@ class ProductTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-    $data = $this->getFormData('Form_AddToCartForm');
+    $data = $this->getFormData('AddToCartForm_AddToCartForm');
 	  unset($data['Options[2]']);
 	  unset($data['Options[3]']);
 	  unset($data['Options[1]']);

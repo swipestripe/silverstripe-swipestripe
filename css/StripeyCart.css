@@ -442,13 +442,13 @@ padding: 2px;
 min-width: 100px;
 }
 
-#Form_AddToCartForm {
+#AddToCartForm_AddToCartForm {
 }
 
-#Form_AddToCartForm fieldset, #Form_AddToCartForm .Actions {
+#AddToCartForm_AddToCartForm fieldset, #AddToCartForm_AddToCartForm .Actions {
 }
 
-#Form_AddToCartForm .Actions {
+#AddToCartForm_AddToCartForm .Actions {
 padding: 15px;	
 }
 
@@ -465,6 +465,23 @@ clear: left;
 
 #VariationPrice {
 font-size: 14px;	
+}
+
+#Product span.error,#Product span.required,#Product span.validation {
+color:red;
+font-size:14px;
+font-style:italic;
+margin-bottom:5px;
+width:100%;
+float: left;
+}
+
+#Product p.message {
+color:red;
+font-size:14px;
+font-style:italic;
+margin-bottom:5px;
+width:100%;
 }
 
 /* 

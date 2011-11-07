@@ -69,8 +69,6 @@ class CheckoutForm extends Form {
     
 		if($this->validator){
 			$errors = $this->validator->validate();
-			
-			SS_Log::log(new Exception(print_r($errors, true)), SS_Log::NOTICE);
 
 			if($errors){
 				if(Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
@@ -85,8 +83,6 @@ class CheckoutForm extends Form {
 					}
 				} else {
 					$data = $this->getData();
-					
-					SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
 
 					$formError = array();
 					if ($formMessageType = $this->MessageType()) {

@@ -36,8 +36,6 @@ class CartQuantityField extends TextField {
 		$items = $currentOrder->Items();
 		$quantity = $this->Value();
 
-		SS_Log::log(new Exception(print_r($this->Value(), true)), SS_Log::NOTICE);
-		
 		$removingItem = false;
 		if ($quantity == 0) {
 		  $removingItem = true;

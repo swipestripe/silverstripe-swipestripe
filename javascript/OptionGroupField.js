@@ -30,15 +30,15 @@
 	    				$('#'+selects[i]).attr('disabled', 'disabled');
 	    			}
 	    			
-	    			var attributeID = e.currentTarget.id.replace(/Form_AddToCartForm_Options-/i, '');
+	    			var attributeID = e.currentTarget.id.replace(/AddToCartForm_AddToCartForm_Options-/i, '');
 	    			var optionID = e.currentTarget.value;
 
 	    			
 	    			//If the next select exists, then call the AJAX to update it
 	    			if ($('#'+nextID).length) {
 	    				
-	    				var values = $('#Form_AddToCartForm').serialize();
-	    				var nextAttributeID = selects[position + 1].replace(/Form_AddToCartForm_Options-/i, '');
+	    				var values = $('#AddToCartForm_AddToCartForm').serialize();
+	    				var nextAttributeID = selects[position + 1].replace(/AddToCartForm_AddToCartForm_Options-/i, '');
 	    				values += '&NextAttributeID='+nextAttributeID;
 	    				
 	    				$.ajax({
@@ -50,15 +50,15 @@
 	  						dataObj = $.parseJSON(data);
 	  						
 	  						if(dataObj.options) {
-	  							$('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).removeAttr('disabled');
-		  					    $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).html('');
+	  							$('#AddToCartForm_AddToCartForm_Options-'+dataObj.nextAttributeID).removeAttr('disabled');
+		  					    $('#AddToCartForm_AddToCartForm_Options-'+dataObj.nextAttributeID).html('');
 		  					    
 		  					    $.each(dataObj.options, function(index, val) {
-		  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID);
+		  					    	$("<option value='"+index+"'>"+val+"</option>").appendTo('#AddToCartForm_AddToCartForm_Options-'+dataObj.nextAttributeID);
 		  					    });
 		  					  
 		  					    //if (dataObj.count == 1) {
-		  						  $('#Form_AddToCartForm_Options-'+dataObj.nextAttributeID).change();
+		  						  $('#AddToCartForm_AddToCartForm_Options-'+dataObj.nextAttributeID).change();
 		  					    //}
 	  						}
 	  					  }
@@ -71,7 +71,7 @@
     		//Get price difference for the current variation selected
     		$(this).change(function(e) {
     			
-    			var values = $('#Form_AddToCartForm').serialize();
+    			var values = $('#AddToCartForm_AddToCartForm').serialize();
     			
     			$.ajax({
 				  url: window.location.pathname + 'variationprice/',

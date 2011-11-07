@@ -90,7 +90,7 @@ class OrderModifierTest extends FunctionalTest {
 	  $this->assertEquals(1, $orders->Count());
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -143,7 +143,7 @@ class OrderModifierTest extends FunctionalTest {
 	  $this->assertEquals(1, $orders->Count());
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -195,7 +195,7 @@ class OrderModifierTest extends FunctionalTest {
 	  $this->assertEquals(1, $orders->Count());
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 

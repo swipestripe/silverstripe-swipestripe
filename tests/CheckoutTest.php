@@ -91,7 +91,7 @@ class CheckoutTest extends FunctionalTest {
 	  $buyer = $this->objFromFixture('Member', 'buyer');
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -135,7 +135,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -187,7 +187,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -243,7 +243,7 @@ class CheckoutTest extends FunctionalTest {
 	  $shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  $this->assertEquals('Enabled', $shortsAVariation->Status);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
@@ -302,7 +302,7 @@ class CheckoutTest extends FunctionalTest {
 	  $shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  $this->assertEquals('Enabled', $shortsAVariation->Status);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
@@ -389,7 +389,7 @@ class CheckoutTest extends FunctionalTest {
 	  $shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  $this->assertEquals('Enabled', $shortsAVariation->Status);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
@@ -445,7 +445,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->loginAs('buyer');
 
 	  $this->get(Director::makeRelative($shortsA->Link())); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
@@ -489,7 +489,7 @@ class CheckoutTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 

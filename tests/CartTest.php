@@ -72,7 +72,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -106,7 +106,7 @@ class CartTest extends FunctionalTest {
 	  
 	  $message = null;
 	  try {
-  	  $this->submitForm('Form_AddToCartForm', null, array(
+  	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
   	    'Quantity' => 1
   	  ));
 	  }
@@ -135,7 +135,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -144,7 +144,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 2
 	  ));
 	  
@@ -167,7 +167,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -177,16 +177,9 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->First()->Quantity);
 	  
 	  $message = null;
-	  try {
-  	  $this->submitForm('Form_AddToCartForm', null, array(
-  	    'Quantity' => -1
-  	  ));
-	  }
-	  catch (Exception $e) {
-	    $message = $e->getMessage();
-	  }
-	  
-	  $this->assertStringEndsWith('Object not written.', $message);
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	    'Quantity' => -1
+	  ));
 	  
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
@@ -207,7 +200,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -216,7 +209,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 0
 	  ));
 	  
@@ -242,7 +235,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -263,7 +256,7 @@ class CartTest extends FunctionalTest {
 	  $secondVersion = $productA->Version;
 	  $this->assertTrue($secondVersion > $firstVersion);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -291,7 +284,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -320,7 +313,7 @@ class CartTest extends FunctionalTest {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -342,7 +335,7 @@ class CartTest extends FunctionalTest {
 	  
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -366,7 +359,7 @@ class CartTest extends FunctionalTest {
 	  
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -404,7 +397,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
 	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -448,7 +441,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
 	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -482,7 +475,7 @@ class CartTest extends FunctionalTest {
 	  //Note to self: Cannot set values for POST that are not valid on the form
 	  
 	  //Submit with incorrect variation values, for Medium, Red, Cotton
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 10,  //Medium
 	    'Options[2]' => 12, //Red
@@ -509,7 +502,7 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -523,7 +516,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $firstItem->Quantity);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 2,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -552,7 +545,7 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -576,7 +569,7 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -609,7 +602,7 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -636,7 +629,7 @@ class CartTest extends FunctionalTest {
 	  $secondVersion = $teeshirtAVariation->Version;
 	  $this->assertTrue($secondVersion > $firstVersion);
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -668,7 +661,7 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
@@ -790,7 +783,7 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('Form_AddToCartForm', null, array(
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => $quantity,
 	    'Options[1]' => 9,  //Small
 	    'Options[2]' => 12, //Red
