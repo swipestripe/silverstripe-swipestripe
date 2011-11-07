@@ -275,6 +275,20 @@ class Product extends Page {
         $variation->write();
       }
     }
+    
+    //If there are no enabled variations for this product when it requires them, unpublish the product
+    /*
+    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
+    if ((!$variations || !$variations->exists()) && $this->requiresVariation() && $this->isPublished()) {
+      
+      //TODO return a message to the CMS that this page was unpublished
+      
+      $this->doUnpublish();
+      
+      $this->Status = "Unpublished";
+			$this->write();
+    }
+    */
   }
   
   protected function duplicateProductImages(DataObjectSet $images) {
@@ -423,7 +437,7 @@ class Product_Controller extends Page_Controller {
     
     $controller = Controller::curr();
     $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);
-    //$form->disableSecurityToken();
+    $form->disableSecurityToken();
     
     //Change the action to accommodate product pages not in the site tree (ParentID = -1)
 	  //$form->setFormAction('/product/'.$this->URLSegment.'/add');

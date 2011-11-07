@@ -119,7 +119,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
 	function goToCheckout(Array $data, Form $form) {
-	  $this->saveCart($data);
+	  $this->saveCart($data, $form);
 	  
 	  if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
 	    $this->redirect($checkoutPage->AbsoluteLink());
@@ -128,7 +128,6 @@ class CartPage_Controller extends Page_Controller {
 	}
 	
 	private function saveCart(Array $data, Form $form) {
-
 	  $currentOrder = Product_Controller::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 
