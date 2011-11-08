@@ -1,10 +1,16 @@
 <?php
+/**
+ * A cart page for the frontend to display contents of a cart to a visitor.
+ * Automatically created on install of the shop module, cannot be deleted by admin user
+ * in the CMS. A required page for the shop module.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage customer
+ * @version 1.0
+ */
 class CartPage extends Page {
-
-  public function getCMSFields() {
-    $fields = parent::getCMSFields();
-    return $fields;
-  }
   
 	/**
 	 * Automatically create a CheckoutPage if one is not found
@@ -26,14 +32,33 @@ class CartPage extends Page {
 		}
 	}
 	
+	/**
+	 * Prevent CMS users from creating another cart page.
+	 * 
+	 * @see SiteTree::canCreate()
+	 * @return Boolean Always returns false
+	 */
   function canCreate($member = null) {
 	  return false;
 	}
 	
+	/**
+	 * Prevent CMS users from deleting the cart page.
+	 * 
+	 * @see SiteTree::canDelete()
+	 * @return Boolean Always returns false
+	 */
 	function canDelete($member = null) {
 	  return false;
 	}
 	
+	/**
+	 * Prevent CMS users from unpublishing the cart page.
+	 * 
+	 * @see SiteTree::canDeleteFromLive()
+	 * @see CartPage::getCMSActions()
+	 * @return Boolean Always returns false
+	 */
   function canDeleteFromLive($member = null) {
 	  return false;
 	}
@@ -42,6 +67,8 @@ class CartPage extends Page {
 	 * To remove the unpublish button from the CMS, as this page must always be published
 	 * 
 	 * @see SiteTree::getCMSActions()
+	 * @see CartPage::canDeleteFromLive()
+	 * @return FieldSet Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -50,10 +77,21 @@ class CartPage extends Page {
 	}
 }
 
+/**
+ * Display the cart page, with cart form. Handle cart form actions.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage customer
+ * @version 1.0
+ */
 class CartPage_Controller extends Page_Controller {
   
   /**
-   * Include some CSS for the cart page
+   * Include some CSS for the cart page.
+   * 
+   * @return Array Contents for page rendering
    */
   function index() {
 
@@ -66,11 +104,9 @@ class CartPage_Controller extends Page_Controller {
   }
 	
 	/**
-	 * Form including quantities for items for displaying on the cart page
+	 * Form including quantities for items for displaying on the cart page.
 	 * 
-	 * TODO validator for positive quantity
-	 * 
-	 * @see CheckoutForm
+	 * @return CartForm A new cart form
 	 */
 	function CartForm() {
 	  $fields = new FieldSet();
@@ -102,10 +138,10 @@ class CartPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Update the current cart quantities
+	 * Update the current cart quantities then redirect back to the cart page.
 	 * 
-	 * @param Array $data
-	 * @param Form $form
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
 	 */
 	function updateCart(Array $data, Form $form) {
 	  $this->saveCart($data, $form);
@@ -113,10 +149,10 @@ class CartPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Update the current cart quantities and redirect to checkout
+	 * Update the current cart quantities and redirect to checkout.
 	 * 
-	 * @param Array $data
-	 * @param Form $form
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
 	 */
 	function goToCheckout(Array $data, Form $form) {
 	  $this->saveCart($data, $form);
@@ -127,6 +163,12 @@ class CartPage_Controller extends Page_Controller {
 	  else Debug::friendlyError(500);
 	}
 	
+	/**
+	 * Save the cart, update the order item quantities and the order total.
+	 * 
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
+	 */
 	private function saveCart(Array $data, Form $form) {
 	  $currentOrder = Product_Controller::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;

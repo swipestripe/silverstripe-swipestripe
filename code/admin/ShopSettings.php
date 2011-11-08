@@ -43,7 +43,7 @@ class ShopSettings extends DataObjectDecorator {
     $licenseKeyField = new TextField('LicenseKey', 'License Key', self::$license_key);
     $fields->addFieldToTab('Root.Shop.LicenseKey', $licenseKeyField->performReadonlyTransformation());
     
-    //TODO include the license here
+    //TODO include the license here in a text area field and some info about setting the license key perhaps
     
     
     //Shop emails

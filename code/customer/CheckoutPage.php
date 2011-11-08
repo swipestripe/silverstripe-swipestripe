@@ -1,14 +1,26 @@
 <?php
+/**
+ * A checkout page for displaying the checkout form to a visitor.
+ * Automatically created on install of the shop module, cannot be deleted by admin user
+ * in the CMS. A required page for the shop module.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage customer
+ * @version 1.0
+ */
 class CheckoutPage extends Page
 {
+  
+  /**
+   * Adding ChequeMessage field, a requirement for ChequePayment::ChequeContent().
+   * 
+   * @var Array Database field descriptions
+   */
   static $db = array(
-    'ChequeMessage' => 'HTMLText' //Dependency for ChequePayment::ChequeContent()
+    'ChequeMessage' => 'HTMLText'
   );
-
-  public function getCMSFields() {
-    $fields = parent::getCMSFields();
-    return $fields;
-  }
   
 	/**
 	 * Automatically create a CheckoutPage if one is not found
@@ -30,14 +42,33 @@ class CheckoutPage extends Page
 		}
 	}
 	
+	/**
+	 * Prevent CMS users from creating another checkout page.
+	 * 
+	 * @see SiteTree::canCreate()
+	 * @return Boolean Always returns false
+	 */
 	function canCreate($member = null) {
 	  return false;
 	}
 	
+	/**
+	 * Prevent CMS users from deleting the checkout page.
+	 * 
+	 * @see SiteTree::canDelete()
+	 * @return Boolean Always returns false
+	 */
 	function canDelete($member = null) {
 	  return false;
 	}
 	
+	/**
+	 * Prevent CMS users from unpublishing the checkout page.
+	 * 
+	 * @see SiteTree::canDeleteFromLive()
+	 * @see CheckoutPage::getCMSActions()
+	 * @return Boolean Always returns false
+	 */
 	function canDeleteFromLive($member = null) {
 	  return false;
 	}
@@ -46,6 +77,8 @@ class CheckoutPage extends Page
 	 * To remove the unpublish button from the CMS, as this page must always be published
 	 * 
 	 * @see SiteTree::getCMSActions()
+	 * @see CheckoutPage::canDeleteFromLive()
+	 * @return FieldSet Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -54,18 +87,28 @@ class CheckoutPage extends Page
 	}
 }
 
+/**
+ * Display the checkout page, with order form. Process the order - send the order details
+ * off to the Payment class.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage customer
+ * @version 1.0
+ */
 class CheckoutPage_Controller extends Page_Controller {
   
   /**
-   * Include some CSS for the checkout page
+   * Include some CSS and javascript for the checkout page
+   * 
    * TODO why didn't I use init() here?
+   * 
+   * @return Array Contents for page rendering
    */
   function index() {
-    
-    //SS_Log::log(new Exception(print_r(Session::get('FormInfo.CheckoutForm_OrderForm'), true)), SS_Log::NOTICE);
-    
+
     Requirements::css('shop/css/Shop.css');
-    
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('shop/javascript/CheckoutPage.js');
 
@@ -76,9 +119,10 @@ class CheckoutPage_Controller extends Page_Controller {
   }
 	
 	/**
-	 * Create an order form
+	 * Create an order form for customers to fill out their details and pass the order
+	 * on to the payment class.
 	 * 
-	 * @return Form 
+	 * @return CheckoutForm The checkout/order form 
 	 */
 	function OrderForm() {
     $fields = array();
@@ -113,6 +157,12 @@ class CheckoutPage_Controller extends Page_Controller {
     return $form;
 	}
 	
+	/**
+	 * Add fields for billing address and required fields to the validator.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 */
 	private function addBillingAddressFields(&$fields, &$validator) {
 	  
 	  $firstNameField = new TextField('Billing[FirstName]', 'First Name');
@@ -154,6 +204,12 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $validator->addRequiredField('Billing[Country]');
 	}
 	
+	/**
+	 * Add fields for shipping address and required fields to the validator.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 */
 	private function addShippingAddressFields(&$fields, &$validator) {
 	  
 	  $firstNameField = new TextField('Shipping[FirstName]', 'First Name');
@@ -197,6 +253,13 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $validator->addRequiredField('Shipping[Country]');
 	}
 	
+	/**
+	 * Add fields for personal details and required fields to the validator.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 * @param Member $member Current logged in member, or Member class singleton if no one logged in
+	 */
 	private function addPersonalDetailsFields(&$fields, &$validator, $member) {
 	  
 	  $emailField = new EmailField('Email', 'Email');
@@ -234,6 +297,13 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $fields['PersonalDetails'][] = $personalFields;
 	}
 	
+	/**
+	 * Add item fields for each item in the current order.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 * @param Order $order The current order
+	 */
 	private function addItemFields(&$fields, &$validator, $order) {
 	  $items = $order->Items();
 
@@ -242,6 +312,13 @@ class CheckoutPage_Controller extends Page_Controller {
 	  }
 	}
 	
+	/**
+	 * Add modifier fields for this order, such as Shipping fields.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 * @param Order $order The current order
+	 */
 	private function addModifierFields(&$fields, &$validator, $order) {
 
 		foreach (Shipping::combined_form_fields($order) as $field) {
@@ -249,10 +326,23 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 	}
 	
+	/**
+	 * Add notes field for the order.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 */
 	private function addNotesField(&$fields, &$validator) {
 	  $fields['Notes'][] = new TextareaField('Notes', 'Notes about this order', 5, 20, '');
 	}
 	
+	/**
+	 * Add pament fields for the current payment method. Also adds payment method as a required field.
+	 * 
+	 * @param Array $fields Array of fields
+	 * @param OrderFormValidator $validator Checkout form validator
+	 * @param Order $order The current order
+	 */
 	private function addPaymentFields(&$fields, &$validator, $order) {
 	  $paymentFields = new CompositeField();
 	  
@@ -276,11 +366,13 @@ class CheckoutPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Process the order by sending form information to Payment class
+	 * Process the order by sending form information to Payment class.
+	 * 
+	 * TODO send emails from this function after payment is processed
 	 * 
 	 * @see Payment::processPayment()
-	 * @param Array $data
-	 * @param Form $form
+	 * @param Array $data Submitted form data via POST
+	 * @param Form $form Form data was submitted from
 	 */
 	function ProcessOrder($data, $form) {
 
@@ -289,15 +381,11 @@ class CheckoutPage_Controller extends Page_Controller {
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
 
 		if(!($payment && $payment instanceof Payment)) {
-		  
 		  Debug::friendlyError(
 		    403,
 		    'Sorry, that is not a valid payment method.',
 		    'Please go back and try again.'
 		  );
-		  
-			//user_error(get_class($payment) . ' is not a valid Payment object!', E_USER_ERROR);
-			//TODO return meaningful error to browser in case error not shown
 			return;
 		}
 
@@ -396,7 +484,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	  //If payment is being processed
 	  //e.g long payment process redirected to another website (PayPal, DPS)
 		if ($result->isProcessing()) {
-		  //Update payment status, do not send receipt yet
 			return $result->getValue();
 		}
 		
@@ -410,6 +497,13 @@ class CheckoutPage_Controller extends Page_Controller {
 		return true;
 	}
 	
+	/**
+	 * Update the order form cart, called via AJAX with current order form data.
+	 * Renders the cart and sends that back for displaying on the order form page.
+	 * 
+	 * @param SS_HTTPRequest $data Form data sent via AJAX POST.
+	 * @return String Rendered cart for the order form, template include 'CheckoutFormOrder'.
+	 */
 	function updateOrderFormCart(SS_HTTPRequest $data) {
 
 	  $fields = array();
@@ -441,7 +535,7 @@ class CheckoutPage_Controller extends Page_Controller {
         //Set the field value to what was passed in POST if possible
         $optionVals = array_keys($field->getSource());
 
-        //BUG this does not seem to set the fiel value and persist on occassion
+        //BUG this does not seem to set the field value and persist on occassion
         /*
         if (in_array($modifierData[$modifierType], $optionVals)) {
           $field->setValue($modifierData[$modifierType]);
