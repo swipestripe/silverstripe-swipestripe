@@ -1,4 +1,13 @@
 <?php
+/**
+ * Form for adding items to the cart from a {@link Product} page.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class AddToCartForm extends Form {
 	
 	/**

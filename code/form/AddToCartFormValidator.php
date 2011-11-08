@@ -1,12 +1,21 @@
 <?php
+/**
+ * Validator for {@link AddToCartForm} which validates that the product {@link Variation} is 
+ * correct for the {@link Product} being added to the cart.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class AddToCartFormValidator extends RequiredFields {
 
 	/**
-	 * Check that current order is valid
+	 * Check that current product variation is valid
 	 *
-	 * @param array $data Submitted data
-	 * @return bool Returns TRUE if the submitted data is valid, otherwise
-	 *              FALSE.
+	 * @param Array $data Submitted data
+	 * @return Boolean Returns TRUE if the submitted data is valid, otherwise FALSE.
 	 */
 	function php($data) {
 
@@ -47,6 +56,8 @@ class AddToCartFormValidator extends RequiredFields {
 	
 	/**
 	 * Helper so that form fields can access the form and current form data
+	 * 
+	 * @return Form The current form
 	 */
 	public function getForm() {
 	  return $this->form;
