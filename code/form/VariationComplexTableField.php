@@ -1,6 +1,21 @@
 <?php
+/**
+ * For managing {@link Variation}s on the {@link Product} page in the CMS.
+ * Created to save {@link Variation} options correctly.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class VariationComplexTableField extends ComplexTableField {
   
+  /**
+   * Handle the item in each request?
+   * 
+   * @see ComplexTableField::handleItem()
+   */
   function handleItem($request) {
 		return new VariationComplexTableField_ItemRequest($this, $request->param('ID'));
 	}

@@ -1,4 +1,13 @@
 <?php
+/**
+ * For {@link Product} {@link Option} fields to be displayed on the {@link Product} page.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class OptionField extends DropdownField {
 
   /**

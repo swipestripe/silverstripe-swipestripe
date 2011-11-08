@@ -1,6 +1,21 @@
 <?php
+/**
+ * Represent each {@link Item} in the {@link Order} on the {@link Product} {@link AddToCartForm}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class QuantityField extends TextField {
 	
+  /**
+   * Validate the quantity is above 0.
+   * 
+   * @see FormField::validate()
+   * @return Boolean
+   */
   function validate($validator) {
 
 	  $valid = true;

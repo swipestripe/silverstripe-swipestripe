@@ -1,15 +1,35 @@
 <?php
+/**
+ * Represent each {@link Item} in the {@link Order} on the {@link OrderForm}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class OrderItemField extends FormField {
 
 	/**
-	 * Template for main rendering
+	 * Template for rendering
 	 *
-	 * @var string
+	 * @var String
 	 */
 	protected $template = "OrderItemField";
 	
+	/**
+	 * Current {@link Item} this field represents.
+	 * 
+	 * @var Item
+	 */
 	protected $item;
 	
+	/**
+	 * Construct the form field and set the {@link Item} it represents.
+	 * 
+	 * @param Item $item
+	 * @param Form $form
+	 */
   function __construct($item, $form = null){
 
 		$this->item = $item;
@@ -17,18 +37,41 @@ class OrderItemField extends FormField {
 		parent::__construct($name, null, '', null, $form);
 	}
 	
+	/**
+	 * Render the form field with the correct template.
+	 * 
+	 * @see FormField::FieldHolder()
+	 * @return String
+	 */
   function FieldHolder() {
 		return $this->renderWith($this->template);
 	}
 	
+	/**
+	 * Retrieve the {@link Item} this field represents.
+	 * 
+	 * @return Item
+	 */
 	function Item() {
 	  return $this->item;
 	}
 	
+	/**
+	 * Set the {@link Item} this field represents.
+	 * 
+	 * @param Item $item
+	 */
 	function setItem(Item $item) {
 	  $this->item = $item;
 	}
 	
+	/**
+	 * Validate this form field, make sure the {@link Item} exists, is in the current 
+	 * {@link Order} and the item is valid for adding to the cart.
+	 * 
+	 * @see FormField::validate()
+	 * @return Boolean
+	 */
 	function validate($validator) {
 
 	  $valid = true;

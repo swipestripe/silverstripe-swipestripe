@@ -1,15 +1,28 @@
 <?php
 /**
- * Represents a group of dropdowns for options for a product.
+ * Represents a group of dropdowns for options for a {@link Product}.
  * 
- * @see SelectionGroup
- * @author frankmullenger
- *
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
  */
 class OptionGroupField extends CompositeField {
 	
+  /**
+   * Holds the current {@link Product} we are viewing
+   * 
+   * @var Product
+   */
   private $product;
   
+  /**
+   * Construct the field with correct ID names and values
+   * 
+   * @param String $name
+   * @param Product $product
+   */
 	function __construct($name, $product) {
 		$this->name = $name;
 		$this->product = $product;
@@ -42,17 +55,28 @@ class OptionGroupField extends CompositeField {
       
       if ($options->exists()) {
         $optionsField = new OptionField($id, $title, $options);
-        //$optionsField->setEmptyString('Please select');
         $items->push($optionsField);
       }
     }
 		parent::__construct($items);
 	}
 	
+	/**
+	 * This field has data
+	 * 
+	 * @see CompositeField::hasData()
+	 * @return Boolean True always
+	 */
 	function hasData() {
 		return true;
 	}
 	
+	/**
+	 * Display this field, add some javascript for handling changes to the dropdowns,
+	 * populating the next dropdown via AJAX etc.
+	 * 
+	 * @see CompositeField::FieldHolder()
+	 */
 	function FieldHolder() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('shop/javascript/OptionGroupField.js');

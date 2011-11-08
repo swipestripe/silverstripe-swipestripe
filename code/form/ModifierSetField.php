@@ -1,21 +1,29 @@
 <?php
-
+/**
+ * For displaying a set of modifiers on the {@link CheckoutPage}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class ModifierSetField extends DropdownField {
 	
 	/**
-	 * Template for main rendering
+	 * Template for rendering
 	 *
-	 * @var string
+	 * @var String
 	 */
 	protected $template = "ModifierSetField";
 
 	/**
-	 * To hold the modifier that will set the value for the Modifier
+	 * To hold the modifier (link FlatFeeShipping) class that will set the value for the 
+	 * actual order {@link Modifier}.
 	 * 
 	 * @var Object
 	 */
-	protected $modifier;
-	
+	protected $modifier;	
 	
 	/**
 	 * Creates a new optionset field for order modifers with the naming convention
@@ -35,10 +43,21 @@ class ModifierSetField extends DropdownField {
 		parent::__construct($name, $title, $source, $value, $form);
 	}
 	
+	/**
+	 * Render field with the appropriate template.
+	 * 
+	 * @see FormField::FieldHolder()
+	 * @return String
+	 */
   function FieldHolder() {
 		return $this->renderWith($this->template);
 	}
 	
+	/**
+	 * Validation is not currently done on this field at this point.
+	 * 
+	 * @see FormField::validate()
+	 */
 	function validate($validator){
 	  return true;
 	}

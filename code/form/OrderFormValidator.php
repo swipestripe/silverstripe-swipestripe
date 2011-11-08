@@ -1,12 +1,20 @@
 <?php
+/**
+ * Validate the {@link OrderForm}, check that the current {@link Order} is valid.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class OrderFormValidator extends RequiredFields {
 
 	/**
 	 * Check that current order is valid
 	 *
-	 * @param array $data Submitted data
-	 * @return bool Returns TRUE if the submitted data is valid, otherwise
-	 *              FALSE.
+	 * @param Array $data Submitted data
+	 * @return Boolean Returns TRUE if the submitted data is valid, otherwise FALSE.
 	 */
 	function php($data) {
 	  
@@ -48,6 +56,8 @@ class OrderFormValidator extends RequiredFields {
 	
 	/**
 	 * Helper so that form fields can access the form and current form data
+	 * 
+	 * @return Form
 	 */
 	public function getForm() {
 	  return $this->form;

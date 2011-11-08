@@ -1,33 +1,79 @@
 <?php
+/**
+ * Quantity field for displaying each {@link Item} in an {@link Order} on the {@link CartPage}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class CartQuantityField extends TextField {
 
 	/**
-	 * Template for main rendering
+	 * Template for rendering the field
 	 *
-	 * @var string
+	 * @var String
 	 */
 	protected $template = "CartQuantityField";
 	
+	/**
+	 * Current {@link Item} represented by this field.
+	 * 
+	 *  @var Item
+	 */
 	protected $item;
 	
+	/**
+	 * Construct the field and set the current {@link Item} that this field represents.
+	 * 
+	 * @param String $name
+	 * @param String $title
+	 * @param String $value
+	 * @param Int $maxLength
+	 * @param Form $form
+	 * @param Item $item
+	 */
   function __construct($name, $title = null, $value = "", $maxLength = null, $form = null, $item = null){
 
 		$this->item = $item;
 		parent::__construct($name, $title, $value, $maxLength, $form);
 	}
 	
+	/**
+	 * Render the field with the appropriate template.
+	 * 
+	 * @see FormField::FieldHolder()
+	 */
   function FieldHolder() {
 		return $this->renderWith($this->template);
 	}
 	
+	/**
+	 * Retrieve the current {@link Item} this field represents. Used in the template.
+	 * 
+	 * @return Item
+	 */
 	function Item() {
 	  return $this->item;
 	}
 	
+	/**
+	 * Set the current {@link Item} this field represents
+	 * 
+	 * @param Item $item
+	 */
 	function setItem(Item $item) {
 	  $this->item = $item;
 	}
 	
+	/**
+	 * Validate this field, check that the current {@link Item} is in the current 
+	 * {@Link Order} and is valid for adding to the cart.
+	 * 
+	 * @see FormField::validate()
+	 * @return Boolean
+	 */
   function validate($validator) {
 
 	  $valid = true;

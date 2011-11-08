@@ -1,10 +1,50 @@
 <?php
+/**
+ * Form for displaying on the {@link CheckoutPage} with all the necessary details 
+ * for a visitor to complete their order and pass off to the {@link Payment} gateway class.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage form
+ * @version 1.0
+ */
 class CheckoutForm extends Form {
   
+  /**
+   * The current {@link Order} 
+   * 
+   * @var Order
+   */
   public $currentOrder;
+  
+  /**
+   * Fields for this form are grouped in sets, they are stored in an array so that the template
+   * can pull out a set of fields for a different part of the form.
+   * 
+   * @var Array 
+   */
   protected $groupedFields = array();
+  
+  /**
+   * Set of extra fields set for this form, such as csrf token etc.
+   * 
+   * @var FieldSet
+   */
   private $extraFieldsSet;
   
+  /**
+   * Construct the form, get the grouped fields and set the fields for this form appropriately,
+   * the fields are passed in an associative array so that the fields can be grouped into sets 
+   * making it easier for the template to grab certain fields for different parts of the form.
+   * 
+   * @param Controller $controller
+   * @param String $name
+   * @param Array $groupedFields Associative array of fields grouped into sets
+   * @param FieldSet $actions
+   * @param Validator $validator
+   * @param Order $currentOrder
+   */
   function __construct($controller, $name, $groupedFields, FieldSet $actions, $validator = null, Order $currentOrder = null) {
     
     //Send fields in as associative array, then loop through and add to $fields array for parent constructuor
@@ -24,6 +64,11 @@ class CheckoutForm extends Form {
 		$this->extraFieldsSet = new FieldSet();
   }
   
+  /**
+   * Helper function to return the current {@link Order}, used in the template for this form
+   * 
+   * @return Order
+   */
   function Cart() {
     return $this->currentOrder;
   }
