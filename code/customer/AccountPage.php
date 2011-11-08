@@ -217,7 +217,7 @@ class AccountPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Log the current member out.
+	 * Log the current member out and redirect to home page.
 	 */
   public function logout() {
     Security::logout(false);

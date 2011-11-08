@@ -1,5 +1,3 @@
-<div class="typography">
-
 <h2>$Title</h2>
 $Content
 
@@ -28,5 +26,3 @@ $Content
 	<% end_control %>
 	</ul>
 <% end_if %>
-
-</div>
