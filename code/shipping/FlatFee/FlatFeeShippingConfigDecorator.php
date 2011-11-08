@@ -13,11 +13,11 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 
   function updateCMSFields(FieldSet &$fields) {
 
-    //$fields->addFieldToTab("Root", new TabSet('StripeyCart')); 
-    $fields->addFieldToTab("Root.StripeyCart", 
+    //$fields->addFieldToTab("Root", new TabSet('Shop')); 
+    $fields->addFieldToTab("Root.Shop", 
       new TabSet('Shipping')
     );
-    $fields->addFieldToTab("Root.StripeyCart.Shipping", 
+    $fields->addFieldToTab("Root.Shop.Shipping", 
       new Tab('FlatFeeShipping')
     );
     
@@ -32,7 +32,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
       ),
       'getCMSFields_forPopup'
     );
-    $fields->addFieldToTab("Root.StripeyCart.Shipping.FlatFeeShipping", $flatFeeCountryManager);
+    $fields->addFieldToTab("Root.Shop.Shipping.FlatFeeShipping", $flatFeeCountryManager);
 	}
 
 }

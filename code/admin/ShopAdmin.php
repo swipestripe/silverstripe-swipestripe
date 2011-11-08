@@ -1,9 +1,9 @@
 <?php
-class StripeyCartAdmin extends ModelAdmin {
+class ShopAdmin extends ModelAdmin {
 
-	public static $collection_controller_class = "StripeyCartAdmin_CollectionController";
+	public static $collection_controller_class = "ShopAdmin_CollectionController";
 
-	public static $record_controller_class = "StripeyCartAdmin_RecordController";
+	public static $record_controller_class = "ShopAdmin_RecordController";
 	
 	public static $parent_page_type = "SiteTree";
 	
@@ -14,9 +14,9 @@ class StripeyCartAdmin extends ModelAdmin {
     //'SiteConfig'
   );
   
-  static $url_segment = 'stripeycart';
+  static $url_segment = 'shop';
   
-  static $menu_title = 'Stripey Cart';
+  static $menu_title = 'Shop';
   
   static $default_model   = 'Order'; 
   
@@ -32,18 +32,18 @@ class StripeyCartAdmin extends ModelAdmin {
 	    parent::init();
 	    
 	    //For managing Orders
-	    Requirements::css('stripeycart/css/StripeyCart.css');
-    	Requirements::css('stripeycart/css/StripeyCartAdmin.css');
+	    Requirements::css('shop/css/Shop.css');
+    	Requirements::css('shop/css/ShopAdmin.css');
     	
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.datepicker.css');
-    	Requirements::css('stripeycart/css/libs/ui.daterangepicker.css');
+    	Requirements::css('shop/css/libs/ui.daterangepicker.css');
     	
     	Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.core.js');
     	Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.datepicker.js');
-    	Requirements::javascript('stripeycart/javascript/libs/daterangepicker.jquery.js');
+    	Requirements::javascript('shop/javascript/libs/daterangepicker.jquery.js');
     	
-    	Requirements::javascript('stripeycart/javascript/StripeyCartAdmin.js');
+    	Requirements::javascript('shop/javascript/ShopAdmin.js');
 	    
 	    // Remove all the junk that will break ModelAdmin
 	    $config = HtmlEditorConfig::get_active();
@@ -79,7 +79,7 @@ class StripeyCartAdmin extends ModelAdmin {
 
 }
 
-class StripeyCartAdmin_CollectionController extends ModelAdmin_CollectionController {
+class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
 
 	function add($request) {
 		$class = $this->modelClass;
@@ -104,7 +104,7 @@ class StripeyCartAdmin_CollectionController extends ModelAdmin_CollectionControl
 
 }
 
-class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
+class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 
 	public function EditForm() {
 		$form = parent::EditForm();
@@ -133,14 +133,14 @@ class StripeyCartAdmin_RecordController extends ModelAdmin_RecordController {
 			$stage_link = Controller::join_links($this->currentRecord->Link(),'?stage=Stage');
 			
 			$form->Fields()->insertFirst(
-			  new LiteralField('view','<div class="publishpreviews clr">'._t('StripeyCartAdmin.VIEW','View Page').': <a target="_blank" href="'.$live_link.'">'._t('StripeyCartAdmin.VIEWLIVE','Live Site').'</a> <a target="_blank" href="'.$stage_link.'">'._t('StripeyCartAdmin.VIEWDRAFT','Draft Site').'</a></div></div>')
+			  new LiteralField('view','<div class="publishpreviews clr">'._t('ShopAdmin.VIEW','View Page').': <a target="_blank" href="'.$live_link.'">'._t('ShopAdmin.VIEWLIVE','Live Site').'</a> <a target="_blank" href="'.$stage_link.'">'._t('ShopAdmin.VIEWDRAFT','Draft Site').'</a></div></div>')
 			);
 			$form->Fields()->insertFirst(
-			  new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button>')
+			  new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('ShopAdmin.BACKTOLIST','Back to list view').'</button>')
 			);	
 		}	
 		else {
-		  $form->Fields()->insertFirst(new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('StripeyCartAdmin.BACKTOLIST','Back to list view').'</button></div>'));		
+		  $form->Fields()->insertFirst(new LiteralField('back','<div class="modelpagenav clr"><button id="list_view">&laquo; '._t('ShopAdmin.BACKTOLIST','Back to list view').'</button></div>'));		
 		}	
 		
 		return $form;	

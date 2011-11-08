@@ -64,10 +64,10 @@ class CheckoutPage_Controller extends Page_Controller {
     
     //SS_Log::log(new Exception(print_r(Session::get('FormInfo.CheckoutForm_OrderForm'), true)), SS_Log::NOTICE);
     
-    Requirements::css('stripeycart/css/StripeyCart.css');
+    Requirements::css('shop/css/Shop.css');
     
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript('stripeycart/javascript/CheckoutPage.js');
+		Requirements::javascript('shop/javascript/CheckoutPage.js');
 
     return array( 
        'Content' => $this->Content, 

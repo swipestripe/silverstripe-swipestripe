@@ -3,7 +3,7 @@
 //Decorators
 Object::add_extension('Member', 'CustomerDecorator');
 Object::add_extension('Payment', 'PaymentDecorator');
-Object::add_extension('SiteConfig', 'CartConfigDecorator');
+Object::add_extension('SiteConfig', 'ShopSettings');
 
 //TODO get rid of product controller dependency?
 Object::add_extension('Page_Controller', 'CartControllerExtension');
@@ -22,7 +22,7 @@ Director::addRules(50, array(
 ));
 
 //TODO is this necessary?
-LeftAndMain::require_css('stripeycart/css/StripeyCartAdmin.css');
+LeftAndMain::require_css('shop/css/ShopAdmin.css');
 
 //For unit testing
 /*

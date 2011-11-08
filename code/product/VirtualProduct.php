@@ -3,10 +3,11 @@ class VirtualProduct extends Product {
   
   /**
    * Download folder relative to site root
+   * TODO this shoulc be a folder in assets or something
    * 
    * @var String
    */
-  public static $downloadFolder = 'stripeycart/downloads/';
+  public static $downloadFolder = 'shop/downloads/';
   
   /**
    * Number of times the product can be downloaded

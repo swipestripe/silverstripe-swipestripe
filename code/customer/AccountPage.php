@@ -77,7 +77,7 @@ class AccountPage_Controller extends Page_Controller {
    */
   function index() {
     
-    Requirements::css('stripeycart/css/StripeyCart.css');
+    Requirements::css('shop/css/Shop.css');
     
     $memberID = Member::currentUserID();
     if (!$memberID) {
@@ -100,7 +100,7 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function order($request) {
 
-	  Requirements::css('stripeycart/css/StripeyCart.css');
+	  Requirements::css('shop/css/Shop.css');
     
 		$memberID = Member::currentUserID();
 	  if (!Member::currentUserID()) {

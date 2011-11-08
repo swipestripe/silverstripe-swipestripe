@@ -55,7 +55,7 @@ class OptionGroupField extends CompositeField {
 	
 	function FieldHolder() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript('stripeycart/javascript/OptionGroupField.js');
+		Requirements::javascript('shop/javascript/OptionGroupField.js');
 		return parent::FieldHolder();
 	}
 	

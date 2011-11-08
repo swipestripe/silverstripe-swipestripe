@@ -57,7 +57,7 @@ class CartPage_Controller extends Page_Controller {
    */
   function index() {
 
-    Requirements::css('stripeycart/css/StripeyCart.css');
+    Requirements::css('shop/css/Shop.css');
 
     return array( 
        'Content' => $this->Content, 
