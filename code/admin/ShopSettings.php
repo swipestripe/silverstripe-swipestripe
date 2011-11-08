@@ -1,13 +1,38 @@
 <?php
-
+/**
+ * Adding shop settings to the main {@link SiteConfig}. This will not work with subsites module due to
+ * a problem with {@link ComplexTableField} which does not set the {@link SiteConfig} ID on records.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage admin
+ * @version 1.0
+ */
 class ShopSettings extends DataObjectDecorator {
   
+  /**
+   * To hold the license key for the shop. Usually set in mysite/_config file.
+   * 
+   * @see ShopSettings::set_license_key()
+   * @var String License key 
+   */
   private static $license_key;
   
+  /**
+   * Set the license key, usually called in mysite/_config.
+   * 
+   * @param String $key License key
+   */
   public static function set_license_key($key) {
     self::$license_key = $key;
   }
 
+  /**
+   * Add database fields for shop settings like emails etc.
+   * 
+   * @see DataObjectDecorator::extraStatics()
+   */
 	function extraStatics() {
 
 		return array(
@@ -27,7 +52,7 @@ class ShopSettings extends DataObjectDecorator {
 	}
 
 	/**
-	 * Fields for sending receipts for orders basically
+	 * Adding fields for shop settings such as email, license key.
 	 * 
 	 * @see DataObjectDecorator::updateCMSFields()
 	 */
