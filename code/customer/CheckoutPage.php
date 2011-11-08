@@ -390,24 +390,19 @@ class CheckoutPage_Controller extends Page_Controller {
 
     //If instant payment success
 		if ($result->isSuccess()) {
-		  //TODO Need to update order status here
-		  //TODO send a receipt
+
 		}
 		
 	  //If payment is being processed
 	  //e.g long payment process redirected to another website (PayPal, DPS)
 		if ($result->isProcessing()) {
-		  
-		  SS_Log::log(new Exception(print_r('We are processing this payment right now.', true)), SS_Log::NOTICE);
-		  
 		  //Update payment status, do not send receipt yet
 			return $result->getValue();
 		}
 		
 		//If payment failed
 		if (!$result->isSuccess() && !$result->isProcessing()) {
-		  
-		  //Send a failure email
+
 		}
 
 		//Fallback
@@ -440,22 +435,28 @@ class CheckoutPage_Controller extends Page_Controller {
       $name = str_replace(array('[', ']'), array('#', ''), $field->Name());
       $nameParts = explode('#', $name);
       $modifierType = (isset($nameParts[1])) ?$nameParts[1] :null;
-
+      
       if ($modifierType && isset($modifierData[$modifierType])) {
         
         //Set the field value to what was passed in POST if possible
         $optionVals = array_keys($field->getSource());
-        
+
+        //BUG this does not seem to set the fiel value and persist on occassion
+        /*
         if (in_array($modifierData[$modifierType], $optionVals)) {
           $field->setValue($modifierData[$modifierType]);
         }
-        
         $modifierData[$modifierType] = $field->Value();
+        */
       }
+      
+      //BUG this is here because bug changing the dropdown value of a modifier on the checkout page
+      $field->setValue($modifierData[$modifierType]);
+      $modifierData[$modifierType] = $field->Value();
     }
+    
     $order->addModifiersAtCheckout(array('Modifiers' => $modifierData));
-    
-    
+
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')
     );

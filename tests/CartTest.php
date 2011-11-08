@@ -70,11 +70,11 @@ class CartTest extends FunctionalTest {
 	  $productA->doPublish();
 	  $this->logOut();
 
-	  $productALink = $productA->Link();
-	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-	    'Quantity' => 1
-	  ));
+    $productALink = $productA->Link();
+    $this->get(Director::makeRelative($productALink)); 
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1
+    ));
 
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();

@@ -144,7 +144,7 @@ class AccountPage_Controller extends Page_Controller {
       return Security::permissionFailure($this, 'You must be logged in to view this page.');
     }
     
-    return $member->Orders();
+    return DataObject::get('Order', "MemberID = '".$member->ID."'", "Created DESC");
 	}
 	
 	/**

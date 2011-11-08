@@ -33,20 +33,20 @@ class ProductTest extends FunctionalTest {
 	  $this->session()->clear('loggedInAs');
 	}
 	
-	/**
-	 * Helper to get data from a form.
-	 * 
-	 * @param String $formID
-	 * @return Array
-	 */
-	function getFormData($formID) {
-	  $page = $this->mainSession->lastPage();
-	  $data = array();
-	  
-	  if ($page) {
-			$form = $page->getFormById($formID);
-			if (!$form) user_error("Function getFormData() failed to find the form {$formID}", E_USER_ERROR);
-
+  /**
+   * Helper to get data from a form.
+   * 
+   * @param String $formID
+   * @return Array
+   */
+  function getFormData($formID) {
+    $page = $this->mainSession->lastPage();
+    $data = array();
+    
+    if ($page) {
+  		$form = $page->getFormById($formID);
+  		if (!$form) user_error("Function getFormData() failed to find the form {$formID}", E_USER_ERROR);
+  
   	  foreach ($form->_widgets as $widget) {
   
   	    $fieldName = $widget->getName();
@@ -54,11 +54,11 @@ class ProductTest extends FunctionalTest {
   	    
   	    $data[$fieldName] = $fieldValue;
   	  }
-	  }
-	  else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
-	  
-	  return $data;
-	}
+    }
+    else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
+    
+    return $data;
+  }
 	
 	/**
 	 * Try to delete a product, make sure it is unpublished but that versions remain the same
@@ -245,41 +245,41 @@ class ProductTest extends FunctionalTest {
   function testProductOptionsSecondSet() {
     
     $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-	  $attributes = $teeshirtA->Attributes();
-	  $options = $teeshirtA->Options();
-	  $variations = $teeshirtA->Variations();
-	  
-	  $this->loginAs('admin');
+    $attributes = $teeshirtA->Attributes();
+    $options = $teeshirtA->Options();
+    $variations = $teeshirtA->Variations();
+    
+    $this->loginAs('admin');
     $teeshirtA->doPublish();	  
-	  $this->logOut();
-	  
-	  $this->loginAs('buyer');
-	  $this->get(Director::makeRelative($teeshirtA->Link())); 
-	  
-	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
-	  unset($data['Options[2]']);
-	  unset($data['Options[3]']);
-	  unset($data['Options[1]']);
-	  
-	  $data['Options'][2] = 12;
-	  $data['NextAttributeID'] = 3;
-	  
-	  $this->post(
-	    Director::absoluteURL($teeshirtA->Link() . '/options/'),
-	    $data
-	  );
-	  
-	  $decoded = json_decode($this->mainSession->lastContent());
-	  
-	  $expected = array(
-	    '14' => 'Cotton',
-	    '15' => 'Polyester'
-	  );
-	  $actual = array();
-	  foreach ($decoded->options as $optionID => $optionName) {
-	    $actual[$optionID] = $optionName;
-	  }
-	  $this->assertEquals($expected, $actual);
+    $this->logOut();
+    
+    $this->loginAs('buyer');
+    $this->get(Director::makeRelative($teeshirtA->Link())); 
+    
+    $data = $this->getFormData('AddToCartForm_AddToCartForm');
+    unset($data['Options[2]']);
+    unset($data['Options[3]']);
+    unset($data['Options[1]']);
+    
+    $data['Options'][2] = 12;
+    $data['NextAttributeID'] = 3;
+    
+    $this->post(
+      Director::absoluteURL($teeshirtA->Link() . '/options/'),
+      $data
+    );
+    
+    $decoded = json_decode($this->mainSession->lastContent());
+    
+    $expected = array(
+      '14' => 'Cotton',
+      '15' => 'Polyester'
+    );
+    $actual = array();
+    foreach ($decoded->options as $optionID => $optionName) {
+      $actual[$optionID] = $optionName;
+    }
+    $this->assertEquals($expected, $actual);
   }
   
   /**

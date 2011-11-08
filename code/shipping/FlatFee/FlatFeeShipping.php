@@ -95,8 +95,8 @@ class FlatFeeShipping extends Shipping {
   	  $fields->push(new FlatFeeShippingField(
   	    $this,
   	  	'Flat Fee Shipping',
-  	  	$flatFeeShippingCountries->map('ID', 'DescriptionSummary'),
-  	  	$flatFeeShippingCountries->First()->ID
+  	  	$flatFeeShippingCountries->map('ID', 'DescriptionSummary')
+  	  	//$flatFeeShippingCountries->First()->ID
   	  ));
 	  }
 	  

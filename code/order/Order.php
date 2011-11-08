@@ -392,6 +392,18 @@ class Order extends DataObject {
 		//TODO if payment Status = Failure send a payment email?
 	}
 	
+	public function onAfterPaymentSuccess() {
+	  
+	}
+	
+	public function onAfterPaymentProcessing() {
+	  
+	}
+	
+	public function onAfterPaymentFailure() {
+	  
+	}
+	
 	/**
 	 * Update the order payment status after payment,
 	 * send email to customer if order is paid
