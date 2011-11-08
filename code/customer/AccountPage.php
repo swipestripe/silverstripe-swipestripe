@@ -1,12 +1,16 @@
 <?php
 /**
- * Account page shows order history and a form to allow
- * the member to edit his/her details.
+ * An account page which displays the order history for any given member and displays an individual order.
+ * Automatically created on install of the shop module, cannot be deleted by admin user
+ * in the CMS. A required page for the shop module.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage customer
+ * @version 1.0
  */
 class AccountPage extends Page {
-
-	static $db = array(
-	);
 
 	/**
 	 * Automatically create an AccountPage if one is not found
@@ -39,14 +43,33 @@ class AccountPage extends Page {
 		}
 	}
 	
+	/**
+	 * Prevent CMS users from creating another account page.
+	 * 
+	 * @see SiteTree::canCreate()
+	 * @return Boolean Always returns false
+	 */
   function canCreate($member = null) {
 	  return false;
 	}
 	
+	/**
+	 * Prevent CMS users from deleting the account page.
+	 * 
+	 * @see SiteTree::canDelete()
+	 * @return Boolean Always returns false
+	 */
 	function canDelete($member = null) {
 	  return false;
 	}
 	
+	/**
+	 * Prevent CMS users from unpublishing the account page.
+	 * 
+	 * @see SiteTree::canDeleteFromLive()
+	 * @see AccountPage::getCMSActions()
+	 * @return Boolean Always returns false
+	 */
   function canDeleteFromLive($member = null) {
 	  return false;
 	}
@@ -55,6 +78,8 @@ class AccountPage extends Page {
 	 * To remove the unpublish button from the CMS, as this page must always be published
 	 * 
 	 * @see SiteTree::getCMSActions()
+	 * @see AccountPage::canDeleteFromLive()
+	 * @return FieldSet Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -63,17 +88,34 @@ class AccountPage extends Page {
 	}
 }
 
+/**
+ * Display the account page with listing of previous orders, and display an individual order.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage customer
+ * @version 1.0
+ */
 class AccountPage_Controller extends Page_Controller {
   
+  /**
+   * Allowed actions that can be invoked.
+   * 
+   * @var Array Set of actions
+   */
   static $allowed_actions = array (
+    'index',
     'order',
-    'orders',
-  	'downloadProduct',
+  	'downloadproduct',
     'logout'
   );
   
   /**
-   * Check access permissions for account page.
+   * Check access permissions for account page and return content for displaying the 
+   * default page.
+   * 
+   * @return Array Content data for displaying the page.
    */
   function index() {
     
@@ -84,19 +126,20 @@ class AccountPage_Controller extends Page_Controller {
       return Security::permissionFailure($this, 'You must be logged in to view this page.');
     }
 
+    //Get the orders for this member
+    $Orders = DataObject::get('Order', "MemberID = '" . Convert::raw2sql($memberID) . "'", "Created DESC");
+
     return array( 
-       'Content' => $this->Content, 
-       'Form' => $this->Form 
+      'Content' => $this->Content, 
+      'Form' => $this->Form,
+      'Orders' => $Orders
     );
   }
 
 	/**
-	 * Return the {@link Order} details for the current
-	 * Order ID that we're viewing (ID parameter in URL).
+	 * Return the {@link Order} details for the current Order ID that we're viewing (ID parameter in URL).
 	 * 
-	 * TODO pass errors back using session instead
-	 *
-	 * @return array of template variables
+	 * @return Array Content for displaying the page
 	 */
 	function order($request) {
 
@@ -133,30 +176,18 @@ class AccountPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Retreive processed (non cart) orders this member has made
-	 * 
-	 * @return DataObjectSet 
-	 */
-	function orders() {
-
-	  $member = Member::currentUser();
-	  if (!$member || !$member->ID) {
-      return Security::permissionFailure($this, 'You must be logged in to view this page.');
-    }
-    
-    return DataObject::get('Order', "MemberID = '".$member->ID."'", "Created DESC");
-	}
-	
-	/**
 	 * Redirect browser to the download location, increment number of times
 	 * this item has been downloaded.
 	 * 
 	 * If the item has been downloaded too many times redirects back with 
 	 * error message.
 	 * 
+	 * This is a remnant of an earlier version of the cart which also had virtual products
+	 * and should be ignored for now.
+	 * 
 	 * @param SS_HTTPRequest $request
 	 */
-	function downloadProduct(SS_HTTPRequest $request) {
+	function downloadproduct(SS_HTTPRequest $request) {
 	  
 	  $memberID = Member::currentUserID();
 	  if (!Member::currentUserID()) {
@@ -185,6 +216,9 @@ class AccountPage_Controller extends Page_Controller {
 	  Director::redirectBack();
 	}
 	
+	/**
+	 * Log the current member out.
+	 */
   public function logout() {
     Security::logout(false);
     Director::redirect("home/");
