@@ -1,33 +1,102 @@
 <?php
+/**
+ * The shop admin area which provides access to orders, products and attributes.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage admin
+ * @version 1.0
+ */
 class ShopAdmin extends ModelAdmin {
 
+  /**
+   * Class used for administering the collections of products, orders etc.
+   * 
+   * @var String
+   */
 	public static $collection_controller_class = "ShopAdmin_CollectionController";
 
+	/**
+	 * Class used for administering a record
+	 * 
+	 * @var String
+	 */
 	public static $record_controller_class = "ShopAdmin_RecordController";
 	
+	/**
+	 * No idea why this exists. 
+	 * TODO remove this variable
+	 * 
+	 * @var String
+	 */
 	public static $parent_page_type = "SiteTree";
 	
+	/**
+	 * The data objects managed by this admin.
+	 * 
+	 * @var Array
+	 */
 	public static $managed_models = array( 
 	  'Order',
     'Product',
-    'Attribute',
-    //'SiteConfig'
+    'Attribute'
   );
   
+  /**
+   * URL segment for this admin area.
+   * 
+   * @var String
+   */
   static $url_segment = 'shop';
   
+  /**
+   * Menu title for this admin area.
+   * 
+   * @var String
+   */
   static $menu_title = 'Shop';
   
+  /**
+   * Default model to be managed when the admin is loaded.
+   * 
+   * @var String
+   */
   static $default_model   = 'Order'; 
   
+  /**
+   * Do not show an import form
+   * 
+   * @var Boolean
+   */
   public $showImportForm = false;
   
+  /**
+   * Set a high priority in the CMS top navigation
+   * 
+   * @var Int
+   */
   static $menu_priority = 7;
   
+  /**
+   * Class for displaying collection results.
+   * 
+   * @var String
+   */
   protected $resultsTableClassName = 'TableListField';
   
+  /**
+   * Number of records to display at one time.
+   * 
+   * @var Int
+   */
   public static $page_length = 20;
 	
+  /**
+   * Load some css and javascript for the admin area, remove some functionality from tinymce.
+   * 
+   * @see ModelAdmin::init()
+   */
 	public function init() {
 	    parent::init();
 	    
@@ -56,15 +125,28 @@ class ShopAdmin extends ModelAdmin {
 	 * Return 'dropdown' or 'tabs' for template file.
 	 * 
 	 * @see ModelAdmin::SearchClassSelector()
+	 * @return String Either 'dropdown' or 'tabs'
 	 */
 	public function SearchClassSelector() {
 		return "tabs";
 	}
 	
+	/**
+	 * Perform a search for the default list view?
+	 * TODO remove this, not sure it is required
+	 * 
+	 * @deprecated
+	 */
 	public function ListView() {
 		return $this->search(array(), $this->SearchForm());
 	}
 	
+	/**
+	 * Retrieve a parent page for a particular record.
+	 * 
+	 * @see ShopAdmin_CollectionController::getSearchQuery()
+	 * @return DataObject|SiteTree|Boolean If the parent page cannot be found returns false
+	 */
 	public function getParentPage() {
 		if($parent = $this->stat('parent')) {
 			if(is_numeric($parent)) {
@@ -79,8 +161,24 @@ class ShopAdmin extends ModelAdmin {
 
 }
 
+/**
+ * Managing collections of the model class, includes overloaded methods for
+ * adding and getting a search query.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage admin
+ * @version 1.0
+ */
 class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
 
+  /**
+   * Form for creating a new model record.
+   * 
+   * @see ModelAdmin_CollectionController::add()
+   * @return String Rendered form
+   */
 	function add($request) {
 		$class = $this->modelClass;
 		$record = new $class();
@@ -90,6 +188,14 @@ class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
 		return $response->edit($request);
 	}
 	
+	/**
+	 * Gets the search query generated on the SearchContext from
+	 * {@link DataObject::getDefaultSearchContext()},
+	 * and the current GET parameters on the request.
+	 * 
+	 * @see ModelAdmin_CollectionController::getSearchQuery()
+	 * @return SQLQuery
+	 */
 	function getSearchQuery($searchCriteria) {
 		$query = parent::getSearchQuery($searchCriteria);
 		if(!is_subclass_of($this->getModelClass(),"SiteTree")) {
@@ -104,8 +210,23 @@ class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
 
 }
 
+/**
+ * Handles operations on a single model record.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage admin
+ * @version 1.0
+ */
 class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 
+  /**
+   * Create the form for editing a model.
+   * 
+   * @see ModelAdmin_RecordController::EditForm()
+   * @return Form
+   */
 	public function EditForm() {
 		$form = parent::EditForm();
 
@@ -146,6 +267,13 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 		return $form;	
 	}
 		
+	/**
+	 * Handle publishign a record
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 * @param SS_HttpRequest $request
+	 */
 	public function publish($data, $form, $request) {
 		if($this->currentRecord && !$this->currentRecord->canPublish()) 
 			return Security::permissionFailure($this);
@@ -166,6 +294,13 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 		}
 	}
 	
+	/**
+	 * Handle unpublishing a record
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 * @param SS_HttpRequest $request
+	 */
 	public function unpublish($data, $form, $request) {
 		if($this->currentRecord && !$this->currentRecord->canDeleteFromLive()) 
 			return Security::permissionFailure($this);
@@ -186,15 +321,28 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 
 	}
 	
+	/**
+	 * Handle a rollback for a record.
+	 * 
+	 * @param Int $id
+	 * @param Int|String $version Either the string 'Live' or a version number
+	 */
 	protected function performRollback($id, $version) {
 		$record = DataObject::get_by_id($this->currentRecord->class, $id);
 		if($record && !$record->canEdit()) 
 			return Security::permissionFailure($this);
-		
+
 		$record->doRollbackTo($version);
 		return $record;
 	}
 	
+	/**
+	 * Handle a rollback for a record.
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 * @param SS_HttpRequest $request
+	 */
 	public function rollback($data, $form, $request) {
 		$record = $this->performRollback($this->currentRecord->ID, "Live");
 		if(Director::is_ajax()) {
@@ -210,7 +358,13 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 		}
 	}
 	
-		
+	/**
+	 * Handle deleting a record.
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 * @param SS_HttpRequest $request
+	 */
 	public function delete($data, $form, $request) {
 		$record = $this->currentRecord;
 		if($record && !$record->canDelete())
@@ -234,6 +388,13 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 		}
 	}
 	
+	/**
+	 * Handle saving a record.
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 * @param SS_HttpRequest $request
+	 */
 	public function save($data, $form, $request) {
 	  
 		if($this->currentRecord && !$this->currentRecord->canEdit()) {
@@ -304,6 +465,13 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 		}
 	}	
 	
+	/**
+	 * Handle deleting a record from the live site, unpublishing.
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 * @param SS_HttpRequest $request
+	 */
 	public function deletefromlive($data, $form, $request) {
 		Versioned::reading_stage('Live');
 		$record = $this->currentRecord;

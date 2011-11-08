@@ -1,6 +1,6 @@
 <?php
 /**
- * An account page which displays the order history for any given member and displays an individual order.
+ * An account page which displays the order history for any given {@link Member} and displays an individual {@link Order}.
  * Automatically created on install of the shop module, cannot be deleted by admin user
  * in the CMS. A required page for the shop module.
  * 
