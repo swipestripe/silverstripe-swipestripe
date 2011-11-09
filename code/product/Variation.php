@@ -72,29 +72,11 @@ class Variation extends DataObject {
   public function __get($property) {
 
     if (strpos($property, 'AttributeValue_') === 0) {
-      return $this->getOptionValueForAttribute(str_replace('AttributeValue_', '', $property));
+      return $this->SummaryOfOptionValueForAttribute(str_replace('AttributeValue_', '', $property));
     }
     else {
       return parent::__get($property);
     }
-	}
-	
-	/**
-	 * Get attribute option value, helper method
-	 * 
-	 * @see Variation::__get()
-	 * @param Int $attributeID
-	 * @return String
-	 */
-	public function getOptionValueForAttribute($attributeID) {
-
-	  $options = $this->Options();
-	  if ($options && $options->exists()) foreach ($options as $option) {
-	    if ($option->AttributeID == $attributeID) {
-	      return $option->Title;
-	    }
-	  } 
-	  return null;
 	}
 	
 	/**
@@ -112,26 +94,6 @@ class Variation extends DataObject {
 	    }
 	  } 
 	  return null;
-	}
-	
-	/**
-	 * Get a summary of the Options, helper method for displaying Options nicely
-	 * 
-	 * TODO allow attributes to be sorted
-	 * 
-	 * @return String
-	 */
-	function SummaryOfOptions() {
-	  $options = $this->Options();
-	  $options->sort('AttributeID');
-	  
-	  $temp = array();
-	  $summary = '';
-	  if ($options && $options->exists()) foreach ($options as $option) {
-	    $temp[] = $option->Title;
-	  } 
-	  $summary = implode(', ', $temp);
-	  return $summary;
 	}
 	
 	/**
@@ -163,6 +125,44 @@ class Variation extends DataObject {
     
     return $fields;
   }
+  
+	/**
+	 * Get a summary of the Options, helper method for displaying Options nicely
+	 * 
+	 * TODO allow attributes to be sorted
+	 * 
+	 * @return String
+	 */
+	function SummaryOfOptions() {
+	  $options = $this->Options();
+	  $options->sort('AttributeID');
+	  
+	  $temp = array();
+	  $summary = '';
+	  if ($options && $options->exists()) foreach ($options as $option) {
+	    $temp[] = $option->Title;
+	  } 
+	  $summary = implode(', ', $temp);
+	  return $summary;
+	}
+	
+	/**
+	 * Get attribute option value, helper method
+	 * 
+	 * @see Variation::__get()
+	 * @param Int $attributeID
+	 * @return String
+	 */
+	public function SummaryOfOptionValueForAttribute($attributeID) {
+
+	  $options = $this->Options();
+	  if ($options && $options->exists()) foreach ($options as $option) {
+	    if ($option->AttributeID == $attributeID) {
+	      return $option->Title;
+	    }
+	  } 
+	  return null;
+	}
   
   /**
    * Summary of stock, not currently used.
