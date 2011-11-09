@@ -257,11 +257,32 @@ class Product extends Page {
       ),
       'getCMSFields_forPopup'
     );
+    $fields->addFieldToTab("Root.Content.Gallery", new HeaderField(
+    	'GalleryHeading', 
+    	'Add images for this product, the first image will be used as a thumbnail',
+      3
+    ));
     $fields->addFieldToTab("Root.Content.Gallery", $manager);
     
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
+		
+		//Product categories
+    $manager = new ManyManyComplexTableField(
+      $this,
+      'ProductCategories',
+      'ProductCategory',
+      array(),
+      'getCMSFields_forPopup'
+    );
+    $manager->setPermissions(array());
+    $fields->addFieldToTab("Root.Content.Categories", new HeaderField(
+    	'CategoriesHeading', 
+    	'Select categories you would like this product to appear in',
+      3
+    ));
+    $fields->addFieldToTab("Root.Content.Categories", $manager);
 		
 		//Attributes selection
 		$anyAttribute = DataObject::get_one('Attribute');
@@ -274,7 +295,20 @@ class Product extends Page {
         'getCMSFields'
       );
       $tablefield->setPermissions(array());
-      $fields->addFieldToTab("Root.Attributes", $tablefield);
+      $fields->addFieldToTab("Root.Content.Attributes", new HeaderField(
+      	'AttributeHeading', 
+      	'Select attributes for this product',
+        3
+      ));
+      $attributeHelp = <<<EOS
+<p class="ProductHelp">
+Once attributes are selected don't forget to save. 
+Always make sure there are options for each attribute and variations which are enabled and have 
+an option selected for each attribute.
+</p>
+EOS;
+      $fields->addFieldToTab("Root.Content.Attributes", new LiteralField('AttributeHelp', $attributeHelp));
+      $fields->addFieldToTab("Root.Content.Attributes", $tablefield);
 		}
 
     //Options selection
@@ -320,6 +354,7 @@ class Product extends Page {
         $manager->setAttributeID($attribute->ID);
         $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
       }
+
       
       //$variationFieldList['SummaryOfStock'] = 'Stock';
       $variationFieldList['SummaryOfPrice'] = 'Price Difference';
@@ -334,17 +369,6 @@ class Product extends Page {
       );
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
-    
-    //Product categories
-    $manager = new ManyManyComplexTableField(
-      $this,
-      'ProductCategories',
-      'ProductCategory',
-      array(),
-      'getCMSFields_forPopup'
-    );
-    $manager->setPermissions(array());
-    $fields->addFieldToTab("Root.Content.Categories", $manager);
     
     return $fields;
 	}

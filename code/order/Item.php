@@ -177,14 +177,14 @@ class Item extends DataObject {
 	  //Check that variation exists if required, not on first write when ItemOption hasn't had a chance to be written
 	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid()) && !$firstWrite) {
       $result->error(
-	      'Sorry, product options are incorrect',
+	      'Sorry, these product options are no longer available',
 	      'VariationExistsError'
 	    );
 	  }
 	  //If a variation does exist, check that it is valid
-	  if ($variation && !$variation->validateForCart()->valid()) {
+	  else if ($variation && !$variation->validateForCart()->valid()) {
 	    $result->error(
-	      'Sorry, product options are incorrect',
+	      'Sorry, these product options are no longer available',
 	      'VariationIncorrectError'
 	    );
 	  }

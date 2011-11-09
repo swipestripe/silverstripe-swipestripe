@@ -84,4 +84,8 @@ body.ModelAdmin #left {
 width:307px!important;
 }
 
-
+p.ProductHelp {
+padding: 5px 0px;
+font-size: 12px;
+font-weight: bold;
+}

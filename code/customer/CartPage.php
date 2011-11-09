@@ -134,7 +134,9 @@ class CartPage_Controller extends Page_Controller {
       new FormAction('goToCheckout', 'Go To Checkout')
     );
     
-    return new CartForm($this, 'CartForm', $fields, $actions, $validator, $currentOrder);
+    $cartForm = new CartForm($this, 'CartForm', $fields, $actions, $validator, $currentOrder);
+    $cartForm->disableSecurityToken();
+    return $cartForm;
 	}
 	
 	/**
