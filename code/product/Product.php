@@ -443,6 +443,12 @@ class Product extends Page {
     return $attributes && $attributes->exists();
   }
   
+  /**
+   * Get options for an Attribute of this Product.
+   * 
+   * @param Int $attributeID
+   * @return DataObjectSet
+   */
   public function getOptionsForAttribute($attributeID) {
     
     $options = new DataObjectSet();

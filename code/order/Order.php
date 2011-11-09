@@ -484,8 +484,10 @@ class Order extends DataObject {
       $item->Quantity = $quantity;
       $item->OrderID = $this->ID;
       $item->write();
-
+      
+      
       if ($productOptions && $productOptions->exists()) foreach ($productOptions as $productOption) {
+        
         $itemOption = new ItemOption();
         $itemOption->ObjectID = $productOption->ID;
         $itemOption->ObjectClass = $productOption->class;
