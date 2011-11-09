@@ -117,12 +117,14 @@ class Variation extends DataObject {
 	/**
 	 * Get a summary of the Options, helper method for displaying Options nicely
 	 * 
-	 * TODO this needs to return Options in order of Attributes
+	 * TODO allow attributes to be sorted
 	 * 
 	 * @return String
 	 */
 	function SummaryOfOptions() {
 	  $options = $this->Options();
+	  $options->sort('AttributeID');
+	  
 	  $temp = array();
 	  $summary = '';
 	  if ($options && $options->exists()) foreach ($options as $option) {
