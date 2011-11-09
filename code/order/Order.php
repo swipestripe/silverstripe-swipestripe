@@ -1,32 +1,50 @@
 <?php
-
+/**
+ * Order, created as soon as a user adds a {@link Product} to their cart, the cart is 
+ * actually an Order with status of 'Cart'. Has many {@link Item}s and can have {@link Modifier}s
+ * which might represent shippng, gift wrapping, coupon codes etc.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage order
+ * @version 1.0
+ */
 class Order extends DataObject {
   
   /**
-   * Order has been made, waiting for payment
-   * to clear/be approved
+   * Order status once Order has been made, waiting for payment to clear/be approved
    * 
    * @var String
    */
   const STATUS_PENDING = 'Pending';
   
   /**
-   * Payment approved, order being processed
-   * before being dispatched
+   * Order status once payment approved, order being processed before being dispatched
    * 
    * @var String
    */
   const STATUS_PROCESSING = 'Processing';
   
   /**
-   * Order has been sent
+   * Order status once Order has been sent
    * 
    * @var String
    */
   const STATUS_DISPATCHED = 'Dispatched';
   
+  /**
+   * Related to timeouts on checkout page for stock management. Not implemented yet.
+   * 
+   * @var Int
+   */
   protected static $timeout = 0;
 
+  /**
+   * DB fields for Order, such as Stauts, Payment Status etc.
+   * 
+   * @var Array
+   */
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
@@ -39,15 +57,30 @@ class Order extends DataObject {
 	  'Notes' => 'Text'
 	);
 	
+	/**
+	 * Default values for Order
+	 * 
+	 * @var Array
+	 */
 	public static $defaults = array(
 	  'ReceiptSent' => false,
 	  'PaidEmailSent' => false
 	);
 
+	/**
+	 * Relations for this Order
+	 * 
+	 * @var Array
+	 */
 	public static $has_one = array(
 		'Member' => 'Member'
 	);
 
+	/*
+	 * Relations for this Order
+	 * 
+	 * @var Array
+	 */
 	public static $has_many = array(
 	  'Items' => 'Item',
 		'Payments' => 'Payment',
@@ -55,6 +88,11 @@ class Order extends DataObject {
 	  'Addresses' => 'Address'
 	);
 	
+	/**
+	 * Overview fields for displaying Orders in the admin area
+	 * 
+	 * @var Array
+	 */
 	public static $table_overview_fields = array(
 		'ID' => 'Order No',
 		'Created' => 'Created',
@@ -64,6 +102,11 @@ class Order extends DataObject {
 		'Status' => 'Status'
 	);
 	
+	/**
+	 * Summary fields for displaying Orders in the admin area
+	 * 
+	 * @var Array
+	 */
 	public static $summary_fields = array(
 	  'ID' => 'Order No',
 		'OrderedOn' => 'Date',
@@ -72,6 +115,11 @@ class Order extends DataObject {
 		'Status' => 'Status'
 	);
 	
+	/**
+	 * Searchable fields with search filters
+	 * 
+	 * @var Array
+	 */
 	public static $searchable_fields = array(
 	  'ID' => array(
 			'field' => 'TextField',
@@ -98,18 +146,29 @@ class Order extends DataObject {
   	)
 	);
 	
+	/**
+	 * Castings for the searchable fields
+	 * 
+	 * @var Array
+	 */
 	public static $casting = array(
 		'HasPayment' => 'Money'
 	);
 	
+	/**
+	 * Table type for Orders should be InnoDB to support transactions - which are not implemented yet.
+	 * 
+	 * @var Array
+	 */
 	static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 	
 	/**
-	 * Filter for order admin area search.
+	 * Filters for order admin area search.
 	 * 
 	 * @see DataObject::scaffoldSearchFields()
+	 * @return FieldSet
 	 */
   function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
@@ -128,6 +187,7 @@ class Order extends DataObject {
 	 * the search results in OrderAdmin
 	 * 
 	 * @see DataObject::getDefaultSearchContext()
+	 * @return DateRangeSearchContext
 	 */
   public function getDefaultSearchContext() {
   	return new DateRangeSearchContext(
@@ -141,6 +201,7 @@ class Order extends DataObject {
 	 * Prevent orders from being created in the CMS
 	 * 
 	 * @see DataObject::canCreate()
+	 * @return Boolean False always
 	 */
   public function canCreate($member = null) {
     return false;
@@ -148,7 +209,9 @@ class Order extends DataObject {
 	
 	/**
 	 * Prevent orders from being deleted in the CMS
+	 * 
 	 * @see DataObject::canDelete()
+	 * @return Boolean False always
 	 */
   public function canDelete($member = null) {
     return false;
@@ -219,7 +282,9 @@ class Order extends DataObject {
 		  ));
 		}
 		
+		//Remanant of an earlier version of the cart.
 		//TODO move this to virtual products
+		/*
 		if ($this->Downloads() && $this->Downloads()->exists()) {
   		$fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
   		$fields->addFieldToTab('Root.Actions', new LiteralField(
@@ -234,46 +299,9 @@ class Order extends DataObject {
   		  ));
   		}
 		}
+		*/
 		
 	  return $fields;
-	}
-	
-	/**
-	 * Trying something for pending options UI in admin area 
-	 * 
-	 * @deprecated
-	 * @return unknown
-	 */
-	public function PendingOptions() {
-	  
-	  	//Workflow fields
-//		$fields->addFieldToTab("Root", new Tab('WorkFlow'));
-//		
-//		$statuses = $this->dbObject('Status')->enumValues();
-//		unset($statuses['Cart']);
-//		$fields->addFieldToTab('Root.WorkFlow', new DropdownField('Status', 'Status', $statuses));
-//		
-//		SS_Log::log(new Exception(print_r($this->Status, true)), SS_Log::NOTICE);
-//		
-//		$workflowContent = $this->renderWith('OrderAdminWorkFlow');
-//		$fields->addFieldToTab('Root.WorkFlow', new LiteralField('OrderWorkFlow', $workflowContent));
-
-    $fields = new FieldSet();
-    
-    $fields->push(new DropdownField( 
-      'PaymentStatus', 
-      'This order is:', 
-      $this->dbObject('PaymentStatus')->enumValues(),
-      $this->PaymentStatus
-    ));
-    
-    $content = ($this->ReceiptSent) ?'has' :'has not';
-    $fields->push(new LiteralField('ReceiptSent', "A receipt <strong>$content</strong> been sent to the customer."));
-    
-    //Set the form as a hack to set form field IDs
-    $form = new Form($this, 'EditForm', new FieldSet(), new FieldSet());
-    $fields->setForm($form);
-    return $fields;
 	}
 	
 	/**
@@ -281,6 +309,7 @@ class Order extends DataObject {
 	 * OrderAdmin_RecordController actions of the same name
 	 * 
 	 * @see DataObject::getCMSActions()
+	 * @return FieldSet
 	 */
 	public function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -290,7 +319,7 @@ class Order extends DataObject {
 	/**
 	 * Helper to get a nicely formatted total of the order
 	 * 
-	 * @return String
+	 * @return String Order total formatted with Nice()
 	 */
 	function SummaryTotal() {
 	  return $this->dbObject('Total')->Nice();
@@ -309,13 +338,12 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * Helper to get payments made for this order
+	 * Helper to get {@link Payment}s that are made against this Order
 	 * 
 	 * @return DataObjectSet Set of Payment objects
 	 */
 	function Payments() {
-	  $payments = DataObject::get('Payment', "PaidForID = $this->ID AND PaidForClass = '$this->class'");
-	  return $payments;
+	  return DataObject::get('Payment', "PaidForID = $this->ID AND PaidForClass = '$this->class'");
 	}
 	
 	/**
@@ -363,8 +391,8 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Processed if payment is successful,
-	 * send a receipt to the customer
+	 * Processed if payment is successfully written, send a receipt to the customer
+	 * TODO move sending receipts to CheckoutPage::ProcessOrder()
 	 * 
 	 * @see PaymentDecorator::onAfterWrite()
 	 */
@@ -392,21 +420,8 @@ class Order extends DataObject {
 		//TODO if payment Status = Failure send a payment email?
 	}
 	
-	public function onAfterPaymentSuccess() {
-	  
-	}
-	
-	public function onAfterPaymentProcessing() {
-	  
-	}
-	
-	public function onAfterPaymentFailure() {
-	  
-	}
-	
 	/**
-	 * Update the order payment status after payment,
-	 * send email to customer if order is paid
+	 * Update the order payment status after Payment is made.
 	 * 
 	 * @see Order::onAfterPayment()
 	 */
@@ -435,7 +450,7 @@ class Order extends DataObject {
 	
 	/**
 	 * Add an item to the order representing the product, 
-	 * if an item for this product exists increase the quantity
+	 * if an item for this product exists increase the quantity. Update the Order total afterward.
 	 * 
 	 * @param DataObject $product The product to be represented by this order item
 	 * @param DataObjectSet $productOptions The product variations to be added, usually just one
@@ -487,10 +502,13 @@ class Order extends DataObject {
 	
 	/**
 	 * Find an identical item in the order/cart, item is identical if the 
-	 * productID, version and the options for the item are the same.
+	 * productID, version and the options for the item are the same. Used to increase 
+	 * quantity of items that already exist in the cart/Order.
 	 * 
+	 * @see Order::addItem()
 	 * @param DatObject $product
 	 * @param DataObjectSet $productOptions
+	 * @return DataObject
 	 */
 	function findIdenticalItem($product, DataObjectSet $productOptions) {
 	  
@@ -515,38 +533,6 @@ class Order extends DataObject {
     	  }
 	    }
 	  }
-	}
-	
-	/**
-	 * Decrease quantity of an item or remove it if quantity = 1
-	 * 
-	 * @param DataObject $product The product to remove
-	 * @deprecated
-	 */
-	function removeItem(DataObject $product, $quantity = 1) {
-	  
-	  return;
-	  
-	  //If quantity not correct throw error
-	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-	    user_error("Cannot remove item from cart, quantity must be a positive number.", E_USER_WARNING);
-	    //TODO return meaningful error to browser in case error not shown
-	    return;
-	  }
-
-	  //Update order items
-    $item = $this->Items()->find('ObjectID', $product->ID);
-
-    if ($item && $item->exists()) {
-      if ($item->Quantity <= $quantity) {
-        $item->delete();
-      }
-      else {
-        $item->Quantity = $item->Quantity - $quantity;
-        $item->write();
-      }
-    }
-    $this->updateTotal();
 	}
 	
 	/**
@@ -578,30 +564,11 @@ class Order extends DataObject {
 	  $this->Total->setCurrency(Payment::site_currency());
     $this->write();
 	}
-	
+
 	/**
-	 * Retrieving the downloadable virtual products for this order
+	 * Retreive products for this order from the order {@link Item}s.
 	 * 
-	 * @return DataObjectSet Items for this order that can be downloaded
-	 */
-	function Downloads() {
-	  
-	  $virtualItems = new DataObjectSet();
-	  $items = $this->Items();
-	  
-	  foreach ($items as $item) {
-	    
-	    if (isset($item->Object()->FileLocation) && $item->Object()->FileLocation) {
-	      $virtualItems->push($item);
-	    }
-	  }
-	  return $virtualItems;
-	}
-	
-	/**
-	 * Retreive products for this order from the order items.
-	 * 
-	 * @return DataObjectSet Set of Products, likely to be children of Page class
+	 * @return DataObjectSet Set of {@link Product}s
 	 */
 	function Products() {
 	  $items = $this->Items();
@@ -635,37 +602,12 @@ class Order extends DataObject {
 	  }
 	  return $status;
 	}
-	
+
 	/**
-	 * Testing to add auto increment to table
-	 */
-	public function augmentDatabase() {
-//	  $tableName = $this->class;
-//	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
-//	  
-	  SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
-	}
-	
-	/**
-	 * Set an order timeout, must be less than session timeouts, 
-	 * timeout prevents products in the order being sold out in the mean 
-	 * time 
+	 * Save modifiers for this Order at the checkout process. 
 	 * 
-	 * @param unknown_type $timeout
+	 * @param Array $data
 	 */
-  public static function set_timeout($timeout) {
-    
-    //TODO check that session 
-    $ssSessionTimeout = Session::get_timeout();
-    $phpSessionTimeout = session_cache_expire();
-    
-		self::$timeout = intval($timeout);
-	}
-	
-	public static function get_timeout() {
-		return self::$timeout;
-	}
-	
 	function addModifiersAtCheckout(Array $data) {
 
 	  //Save the order modifiers
@@ -707,6 +649,11 @@ class Order extends DataObject {
 	  $this->updateTotal();
 	}
 	
+	/**
+	 * Add addresses to this Order at the checkout.
+	 * 
+	 * @param Array $data
+	 */
 	function addAddressesAtCheckout(Array $data) {
 
 	  $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
@@ -767,6 +714,11 @@ class Order extends DataObject {
     }
 	}
 	
+	/**
+	 * Retrieve the billing {@link Address} for this Order.
+	 * 
+	 * @return Address
+	 */
 	function BillingAddress() {
 	  $address = null;
 	  
@@ -778,6 +730,11 @@ class Order extends DataObject {
 	  return $address;
 	}
 	
+	/**
+	 * Retrieve the shipping {@link Address} for this Order.
+	 * 
+	 * @return Address
+	 */
   function ShippingAddress() {
 	  $address = null;
 	  
@@ -789,6 +746,12 @@ class Order extends DataObject {
 	  return $address;
 	}
 	
+	/**
+	 * Valdiate this Order for use in Validators at checkout. Makes sure
+	 * Items exist and each Item is valid.
+	 * 
+	 * @return ValidationResult
+	 */
 	function validateForCart() {
 	  
 	  $result = new ValidationResult(); 
@@ -817,11 +780,69 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * TODO validate Item before write()
+	 * By default Orders are always valid
 	 * 
 	 * @see DataObject::validate()
 	 */
 	function validate() {
 	  return parent::validate();
+	}
+	
+	/**
+	 * Set an order timeout, must be less than session timeouts, 
+	 * timeout prevents products in the order being sold out in the mean 
+	 * time. Not yet implemented.
+	 * 
+	 * @param Int $timeout
+	 */
+  public static function set_timeout($timeout) {
+    
+    //TODO check that session 
+    $ssSessionTimeout = Session::get_timeout();
+    $phpSessionTimeout = session_cache_expire();
+    
+		self::$timeout = intval($timeout);
+	}
+	
+	/**
+	 * Get the order timeout, for managing stock levels. Not yet implemented.
+	 * 
+	 * @return Int
+	 */
+	public static function get_timeout() {
+		return self::$timeout;
+	}
+	
+	/**
+	 * Testing to add auto increment to table
+	 * 
+	 * @deprecated
+	 */
+	public function augmentDatabase() {
+//	  $tableName = $this->class;
+//	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
+//	  
+	  //SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
+	}
+	
+	/**
+	 * Retrieving the downloadable virtual products for this order. This is a remanant of
+	 * a previous version of the cart.
+	 * 
+	 * @return DataObjectSet Items for this order that can be downloaded
+	 * @deprecated
+	 */
+	function Downloads() {
+	  
+	  $virtualItems = new DataObjectSet();
+	  $items = $this->Items();
+	  
+	  foreach ($items as $item) {
+	    
+	    if (isset($item->Object()->FileLocation) && $item->Object()->FileLocation) {
+	      $virtualItems->push($item);
+	    }
+	  }
+	  return $virtualItems;
 	}
 }

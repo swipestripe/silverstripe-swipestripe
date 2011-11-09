@@ -1,7 +1,22 @@
 <?php
-
+/**
+ * An Item for an {@link Order}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage order
+ * @version 1.0
+ */
 class Item extends DataObject {
 
+  /**
+   * DB fields for an Item, the object this Item represents (e.g. {@link Product}
+   * has a version ID saved as well, so if price is changed or something then 
+   * a record of the price at time of ordering exists and can be retrieved.
+   * 
+   * @var Array
+   */
 	public static $db = array(
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
@@ -11,14 +26,29 @@ class Item extends DataObject {
 	  'DownloadCount' => 'Int' //If item represents a downloadable product,
 	);
 
+	/**
+	 * Relations for this class
+	 * 
+	 * @var Array
+	 */
 	public static $has_one = array(
 		'Order' => 'Order'
 	);
 	
+	/**
+	 * Relations for this class
+	 * 
+	 * @var Array
+	 */
 	public static $has_many = array(
 	  'ItemOptions' => 'ItemOption'
 	);
 	
+	/**
+	 * Default values for this class
+	 * 
+	 * @var Array
+	 */
 	public static $defaults = array(
 	  'Quantity' => 1,
 	  'DownloadCount' => 0
@@ -29,18 +59,17 @@ class Item extends DataObject {
 	);
 	
 	/**
-	 * Retrieve the object this item represents (Product)
-	 * TODO serialize product object data and save in item row
+	 * Retrieve the object this item represents (e.g. {@link Product}). Uses versioning
+	 * so that the product that was bought can be retrieved with all the correct details.
 	 * 
 	 * @return DataObject 
 	 */
 	function Object() {
-	  //return DataObject::get_by_id($this->ObjectClass, $this->ObjectID);
 	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
 	}
 	
 	/**
-	 * Find item options and delete them
+	 * Find item options and delete them to clean up DB.
 	 * 
 	 * @see DataObject::onBeforeDelete()
 	 */
@@ -54,9 +83,9 @@ class Item extends DataObject {
 	}
 	
 	/**
-	 * Get unit price for this item including item options price
+	 * Get unit price for this Item including price or any {@link ItemOption}s.
 	 * 
-	 * @return Money
+	 * @return Money Item price inclusive of item options prices
 	 */
 	public function UnitPrice() {
 
@@ -72,9 +101,9 @@ class Item extends DataObject {
 	}
 	
 	/**
-	 * Get unit price for this item including item options price and quantity
+	 * Get unit price for this item including item options price and quantity.
 	 * 
-	 * @return Money
+	 * @return Money Item total inclusive of item options prices and quantity
 	 */
 	public function Total() {
 
@@ -89,57 +118,12 @@ class Item extends DataObject {
 	  $subTotal->setCurrency($this->Amount->getCurrency());
 	  return $subTotal;
 	}
-	
-	/**
-	 * Return the link that should be used for downloading the 
-	 * virtual product represented by this item.
-	 * 
-	 * @return Mixed URL to download or false
-	 */
-	function DownloadLink() {
 
-	  if ($this->DownloadCount < $this->getDownloadLimit()) {
-	    
-	    //If order is not paid do not provide access to download
-	    $order = $this->Order();
-	    if (!$order->getPaid()) {
-	      return false;
-	    }
-	  
-  	  if ($accountPage = DataObject::get_one('AccountPage')) {
-  	    return $accountPage->Link() . 'downloadproduct/?ItemID='.$this->ID;
-  	  }
-  	  else {
-  	    return false;
-  	  }
-	  
-	  }
-	  else {
-	    return false;
-	  }
-	}
-	
-	/**
-	 * Number of times this item can be downloaded for this order
-	 * 
-	 * @return Int
-	 */
-	function getDownloadLimit() {
-	  return VirutalProductDecorator::$downloadLimit * $this->Quantity;
-	}
-	
-	/**
-	 * Calculate remaining number of downloads for this item
-	 * 
-	 * @return Int
-	 */
-	function RemainingDownloadLimit() {
-	  return $this->getDownloadLimit() - $this->DownloadCount;
-	}
-	
 	/**
 	 * Get the variation for the item if a Variation exists in the ItemOptions
-	 * This assumes only one variation per item
+	 * This assumes only one variation per item.
+	 * 
+	 * @return Variation
 	 */
 	function Variation() {
 	  $itemOptions = $this->ItemOptions();
@@ -154,6 +138,11 @@ class Item extends DataObject {
 	  return $variation;
 	}
 	
+	/**
+	 * Validate this Item to make sure it can be added to a cart.
+	 * 
+	 * @return ValidationResult
+	 */
 	function validateForCart() {
 	  return $this->validate();
 	}
@@ -165,6 +154,7 @@ class Item extends DataObject {
 	 * TODO remove the check for $firstWrite when transactions are implemented
 	 * 
 	 * @see DataObject::validate()
+	 * @return ValidationResult
 	 */
 	function validate() {
 
@@ -208,5 +198,58 @@ class Item extends DataObject {
 	  }
 
 	  return $result;
+	}
+	
+	/**
+	 * Return the link that should be used for downloading the 
+	 * virtual product represented by this item.
+	 * This is a remanant of an earlier cart and not currently used.
+	 * 
+	 * @return Mixed URL to download or false
+	 * @deprecated
+	 */
+	function DownloadLink() {
+
+	  if ($this->DownloadCount < $this->getDownloadLimit()) {
+	    
+	    //If order is not paid do not provide access to download
+	    $order = $this->Order();
+	    if (!$order->getPaid()) {
+	      return false;
+	    }
+	  
+  	  if ($accountPage = DataObject::get_one('AccountPage')) {
+  	    return $accountPage->Link() . 'downloadproduct/?ItemID='.$this->ID;
+  	  }
+  	  else {
+  	    return false;
+  	  }
+	  
+	  }
+	  else {
+	    return false;
+	  }
+	}
+	
+	/**
+	 * Number of times this item can be downloaded for this order.
+	 * This is a remenant of an earlier cart.
+	 * 
+	 * @return Int
+	 * @deprecated
+	 */
+	function getDownloadLimit() {
+	  return VirutalProductDecorator::$downloadLimit * $this->Quantity;
+	}
+	
+	/**
+	 * Calculate remaining number of downloads for this item,
+	 * Remenant of an earlier cart.
+	 * 
+	 * @return Int
+	 * @deprecated
+	 */
+	function RemainingDownloadLimit() {
+	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}
 }

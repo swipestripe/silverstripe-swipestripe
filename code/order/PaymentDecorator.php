@@ -1,12 +1,21 @@
 <?php
 /**
- * Mixin to augment the Payment class
+ * Mixin to augment the {@link Payment} class.
  * Payment statuses: Incomplete,Success,Failure,Pending
  * 
- * @author frankmullenger
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage order
+ * @version 1.0
  */
 class PaymentDecorator extends DataObjectDecorator {
 
+  /**
+   * Extra fields to be added to the {@link Payment} class.
+   * 
+   * @see DataObjectDecorator::extraStatics()
+   */
 	function extraStatics() {
 
 		return array(
@@ -23,45 +32,49 @@ class PaymentDecorator extends DataObjectDecorator {
 	}
 
 	/**
-	 * Cannot create payments in the CMS
+	 * Cannot create {@link Payment}s in the CMS.
 	 * 
 	 * @see DataObjectDecorator::canCreate()
+	 * @return Boolean False always
 	 */
 	function canCreate($member = null) {
 		return false;
 	}
 
 	/**
-	 * Cannot delete payments in the CMS
+	 * Cannot delete {@link Payment}s in the CMS.
 	 * 
 	 * @see DataObjectDecorator::canDelete()
+	 * @return Boolean False always
 	 */
 	function canDelete($member = null) {
 		return false;
 	}
 	
 	/**
-	 * Helper to get a nicely formatted amount for this payment
+	 * Helper to get a nicely formatted amount for this {@link Payment}
 	 * 
-	 * @return String
+	 * @return String Payment amount formatted with Nice()
 	 */
 	function SummaryAmount() {
 	  return $this->owner->dbObject('Amount')->Nice();
 	}
 	
 	/**
-	 * Helper to get type of payment depending on payment class (system) used
+	 * Helper to get type of {@link Payment} depending on payment class used.
 	 * 
-	 * @return String
+	 * @return String Payment class name with camel case exploded
 	 */
 	function SummaryType() {
 	  return implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', $this->owner->ClassName));
 	}
 	
 	/**
-	 * Fields to display this payment in the CMS
+	 * Fields to display this {@link Payment} in the CMS, removed some of the 
+	 * unnecessary fields.
 	 * 
 	 * @see DataObjectDecorator::updateCMSFields()
+	 * @return FieldSet
 	 */
   function updateCMSFields(FieldSet &$fields) {
 
@@ -94,8 +107,9 @@ class PaymentDecorator extends DataObjectDecorator {
 	}
 
 	/**
-	 * After payment success process Order::onAfterPayment()
+	 * After payment success process onAfterPayment() in {@link Order}.
 	 * 
+	 * @see Order::onAfterPayment()
 	 * @see DataObjectDecorator::onAfterWrite()
 	 */
 	function onAfterWrite() {

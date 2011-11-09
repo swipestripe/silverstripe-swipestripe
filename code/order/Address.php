@@ -1,7 +1,20 @@
 <?php
-
+/**
+ * Represents a shipping or billing address which are both attached to {@link Order}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage order
+ * @version 1.0
+ */
 class Address extends DataObject {
 
+  /**
+   * DB fields for an address
+   * 
+   * @var Array
+   */
 	public static $db = array(
 		'Type' => "Enum('Billing,Shipping','Billing')",
 	  'FirstName' => 'Varchar',
@@ -15,21 +28,30 @@ class Address extends DataObject {
 		'Country' => 'Varchar',
 	);
 
+	/**
+	 * Relations for address
+	 * 
+	 * @var Array
+	 */
 	public static $has_one = array(
 		'Order' => 'Order',
 	  'Member' => 'Member'
 	);
 	
+	/**
+	 * Table type needs to be InnoDB for transaction support (not currently implemented).
+	 * 
+	 * @var Array
+	 */
 	static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 	
 	/**
 	 * Return data in an Array with keys formatted to match the field names
-	 * on the checkout form.
+	 * on the checkout form so that it can be loaded into an order form.
 	 * 
 	 * @see Form::loadDataFrom()
-	 * 
 	 * @return Array Data for loading into the form
 	 */
 	function getCheckoutFormData($prefix = 'Billing') {
@@ -49,7 +71,9 @@ class Address extends DataObject {
 	}
 	
 	/**
-	 * TODO validate before write()
+	 * By default an order is always valid. Empty orders are often created and saved
+	 * in the DB to represent a cart, so cannot validate that Items and Addresses 
+	 * exist for the order until the checkout process.
 	 * 
 	 * @see DataObject::validate()
 	 */
