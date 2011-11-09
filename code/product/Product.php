@@ -1,12 +1,30 @@
 <?php
+/**
+ * Represents a Product, which is a type of a {@link Page}. Products are managed in a seperate
+ * admin area {@link ShopAdmin}. A product can have {@link Variation}s, in fact if a Product
+ * has attributes (e.g Size, Color) then it must have Variations.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage product
+ * @version 1.0
+ */
 class Product extends Page {
   
+  /**
+   * Flag for denoting if this is the first time this Product is being written.
+   * 
+   * @var Boolean
+   */
   protected $firstWrite = false;
   
   /**
    * Currency allowed to be used for products
    * Code match Payment::$site_currency
-   * Only once currency site wide allowed
+   * Only one currency site wide allowed
+   * 
+   * TODO Set currency in a central location
    * 
    * @var Array Currency code indexes currency name
    */
@@ -14,28 +32,58 @@ class Product extends Page {
     'NZD' => 'New Zealand Dollar'
   );
 
+  /**
+   * DB fields for Product.
+   * 
+   * @var Array
+   */
   public static $db = array(
     'Amount' => 'Money'
   );
 
+  /**
+   * Has many relations for Product.
+   * 
+   * @var Array
+   */
   public static $has_many = array(
     'Images' => 'ProductImage',
     'Options' => 'Option',
     'Variations' => 'Variation'
   );
   
+  /**
+   * Many many relations for Product
+   * 
+   * @var Array
+   */
   public static $many_many = array(
     'Attributes' => 'Attribute'
   );
   
+  /**
+   * Belongs many many relations for Product
+   * 
+   * @var Array
+   */
   static $belongs_many_many = array(    
     'ProductCategories' => 'ProductCategory'
   );
   
+  /**
+   * Defaults for Product
+   * 
+   * @var Array
+   */
   public static $defaults = array(
     'ParentID' => -1
   );
   
+  /**
+   * Summary fields for displaying Products in the CMS
+   * 
+   * @var Array
+   */
   public static $summary_fields = array(
     'FirstImage' => 'Image',
 	  'Title' => 'Name',
@@ -43,6 +91,11 @@ class Product extends Page {
     'CategoriesSummary' => 'Categories'
 	);
 	
+	/**
+   * Searchable fields for searching for Products in the CMS
+   * 
+   * @var Array
+   */
 	public static $searchable_fields = array(
 	  'Title' => array(
 			'field' => 'TextField',
@@ -58,6 +111,12 @@ class Product extends Page {
   	)
 	);
 	
+	/**
+   * Casting for searchable fields
+   * 
+   * @see Product::$searchable_fields
+   * @var Array
+   */
 	public static $casting = array(
 		'Category' => 'Varchar'
 	);
@@ -66,6 +125,7 @@ class Product extends Page {
 	 * Filter for order admin area search.
 	 * 
 	 * @see DataObject::scaffoldSearchFields()
+	 * @return FieldSet
 	 */
   function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
@@ -91,6 +151,61 @@ class Product extends Page {
 	}
 	
 	/**
+	 * Set firstWrite flag if this is the first time this Product is written.
+	 * 
+	 * @see SiteTree::onBeforeWrite()
+	 * @see Product::onAfterWrite()
+	 */
+  function onBeforeWrite() {
+    parent::onBeforeWrite();
+    if (!$this->ID) $this->firstWrite = true;
+  }
+  
+	/**
+   * Copy the original product options or generate the default product 
+   * options
+   * 
+   * @see SiteTree::onAfterWrite()
+   */
+  function onAfterWrite() {
+    parent::onAfterWrite();
+    
+    if ($this->firstWrite) {
+      
+      $original = DataObject::get_by_id($this->class, $this->original['ID']);
+      if ($original) {
+        $images = $original->Images();
+        $this->duplicateProductImages($images);
+      }
+    }
+
+    //If the variation does not have a complete set of valid options, then disable it
+    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
+
+    if ($variations) foreach ($variations as $variation) {
+      
+      if (!$variation->hasValidOptions()) {
+        $variation->Status = 'Disabled';
+        $variation->write();
+      }
+    }
+    
+    //If there are no enabled variations for this product when it requires them, unpublish the product
+    /*
+    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
+    if ((!$variations || !$variations->exists()) && $this->requiresVariation() && $this->isPublished()) {
+      
+      //TODO return a message to the CMS that this page was unpublished
+      
+      $this->doUnpublish();
+      
+      $this->Status = "Unpublished";
+			$this->write();
+    }
+    */
+  }
+	
+	/**
 	 * Unpublish products if they get deleted, such as in product admin area
 	 * 
 	 * @see SiteTree::onAfterDelete()
@@ -104,10 +219,10 @@ class Product extends Page {
   }
   
 	/**
-	 * Set the currency for all products.
-	 * Must match site curency
+	 * Set the currency for all products. Must match site curency.
+	 * TODO set currency for entire site in central location
 	 * 
-	 * @param array $currency
+	 * @param Array $currency
 	 */
 	public static function set_allowed_currency(Array $currency) {
 	  if (count($currency) && array_key_exists(Payment::site_currency(), $currency)) {
@@ -120,6 +235,12 @@ class Product extends Page {
 	  }
 	}
     
+	/**
+	 * Set some CMS fields for managing Product images, Variations, Options, Attributes etc.
+	 * 
+	 * @see Page::getCMSFields()
+	 * @return FieldSet
+	 */
 	public function getCMSFields() {
     $fields = parent::getCMSFields();
     
@@ -226,11 +347,14 @@ class Product extends Page {
     return $fields;
 	}
 
-  function onBeforeWrite() {
-    parent::onBeforeWrite();
-    if (!$this->ID) $this->firstWrite = true;
-  }
-
+  /**
+   * Hack to set Amount field in the array of database fields for this Product.
+   * Helps to ensure a new version is created when Amount (type of {@link Money}) is changed
+   * on a Product.
+   * 
+   * @see DataObject::inheritedDatabaseFields()
+   * @return Array
+   */
   public function inheritedDatabaseFields() {
 
 		$fields     = array();
@@ -248,49 +372,11 @@ class Product extends Page {
 	}
   
   /**
-   * Copy the original product options or generate the default product 
-   * options
+   * Duplicate product images, useful when duplicating a product. 
    * 
-   * @see SiteTree::onAfterWrite()
+   * @see Product::onAfterWrite()
+   * @param DataObjectSet $images
    */
-  function onAfterWrite() {
-    parent::onAfterWrite();
-    
-    if ($this->firstWrite) {
-      
-      $original = DataObject::get_by_id($this->class, $this->original['ID']);
-      if ($original) {
-        $images = $original->Images();
-        $this->duplicateProductImages($images);
-      }
-    }
-
-    //If the variation does not have a complete set of valid options, then disable it
-    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
-
-    if ($variations) foreach ($variations as $variation) {
-      
-      if (!$variation->hasValidOptions()) {
-        $variation->Status = 'Disabled';
-        $variation->write();
-      }
-    }
-    
-    //If there are no enabled variations for this product when it requires them, unpublish the product
-    /*
-    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
-    if ((!$variations || !$variations->exists()) && $this->requiresVariation() && $this->isPublished()) {
-      
-      //TODO return a message to the CMS that this page was unpublished
-      
-      $this->doUnpublish();
-      
-      $this->Status = "Unpublished";
-			$this->write();
-    }
-    */
-  }
-  
   protected function duplicateProductImages(DataObjectSet $images) {
     
     foreach ($images as $productImage) {
@@ -300,6 +386,11 @@ class Product extends Page {
     }
   }
   
+  /**
+   * Get the first Image of all Images attached to this Product.
+   * 
+   * @return Image
+   */
   public function FirstImage() {
     $images = $this->Images();
     $images->sort('SortOrder', 'ASC');
@@ -307,7 +398,9 @@ class Product extends Page {
   }
 	
 	/**
-	 * Summary of product categories for convenience
+	 * Summary of product categories for convenience, categories are comma seperated.
+	 * 
+	 * @return String
 	 */
 	function CategoriesSummary() {
 	  $summary = array();
@@ -320,17 +413,26 @@ class Product extends Page {
 	  return implode(', ', $summary);
 	}
 	
+	/**
+	 * Get the URL for this Product, products that are not part of the SiteTree are 
+	 * displayed by the {@link Product_Controller}.
+	 * 
+	 * @see SiteTree::Link()
+	 * @see Product_Controller::show()
+	 * @return String
+	 */
 	function Link($action = null) {
 	  
 	  if ($this->ParentID > -1) {
-	    return Controller::join_links(Director::baseURL() . 'product/', $this->URLSegment .'/');
-	    //return parent::Link($action);
+	    //return Controller::join_links(Director::baseURL() . 'product/', $this->URLSegment .'/');
+	    return parent::Link($action);
 	  }
 	  return Controller::join_links(Director::baseURL() . 'product/', $this->RelativeLink($action));
 	}
 	
 	/**
-   * A product is required to be added to a cart with a variation if it has attributes
+   * A product is required to be added to a cart with a variation if it has attributes.
+   * A product with attributes needs to have some enabled {@link Variation}s
    * 
    * @return Boolean
    */
@@ -355,25 +457,60 @@ class Product extends Page {
   }
 
 }
+
+/**
+ * Displays a product, add to cart form, gets options and variation price for a {@link Product} 
+ * via AJAX.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage product
+ * @version 1.0
+ */
 class Product_Controller extends Page_Controller {
   
+  /**
+   * Allowed actions for this controller
+   * 
+   * @var Array
+   */
   public static $allowed_actions = array (
-    'AddToCartForm',
   	'add',
     'options',
     'AddToCartForm',
     'variationprice',
-    'show'
+    'index'
   );
 
+  /**
+   * URL handlers to redirect URLs of the type /product/[Product URL Segment]
+   * to the correct actions. As well as directing norman nested URLs to the same
+   * actions. This is so that Products without a ParentID (not part of the site tree) 
+   * can be accessed from a nicely formatted generic URL.
+   * 
+   * @see Product::Link()
+   * @var Array
+   */
   public static $url_handlers = array( 
+    '' => 'index',
+  	'AddToCartForm' => 'AddToCartForm',
+    'add' => 'add',
+  	'options' => 'options',
+    'variationprice' => 'variationprice',
+  	
     '$ID!/AddToCartForm' => 'AddToCartForm',
     '$ID!/add' => 'add',
-    '$ID!/options' => 'options',
-    '$ID!/variationprice' => 'variationprice',
-  	'$ID!' => 'show'
+    '$ID/options' => 'options',
+    '$ID/variationprice' => 'variationprice',
+  	'$ID!' => 'index',
   );
   
+  /**
+   * Include some CSS and set the dataRecord to the current Product that is being viewed.
+   * 
+   * @see Page_Controller::init()
+   */
   function init() {
     parent::init();
     
@@ -401,12 +538,39 @@ class Product_Controller extends Page_Controller {
     }
   }
   
-	/**
-   * Add to cart form for products
-   * TODO validation broken due to overriding the Actions
+  /**
+   * Display a {@link Product}.
    * 
-   * @param unknown_type $quantity
-   * @param unknown_type $redirectURL
+   * @param SS_HTTPRequest $request
+   */
+  function index(SS_HTTPRequest $request) {
+
+    $product = $this->data();
+
+    if ($product && $product->exists()) {
+      $data = array(
+      	'Product' => $product,
+        'Content' => $this->Content, 
+       	'Form' => $this->AddToCartForm() 
+      );
+      return $this->Customise($data)->renderWith(array('Product','Page'));
+      
+      /*
+      $ssv = new SSViewer("Page"); 
+      $ssv->setTemplateFile("Layout", "Product_show"); 
+      return $this->Customise($data)->renderWith($ssv); 
+      */
+    }
+    else {
+      return $this->httpError(404, 'Sorry that product could not be found');
+    }
+  }
+  
+	/**
+   * Add to cart form for adding Products, to show on the Product page.
+   * 
+   * @param Int $quantity
+   * @param String $redirectURL A URL to redirect to after the product is added, useful to redirect to cart page
    */
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
@@ -446,8 +610,11 @@ class Product_Controller extends Page_Controller {
 	}
   
 	/**
-   * Add an item to the cart
-   */
+	 * Add an item to the current cart ({@link Order}) for a given {@link Product}.
+	 * 
+	 * @param Array $data
+	 * @param Form $form
+	 */
   function add(Array $data, Form $form) {
     CartControllerExtension::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
@@ -514,10 +681,18 @@ class Product_Controller extends Page_Controller {
   }
   
   /**
-   * AJAX action to get options for a product and return for use in the form
+   * Get options for a product and return for use in the form
    * Must get options for nextAttributeID, but these options should be filtered so 
    * that only the options for the variations that match attributeID and optionID
    * are returned.
+   * 
+   * In other words, do not just return options for a product, return options for product
+   * variations.
+   * 
+   * Usually called via AJAX.
+   * 
+   * @param SS_HTTPRequest $request
+   * @return String JSON encoded string for use to update options in select fields on Product page
    */
   public function options(SS_HTTPRequest $request) {
 
@@ -570,19 +745,24 @@ class Product_Controller extends Page_Controller {
   }
   
   /**
-   * TODO return the total here as well
-   * TODO format with a + or - prefix
+   * Calculate the {@link Variation} price difference based on current request. 
+   * Current seleted options are passed in POST vars, if a matching Variation can 
+   * be found, the price difference of that Variation is returned for display on the Product 
+   * page.
    * 
-   * @param unknown_type $request
+   * TODO return the total here as well
+   * 
+   * @param SS_HTTPRequest $request
+   * @return String JSON encoded string of price difference
    */
   function variationprice(SS_HTTPRequest $request) {
-
+    
     $data = array();
     $product = $this->data();
     $variations = $product->Variations();
     
     $attributeOptions = $request->postVar('Options');
-    
+
     //Filter variations to match attribute ID and option ID
     $variationOptions = array();
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
@@ -617,24 +797,5 @@ class Product_Controller extends Page_Controller {
     
     return json_encode($data);
   }
-  
-  function show(SS_HTTPRequest $request) {
-    
-    $product = $this->data();
 
-    if ($product && $product->exists()) {
-      $data = array(
-      	'Product' => $product,
-        //'Content' => $this->Content, 
-       	'Form' => $this->AddToCartForm() 
-      );
- 
-      $ssv = new SSViewer("Page"); 
-      $ssv->setTemplateFile("Layout", "Product_show"); 
-      return $this->Customise($data)->renderWith($ssv); 
-    }
-    else {
-      return $this->httpError(404, 'Sorry that product could not be found');
-    }
-  }
 }
