@@ -117,9 +117,11 @@ class Variation extends DataObject {
 	/**
 	 * Get a summary of the Options, helper method for displaying Options nicely
 	 * 
+	 * TODO this needs to return Options in order of Attributes
+	 * 
 	 * @return String
 	 */
-	function getOptionSummary() {
+	function SummaryOfOptions() {
 	  $options = $this->Options();
 	  $temp = array();
 	  $summary = '';
@@ -165,7 +167,7 @@ class Variation extends DataObject {
    * 
    * @return String
    */
-  public function SummaryStock() {
+  public function SummaryOfStock() {
     if ($this->Stock == -1) {
       return 'unlimited';
     }
@@ -177,7 +179,7 @@ class Variation extends DataObject {
    * 
    * @return String
    */
-  public function SummaryPrice() {
+  public function SummaryOfPrice() {
     return $this->Amount->Nice();
   }
   

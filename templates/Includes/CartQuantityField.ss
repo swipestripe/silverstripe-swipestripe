@@ -16,7 +16,7 @@
   
   <td>
     <% if Item.Variation %>
-      $Item.Variation.OptionSummary
+      $Item.Variation.SummaryOfOptions
     <% end_if %>
   </td>
   

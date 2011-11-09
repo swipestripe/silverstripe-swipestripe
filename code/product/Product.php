@@ -90,7 +90,7 @@ class Product extends Page {
     'FirstImage' => 'Image',
 	  'Title' => 'Name',
     'Status' => 'Status',
-    'CategoriesSummary' => 'Categories'
+    'SummaryOfCategories' => 'Categories'
 	);
 	
 	/**
@@ -252,7 +252,7 @@ class Product extends Page {
       'Images',
       'ProductImage',
       array(
-        'ThumbnailSummary' => 'Thumbnail',
+        'SummaryOfImage' => 'Thumbnail',
         'Caption' => 'Caption'
       ),
       'getCMSFields_forPopup'
@@ -321,8 +321,8 @@ class Product extends Page {
         $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
       }
       
-      //$variationFieldList['SummaryStock'] = 'Stock';
-      $variationFieldList['SummaryPrice'] = 'Price Difference';
+      //$variationFieldList['SummaryOfStock'] = 'Stock';
+      $variationFieldList['SummaryOfPrice'] = 'Price Difference';
       $variationFieldList['Status'] = 'Status';
       
       $manager = new VariationComplexTableField(
@@ -404,7 +404,7 @@ class Product extends Page {
 	 * 
 	 * @return String
 	 */
-	function CategoriesSummary() {
+	function SummaryOfCategories() {
 	  $summary = array();
 	  $categories = $this->ProductCategories();
 	  

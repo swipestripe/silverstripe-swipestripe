@@ -28,7 +28,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
       array(
         'Description' => 'Description',
         'CountryCode' => 'Country Code',
-        'AmountSummary'=> 'Amount'
+        'SummaryOfAmount'=> 'Amount'
       ),
       'getCMSFields_forPopup'
     );

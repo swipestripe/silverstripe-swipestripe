@@ -34,11 +34,11 @@ class FlatFeeShippingCountry extends DataObject {
     return $fields;
   }
   
-  public function AmountSummary() {
+  public function SummaryOfAmount() {
     return $this->Amount->Nice();
   }
   
-  public function DescriptionSummary() {
+  public function SummaryOfDescription() {
     return $this->Description . ' ' . $this->Amount->Nice();
   }
 	

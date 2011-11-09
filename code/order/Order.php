@@ -111,7 +111,7 @@ class Order extends DataObject {
 	  'ID' => 'Order No',
 		'OrderedOn' => 'Date',
 		'Member.Name' => 'Customer',
-		'SummaryTotal' => 'Total',
+		'SummaryOfTotal' => 'Total',
 		'Status' => 'Status'
 	);
 	
@@ -321,7 +321,7 @@ class Order extends DataObject {
 	 * 
 	 * @return String Order total formatted with Nice()
 	 */
-	function SummaryTotal() {
+	function SummaryOfTotal() {
 	  return $this->dbObject('Total')->Nice();
 	}
 	
@@ -584,7 +584,7 @@ class Order extends DataObject {
 	 * 
 	 * @return String List of payments and their status
 	 */
-	function PaymentStatusSummary() {
+	function SummaryOfPaymentStatus() {
 	  $payments = $this->Payments();
 	  $status = null;
 

@@ -24,8 +24,8 @@ class PaymentDecorator extends DataObjectDecorator {
 			),
 			'summary_fields' => array(
 			  'ID' => 'Payment ID',
-			  'SummaryAmount' => 'Amount',
-			  'SummaryType' => 'Type',
+			  'SummaryOfAmount' => 'Amount',
+			  'SummaryOfType' => 'Type',
 			  'PaidBy.Name' => 'Customer'
 			)
 		);
@@ -56,7 +56,7 @@ class PaymentDecorator extends DataObjectDecorator {
 	 * 
 	 * @return String Payment amount formatted with Nice()
 	 */
-	function SummaryAmount() {
+	function SummaryOfAmount() {
 	  return $this->owner->dbObject('Amount')->Nice();
 	}
 	
@@ -65,7 +65,7 @@ class PaymentDecorator extends DataObjectDecorator {
 	 * 
 	 * @return String Payment class name with camel case exploded
 	 */
-	function SummaryType() {
+	function SummaryOfType() {
 	  return implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', $this->owner->ClassName));
 	}
 	

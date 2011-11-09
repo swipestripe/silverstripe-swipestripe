@@ -1,10 +1,12 @@
 <?php
 /**
- * 
  * Flat fee shipping
  * 
- * @author frankmullenger
- *
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage shipping
+ * @version 1.0
  */
 class FlatFeeShipping extends Shipping {
   
@@ -61,7 +63,7 @@ class FlatFeeShipping extends Shipping {
       
       $shippingCountry = $flatFeeShippingCountries->find('ID', $optionID);
       if ($shippingCountry) {
-        $description = $shippingCountry->DescriptionSummary();
+        $description = $shippingCountry->SummaryOfDescription();
       }
       else {
         user_error("Cannot find flat fee country for that ID.", E_USER_WARNING);
@@ -95,7 +97,7 @@ class FlatFeeShipping extends Shipping {
   	  $fields->push(new FlatFeeShippingField(
   	    $this,
   	  	'Flat Fee Shipping',
-  	  	$flatFeeShippingCountries->map('ID', 'DescriptionSummary')
+  	  	$flatFeeShippingCountries->map('ID', 'SummaryOfDescription')
   	  	//$flatFeeShippingCountries->First()->ID
   	  ));
 	  }
