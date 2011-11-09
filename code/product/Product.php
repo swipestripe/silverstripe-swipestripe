@@ -449,7 +449,7 @@ class Product_Controller extends Page_Controller {
    * Add an item to the cart
    */
   function add(Array $data, Form $form) {
-    self::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
+    CartControllerExtension::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     $this->goToNextPage();
   }
   
@@ -511,33 +511,6 @@ class Product_Controller extends Page_Controller {
     //Check if on site URL, if so redirect there, else redirect back
     if ($redirectURL && Director::is_site_url($redirectURL)) Director::redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
     else Director::redirectBack();
-  }
-  
-	/**
-   * Get the current order from the session, if order does not exist
-   * John Connor it (create a new order)
-   * 
-   * TODO move this to CartControllerExtension
-   * 
-   * @return Order
-   */
-  static function get_current_order() {
-
-    $orderID = Session::get('Cart.OrderID');
-    
-    if ($orderID) {
-      $order = DataObject::get_by_id('Order', $orderID);
-    }
-    else {
-      $order = new Order();
-      $order->write();
-      Session::set('Cart', array(
-        'OrderID' => $order->ID
-      ));
-      Session::save();
-    }
-    
-    return $order;
   }
   
   /**

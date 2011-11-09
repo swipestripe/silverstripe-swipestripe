@@ -31,7 +31,7 @@ class CartControllerExtension extends Extension {
    * @param String $type The type of cart page a link is needed for
    * @return String The URL to the particular page
    */
-  public function CartLink($type = 'Cart') {
+  function CartLink($type = 'Cart') {
     switch ($type) {
       case 'Account':
         if ($page = DataObject::get_one('AccountPage')) return $page->Link();
@@ -77,7 +77,7 @@ class CartControllerExtension extends Extension {
 	 * Updates timestamp LastActive on the order, called on every page request. 
 	 * This is for a stock level solution which is not currently implemented.
 	 */
-  public function onBeforeInit() {
+  function onBeforeInit() {
 
     $orderID = Session::get('Cart.OrderID');
     if ($orderID && $order = DataObject::get_by_id('Order', $orderID)) {

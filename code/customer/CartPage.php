@@ -170,7 +170,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form Form that data was submitted from
 	 */
 	private function saveCart(Array $data, Form $form) {
-	  $currentOrder = Product_Controller::get_current_order();
+	  $currentOrder = CartControllerExtension::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 
 	  if ($quantities) foreach ($quantities as $itemID => $quantity) {

@@ -128,7 +128,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $fields = array();
     $validator = new OrderFormValidator();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
-    $order = Product_Controller::get_current_order();
+    $order = CartControllerExtension::get_current_order();
     $billingAddress = $member->BillingAddress();
     $shippingAddress = $member->ShippingAddress();
     
@@ -439,7 +439,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 		
 		//Save the order
-		$order = Product_Controller::get_current_order();
+		$order = CartControllerExtension::get_current_order();
 		$items = $order->Items();
 
 		$form->saveInto($order);
@@ -509,7 +509,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $fields = array();
     $validator = new OrderFormValidator();
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
-    $order = Product_Controller::get_current_order();
+    $order = CartControllerExtension::get_current_order();
     
     //Add addresses to order, when getting the shipping fields use the shipping address to filter results
     $order->addAddressesAtCheckout($data->requestVars());
