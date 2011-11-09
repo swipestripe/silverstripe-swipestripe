@@ -1,4 +1,14 @@
 <?php
+/**
+ * Remnant of previous cart version. Not impelmented properly again yet.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage product
+ * @version 1.0
+ * @deprecated
+ */
 class VirtualProduct extends Product {
   
   /**
@@ -72,6 +82,17 @@ class VirtualProduct extends Product {
 	  return false;
 	}
 }
+
+/**
+ * Remnant of previous cart version. Not impelmented properly again yet.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage product
+ * @version 1.0
+ * @deprecated
+ */
 class VirtualProduct_Controller extends Page_Controller {
 
 }

@@ -245,9 +245,9 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
-	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
-	    'Options[3]' => $shortsAVariation->getAttributeOption(3)->ID, //Cotton
+	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
+	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
+	    'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 	  ));
 
 	  $order = CartControllerExtension::get_current_order();
@@ -304,9 +304,9 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
-	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
-	    'Options[3]' => $shortsAVariation->getAttributeOption(3)->ID, //Cotton
+	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
+	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
+	    'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 	  ));
 
 	  $order = CartControllerExtension::get_current_order();
@@ -391,9 +391,9 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
-	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
-	    'Options[3]' => $shortsAVariation->getAttributeOption(3)->ID, //Cotton
+	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
+	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
+	    'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 	  ));
 
 	  $order = CartControllerExtension::get_current_order();
@@ -447,9 +447,9 @@ class CheckoutTest extends FunctionalTest {
 	  $this->get(Director::makeRelative($shortsA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => $shortsAVariation->getAttributeOption(1)->ID,  //Small
-	    'Options[2]' => $shortsAVariation->getAttributeOption(2)->ID, //Red
-	    'Options[3]' => $shortsAVariation->getAttributeOption(3)->ID, //Cotton
+	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
+	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
+	    'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 	  ));
 
 	  $order = CartControllerExtension::get_current_order();

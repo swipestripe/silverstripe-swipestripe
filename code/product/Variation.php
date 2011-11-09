@@ -1,41 +1,92 @@
 <?php
-
+/**
+ * Represents a Variation for a Product. A variation needs to have a valid Option set for each
+ * Attribute that the product has e.g Size:Medium, Color:Red, Material:Cotton. Variations are Versioned
+ * so that when they are added to an Order and then changed, the Order can still access the correct
+ * information.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage product
+ * @version 1.0
+ */
 class Variation extends DataObject {
 
+  /**
+   * DB fields for a Variation
+   * 
+   * @var Array
+   */
   public static $db = array(
     'Amount' => 'Money',
     'Stock' => 'Int',
   	'Status' => "Enum('Enabled,Disabled','Enabled')",
   );
 
+  /**
+   * Has one relation for a Variation
+   * 
+   * @var Array
+   */
   public static $has_one = array(
     'Product' => 'Product',
     'Image' => 'ProductImage'
   );
   
+  /**
+   * Many many relation for a Variation
+   * 
+   * @var Array
+   */
   public static $many_many = array(
     'Options' => 'Option'
   );
   
+  /**
+   * Default values for a Variation
+   * 
+   * @var Array
+   */
   public static $defaults = array(
     'Stock' => -1
   );
   
+  /**
+   * Versioning for a Variation, so that Orders can access the version 
+   * that was purchased and correct information can be retrieved.
+   * 
+   * @var Array
+   */
   static $extensions = array(
 		"Versioned('Live')",
 	);
   
+	/**
+	 * Overloaded magic method so that attribute values can be retrieved for display 
+	 * in CTFs etc.
+	 * 
+	 * @see ViewableData::__get()
+	 * @see Product::getCMSFields()
+	 */
   public function __get($property) {
 
     if (strpos($property, 'AttributeValue_') === 0) {
-      return $this->getAttributeOptionValue(str_replace('AttributeValue_', '', $property));
+      return $this->getOptionValueForAttribute(str_replace('AttributeValue_', '', $property));
     }
     else {
       return parent::__get($property);
     }
 	}
 	
-	public function getAttributeOptionValue($attributeID) {
+	/**
+	 * Get attribute option value, helper method
+	 * 
+	 * @see Variation::__get()
+	 * @param Int $attributeID
+	 * @return String
+	 */
+	public function getOptionValueForAttribute($attributeID) {
 
 	  $options = $this->Options();
 	  if ($options && $options->exists()) foreach ($options as $option) {
@@ -47,11 +98,12 @@ class Variation extends DataObject {
 	}
 	
 	/**
-	 * TODO refactor this to getOptionForAttribute()
+	 * Get a Variation option for an attribute
 	 * 
-	 * @param unknown_type $attributeID
+	 * @param Int $attributeID
+	 * @return Option
 	 */
-	public function getAttributeOption($attributeID) {
+	public function getOptionForAttribute($attributeID) {
 	  $options = $this->Options();
 	  if ($options && $options->exists()) foreach ($options as $option) {
 	    
@@ -62,6 +114,11 @@ class Variation extends DataObject {
 	  return null;
 	}
 	
+	/**
+	 * Get a summary of the Options, helper method for displaying Options nicely
+	 * 
+	 * @return String
+	 */
 	function getOptionSummary() {
 	  $options = $this->Options();
 	  $temp = array();
@@ -73,6 +130,11 @@ class Variation extends DataObject {
 	  return $summary;
 	}
 	
+	/**
+	 * Add fields for editing a Variation in the CMS popup.
+	 * 
+	 * @return FieldSet
+	 */
   public function getCMSFields_forPopup() {
 
     $fields = new FieldSet();
@@ -98,6 +160,11 @@ class Variation extends DataObject {
     return $fields;
   }
   
+  /**
+   * Summary of stock, not currently used.
+   * 
+   * @return String
+   */
   public function SummaryStock() {
     if ($this->Stock == -1) {
       return 'unlimited';
@@ -105,10 +172,20 @@ class Variation extends DataObject {
     return $this->Stock;
   }
   
+  /**
+   * Summarize the Product price, returns Amount formatted with Nice()
+   * 
+   * @return String
+   */
   public function SummaryPrice() {
     return $this->Amount->Nice();
   }
   
+  /**
+   * Basic check to see if Product is in stock. Not currently used.
+   * 
+   * @return Boolean
+   */
   public function inStock() {
     if ($this->Stock == -1) return true;
     if ($this->Stock == 0) return false;
@@ -117,6 +194,11 @@ class Variation extends DataObject {
     if ($this->Stock > 0) return true; 
   }
   
+  /**
+   * Validate that this variation is suitable for adding to the cart.
+   * 
+   * @return ValidationResult
+   */
   function validateForCart() {
     
     $result = new ValidationResult(); 
@@ -145,6 +227,11 @@ class Variation extends DataObject {
 	  return $result;
   }
   
+  /**
+   * Convenience method to check that this Variation has valid options.
+   * 
+   * @return Boolean
+   */
   public function hasValidOptions() {
     //Get the options for the product
     //Get the attributes for the product
@@ -192,6 +279,12 @@ class Variation extends DataObject {
     return true;
   }
   
+  /**
+   * Convenience method to check that this Variation is not a duplicate.
+   * 
+   * @see Varaition::validate()
+   * @return Boolean
+   */
   public function isDuplicate() {
 
     //Hacky way to get new option IDs from $this->record because $this->Options() returns existing options
@@ -249,6 +342,12 @@ class Variation extends DataObject {
     return (!$latest || !$latest->exists());
   }
 
+  /**
+   * Validate the Variation before it is saved. 
+   * 
+   * @see DataObject::validate()
+   * @return ValidationResult
+   */
   protected function validate() {
     
     $result = new ValidationResult(); 

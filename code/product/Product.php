@@ -2,7 +2,9 @@
 /**
  * Represents a Product, which is a type of a {@link Page}. Products are managed in a seperate
  * admin area {@link ShopAdmin}. A product can have {@link Variation}s, in fact if a Product
- * has attributes (e.g Size, Color) then it must have Variations.
+ * has attributes (e.g Size, Color) then it must have Variations. Products are Versioned so that
+ * when a Product is added to an Order, then subsequently changed, the Order can get the correct
+ * details about the Product.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -449,7 +451,7 @@ class Product extends Page {
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
       if ($variation->isEnabled()) {
-        $option = $variation->getAttributeOption($attributeID);
+        $option = $variation->getOptionForAttribute($attributeID);
         if ($option) $options->push($option); 
       }
     }
@@ -714,7 +716,7 @@ class Product_Controller extends Page_Controller {
       foreach ($attributeOptions as $attributeID => $optionID) {
         
         //Get option for attribute ID, if this variation has options for every attribute in the array then add it to filtered
-        $attributeOption = $variation->getAttributeOption($attributeID);
+        $attributeOption = $variation->getOptionForAttribute($attributeID);
         if ($attributeOption && $attributeOption->ID == $optionID) $variationOptions[$attributeID] = $optionID;
       }
       
@@ -726,7 +728,7 @@ class Product_Controller extends Page_Controller {
     //Find options in filtered variations that match next attribute ID
     //All variations must have options for all attributes so this is belt and braces really
     if ($filteredVariations && $filteredVariations->exists()) foreach ($filteredVariations as $variation) {
-      $attributeOption = $variation->getAttributeOption($nextAttributeID);
+      $attributeOption = $variation->getOptionForAttribute($nextAttributeID);
       if ($attributeOption) $options->push($attributeOption);
     }
     

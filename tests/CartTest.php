@@ -393,9 +393,9 @@ class CartTest extends FunctionalTest {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton');
 	  $this->assertEquals('Enabled', $teeshirtAVariation->Status);
 	  
-	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
-	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
-	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
+	  $this->assertEquals(9,  $teeshirtAVariation->getOptionForAttribute(1)->ID);
+	  $this->assertEquals(12, $teeshirtAVariation->getOptionForAttribute(2)->ID);
+	  $this->assertEquals(14, $teeshirtAVariation->getOptionForAttribute(3)->ID);
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
@@ -437,9 +437,9 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals('Disabled', $teeshirtAVariation->Status);
 	  $this->assertFalse($teeshirtAVariation->isEnabled());
 	  
-	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
-	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
-	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
+	  $this->assertEquals(9,  $teeshirtAVariation->getOptionForAttribute(1)->ID);
+	  $this->assertEquals(12, $teeshirtAVariation->getOptionForAttribute(2)->ID);
+	  $this->assertEquals(14, $teeshirtAVariation->getOptionForAttribute(3)->ID);
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
@@ -468,9 +468,9 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 
-	  $this->assertEquals(9,  $teeshirtAVariation->getAttributeOption(1)->ID);
-	  $this->assertEquals(12, $teeshirtAVariation->getAttributeOption(2)->ID);
-	  $this->assertEquals(14, $teeshirtAVariation->getAttributeOption(3)->ID);
+	  $this->assertEquals(9,  $teeshirtAVariation->getOptionForAttribute(1)->ID);
+	  $this->assertEquals(12, $teeshirtAVariation->getOptionForAttribute(2)->ID);
+	  $this->assertEquals(14, $teeshirtAVariation->getOptionForAttribute(3)->ID);
 
 	  //Note to self: Cannot set values for POST that are not valid on the form
 	  

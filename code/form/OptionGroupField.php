@@ -47,7 +47,7 @@ class OptionGroupField extends CompositeField {
       if ($variations && $variations->exists()) foreach ($variations as $variation) {
         
         if ($variation->isEnabled()) {
-          $option = $variation->getAttributeOption($id);
+          $option = $variation->getOptionForAttribute($id);
           if ($option) $options->push($option); 
         }
       }
