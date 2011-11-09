@@ -1,11 +1,21 @@
 <?php
-
+/**
+ * Search filter for {@link Product} categories, filtering search results for 
+ * certain {@link ProductCategory}s in the CMS.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage search
+ * @version 1.0
+ */
 class ProductCategorySearchFilter extends SearchFilter {
 
   /**
    * Apply filter query SQL to a search query
    * 
    * @see SearchFilter::apply()
+   * @return SQLQuery
    */
 	public function apply(SQLQuery $query) {
 	  
@@ -33,6 +43,7 @@ class ProductCategorySearchFilter extends SearchFilter {
 	 * value of the field being passed
 	 * 
 	 * @see SearchFilter::isEmpty()
+	 * @return Boolean
 	 */
 	public function isEmpty() {
 	  

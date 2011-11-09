@@ -1,11 +1,20 @@
 <?php
-
+/**
+ * Search filter for option sets, used for searching {@link Order} statuses in the CMS.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage search
+ * @version 1.0
+ */
 class OptionSetSearchFilter extends SearchFilter {
 
   /**
    * Apply filter query SQL to a search query
    * 
    * @see SearchFilter::apply()
+   * @return SQLQuery
    */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
@@ -29,6 +38,7 @@ class OptionSetSearchFilter extends SearchFilter {
 	 * value of the field being passed
 	 * 
 	 * @see SearchFilter::isEmpty()
+	 * @return Boolean
 	 */
 	public function isEmpty() {
 

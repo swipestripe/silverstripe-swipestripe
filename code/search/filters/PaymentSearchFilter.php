@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Search filter for determining whether an {@link Order} has a {@link Payment} attached.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage search
+ * @version 1.0
+ */
 class PaymentSearchFilter extends SearchFilter {
 
   /**
@@ -24,6 +32,7 @@ class PaymentSearchFilter extends SearchFilter {
 	 * value of the field being passed
 	 * 
 	 * @see SearchFilter::isEmpty()
+	 * @return Boolean
 	 */
 	public function isEmpty() {
 		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;

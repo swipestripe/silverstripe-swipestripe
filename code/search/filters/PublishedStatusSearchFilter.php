@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * Search filter for {@link Product} status, whether a {@link Product} is published
+ * or unpublished.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage search
+ * @version 1.0
+ */
 class PublishedStatusSearchFilter extends SearchFilter {
 
   /**
@@ -23,6 +32,7 @@ class PublishedStatusSearchFilter extends SearchFilter {
 	 * value of the field being passed
 	 * 
 	 * @see SearchFilter::isEmpty()
+	 * @return Boolean
 	 */
 	public function isEmpty() {
 		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;

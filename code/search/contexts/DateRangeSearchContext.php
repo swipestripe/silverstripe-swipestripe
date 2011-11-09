@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Search context for date ranges, used in the CMS for searching {@link Order}s.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage search
+ * @version 1.0
+ */
 class DateRangeSearchContext extends SearchContext {
 
   /**
