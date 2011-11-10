@@ -1,6 +1,18 @@
 <?php
 
 class FlatFeeShippingField extends ModifierSetField {
+  
+	/**
+	 * Render field with the appropriate template.
+	 * 
+	 * @see FormField::FieldHolder()
+	 * @return String
+	 */
+  function FieldHolder() {
+    Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript('shop/javascript/FlatFeeShippingField.js');
+		return $this->renderWith($this->template);
+	}
 	
 	function validate($validator){
 	  

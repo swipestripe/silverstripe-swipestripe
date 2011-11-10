@@ -82,5 +82,4 @@ class OptionGroupField extends CompositeField {
 		Requirements::javascript('shop/javascript/OptionGroupField.js');
 		return parent::FieldHolder();
 	}
-	
 }

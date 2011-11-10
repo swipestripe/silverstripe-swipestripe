@@ -486,7 +486,7 @@ EOS;
     
     //If this is being published, check that enabled variations exist if they are required
     $request = Controller::curr()->getRequest();
-    $publishing = ($request->getVar('action_publish')) ? true : false;
+    $publishing = ($request && $request->getVar('action_publish')) ? true : false;
     
     if ($publishing && $this->requiresVariation()) {
       
