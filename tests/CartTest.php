@@ -30,7 +30,7 @@
  */
 class CartTest extends FunctionalTest {
   
-	static $fixture_file = 'shop/tests/CartTest.yml';
+	static $fixture_file = 'shop/tests/Shop.yml';
 	static $disable_themes = false;
 	static $use_draft_site = true;
 	

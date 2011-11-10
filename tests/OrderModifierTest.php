@@ -1,7 +1,6 @@
 <?php
 /**
- * 
- * @author frankmullenger
+ * Testing {@link Order} modifiers at checkout.
  * 
  * Summary of tests:
  * -----------------
@@ -9,10 +8,15 @@
  * checkout with deleted flat fee shipping option
  * checkout with wrong flat fee shipping option compared to shipping country
  * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage product
+ * @version 1.0
  */
 class OrderModifierTest extends FunctionalTest {
   
-	static $fixture_file = 'shop/tests/CartTest.yml';
+	static $fixture_file = 'shop/tests/Shop.yml';
 	static $disable_themes = false;
 	static $use_draft_site = true;
 	
