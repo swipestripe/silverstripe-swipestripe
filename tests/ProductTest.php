@@ -1,7 +1,6 @@
 <?php
 /**
- * 
- * @author frankmullenger
+ * Testing {@link Order} modifiers at checkout.
  * 
  * Summary of tests:
  * -----------------
@@ -17,6 +16,12 @@
  * add product to multiple categories, check that it appears on each
  * disable all variations, product should be unpublished
  * try saving product with 'action_publish' passed as a Get var, when no enabled variations exist product should not be published
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage tests
+ * @version 1.0
  */
 class ProductTest extends FunctionalTest {
   

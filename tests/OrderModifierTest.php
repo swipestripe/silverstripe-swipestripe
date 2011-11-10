@@ -11,7 +11,7 @@
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package shop
- * @subpackage product
+ * @subpackage tests
  * @version 1.0
  */
 class OrderModifierTest extends FunctionalTest {

@@ -1,7 +1,6 @@
 <?php
 /**
- * 
- * @author frankmullenger
+ * Testing {@link Order} modifiers at checkout.
  * 
  * Summary of tests:
  * -----------------
@@ -27,6 +26,12 @@
  * TODO
  * ----
  * remove options from product and variaiton when the attribute is deleted
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage tests
+ * @version 1.0
  */
 class CartTest extends FunctionalTest {
   

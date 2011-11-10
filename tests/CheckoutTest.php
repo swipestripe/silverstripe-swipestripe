@@ -1,7 +1,6 @@
 <?php
 /**
- * 
- * @author frankmullenger
+ * Testing {@link Order} modifiers at checkout.
  * 
  * Summary of tests:
  * -----------------
@@ -20,6 +19,12 @@
  * process payment
  * send receipt
  * checkout addresses correct
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage tests
+ * @version 1.0
  */
 class CheckoutTest extends FunctionalTest {
   
