@@ -185,26 +185,11 @@ class Product extends Page {
     $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
 
     if ($variations) foreach ($variations as $variation) {
-      
       if (!$variation->hasValidOptions()) {
         $variation->Status = 'Disabled';
         $variation->write();
       }
     }
-    
-    //If there are no enabled variations for this product when it requires them, unpublish the product
-    /*
-    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
-    if ((!$variations || !$variations->exists()) && $this->requiresVariation() && $this->isPublished()) {
-      
-      //TODO return a message to the CMS that this page was unpublished
-      
-      $this->doUnpublish();
-      
-      $this->Status = "Unpublished";
-			$this->write();
-    }
-    */
   }
 	
 	/**
@@ -487,6 +472,47 @@ EOS;
     }
     return $options;
   }
+  
+	/**
+   * Validate the Product before it is saved in {@link ShopAdmin}.
+   * 
+   * @see DataObject::validate()
+   * @return ValidationResult
+   */
+  public function validate() {
+    
+    $result = new ValidationResult(); 
+    
+    
+    //If this is being published, check that enabled variations exist if they are required
+    $request = Controller::curr()->getRequest();
+    $publishing = ($request->getVar('action_publish')) ? true : false;
+    
+    if ($publishing && $this->requiresVariation()) {
+      
+      $variations = $this->Variations();
+      
+      if (!in_array('Enabled', $variations->map('ID', 'Status'))) {
+  		  $result->error(
+  	      'Cannot publish product when no variations are enabled. Please enable some product variations and try again.',
+  	      'VariationsDisabledError'
+  	    );
+  		}
+    }
+    
+    return $result;
+	}
+	
+	/**
+	 * Set custom validator for validating EditForm in {@link ShopAdmin}. Not currently used.
+	 * 
+	 * TODO could use this custom validator to check variations perhaps
+	 * 
+	 * @return ProductAdminValidator
+	 */
+	function getCMSValidator() {
+	  return new ProductAdminValidator();
+	}
 
 }
 

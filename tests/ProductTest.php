@@ -15,6 +15,8 @@
  * add new variation
  * add product to parent page, check URL works
  * add product to multiple categories, check that it appears on each
+ * disable all variations, product should be unpublished
+ * try saving product with 'action_publish' passed as a Get var, when no enabled variations exist product should not be published
  */
 class ProductTest extends FunctionalTest {
   

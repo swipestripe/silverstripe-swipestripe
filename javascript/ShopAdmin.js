@@ -73,5 +73,11 @@ $(document).ready(function() {
 		});
 		return false;
 	});
+	
+	//Change of attributes alert
+	$('#Form_EditForm_Attributes input[type=checkbox]').live('change', function() {
+		alert('Please save after changing product attributes and check that options are correct for any new attributes and variations are correct.');
+	});
+	
 });
 })(jQuery);

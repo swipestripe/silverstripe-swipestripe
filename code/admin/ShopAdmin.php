@@ -268,28 +268,46 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 	}
 		
 	/**
-	 * Handle publishign a record
+	 * Handle publishing a record, will set errors on form if {@link Product} validation fails.
 	 * 
+	 * @see Product::validate()
 	 * @param Array $data
 	 * @param Form $form
 	 * @param SS_HttpRequest $request
 	 */
 	public function publish($data, $form, $request) {
-		if($this->currentRecord && !$this->currentRecord->canPublish()) 
+
+		if ($this->currentRecord && !$this->currentRecord->canPublish()) {
 			return Security::permissionFailure($this);
+		}
 
-		$form->saveInto($this->currentRecord);		
-		$this->currentRecord->doPublish();
+		$response = new SS_HTTPResponse(
+			Convert::array2json(array(
+				'html' => $this->EditForm()->forAjaxTemplate(),
+				'message' => _t('ModelAdmin.PUBLISHED','Published')
+			)),				
+			200
+		);
+    
+		try {
+  		$form->saveInto($this->currentRecord);		
+  		$this->currentRecord->doPublish();
+		}
+		catch (ValidationException $e) {
 
-		if(Director::is_ajax()) {
-			return new SS_HTTPResponse(
-				Convert::array2json(array(
-					'html' => $this->EditForm()->forAjaxTemplate(),
-					'message' => _t('ModelAdmin.PUBLISHED','Published')
-				)),				
-				200
-			);
-		} else {
+		  $form->setMessage($e->getResult()->message(), 'bad');
+		  $response = new SS_HTTPResponse(
+  			Convert::array2json(array(
+  				'html' => $form->forAjaxTemplate()
+  			)),				
+  			200
+  		);
+		}
+		
+		if (Director::is_ajax()) {
+			return $response;
+		} 
+		else {
 			Director::redirectBack();
 		}
 	}
@@ -396,7 +414,7 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 	 * @param SS_HttpRequest $request
 	 */
 	public function save($data, $form, $request) {
-	  
+
 		if($this->currentRecord && !$this->currentRecord->canEdit()) {
 			return Security::permissionFailure($this);
 		}	
@@ -442,11 +460,13 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
   
   	  //TODO move this to some place else
   	  //Reset the download count for a particular item
+  	  /*
   	  if (isset($data['DownloadCountItem'])) foreach($data['DownloadCountItem'] as $itemID => $newDownloadCount) {
   	    $item = DataObject::get_by_id('Item', $itemID);
   	    $item->DownloadCount = $newDownloadCount;
   	    $item->write();
   	  }
+  	  */
 	  }
 	  
 	  $form->saveInto($this->currentRecord);
