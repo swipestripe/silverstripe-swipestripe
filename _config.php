@@ -23,10 +23,3 @@ Director::addRules(50, array(
 
 //TODO is this necessary?
 LeftAndMain::require_css('shop/css/ShopAdmin.css');
-
-//For unit testing
-/*
-Object::add_extension('DummyProductPage', 'ProductDecorator');
-Object::add_extension('DummyVirtualProductPage', 'ProductDecorator');
-Object::add_extension('DummyVirtualProductPage', 'VirutalProductDecorator');
-*/
