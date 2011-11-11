@@ -19,6 +19,8 @@
  * process payment
  * send receipt
  * checkout addresses correct
+ * when attribute deleted cannot checkout variation
+ * when attribute deleted previous orders keep data
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger

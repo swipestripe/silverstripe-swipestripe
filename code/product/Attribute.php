@@ -63,6 +63,7 @@ class Attribute extends DataObject {
   function getCMSFields() {
     $fields = parent::getCMSFields();
     $fields->removeByName('Products');
+    $fields->removeByName('Options');
     
     //Add a manager for options
     $manager = new ComplexTableField(
@@ -75,7 +76,7 @@ class Attribute extends DataObject {
       'getCMSFields_forPopup',
       'ProductID = 0'
     );
-    $fields->addFieldToTab("Root.Options", $manager);
+    $fields->addFieldToTab("Root.DefaultOptions", $manager);
     
     return $fields;
   }

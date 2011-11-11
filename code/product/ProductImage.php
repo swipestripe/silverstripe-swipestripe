@@ -38,9 +38,9 @@ class ProductImage extends DataObject {
     
     $fields = new FieldSet();
     $fields->push(new TextareaField('Caption'));
-    
-    if (class_exists('ImageUploadField')) $fields->push(new ImageUploadField('Image'));
-    else $fields->push(new FileIFrameField('Image'));
+
+    $imageUploadField = (class_exists('ImageUploadField')) ? new ImageUploadField('Image') : new FileIFrameField('Image');
+    $fields->push($imageUploadField);
     
     return $fields;
   }

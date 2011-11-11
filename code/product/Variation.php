@@ -366,21 +366,22 @@ class Variation extends DataObject {
     return $result;
 	}
 	
+	/**
+	 * Unpublish {@link Product}s if after the Variations have been saved there are no enabled Variations.
+	 * 
+	 * TODO check that this works when changing attributes
+	 * 
+	 * @see DataObject::onAfterWrite()
+	 */
   protected function onAfterWrite() {
 		parent::onAfterWrite();
-		
-		//If all the variations have been disabled, then unpublish the product and remove the publish button
-		
+
 		$product = $this->Product();
 		$variations = $product->Variations();
-		
-		//SS_Log::log(new Exception(print_r($variations->map('ID', 'Status'), true)), SS_Log::NOTICE);
-		
+
 		if (!in_array('Enabled', $variations->map('ID', 'Status'))) {
 		  $product->doUnpublish(); 
 		}
-		
-		//TODO need to send a message back to the CMS
 	}
 
 }

@@ -231,7 +231,7 @@ class Product extends Page {
 	public function getCMSFields() {
     $fields = parent::getCMSFields();
     
-    //Basic db fields
+    //Gallery
     $manager = new ComplexTableField(
       $this,
       'Images',
@@ -242,6 +242,7 @@ class Product extends Page {
       ),
       'getCMSFields_forPopup'
     );
+    $manager->setPopupSize(650, 400);
     $fields->addFieldToTab("Root.Content.Gallery", new HeaderField(
     	'GalleryHeading', 
     	'Add images for this product, the first image will be used as a thumbnail',
@@ -309,7 +310,7 @@ EOS;
 
         $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
 
-        //TODO refactor, this is a really dumb place to be writing default options I think
+        //TODO refactor, this is a really dumb place to be writing default options probably
         
         //If there aren't any existing options for this attribute on this product,
         //populate with the default options
