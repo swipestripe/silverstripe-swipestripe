@@ -105,7 +105,7 @@ class Variation extends DataObject {
 
     $fields = new FieldSet();
     
-    $amountField = new MoneyField('Amount');
+    $amountField = new VariationMoneyField('Amount');
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
     //$fields->push(new NumericField('Stock'));
@@ -383,5 +383,4 @@ class Variation extends DataObject {
 		  $product->doUnpublish(); 
 		}
 	}
-
 }

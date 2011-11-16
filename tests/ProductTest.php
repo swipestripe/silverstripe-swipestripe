@@ -8,6 +8,7 @@
  * new version of product created when amount changed
  * variations disabled when new attribute added
  * correct options for variations returned on product page on first, second and third attribute dropdowns
+ * cannot save negative amount for product variation
  * 
  * TODO
  * ----
