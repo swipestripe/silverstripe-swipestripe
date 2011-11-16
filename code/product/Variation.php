@@ -345,6 +345,15 @@ class Variation extends DataObject {
     $latest = DataObject::get_by_id('Variation', $this->ID);
     return (!$latest || !$latest->exists());
   }
+  
+  /**
+   * Check if {@link Variation} amount is a negative value
+   * 
+   * @return Boolean
+   */
+  public function isNegativeAmount() {
+    return $this->Amount->getAmount() < 0;
+  }
 
   /**
    * Validate the Variation before it is saved. 
@@ -360,6 +369,13 @@ class Variation extends DataObject {
       $result->error(
 	      'Duplicate variation for this product',
 	      'VariationDuplicateError'
+	    );
+    }
+    
+    if ($this->isNegativeAmount()) {
+      $result->error(
+	      'Variation price difference is a negative amount',
+	      'VariationNegativeAmountError'
 	    );
     }
     

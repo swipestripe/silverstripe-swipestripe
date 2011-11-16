@@ -333,5 +333,36 @@ class ProductTest extends FunctionalTest {
 	  }
 	  $this->assertEquals($expected, $actual);
   }
+  
+	/**
+	 * Try to save a Variation with a negative price difference
+	 * 
+	 * @see Variation::validate()
+	 */
+	function testNegativeVariationPrice() {
+	  
+	  $this->loginAs('admin');
+	  $smallRedShortsVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+	  
+	  $originalAmount = $smallRedShortsVariation->Amount;
+	  
+	  $this->assertTrue($originalAmount->getAmount() >= 0);
+	  
+	  $newAmount = new Money();
+	  $newAmount->setAmount(-1);
+	  $newAmount->setCurrency($originalAmount->getCurrency());
+	  
+	  $smallRedShortsVariation->Amount = $newAmount;
+	  $errorMessage = null;
+	  try {
+	    $smallRedShortsVariation->write();
+	  }
+	  catch (Exception $e) {
+	    $errorMessage = $e->getMessage();
+	  }
+	  
+	  //Make sure there is an error when trying to save
+	  $this->assertTrue($errorMessage != null);
+	}
 	
 }
