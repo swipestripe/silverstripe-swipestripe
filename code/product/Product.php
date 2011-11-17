@@ -485,8 +485,7 @@ EOS;
   public function validate() {
     
     $result = new ValidationResult(); 
-    
-    
+
     //If this is being published, check that enabled variations exist if they are required
     $request = Controller::curr()->getRequest();
     $publishing = ($request && $request->getVar('action_publish')) ? true : false;
@@ -502,7 +501,6 @@ EOS;
   	    );
   		}
     }
-    
     return $result;
 	}
 	
@@ -852,6 +850,8 @@ class Product_Controller extends Page_Controller {
       }
     }
     
+    $data['totalPrice'] = $product->Amount->Nice();
+    
     if ($variation) {
 
       if ($variation->Amount->getAmount() == 0) {
@@ -859,13 +859,16 @@ class Product_Controller extends Page_Controller {
       }
       else if ($variation->Amount->getAmount() > 0) {
         $data['priceDifference'] = '(+' . $variation->Amount->Nice() . ')';
+        $newTotal = new Money();
+        $newTotal->setCurrency($product->Amount->getCurrency());
+        $newTotal->setAmount($product->Amount->getAmount() + $variation->Amount->getAmount());
+        $data['totalPrice'] = $newTotal->Nice();
       }
-      else {
-        $data['priceDifference'] = '(' . $variation->Amount->Nice() . ')';
+      else { //Variations have been changed so only positive values, so this is unnecessary
+        //$data['priceDifference'] = '(' . $variation->Amount->Nice() . ')';
       }
     }
-    
+
     return json_encode($data);
   }
-
 }

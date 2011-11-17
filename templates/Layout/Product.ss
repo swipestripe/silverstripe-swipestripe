@@ -9,7 +9,7 @@
 
   <h1>$Product.Title</h1>
   
-  <p id="ProductPrice">$Product.Amount.Nice <span id="VariationPrice"></span></p>
+  <p id="ProductPrice"><span id="PriceTotal">$Product.Amount.Nice</span> <span id="VariationPrice"></span></p>
 
   <div id="ProductAdd">
     $AddToCartForm(1)

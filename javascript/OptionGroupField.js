@@ -81,11 +81,17 @@
 					  
 					dataObj = $.parseJSON(data);
 					
+					/*
 					if (dataObj.priceDifference && $('#VariationPrice').length) {
 						$('#VariationPrice').html(dataObj.priceDifference);
 					}
 					else if ($('#VariationPrice').length) {
 						$('#VariationPrice').html('');
+					}
+					*/
+					
+					if (dataObj.totalPrice && $('#VariationPrice').length) {
+						$('#PriceTotal').html(dataObj.totalPrice);
 					}
 				  }
 				});
