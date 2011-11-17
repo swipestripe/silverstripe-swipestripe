@@ -88,6 +88,7 @@ class Product extends Page {
    */
   public static $summary_fields = array(
     'FirstImage' => 'Image',
+    'SummaryOfPrice' => 'Price',
 	  'Title' => 'Name',
     'Status' => 'Status',
     'SummaryOfCategories' => 'Categories'
@@ -513,6 +514,15 @@ EOS;
 	 */
 	function getCMSValidator() {
 	  return new ProductAdminValidator();
+	}
+	
+	/**
+	 * Summary of price for convenience
+	 * 
+	 * @return String Amount formatted with Nice()
+	 */
+	function SummaryOfPrice() {
+	  return $this->Amount->Nice();
 	}
 
 }
