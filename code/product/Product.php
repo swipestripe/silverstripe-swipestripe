@@ -306,7 +306,7 @@ EOS;
       
       $fields->addFieldToTab("Root.Content", new TabSet('Options'));
       $fields->addFieldToTab("Root.Content", new Tab('Variations'));
-
+      
       foreach ($attributes as $attribute) {
 
         $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
@@ -327,7 +327,8 @@ EOS;
           }
         }
 
-        $fields->addFieldToTab("Root.Content.Options", new Tab($attribute->Title));
+        $attributeTabName = str_replace(' ', '', $attribute->Title);
+        $fields->addFieldToTab("Root.Content.Options", new Tab($attributeTabName));
         $manager = new OptionComplexTableField(
           $this,
           $attribute->Title,
@@ -339,7 +340,7 @@ EOS;
           "AttributeID = $attribute->ID"
         );
         $manager->setAttributeID($attribute->ID);
-        $fields->addFieldToTab("Root.Content.Options.".$attribute->Title, $manager);
+        $fields->addFieldToTab("Root.Content.Options.".$attributeTabName, $manager);
       }
 
       
