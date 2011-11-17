@@ -62,4 +62,13 @@ class ModifierSetField extends DropdownField {
 	  return true;
 	}
 	
+	/**
+	 * Get the modifier e.g: FlatFeeShipping
+	 * 
+	 * @return Object Mixed object, class depends on type of ModifierSetField e.g: FlatFeeShippingField
+	 */
+	function getModifier() {
+	  return $this->modifier;
+	}
+	
 }

@@ -1,11 +1,4 @@
 <?php
-/**
- * 
- * Shipping abstract class
- * 
- * @author frankmullenger
- *
- */
 class Shipping extends DataObject {
 	
 	public static $supported_methods = array(

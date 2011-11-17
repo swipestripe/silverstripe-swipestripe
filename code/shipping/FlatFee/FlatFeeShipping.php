@@ -83,6 +83,8 @@ class FlatFeeShipping extends Shipping {
 	  $flatFeeShippingCountries = DataObject::get('FLatFeeShippingCountry');
 	  
 	  if ($flatFeeShippingCountries) {
+	    
+	    //TODO could probably do this filter in the DataObject::get()
 	    //Filter based on shipping address
   	  $shippingCountry = null;
   	  if ($order && $order->exists()) {

@@ -10,8 +10,7 @@
  * @subpackage customer
  * @version 1.0
  */
-class CheckoutPage extends Page
-{
+class CheckoutPage extends Page {
   
   /**
    * Adding ChequeMessage field, a requirement for ChequePayment::ChequeContent().
@@ -321,6 +320,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 */
 	private function addModifierFields(&$fields, &$validator, $order) {
 
+	  //TODO change this so that its not tied to Shipping
 		foreach (Shipping::combined_form_fields($order) as $field) {
 		  $fields['Modifiers'][] = $field;
 		}
@@ -511,53 +511,37 @@ class CheckoutPage_Controller extends Page_Controller {
     $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = CartControllerExtension::get_current_order();
     
-    //Add addresses to order, when getting the shipping fields use the shipping address to filter results
+    //Update the Order 
     $order->addAddressesAtCheckout($data->requestVars());
+    $order->addModifiersAtCheckout($data->requestVars());
+    //TODO update personal details, notes and payment type?
     
-    //Add order item fields
+    //Create the part of the form that displays the Order
     $this->addItemFields($fields, $validator, $order);
+    $this->addModifierFields($fields, $validator, $order); //This is going to go through and add modifiers based on current Form DATA
     
-    //Add modifier fields
-    $this->addModifierFields($fields, $validator, $order);
-
-    //Modifier fields might have changed, so update the order with new defaults
-    //by getting the new modifier field values and passing to addModifiersAtCheckout()
-    //Also check to set the fields to the same values as passed by POSTed data
-    $modifierData = $data->postVar('Modifiers');
+    //Update modifier form fields so that the dropdown values are correct
+    $newModifierData = array();
     foreach ($fields['Modifiers'] as $field) {
-      
-      $name = str_replace(array('[', ']'), array('#', ''), $field->Name());
-      $nameParts = explode('#', $name);
-      $modifierType = (isset($nameParts[1])) ?$nameParts[1] :null;
-      
-      if ($modifierType && isset($modifierData[$modifierType])) {
-        
-        //Set the field value to what was passed in POST if possible
-        $optionVals = array_keys($field->getSource());
 
-        //BUG this does not seem to set the field value and persist on occassion
-        /*
-        if (in_array($modifierData[$modifierType], $optionVals)) {
-          $field->setValue($modifierData[$modifierType]);
-        }
-        $modifierData[$modifierType] = $field->Value();
-        */
+      if (method_exists($field, 'updateValue')) {
+        $field->updateValue($order);
       }
-      
-      //BUG this is here because bug changing the dropdown value of a modifier on the checkout page
-      $field->setValue($modifierData[$modifierType]);
-      $modifierData[$modifierType] = $field->Value();
+
+      $modifierClassName = get_class($field->getModifier());
+      $newModifierData['Modifiers'][$modifierClassName] = $field->Value();
     }
     
-    $order->addModifiersAtCheckout(array('Modifiers' => $modifierData));
+    //Add modifiers to the order again so that the new values are used
+    $order->addModifiersAtCheckout($newModifierData);
 
     $actions = new FieldSet(
       new FormAction('ProcessOrder', 'Proceed to pay')
     );
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
-
     $form->validate();
+    
 	  return $form->renderWith('CheckoutFormOrder');
 	}
 

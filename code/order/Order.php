@@ -611,17 +611,17 @@ class Order extends DataObject {
 	 * @param Array $data
 	 */
 	function addModifiersAtCheckout(Array $data) {
-
+	  
 	  //Save the order modifiers
     $existingModifiers = $this->Modifiers();
 	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $optionID) {
 	    
 	    //If the exact modifier exists on this order do not add it again,
 	    //protects against resubmission of checkout form
+	    
 	    if ($existingModifiers) foreach ($existingModifiers as $modifier) {
 	      
 	      if ($modifier->ModifierClass == $modifierClass) {
-	          //&& $modifier->ModifierOptionID == $optionID) {
           
           //Update the current modifier
           $modifier->ModifierOptionID = $optionID;
