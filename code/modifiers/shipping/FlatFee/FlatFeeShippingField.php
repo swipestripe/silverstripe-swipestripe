@@ -19,10 +19,10 @@ class FlatFeeShippingField extends ModifierSetField {
     $shippingAddress = $order->ShippingAddress();
     $shippingCountry = $shippingAddress->Country;
     
-    $shippingOptions = DataObject::get('FlatFeeShippingCountry', "CountryCode = '$shippingCountry'");
-    $optionsMap = $shippingOptions->map('ID', 'SummaryOfDescription');
+    $shippingOptions = DataObject::get('FlatFeeShippingRate', "CountryCode = '$shippingCountry'");
     
     if ($shippingOptions && $shippingOptions->exists()) {
+      $optionsMap = $shippingOptions->map('ID', 'SummaryOfDescription');
       $this->setSource($optionsMap);
     }
     
@@ -44,13 +44,13 @@ class FlatFeeShippingField extends ModifierSetField {
     $valid = true;
     $value = $this->Value();
     $formData = $validator->getForm()->getData();
-    $flatFeeShippingCountries = DataObject::get('FLatFeeShippingCountry');
+    $flatFeeShippingRates = DataObject::get('FlatFeeShippingRate');
     $shippingAddressCountry = (isset($formData['Shipping[Country]'])) ? $formData['Shipping[Country]'] : null;
 
     //If the value is not in the set of shipping countries, error
     //If the shipping country does not match the current shipping country, error
 
-    if (!$flatFeeShippingCountries || !$flatFeeShippingCountries->exists()) {
+    if (!$flatFeeShippingRates || !$flatFeeShippingRates->exists()) {
        
       $errorMessage = _t('Form.FLAT_FEE_SHIPPING_NOT_EXISTS', 'This shipping option is no longer available sorry');
       if ($msg = $this->getCustomValidationMessage()) {
@@ -80,7 +80,7 @@ class FlatFeeShippingField extends ModifierSetField {
 				$valid = false;
     }
      
-    $shippingOption = $flatFeeShippingCountries->find('ID', $value);
+    $shippingOption = $flatFeeShippingRates->find('ID', $value);
     if (!$shippingOption || !$shippingOption->exists()) {
        
       $errorMessage = _t('Form.FLAT_FEE_SHIPPING_OPTION_NOT_EXISTS', 'This shipping option is no longer available sorry');

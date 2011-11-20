@@ -6,7 +6,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 
 		return array(
 			'has_many' => array(
-			  'FlatFeeShippingCountries' => 'FlatFeeShippingCountry'
+			  'FlatFeeShippingRates' => 'FlatFeeShippingRate'
 			)
 		);
 	}
@@ -21,10 +21,10 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
       new Tab('FlatFeeShipping')
     );
     
-    $flatFeeCountryManager = new ComplexTableField(
+    $flatFeeManager = new ComplexTableField(
       $this->owner,
-      'FlatFeeShippingCountries',
-      'FlatFeeShippingCountry',
+      'FlatFeeShippingRates',
+      'FlatFeeShippingRate',
       array(
         'Description' => 'Description',
         'CountryCode' => 'Country Code',
@@ -32,7 +32,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
       ),
       'getCMSFields_forPopup'
     );
-    $fields->addFieldToTab("Root.Shop.Shipping.FlatFeeShipping", $flatFeeCountryManager);
+    $fields->addFieldToTab("Root.Shop.Shipping.FlatFeeShipping", $flatFeeManager);
 	}
 
 }

@@ -689,21 +689,21 @@ Address:
 # ------------------------------------------
 # Flat fee shipping countries
 # ------------------------------------------    
-FlatFeeShippingCountry:
+FlatFeeShippingRate:
   MainCentreNewZealand:
-    ClassName: FlatFeeShippingCountry
+    ClassName: FlatFeeShippingRate
     CountryCode: NZ
     AmountCurrency: NZD
     AmountAmount: 10.00
     Description: To Any Main Centre In New Zealand
   RuralNewZealand:
-    ClassName: FlatFeeShippingCountry
+    ClassName: FlatFeeShippingRate
     CountryCode: NZ
     AmountCurrency: NZD
     AmountAmount: 15.00
     Description: To Any Rural Address In New Zealand
   MainCentreAustralia:
-    ClassName: FlatFeeShippingCountry
+    ClassName: FlatFeeShippingRate
     CountryCode: AU
     AmountCurrency: NZD
     AmountAmount: 25.00

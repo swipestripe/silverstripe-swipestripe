@@ -521,6 +521,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $this->addItemFields($fields, $validator, $order);
     $this->addModifierFields($fields, $validator, $order); //This is going to go through and add modifiers based on current Form DATA
     
+    //TODO This should be constructed for non-dropdown fields as well
     //Update modifier form fields so that the dropdown values are correct
     $newModifierData = array();
     foreach ($fields['Modifiers'] as $field) {

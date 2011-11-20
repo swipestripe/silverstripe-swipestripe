@@ -78,7 +78,7 @@ class OrderModifierTest extends FunctionalTest {
 	function testCheckoutFlatFeeShipping() {
 	  
 	  $productA = $this->objFromFixture('Product', 'productA');
-	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingCountry', 'MainCentreNewZealand');
+	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreNewZealand');
 	  $shippingAmount = $shippingMainCentreNZ->Amount->getAmount();
 
 	  $this->loginAs('admin');
@@ -128,7 +128,7 @@ class OrderModifierTest extends FunctionalTest {
 	function testCheckoutDeletedFlatFeeShipping() {
 	  
 	  $productA = $this->objFromFixture('Product', 'productA');
-	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingCountry', 'MainCentreNewZealand');
+	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreNewZealand');
 	  $shippingID = $shippingMainCentreNZ->ID;
 	  $shippingAmount = $shippingMainCentreNZ->Amount->getAmount();
 
@@ -183,7 +183,7 @@ class OrderModifierTest extends FunctionalTest {
 	function testCheckoutInvalidFlatFeeShipping() {
 	  
 	  $productA = $this->objFromFixture('Product', 'productA');
-	  $shippingMainCentreAustralia = $this->objFromFixture('FlatFeeShippingCountry', 'MainCentreAustralia');
+	  $shippingMainCentreAustralia = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreAustralia');
 	  $shippingAmount = $shippingMainCentreAustralia->Amount->getAmount();
 
 	  $this->loginAs('admin');
