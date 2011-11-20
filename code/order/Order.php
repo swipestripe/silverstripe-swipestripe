@@ -1,8 +1,8 @@
 <?php
 /**
  * Order, created as soon as a user adds a {@link Product} to their cart, the cart is 
- * actually an Order with status of 'Cart'. Has many {@link Item}s and can have {@link Modifier}s
- * which might represent shippng, gift wrapping, coupon codes etc.
+ * actually an Order with status of 'Cart'. Has many {@link Item}s and can have {@link Modification}s
+ * which might represent a {@link Modifier} like shipping, tax, coupon codes.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -84,7 +84,7 @@ class Order extends DataObject {
 	public static $has_many = array(
 	  'Items' => 'Item',
 		'Payments' => 'Payment',
-	  'Modifiers' => 'Modifier',
+	  'Modifications' => 'Modification',
 	  'Addresses' => 'Address'
 	);
 	
@@ -238,7 +238,7 @@ class Order extends DataObject {
 	    'PaidEmailSent',
 	    'OrderedOn',
 	    'PaymentStatus',
-	    'Modifiers',
+	    'Modifications',
 	    'Addresses',
 	    'SubTotal',
 	    'LastActive',
@@ -549,15 +549,15 @@ class Order extends DataObject {
 	  $total = 0;
 	  $subTotal = 0;
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
-	  $modifiers = DataObject::get('Modifier', 'OrderID = '.$this->ID);
+	  $modifications = DataObject::get('Modification', 'OrderID = '.$this->ID);
 	  
 	  if ($items) foreach ($items as $item) {
 	    $total += $item->Total()->Amount;
 	    $subTotal += $item->Total()->Amount;
 	  }
 
-	  if ($modifiers) foreach ($modifiers as $modifier) {
-	    $total += $modifier->Amount->getAmount();
+	  if ($modifications) foreach ($modifications as $modification) {
+	    $total += $modification->Amount->getAmount();
 	  }
 
     $this->SubTotal->setAmount($subTotal); 
@@ -613,40 +613,38 @@ class Order extends DataObject {
 	function addModifiersAtCheckout(Array $data) {
 	  
 	  //Save the order modifiers
-    $existingModifiers = $this->Modifiers();
-	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $optionID) {
+    $existingModifications = $this->Modifications();
+	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {
 	    
-	    //If the exact modifier exists on this order do not add it again,
-	    //protects against resubmission of checkout form
-	    
-	    if ($existingModifiers) foreach ($existingModifiers as $modifier) {
+	    //If the exact modifier exists on this order do not add it again, protects against resubmission of checkout form
+	    if ($existingModifications) foreach ($existingModifications as $modification) {
 	      
-	      if ($modifier->ModifierClass == $modifierClass) {
+	      if ($modification->ModifierClass == $modifierClass) {
           
           //Update the current modifier
-          $modifier->ModifierOptionID = $optionID;
+          $modification->ModifierOptionID = $value;
 	    
           $modifierInstance = new $modifierClass();
-          $modifier->Amount = call_user_func(array($modifierInstance, 'Amount'), $optionID, $this);
-          $modifier->Description = call_user_func(array($modifierInstance, 'Description'), $optionID);
+          $modification->Amount = call_user_func(array($modifierInstance, 'Amount'), $this, $value);
+          $modification->Description = call_user_func(array($modifierInstance, 'Description'), $this, $value);
           
-          $modifier->OrderID = $this->ID;
-          $modifier->write();
+          $modification->OrderID = $this->ID;
+          $modification->write();
 	            
 	        continue 2;
 	      }
 	    }
 	    
-	    $modifier = new Modifier();
-	    $modifier->ModifierClass = $modifierClass;
-	    $modifier->ModifierOptionID = $optionID;
+	    $modification = new Modification();
+	    $modification->ModifierClass = $modifierClass;
+	    $modification->ModifierOptionID = $value;
 	    
-	    $modifierInstance = new $modifierClass();
-	    $modifier->Amount = call_user_func(array($modifierInstance, 'Amount'), $optionID, $this);
-	    $modifier->Description = call_user_func(array($modifierInstance, 'Description'), $optionID);
+	    $modifierInstance = new $modifierClass($this);
+	    $modification->Amount = call_user_func(array($modifierInstance, 'Amount'), $this, $value);
+	    $modification->Description = call_user_func(array($modifierInstance, 'Description'), $this, $value);
 	    
-	    $modifier->OrderID = $this->ID;
-	    $modifier->write();
+	    $modification->OrderID = $this->ID;
+	    $modification->write();
 	  }
 	  $this->updateTotal();
 	}

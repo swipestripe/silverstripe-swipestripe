@@ -58,7 +58,7 @@ class ModifierSetField extends DropdownField {
 	 * 
 	 * @see FormField::validate()
 	 */
-	function validate($validator){
+	function validate($validator) {
 	  return true;
 	}
 	

@@ -8,7 +8,7 @@
  * @subpackage order
  * @version 1.0
  */
-class Modifier extends DataObject {
+class Modification extends DataObject {
 
   /**
    * DB fields for the order modifier, the actual modifier data is saved into
@@ -19,7 +19,7 @@ class Modifier extends DataObject {
    */
 	public static $db = array(
 	  'ModifierClass' => 'Varchar',
-		'ModifierOptionID' => 'Int',
+		'ModifierOptionID' => 'Int', 
 	  'Amount' => 'Money',
 	  'Description' => 'Text'
 	);
@@ -41,6 +41,11 @@ class Modifier extends DataObject {
 	 */
 	protected static $currency = 'NZD';
 	
+	/**
+	 * Set table to InnoDB in preparation for transaction support.
+	 * 
+	 * @var Array
+	 */
 	static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
@@ -70,14 +75,6 @@ class Modifier extends DataObject {
 	 */
 	function validate() {
 	  return parent::validate();
-	}
-	
-	/**
-	 * This might return empty if the modifier has been deleted. The modifier
-	 * data is saved in Modifier table anyway.
-	 */
-	function Object() {
-	  return DataObject::get_by_id($this->ModifierClass, $this->ModifierOptionID);
 	}
 
 }

@@ -130,7 +130,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $order = CartControllerExtension::get_current_order();
     $billingAddress = $member->BillingAddress();
     $shippingAddress = $member->ShippingAddress();
-    
+
     $this->addBillingAddressFields($fields, $validator);
     $this->addShippingAddressFields($fields, $validator);
     $this->addPersonalDetailsFields($fields, $validator, $member);
@@ -320,8 +320,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 */
 	private function addModifierFields(&$fields, &$validator, $order) {
 
-	  //TODO change this so that its not tied to Shipping
-		foreach (Shipping::combined_form_fields($order) as $field) {
+		foreach (Modifier::combined_form_fields($order) as $field) {
 		  $fields['Modifiers'][] = $field;
 		}
 	}
@@ -375,6 +374,9 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form Form data was submitted from
 	 */
 	function ProcessOrder($data, $form) {
+	  
+	  //SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
+	  //exit;
 
 	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
@@ -406,8 +408,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  if (!$member = DataObject::get_one('Member', "\"Email\" = '".$data['Email']."'")) {
 			$member = new Member();
 			
-			//$form->saveInto($member);
-			//$member->update($memberData);
+			$form->saveInto($member);
 			$member->FirstName = $data['Billing']['FirstName'];
 			$member->Surname = $data['Billing']['Surname'];
 			$member->Address = $data['Billing']['Address'];
@@ -541,7 +542,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
     $form->disableSecurityToken();
     $form->validate();
-    
+
 	  return $form->renderWith('CheckoutFormOrder');
 	}
 

@@ -1,5 +1,4 @@
 <?php
-
 class FlatFeeShippingField extends ModifierSetField {
 
   /**
@@ -28,21 +27,16 @@ class FlatFeeShippingField extends ModifierSetField {
     }
     
     //If the current modifier value is not in the new options, then set to first option
-    $modifier = DataObject::get_one('Modifier', "ModifierClass = 'FlatFeeShipping' AND OrderID = '" . $order->ID . "'");
-    $currentOptionID = $modifier->ModifierOptionID;
+    $modification = DataObject::get_one('Modification', "ModifierClass = 'FlatFeeShipping' AND OrderID = '" . $order->ID . "'");
+    $currentOptionID = $modification->ModifierOptionID;
     $newOptions = array_keys($optionsMap);
-    
-    SS_Log::log(new Exception(print_r($currentOptionID, true)), SS_Log::NOTICE);
-    SS_Log::log(new Exception(print_r($newOptions, true)), SS_Log::NOTICE);
-    
+
     if (!in_array($currentOptionID, $newOptions)) {
       $this->setValue(array_shift($newOptions));
     }
     else {
       $this->setValue($currentOptionID);  
     }
-    
-    SS_Log::log(new Exception(print_r($this->Value(), true)), SS_Log::NOTICE);
   }
 
   function validate($validator){
