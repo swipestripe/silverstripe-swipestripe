@@ -685,6 +685,11 @@ class Product_Controller extends Page_Controller {
 	 */
   function add(Array $data, Form $form) {
     CartControllerExtension::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
+    
+    $form->sessionMessage(
+			'The product was added to your cart.',
+			'good'
+		);
     $this->goToNextPage();
   }
   

@@ -374,9 +374,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param Form $form Form data was submitted from
 	 */
 	function ProcessOrder($data, $form) {
-	  
-	  //SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
-	  //exit;
 
 	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;

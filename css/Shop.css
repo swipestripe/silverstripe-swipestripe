@@ -484,6 +484,10 @@ margin-bottom:5px;
 width:100%;
 }
 
+#Product p.good {
+color:green;
+}
+
 /* 
   Security ========================================
 */
