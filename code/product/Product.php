@@ -155,6 +155,8 @@ class Product extends Page {
 	
 	/**
 	 * Set firstWrite flag if this is the first time this Product is written.
+	 * If this product is a child of a ProductCategory, make sure that ProductCategory 
+	 * is in the ProductCategories for this Product.
 	 * 
 	 * @see SiteTree::onBeforeWrite()
 	 * @see Product::onAfterWrite()
@@ -162,6 +164,15 @@ class Product extends Page {
   function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->firstWrite = true;
+    
+    //If the ParentID is set to a ProductCategory, select that category for this Product
+    $parent = $this->getParent();
+    if ($parent && $parent instanceof ProductCategory) {
+      $productCategories = $this->ProductCategories();
+      if (!in_array($parent->ID, array_keys($productCategories->map()))) {
+        $productCategories->add($parent);
+      }
+    }
   }
   
 	/**
