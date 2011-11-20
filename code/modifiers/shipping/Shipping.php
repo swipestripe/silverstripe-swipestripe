@@ -1,16 +1,31 @@
 <?php
+/**
+ * A convenience class to set shipping supported countries in a centralised location.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage modifiers
+ * @version 1.0
+ */
 class Shipping extends DataObject {
 
 	/**
-	 * Countries allowed to be shipped to
+	 * Countries allowed to be shipped to, these will be options in the shipping address
+	 * of the Checkout form.
 	 * 
 	 * @see Shipping::set_supported_countries()
-	 * @var Array
+	 * @var Array List of countries that goods can be shipped to e.g:'NZ' => 'New Zealand'
 	 */
 	protected static $supported_countries = array(
-	  //'NZ' => 'New Zealand'
 	);
 	
+	/**
+	 * Set countries that are supported for shipping to.
+	 * 
+	 * @see Shipping::$supported_countries
+	 * @param array $countries
+	 */
   public static function set_supported_countries(Array $countries) {
     
     //Check each of the countries before adding them
@@ -27,6 +42,12 @@ class Shipping extends DataObject {
     }
 	}
 	
+	/**
+	 * Get countries supported for shipping.
+	 * 
+	 * @see Shipping::$supported_countries
+	 * @var Array List of countries that goods can be shipped to e.g:'NZ' => 'New Zealand'
+	 */
 	public static function supported_countries() {
 	  return self::$supported_countries;
 	}

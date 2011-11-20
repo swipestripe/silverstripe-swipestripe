@@ -1,6 +1,10 @@
 <?php
 /**
- * Modifiers for the {@link Order}, e.g: shipping, tax, vouchers etc.
+ * Modification for the {@link Order}, saves data that is set by {@link Modifier}s 
+ * e.g: shipping, tax, vouchers etc. Instead of linking to a {@link Modifier} it takes the Amount
+ * that the modifier will ammend the {@link Order} total by and the Description of the Modifier
+ * and saves that - denormalising the data - so that Modifiers can be deleted without losing
+ * any information from the Order.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -11,7 +15,7 @@
 class Modification extends DataObject {
 
   /**
-   * DB fields for the order modifier, the actual modifier data is saved into
+   * DB fields for the order Modification, the actual {@link Modifier} data is saved into
    * this class so if a modifier is deleted the order still has the necessary 
    * details.
    * 
@@ -51,7 +55,7 @@ class Modification extends DataObject {
 	);
 	
 	/**
-	 * Set the currency code that this site uses for modifiers
+	 * Set the currency code that this site uses for Order Modifications
 	 * 
 	 * @param string $currency 3 letter ISO 4217 currency code e.g. "NZD"
 	 */
@@ -60,7 +64,7 @@ class Modification extends DataObject {
 	}
 	
 	/**
-	 * Return the currency set for modifiers
+	 * Return the currency set for Order Modifications
 	 * 
 	 * @return string 3 letter ISO 4217 currency code e.g. "NZD"
 	 */
@@ -69,7 +73,7 @@ class Modification extends DataObject {
 	}
 	
 	/**
-	 * By default modifiers are valid
+	 * By default Modifications are valid
 	 * 
 	 * @see DataObject::validate()
 	 */

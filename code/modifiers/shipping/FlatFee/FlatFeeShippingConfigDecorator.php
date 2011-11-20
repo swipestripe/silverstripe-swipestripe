@@ -1,9 +1,21 @@
 <?php
-
+/**
+ * So that {@link FlatFeeShippingRate}s can be created in {@link SiteConfig}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage shipping
+ * @version 1.0
+ */
 class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 
+  /**
+   * Attach {@link FlatFeeShippingRate}s to {@link SiteConfig}.
+   * 
+   * @see DataObjectDecorator::extraStatics()
+   */
 	function extraStatics() {
-
 		return array(
 			'has_many' => array(
 			  'FlatFeeShippingRates' => 'FlatFeeShippingRate'
@@ -11,6 +23,11 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 		);
 	}
 
+	/**
+	 * Create {@link ComplexTableField} for managing {@link FlatFeeShippingRate}s.
+	 * 
+	 * @see DataObjectDecorator::updateCMSFields()
+	 */
   function updateCMSFields(FieldSet &$fields) {
 
     //$fields->addFieldToTab("Root", new TabSet('Shop')); 

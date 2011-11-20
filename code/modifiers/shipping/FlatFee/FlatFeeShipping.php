@@ -1,6 +1,7 @@
 <?php
 /**
- * Flat fee shipping
+ * Flat fee shipping, flat fees can be added for each supported shipping country from 
+ * the SiteConfig using {@link FlatFeeShippingRate}s.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -18,6 +19,15 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
     Object::add_extension('SiteConfig', 'FlatFeeShippingConfigDecorator');
   }
   
+  /**
+   * Form fields for displaying on the Checkout form, a dropdown of {@link FlatFeeShippingRate}s
+   * that are filtered depending on the shipping country selected.
+   * 
+   * @see FlatFeeShippingRate
+   * @see Modifier::combined_form_fields()
+   * @param Order $order
+   * @return FieldSet
+   */
   public function getFormFields($order) {
     
     //TODO use SiteConfig object to get the countries back, but at the moment
@@ -51,15 +61,24 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
 	  return $fields;
 	}
 	
+	/**
+   * Get form requirements for this modifier.
+   * 
+   * @see Modifier::combined_form_fields()
+   * @param Order $order
+   * @return FieldSet
+   */
 	public function getFormRequirements($order) {
-	  return;
+	  return new FieldSet();
 	}
 
   /**
-   * Use the optionID to get the amount for the FlatFeeShippingRate
+   * Get Amount for this modifier so that it can be saved into an {@link Order} {@link Modification}.
    * 
-   * @see Shipping::Amount()
-   * @param $optionID FlatFeeShippingRate ID
+   * @see Modification
+   * @param Order $order
+   * @param Int $value ID for a {@link FlatFeeShippingRate} 
+   * @return Money
    */
   public function Amount($order, $value) {
 
@@ -85,12 +104,12 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
   }
   
   /**
-   * Use the optionID to get the description summary for the FlatFeeShippingRate
-   * This is used as the description of the modifier in the Order, so it should be descriptive 
+   * Get Description for this modifier so that it can be saved into an {@link Order} {@link Modification}.
    * 
-   * @see Order::addModifiersAtCheckout()
-   * @see Shipping::Description()
-   * @param $optionID FlatFeeShippingRate ID
+   * @see Modification
+   * @param Order $order
+   * @param Mixed $value A value passed from the Checkout form POST data usually
+   * @return String
    */
   public function Description($order, $value) {
     
