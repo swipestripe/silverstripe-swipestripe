@@ -43,7 +43,7 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
   	  $fields->push(new FlatFeeShippingField(
   	    $this,
   	  	'Flat Fee Shipping',
-  	  	$flatFeeShippingRates->map('ID', 'SummaryOfDescription')
+  	  	$flatFeeShippingRates->map('ID', 'Label')
   	  	//$flatFeeShippingCountries->First()->ID
   	  ));
 	  }
@@ -102,7 +102,7 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
       
       $shippingRate = $flatFeeShippingRates->find('ID', $optionID);
       if ($shippingRate) {
-        $description = $shippingRate->SummaryOfDescription();
+        $description = $shippingRate->Description;
       }
       else {
         user_error("Cannot find flat fee rate for that ID.", E_USER_WARNING);
@@ -110,7 +110,7 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
         return; 
       }
     }
-	  return 'Shipping ' . $description;
+	  return $description;
   }
 
 }

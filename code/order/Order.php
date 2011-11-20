@@ -612,8 +612,6 @@ class Order extends DataObject {
 	 */
 	function addModifiersAtCheckout(Array $data) {
 	  
-	  SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
-	  
 	  //Save the order modifiers
     $existingModifications = $this->Modifications();
 	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {

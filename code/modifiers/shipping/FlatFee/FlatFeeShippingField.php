@@ -22,7 +22,7 @@ class FlatFeeShippingField extends ModifierSetField {
     $shippingOptions = DataObject::get('FlatFeeShippingRate', "CountryCode = '$shippingCountry'");
     
     if ($shippingOptions && $shippingOptions->exists()) {
-      $optionsMap = $shippingOptions->map('ID', 'SummaryOfDescription');
+      $optionsMap = $shippingOptions->map('ID', 'Label');
       $this->setSource($optionsMap);
     }
     

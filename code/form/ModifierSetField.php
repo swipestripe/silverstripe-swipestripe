@@ -1,6 +1,7 @@
 <?php
 /**
- * For displaying a set of modifiers on the {@link CheckoutPage}.
+ * For displaying a set of modifiers on the {@link CheckoutPage} which will inject their details
+ * into {@link Order} {@link Modifications}.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -19,7 +20,7 @@ class ModifierSetField extends DropdownField {
 
 	/**
 	 * To hold the modifier (link FlatFeeShipping) class that will set the value for the 
-	 * actual order {@link Modifier}.
+	 * order {@link Modification}.
 	 * 
 	 * @var Object
 	 */
