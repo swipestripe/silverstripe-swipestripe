@@ -35,6 +35,23 @@ class CustomerDecorator extends DataObjectDecorator {
 			)
 		);
 	}
+	
+	/**
+	 * If this Member has Orders, then prevent member from being deleted.
+	 * 
+	 * @see DataObjectDecorator::onBeforeDelete()
+	 */
+  function onBeforeDelete() {
+
+    $member = $this->owner;
+    if ($member->inGroup('customers')) {
+      
+      $orders = $member->Orders();
+      if ($orders && $orders->exists()) {
+        throw new Exception("Cound not delete this customer they have orders.");
+      }
+    }
+	}
 
 	/**
 	 * Add some fields for managing Members in the CMS.
@@ -45,6 +62,8 @@ class CustomerDecorator extends DataObjectDecorator {
 		$fields->removeByName('Country');
 		$fields->addFieldToTab('Root.Main', new DropdownField('Country', 'Country', Geoip::getCountryDropDown()));
 		$fields->removeByName('Notes');
+		$fields->removeByName('Orders');
+		$fields->removeByName('Addresses');
 	}
 	
 	/**
