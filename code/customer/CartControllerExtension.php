@@ -57,11 +57,13 @@ class CartControllerExtension extends Extension {
   static function get_current_order() {
 
     $orderID = Session::get('Cart.OrderID');
+    $order = null;
     
     if ($orderID) {
       $order = DataObject::get_by_id('Order', $orderID);
     }
-    else {
+    
+    if (!$orderID || !$order || !$order->exists()) {
       $order = new Order();
       $order->write();
       Session::set('Cart', array(
