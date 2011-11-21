@@ -333,6 +333,30 @@ font-style: italic;
 
 
 /*
+  Payment ==============================================
+*/
+
+div#PaymentMethod {
+float: left;
+width: 100%;
+}
+
+div.paymentfields {
+float: left;
+margin-bottom: 15px;
+margin-left: 20px;
+clear: left;
+}
+
+.creditCardField input {
+  border: 1px solid #CDDDDD;
+  color: #333333;
+  padding: 5px;
+  width: 100px;
+}
+
+
+/*
   Cart ==============================================
 */
 
