@@ -9,7 +9,7 @@ class ReceiptEmail extends ProcessedEmail {
 	  
 	  $siteConfig = SiteConfig::current_site_config();
 	  if ($customer->Email) $this->to = $customer->Email; 
-	  if ($siteConfig->ReceiptSubject) $this->subject = $siteConfig->ReceiptSubject;
+	  if ($siteConfig->ReceiptSubject) $this->subject = $siteConfig->ReceiptSubject . ' - Order #'.$order->ID;
 	  if ($siteConfig->ReceiptBody) $this->body = $siteConfig->ReceiptBody;
 	  if ($siteConfig->ReceiptFrom) $this->from = $siteConfig->ReceiptFrom;
 	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();

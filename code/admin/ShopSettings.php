@@ -41,9 +41,6 @@ class ShopSettings extends DataObjectDecorator {
 				'ReceiptSubject' => 'Varchar',
 		    'ReceiptBody' => 'HTMLText',
 		    'ReceiptFrom' => 'Varchar',
-		    //'PaidSubject' => 'Varchar',
-		    //'PaidBody' => 'HTMLText',
-		    //'PaidFrom' => 'Varchar',
 				'OrderSubject' => 'Varchar',
 		    'OrderBody' => 'HTMLText',
 		    'OrderTo' => 'Varchar'
@@ -69,29 +66,23 @@ class ShopSettings extends DataObjectDecorator {
     
     //TODO include the license here in a text area field and some info about setting the license key perhaps
     
-    
     //Shop emails
     $fields->addFieldToTab("Root.Shop", 
       new TabSet('Emails')
     );
     $fields->addFieldToTab("Root.Shop.Emails", 
-      new Tab('ReceiptEmail'),
-      //new Tab('PaidEmail'),
-      new Tab('OrderEmail'),
+      new Tab('Receipt'),
+      new Tab('OrderNotification'),
       new Tab('Signature')
     );
 
-    $fields->addFieldToTab('Root.Shop.Emails.ReceiptEmail', new EmailField('ReceiptFrom', 'Receipt email sender'));
-    $fields->addFieldToTab('Root.Shop.Emails.ReceiptEmail', new TextField('ReceiptSubject', 'Receipt email subject line'));
-    $fields->addFieldToTab('Root.Shop.Emails.ReceiptEmail', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
-    
-    //$fields->addFieldToTab('Root.Shop.Emails.PaidEmail', new EmailField('PaidFrom', 'Paid email sender'));
-    //$fields->addFieldToTab('Root.Shop.Emails.PaidEmail', new TextField('PaidSubject', 'Paid email subject line'));
-    //$fields->addFieldToTab('Root.Shop.Emails.PaidEmail', new HtmlEditorField('PaidBody', 'Paid email body', 15));
-    
-    $fields->addFieldToTab('Root.Shop.Emails.OrderEmail', new EmailField('OrderTo', 'Order email recipient'));
-    $fields->addFieldToTab('Root.Shop.Emails.OrderEmail', new TextField('OrderSubject', 'Order email subject line'));
-    $fields->addFieldToTab('Root.Shop.Emails.OrderEmail', new HtmlEditorField('OrderBody', 'Order email body', 15));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new EmailField('ReceiptFrom', 'Receipt email sender'));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', 'Receipt email subject line'));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
+
+    $fields->addFieldToTab('Root.Shop.Emails.OrderNotification', new EmailField('OrderTo', 'Order email recipient'));
+    $fields->addFieldToTab('Root.Shop.Emails.OrderNotification', new TextField('OrderSubject', 'Order email subject line'));
+    $fields->addFieldToTab('Root.Shop.Emails.OrderNotification', new HtmlEditorField('OrderBody', 'Order email body', 15));
     
     $fields->addFieldToTab('Root.Shop.Emails.Signature', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
 	}

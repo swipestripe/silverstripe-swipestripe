@@ -476,18 +476,24 @@ class CheckoutPage_Controller extends Page_Controller {
 
     //If instant payment success
 		if ($result->isSuccess()) {
-
+      $order->sendReceipt();
+      $order->sendNotification();
 		}
 		
 	  //If payment is being processed
 	  //e.g long payment process redirected to another website (PayPal, DPS)
 		if ($result->isProcessing()) {
+		  
+		  //Defer sending receipt until payment process has completed
+		  $order->sendNotification();
+		  
 			return $result->getValue();
 		}
 		
 		//If payment failed
 		if (!$result->isSuccess() && !$result->isProcessing()) {
-
+      $order->sendReceipt();
+      $order->sendNotification();
 		}
 
 		//Fallback

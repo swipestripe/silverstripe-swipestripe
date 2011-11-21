@@ -162,7 +162,13 @@ class AccountPage_Controller extends Page_Controller {
         return Security::permissionFailure($this, 'You cannot view orders that do not belong to you.');
       }
       
-      if ($order) {
+      if ($order && $order->exists()) {
+        
+        //Because this is the page that long payment processes direct back to, want to send
+        //a receipt and order notification if they have not already been sent
+        $order->sendReceipt();
+        $order->sendNotification();
+        
         return array(
 					'Order' => $order
 				);
@@ -176,6 +182,14 @@ class AccountPage_Controller extends Page_Controller {
 	}
 	
 	/**
+	 * Log the current member out and redirect to home page.
+	 */
+  public function logout() {
+    Security::logout(false);
+    Director::redirect("home/");
+  }
+	
+	/**
 	 * Redirect browser to the download location, increment number of times
 	 * this item has been downloaded.
 	 * 
@@ -186,6 +200,7 @@ class AccountPage_Controller extends Page_Controller {
 	 * and should be ignored for now.
 	 * 
 	 * @param SS_HTTPRequest $request
+	 * @deprecated
 	 */
 	function downloadproduct(SS_HTTPRequest $request) {
 	  
@@ -215,14 +230,6 @@ class AccountPage_Controller extends Page_Controller {
 	  //TODO set an error message
 	  Director::redirectBack();
 	}
-	
-	/**
-	 * Log the current member out and redirect to home page.
-	 */
-  public function logout() {
-    Security::logout(false);
-    Director::redirect("home/");
-  }
 
 }
 

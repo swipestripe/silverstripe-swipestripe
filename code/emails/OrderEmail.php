@@ -14,7 +14,7 @@ class OrderEmail extends ProcessedEmail {
 	  
 	  $siteConfig = SiteConfig::current_site_config();
 	  if ($siteConfig->OrderTo) $this->to = $siteConfig->OrderTo; 
-	  if ($siteConfig->OrderSubject) $this->subject = $siteConfig->OrderSubject;
+	  if ($siteConfig->OrderSubject) $this->subject = $siteConfig->OrderSubject . ' - Order #'.$order->ID;
 	  if ($siteConfig->OrderBody) $this->body = $siteConfig->OrderBody;
 	  if (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
 	  if ($siteConfig->EmailSignature) $this->signature = $siteConfig->EmailSignature;

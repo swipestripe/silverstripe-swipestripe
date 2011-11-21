@@ -51,7 +51,7 @@ class Order extends DataObject {
 	  'Total' => 'Money',
 	  'SubTotal' => 'Money',
 		'ReceiptSent' => 'Boolean',
-	  'PaidEmailSent' => 'Boolean',
+	  'NotificationSent' => 'Boolean',
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
 	  'Notes' => 'Text'
@@ -64,7 +64,7 @@ class Order extends DataObject {
 	 */
 	public static $defaults = array(
 	  'ReceiptSent' => false,
-	  'PaidEmailSent' => false
+	  'NotificationSent' => false
 	);
 
 	/**
@@ -235,7 +235,7 @@ class Order extends DataObject {
 	    'Items',
 	    'Status',
 	    'ReceiptSent',
-	    'PaidEmailSent',
+	    'NotificationSent',
 	    'OrderedOn',
 	    'PaymentStatus',
 	    'Modifications',
@@ -282,7 +282,7 @@ class Order extends DataObject {
 		  ));
 		}
 		
-		//Remanant of an earlier version of the cart.
+		//Remnant of an earlier version of the cart.
 		//TODO move this to virtual products
 		/*
 		if ($this->Downloads() && $this->Downloads()->exists()) {
@@ -402,7 +402,13 @@ class Order extends DataObject {
 	function onAfterPayment() {
 	  
 	  $this->updatePaymentStatus();
+	  
+	  if ($this->PaymentStatus == 'Paid') {
+	    $this->sendReceipt();
+	  }
+	  $this->sendNotification();
 
+	  /*
 	  //Send a receipt to customer if payment has been completed
 		if (!$this->ReceiptSent) { // && $this->PaymentStatus == 'Paid'){
 		  
@@ -421,6 +427,36 @@ class Order extends DataObject {
 		
 		//TODO if payment is processing send an email too?
 		//TODO if payment Status = Failure send a payment email?
+		 * 
+		 */
+	}
+	
+	/**
+	 * Send a receipt if one has not already been sent.
+	 */
+	public function sendReceipt() {
+	  
+	  if (!$this->ReceiptSent) {
+  	  $receipt = new ReceiptEmail($this->Member(), $this);
+  		if ($receipt->send()) {
+  	    $this->ReceiptSent = true;
+  	    $this->write();
+  	  }
+	  }
+	}
+	
+	/**
+	 * Send an order notification to admin if one has not already been sent.
+	 */
+	public function sendNotification() {
+	  
+	  if (!$this->NotificationSent) {
+  	  $notification = new OrderEmail($this->Member(), $this);
+  	  if ($notification->send()) {
+  	    $this->NotificationSent = true;
+  	    $this->write();
+  	  }
+	  }
 	}
 	
 	/**
