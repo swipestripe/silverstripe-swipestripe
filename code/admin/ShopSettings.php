@@ -75,10 +75,10 @@ class ShopSettings extends DataObjectDecorator {
       new TabSet('Emails')
     );
     $fields->addFieldToTab("Root.Shop.Emails", 
-      new Tab('Email'),
       new Tab('ReceiptEmail'),
       //new Tab('PaidEmail'),
-      new Tab('OrderEmail')
+      new Tab('OrderEmail'),
+      new Tab('Signature')
     );
     $fields->addFieldToTab('Root.Shop.Emails.Email', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
     
