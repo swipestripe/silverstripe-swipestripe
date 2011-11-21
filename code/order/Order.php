@@ -405,30 +405,8 @@ class Order extends DataObject {
 	  
 	  if ($this->PaymentStatus == 'Paid') {
 	    $this->sendReceipt();
+	    $this->sendNotification();
 	  }
-	  $this->sendNotification();
-
-	  /*
-	  //Send a receipt to customer if payment has been completed
-		if (!$this->ReceiptSent) { // && $this->PaymentStatus == 'Paid'){
-		  
-		  //TODO Need some kind of payment completed flag because 
-		  //this is being sent too soon, before payment details have been filled out
-			$receipt = new ReceiptEmail($this->Member(), $this);
-  		if ($receipt->send()) {
-  	    $this->ReceiptSent = true;
-  	    $this->write();
-  	  }
-  	  
-  	  //Send a notification to website owner
-  		$orderEmail = new OrderEmail($this->Member(), $this);
-  		$orderEmail->send();
-		}
-		
-		//TODO if payment is processing send an email too?
-		//TODO if payment Status = Failure send a payment email?
-		 * 
-		 */
 	}
 	
 	/**
@@ -451,7 +429,7 @@ class Order extends DataObject {
 	public function sendNotification() {
 	  
 	  if (!$this->NotificationSent) {
-  	  $notification = new OrderEmail($this->Member(), $this);
+  	  $notification = new NotificationEmail($this->Member(), $this);
   	  if ($notification->send()) {
   	    $this->NotificationSent = true;
   	    $this->write();

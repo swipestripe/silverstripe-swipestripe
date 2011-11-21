@@ -14,18 +14,15 @@
 		  <% control Order %>
 	    
 	      <h3><a href="$Link">Order #$ID - $Status</a></h3>
+	      
 	      <p class="OrderMeta">
 	        $Created.Format(j M Y - g:i a)<br />
 	        ($PaymentStatus)
 	      </p>
+	      
 	      <p>
-	      Please note that orders will not be shipped or available for download until 
-	      payment has been successfully processed.
-	      <% if Downloads %>
-	      Downloads wil be available for this order from the <a href="$Link">order page in your members area</a>
-	      once payment has been completed. You may download each product 3 times.
-	      <% end_if %>
-	      </p>
+        Please note that orders will not be shipped until payment has been successfully processed.
+        </p>
 	      
 	      <div id="OrderInformation">
 	

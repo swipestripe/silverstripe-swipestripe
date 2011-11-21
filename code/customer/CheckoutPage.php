@@ -485,7 +485,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		if ($result->isProcessing()) {
 		  
 		  //Defer sending receipt until payment process has completed
-		  $order->sendNotification();
+		  //@see AccountPage_Controller::order()
 		  
 			return $result->getValue();
 		}
