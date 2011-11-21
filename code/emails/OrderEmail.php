@@ -37,8 +37,6 @@ class OrderEmail extends ProcessedEmail {
     	  'Signature' => $this->signature
     	)
     );
-
 		parent::__construct($from, null, $subject, $body, $bounceHandlerURL, $cc, $bcc);
 	}
-
 }

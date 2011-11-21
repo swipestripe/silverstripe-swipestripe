@@ -404,7 +404,7 @@ class Order extends DataObject {
 	  $this->updatePaymentStatus();
 
 	  //Send a receipt to customer if payment has been completed
-		if(!$this->ReceiptSent && $this->PaymentStatus == 'Paid'){
+		if (!$this->ReceiptSent) { // && $this->PaymentStatus == 'Paid'){
 		  
 		  //TODO Need some kind of payment completed flag because 
 		  //this is being sent too soon, before payment details have been filled out
