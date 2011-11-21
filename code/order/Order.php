@@ -361,6 +361,9 @@ class Order extends DataObject {
 	    }
 	  }
 	  
+	  //Total outstanding cannot be negative 
+	  if ($total < 0) $total = 0;
+	  
 	  $outstanding = new Money();
 	  $outstanding->setAmount($total);
 	  $outstanding->setCurrency($this->Total->getCurrency());
