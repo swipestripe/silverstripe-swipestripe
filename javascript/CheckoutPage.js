@@ -25,12 +25,14 @@
     		$('#CheckoutForm_OrderForm_Shipping-Country').change();
     	});
     	
-    	$('#LeftCheckout input[type=text], #LeftCheckout select').live('keyup', function() {
+    	$('#LeftCheckout input[type=text], #LeftCheckout select').live('keyup', copyBillingAddressAcross);
+    	$('#LeftCheckout input[type=text], #LeftCheckout select').live('blur', copyBillingAddressAcross);
+    	function copyBillingAddressAcross() {
     		if ($('#CheckoutForm_OrderForm_ShipToBillingAddress').is(':checked')) {
     			var ID = $(this).attr('id');
     			var newID = ID.replace(/Billing/i, 'Shipping');
     			$('#'+newID).val($('#'+ID).val());
     		}
-    	});
+    	}
     })
 })(jQuery);
