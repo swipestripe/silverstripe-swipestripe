@@ -80,8 +80,7 @@ class ShopSettings extends DataObjectDecorator {
       new Tab('OrderEmail'),
       new Tab('Signature')
     );
-    $fields->addFieldToTab('Root.Shop.Emails.Email', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
-    
+
     $fields->addFieldToTab('Root.Shop.Emails.ReceiptEmail', new EmailField('ReceiptFrom', 'Receipt email sender'));
     $fields->addFieldToTab('Root.Shop.Emails.ReceiptEmail', new TextField('ReceiptSubject', 'Receipt email subject line'));
     $fields->addFieldToTab('Root.Shop.Emails.ReceiptEmail', new HtmlEditorField('ReceiptBody', 'Receipt email body', 15));
@@ -93,6 +92,8 @@ class ShopSettings extends DataObjectDecorator {
     $fields->addFieldToTab('Root.Shop.Emails.OrderEmail', new EmailField('OrderTo', 'Order email recipient'));
     $fields->addFieldToTab('Root.Shop.Emails.OrderEmail', new TextField('OrderSubject', 'Order email subject line'));
     $fields->addFieldToTab('Root.Shop.Emails.OrderEmail', new HtmlEditorField('OrderBody', 'Order email body', 15));
+    
+    $fields->addFieldToTab('Root.Shop.Emails.Signature', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
 	}
 
 }
