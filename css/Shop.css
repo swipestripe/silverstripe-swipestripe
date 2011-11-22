@@ -191,6 +191,11 @@ font-style:italic;
 margin:5px 0 20px;
 }
 
+#OrderLink {
+font-size: 12px;
+font-weight: normal;
+}	
+
 /* 
   Checkout ========================================
 */

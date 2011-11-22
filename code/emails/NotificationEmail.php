@@ -18,6 +18,7 @@ class NotificationEmail extends ProcessedEmail {
 	  if ($siteConfig->NotificationBody) $this->body = $siteConfig->NotificationBody;
 	  if (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
 	  $this->signature = '';
+	  $adminLink = Director::absoluteURL('/admin/shop/');
 
 	  //Get css for Email by reading css file and put css inline for emogrification
 	  $this->setTemplate('Order_NotificationEmail');
@@ -34,7 +35,8 @@ class NotificationEmail extends ProcessedEmail {
     		'Order' => $order,
     	  'Customer' => $customer,
     	  'InlineCSS' => "<style>$css</style>",
-    	  'Signature' => $this->signature
+    	  'Signature' => $this->signature,
+    	  'AdminLink' => $adminLink
     	)
     );
 		parent::__construct($from, null, $subject, $body, $bounceHandlerURL, $cc, $bcc);

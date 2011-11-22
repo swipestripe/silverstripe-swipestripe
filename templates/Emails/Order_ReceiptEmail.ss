@@ -11,18 +11,16 @@
 			<h3>Hi $Customer.Name,</h3>
 			$Message
 	
+	    <p>&nbsp;</p>
+	
 		  <% control Order %>
 	    
-	      <h3><a href="$Link">Order #$ID - $Status</a></h3>
+	      <h3>Order #$ID - $Status &nbsp;&nbsp;&nbsp; <a href="$Link" id="OrderLink">View this order</a></h3>
 	      
 	      <p class="OrderMeta">
 	        $Created.Format(j M Y - g:i a)<br />
 	        ($PaymentStatus)
 	      </p>
-	      
-	      <p>
-        Please note that orders will not be shipped until payment has been successfully processed.
-        </p>
 	      
 	      <div id="OrderInformation">
 	
@@ -39,6 +37,10 @@
 	        <% end_if %>
 	        
 	      </div>
+	      
+	      <p>
+        Please note that orders will not be shipped until payment has been successfully processed.
+        </p>
 	      
 	    <% end_control %>
 	    
