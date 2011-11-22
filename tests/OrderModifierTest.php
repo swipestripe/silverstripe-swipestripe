@@ -113,6 +113,7 @@ class OrderModifierTest extends FunctionalTest {
 	  ));
 	  
 	  $orders = $buyer->Orders();
+	  $orders->sort('ID', "ASC");
 	  $this->assertEquals(2, $orders->Count());
 	  
 	  $realTotal = $productA->Amount->getAmount() + $shippingMainCentreNZ->Amount->getAmount();
@@ -169,6 +170,7 @@ class OrderModifierTest extends FunctionalTest {
 	  );
 	  
 	  $orders = $buyer->Orders();
+	  $orders->sort('ID', "ASC");
 	  $this->assertEquals(1, $orders->Count());
 	  
 	  $realTotal = $productA->Amount->getAmount();
@@ -218,6 +220,7 @@ class OrderModifierTest extends FunctionalTest {
 	  ));
 	  
 	  $orders = $buyer->Orders();
+	  $orders->sort('ID', "ASC");
 	  $this->assertEquals(1, $orders->Count());
 	  
 	  $realTotal = $productA->Amount->getAmount();
