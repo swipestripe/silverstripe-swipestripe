@@ -1,9 +1,27 @@
 <?php
-
+/**
+ * A receipt email that is sent to the customer after they have completed their {@link Order}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage emails
+ * @version 1.0
+ */
 class ReceiptEmail extends ProcessedEmail {
 
 	/**
-	 * Create a new email.
+	 * Create the new receipt email.
+	 * 
+	 * @param Member $customer
+	 * @param Order $order
+	 * @param String $from
+	 * @param String $to
+	 * @param String $subject
+	 * @param String $body
+	 * @param String $bounceHandlerURL
+	 * @param String $cc
+	 * @param String $bcc
 	 */
 	public function __construct(Member $customer, Order $order, $from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
 	  

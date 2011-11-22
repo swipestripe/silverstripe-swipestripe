@@ -1,9 +1,12 @@
 <?php
 /**
  * Same as the normal system email class, but runs the content through
- * Emogrifier to merge css style inline before sending.
+ * Emogrifier to merge css rules inline before sending.
  * 
  * @author Mark Guinn
+ * @package shop
+ * @subpackage emails
+ * @version 1.0
  */
 class ProcessedEmail extends Email {
   

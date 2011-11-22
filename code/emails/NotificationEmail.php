@@ -1,14 +1,28 @@
 <?php
 /**
- * Sent to website owner when new Order is made.
+ * A notification email that is sent to an email address specified in {@link ShopSettings}, usually
+ * a site administrator or owner. 
  * 
- * @author frankmullenger
- *
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage emails
+ * @version 1.0
  */
 class NotificationEmail extends ProcessedEmail {
 
 	/**
-	 * Create a new email.
+	 * Create the new notification email.
+	 * 
+	 * @param Member $customer
+	 * @param Order $order
+	 * @param String $from
+	 * @param String $to
+	 * @param String $subject
+	 * @param String $body
+	 * @param String $bounceHandlerURL
+	 * @param String $cc
+	 * @param String $bcc
 	 */
 	public function __construct(Member $customer, Order $order, $from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
 	  
