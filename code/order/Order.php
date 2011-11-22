@@ -165,6 +165,15 @@ class Order extends DataObject {
 	);
 	
 	/**
+	 * The default sort expression. This will be inserted in the ORDER BY
+	 * clause of a SQL query if no other sort expression is provided.
+	 * 
+	 * @see ShopAdmin
+	 * @var String
+	 */
+	public static $default_sort = 'ID DESC';
+	
+	/**
 	 * Filters for order admin area search.
 	 * 
 	 * @see DataObject::scaffoldSearchFields()
