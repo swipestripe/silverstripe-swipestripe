@@ -81,9 +81,9 @@ class ProductCategory_Controller extends Page_Controller {
     $doSet = DataObject::get( 
        'Product', 
        "`ProductCategory_Products`.`ProductCategoryID` = '".$this->ID."' OR `ParentID` = '".$this->ID."'", 
-       "", 
+       "Created DESC", 
        "LEFT JOIN `ProductCategory_Products` ON `ProductCategory_Products`.`ProductID` = `Product`.`ID`",
-       "{$SQL_start}, 2"
+       "{$SQL_start}, 3"
     ); 
    
     return $doSet ? $doSet : false;
