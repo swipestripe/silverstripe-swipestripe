@@ -289,7 +289,10 @@ class Product extends Page {
         $this,
         'Attributes',
         'Attribute',
-        array('Title' => 'Title'),
+        array(
+        	'Title' => 'Title',
+        	'Description' => 'Description'
+        ),
         'getCMSFields'
       );
       $tablefield->setPermissions(array());
