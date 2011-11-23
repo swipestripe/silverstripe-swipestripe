@@ -1,5 +1,5 @@
 
-<div id="ModelAdminPanel">
+<div id="ModelAdminPanel" class="ShopAdmin">
 
 <% if EditForm %>
 	$EditForm

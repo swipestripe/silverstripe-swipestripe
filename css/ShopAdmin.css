@@ -75,7 +75,7 @@ line-height:22px;
 margin:0 0 0 7px;
 }
 
-/* Stripey Cart */
+/* Swipe Stripe */
 .right form .ComplexTableField .middleColumn {
 background:none;
 }
@@ -88,4 +88,13 @@ p.ProductHelp {
 padding: 5px 0px;
 font-size: 12px;
 font-weight: bold;
+}
+
+#AttributeAlert {
+display: none;	
+}
+
+.ShopAdmin form .message {
+font-size: 14px;
+font-weight: normal;
 }

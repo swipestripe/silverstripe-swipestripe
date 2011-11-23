@@ -309,6 +309,14 @@ an option selected for each attribute.
 </p>
 EOS;
       $fields->addFieldToTab("Root.Content.Attributes", new LiteralField('AttributeHelp', $attributeHelp));
+      
+      $attributeAlert = <<<EOS
+<p id="AttributeAlert" class="message good">
+Please 'Save' after you have finished changing attributes and check that product variations are correct.
+</p>
+EOS;
+      $fields->addFieldToTab("Root.Content.Attributes", new LiteralField('AttributeAlert', $attributeAlert));
+      
       $fields->addFieldToTab("Root.Content.Attributes", $tablefield);
 		}
 
