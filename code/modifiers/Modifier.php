@@ -111,4 +111,12 @@ interface Modifier_Interface {
    * @return String
    */
   public function Description($order, $value);
+  
+  /**
+   * Add modifider to an {@link Order} .
+   * 
+   * @param Order $order
+   * @param Mixed $value
+   */
+  public function addToOrder($order, $value);
 }

@@ -37,6 +37,7 @@ class FlatFeeShippingField extends ModifierSetField {
     
     $shippingOptions = DataObject::get('FlatFeeShippingRate', "CountryCode = '$shippingCountry'");
     
+    $optionsMap = array();
     if ($shippingOptions && $shippingOptions->exists()) {
       $optionsMap = $shippingOptions->map('ID', 'Label');
       $this->setSource($optionsMap);
@@ -44,7 +45,7 @@ class FlatFeeShippingField extends ModifierSetField {
     
     //If the current modifier value is not in the new options, then set to first option
     $modification = DataObject::get_one('Modification', "ModifierClass = 'FlatFeeShipping' AND OrderID = '" . $order->ID . "'");
-    $currentOptionID = $modification->ModifierOptionID;
+    $currentOptionID = ($modification && $modification->exists()) ? $modification->ModifierOptionID : null;
     $newOptions = array_keys($optionsMap);
 
     if (!in_array($currentOptionID, $newOptions)) {

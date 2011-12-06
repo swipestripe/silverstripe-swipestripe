@@ -9,14 +9,14 @@
  * @subpackage shipping
  * @version 1.0
  */
-class FlatFeeShipping extends Modifier implements Modifier_Interface {
+class FlatFeeTax extends Modifier implements Modifier_Interface {
   
 	/**
    * For setting configuration, should be called from _config.php files only
    */
   public static function enable() {
-    Modifier::$supported_methods[] = 'FlatFeeShipping';
-    Object::add_extension('SiteConfig', 'FlatFeeShippingConfigDecorator');
+    Modifier::$supported_methods[] = 'FlatFeeTax';
+    Object::add_extension('SiteConfig', 'FlatFeeTaxConfigDecorator');
   }
   
   /**
@@ -34,28 +34,30 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
     //SiteConfig ID not being set correctly on country db rows
 
 	  $fields = new FieldSet();
-	  $flatFeeShippingRates = DataObject::get('FLatFeeShippingRate');
 	  
-	  if ($flatFeeShippingRates) {
+    //Get tax rate based on shipping address
+	  $shippingCountry = null;
+	  if ($order && $order->exists()) {
+	    $shippingAddress = $order->ShippingAddress();
+  	  if ($shippingAddress) $shippingCountry = $shippingAddress->Country;
+	  }
+
+	  if ($shippingCountry) {
+	    $flatFeeTaxRate = DataObject::get_one('FlatFeeTaxRate', "CountryCode = '$shippingCountry'");
 	    
-	    //TODO could probably do this filter in the DataObject::get()
-	    //Filter based on shipping address
-  	  $shippingCountry = null;
-  	  if ($order && $order->exists()) {
-  	    $shippingAddress = $order->ShippingAddress();
-    	  if ($shippingAddress) $shippingCountry = $shippingAddress->Country;
-  	  }
-  	  
-  	  if ($shippingCountry) foreach ($flatFeeShippingRates as $rate) {
-  	    if ($rate->CountryCode != $shippingCountry) $flatFeeShippingRates->remove($rate);
-  	  }
-  
-  	  $fields->push(new FlatFeeShippingField(
-  	    $this,
-  	  	'Flat Fee Shipping',
-  	  	$flatFeeShippingRates->map('ID', 'Label')
-  	  	//$flatFeeShippingCountries->First()->ID
-  	  ));
+	    if ($flatFeeTaxRate && $flatFeeTaxRate->exists()) {
+	      
+	      $flatFeeTaxField = new FlatFeeTaxField(
+    	    $this,
+    	  	$flatFeeTaxRate->Label(),
+    	  	$flatFeeTaxRate->ID
+    	  );
+	      
+	      //Set the amount for display on the Order form
+    	  $flatFeeTaxField->setAmount($this->Amount($order, $flatFeeTaxField->Value()));
+    	  
+    	  $fields->push($flatFeeTaxField);
+	    }
 	  }
 	  
 	  return $fields;
@@ -81,26 +83,23 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
    * @return Money
    */
   public function Amount($order, $value) {
-
-    $optionID = $value;
-    $amount = new Money();
+    
     $currency = Modification::currency();
-	  $amount->setCurrency($currency);
-    $flatFeeShippingRates = DataObject::get('FlatFeeShippingRate');
+    $amount = new Money();
+    $amount->setCurrency($currency);
 
-    if ($flatFeeShippingRates && $flatFeeShippingRates->exists()) {
-      
-      $shippingRate = $flatFeeShippingRates->find('ID', $optionID);
-      if ($shippingRate) {
-        $amount->setAmount($shippingRate->Amount->getAmount());
-      }
-      else {
-        user_error("Cannot find flat fee rate for that ID.", E_USER_WARNING);
-        //TODO return meaningful error to browser in case error not shown
-        return;
-      }
+    $taxRate = DataObject::get_by_id('FlatFeeTaxRate', $value);
+    
+    if ($taxRate && $taxRate->exists()) {
+      $amount->setAmount($order->SubTotal->getAmount() * ($taxRate->Rate / 100));
     }
-	  return $amount;
+    else {
+      user_error("Cannot find flat tax rate for that ID.", E_USER_WARNING);
+      //TODO return meaningful error to browser in case error not shown
+      return;
+    }
+    
+    return $amount;
   }
   
   /**
@@ -113,27 +112,22 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
    */
   public function Description($order, $value) {
     
-    $optionID = $value;
+    $taxRate = DataObject::get_by_id('FlatFeeTaxRate', $value);
     $description = null;
-    $flatFeeShippingRates = DataObject::get('FlatFeeShippingRate');
     
-    if ($flatFeeShippingRates && $flatFeeShippingRates->exists()) {
-      
-      $shippingRate = $flatFeeShippingRates->find('ID', $optionID);
-      if ($shippingRate) {
-        $description = $shippingRate->Description;
-      }
-      else {
-        user_error("Cannot find flat fee rate for that ID.", E_USER_WARNING);
-        //TODO return meaningful error to browser in case error not shown
-        return; 
-      }
+    if ($taxRate && $taxRate->exists()) {
+      $description = $taxRate->Description;
     }
-	  return $description;
+    else {
+      user_error("Cannot find flat fee tax rate for that ID.", E_USER_WARNING);
+      //TODO return meaningful error to browser in case error not shown
+      return; 
+    }
+    return $description;
   }
   
-  function addToOrder($order, $value) {
-  
+  public function addToOrder($order, $value) {
+    
     $modification = new Modification();
     $modification->ModifierClass = get_class($this);
     $modification->ModifierOptionID = $value;

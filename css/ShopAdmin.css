@@ -98,3 +98,16 @@ display: none;
 font-size: 14px;
 font-weight: normal;
 }
+
+.ShopAdmin #Amount .fieldgroupField {
+margin-right: 5px;
+}
+
+.ShopAdmin .option select {
+font-size: 12px;
+height: 19px;
+}
+
+
+
+

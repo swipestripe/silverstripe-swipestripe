@@ -638,39 +638,17 @@ class Order extends DataObject {
 	 */
 	function addModifiersAtCheckout(Array $data) {
 
-	  //Save the order modifiers
+	  //Remove existing Modifications
     $existingModifications = $this->Modifications();
+    foreach ($existingModifications as $modification) {
+      $modification->delete();
+    }
+    
+    //Save new Modifications
 	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {
-
-	    //If the exact modifier exists on this order do not add it again, protects against resubmission of checkout form
-	    if ($existingModifications) foreach ($existingModifications as $modification) {
-	      
-	      if ($modification->ModifierClass == $modifierClass) {
-          
-          //Update the current modifier
-          $modification->ModifierOptionID = $value;
 	    
-          $modifierInstance = new $modifierClass();
-          $modification->Amount = call_user_func(array($modifierInstance, 'Amount'), $this, $value);
-          $modification->Description = call_user_func(array($modifierInstance, 'Description'), $this, $value);
-          
-          $modification->OrderID = $this->ID;
-          $modification->write();
-	            
-	        continue 2;
-	      }
-	    }
-
-	    $modification = new Modification();
-	    $modification->ModifierClass = $modifierClass;
-	    $modification->ModifierOptionID = $value;
-	    
-	    $modifierInstance = new $modifierClass();
-	    $modification->Amount = call_user_func(array($modifierInstance, 'Amount'), $this, $value);
-	    $modification->Description = call_user_func(array($modifierInstance, 'Description'), $this, $value);
-	    
-	    $modification->OrderID = $this->ID;
-	    $modification->write();
+	    $modifier = new $modifierClass();
+	    $modifier->addToOrder($this, $value);
 	  }
 	  $this->updateTotal();
 	}
@@ -681,7 +659,7 @@ class Order extends DataObject {
 	 * @param Array $data
 	 */
 	function addAddressesAtCheckout(Array $data) {
-
+	  
 	  $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
     $order = CartControllerExtension::get_current_order();
     
@@ -691,7 +669,7 @@ class Order extends DataObject {
 
     if ($existingBillingAddress && $existingBillingAddress->exists()) {
       $newData = array();
-      if (is_array($data['Billing'])) foreach ($data['Billing'] as $fieldName => $value) {
+      if (isset($data['Billing']) && is_array($data['Billing'])) foreach ($data['Billing'] as $fieldName => $value) {
         $newData[$fieldName] = $value;
       }
       $existingBillingAddress->update($newData);
@@ -716,7 +694,7 @@ class Order extends DataObject {
 
     if ($existingShippingAddress && $existingShippingAddress->exists()) {
       $newData = array();
-      if (is_array($data['Shipping'])) foreach ($data['Shipping'] as $fieldName => $value) {
+      if (isset($data['Shipping']) && is_array($data['Shipping'])) foreach ($data['Shipping'] as $fieldName => $value) {
         $newData[$fieldName] = $value;
       }
       $existingShippingAddress->update($newData);
