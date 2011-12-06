@@ -1,4 +1,4 @@
-<tr class="gap total ModifierTextField">
+<tr class="gap total ModifierHiddenField">
 
   <td class="threeColHeader" colspan="4">
     $Title
@@ -8,7 +8,7 @@
     <div id="$Name" class="field $Type $extraClass">
       $titleBlock
       <div class="middleColumn">
-        $Amount.Nice
+        $Description
         $Field
       </div>
       $rightTitleBlock

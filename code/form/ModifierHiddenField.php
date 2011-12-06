@@ -1,7 +1,9 @@
 <?php
 /**
- * For displaying a set of modifiers on the {@link CheckoutPage} which will inject their details
+ * For displaying a {@link Modifier} on the {@link CheckoutPage} which will inject details
  * into {@link Order} {@link Modifications}.
+ * 
+ * The hidden field stores the {@link Modifier} ID.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -9,14 +11,14 @@
  * @subpackage form
  * @version 1.0
  */
-class ModifierTextField extends HiddenField {
+class ModifierHiddenField extends HiddenField {
 	
 	/**
 	 * Template for rendering
 	 *
 	 * @var String
 	 */
-	protected $template = "ModifierTextField";
+	protected $template = "ModifierHiddenField";
 
 	/**
 	 * To hold the modifier (link FlatFeeShipping) class that will set the value for the 
@@ -71,6 +73,16 @@ class ModifierTextField extends HiddenField {
 	 */
 	function getModifier() {
 	  return $this->modifier;
+	}
+	
+	/**
+	 * A description to show alongside the hidden field on the {@link CheckoutForm}.
+	 * For instance, this might be a calculated value.
+	 * 
+	 * @return String Description of the modifier e.g: a calculated value of tax
+	 */
+	function Description() {
+	  return;
 	}
 	
 }

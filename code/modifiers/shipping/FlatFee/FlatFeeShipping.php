@@ -132,6 +132,13 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
 	  return $description;
   }
   
+  /**
+   * Add modifider to an {@link Order} .
+   * 
+   * @see Modifier_Interface::addToOrder()
+   * @param Order $order
+   * @param Mixed $value
+   */
   function addToOrder($order, $value) {
   
     $modification = new Modification();

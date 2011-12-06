@@ -1,6 +1,6 @@
 <?php
 /**
- * Form fields that represent {@link FlatFeeShippingRate}s in the Checkout form.
+ * Form field that represents {@link FlatFeeTaxRate}s in the Checkout form.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -8,15 +8,13 @@
  * @subpackage shipping
  * @version 1.0
  */
-class FlatFeeTaxField extends ModifierTextField {
-  
-  /**
-	 * Template for rendering
-	 *
-	 * @var String
-	 */
-	protected $template = "FlatFeeTaxField";
+class FlatFeeTaxField extends ModifierHiddenField {
 	
+  /**
+   * The amount this field represents e.g: 15% * order subtotal
+   * 
+   * @var Money
+   */
 	protected $amount;
 
   /**
@@ -39,9 +37,7 @@ class FlatFeeTaxField extends ModifierTextField {
    * @param Order $order
    */
   function updateValue($order) {
-    
     return;
-
   }
 
   /**
@@ -58,11 +54,21 @@ class FlatFeeTaxField extends ModifierTextField {
 
   }
   
+  /**
+   * Set the amount that this field represents.
+   * 
+   * @param Money $amount
+   */
   function setAmount(Money $amount) {
     $this->amount = $amount;
   }
   
-  function Amount() {
-    return $this->amount;
+  /**
+   * Return the amount for this tax rate for displaying in the {@link CheckoutForm}
+   * 
+   * @return String
+   */
+  function Description() {
+    return $this->amount->Nice();
   }
 }

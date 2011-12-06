@@ -1,6 +1,6 @@
 <?php
 /**
- * Shipping rates that can be set in {@link SiteConfig}. Several flat rates can be set 
+ * Tax rates that can be set in {@link SiteConfig}. Several flat rates can be set 
  * for any supported shipping country.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
@@ -12,7 +12,7 @@
 class FlatFeeTaxRate extends DataObject {
   
   /**
-   * Fields for this shipping rate
+   * Fields for this tax rate
    * 
    * @var Array
    */
@@ -25,7 +25,7 @@ class FlatFeeTaxRate extends DataObject {
 	);
 	
 	/**
-	 * Shipping rates are associated with SiteConfigs.
+	 * Tax rates are associated with SiteConfigs.
 	 * 
 	 * TODO The CTF in SiteConfig does not save the SiteConfig ID correctly so this is moot
 	 * 
@@ -36,7 +36,7 @@ class FlatFeeTaxRate extends DataObject {
   );
 	
   /**
-   * Field for editing a {@link FlatFeeShippingRate}.
+   * Field for editing a {@link FlatFeeTaxRate}.
    * 
    * @return FieldSet
    */
@@ -61,9 +61,9 @@ class FlatFeeTaxRate extends DataObject {
   }
   
   /**
-   * Label for using on {@link FlatFeeShippingField}s.
+   * Label for using on {@link FlatFeeTaxField}s.
    * 
-   * @see FlatFeeShippingField
+   * @see FlatFeeTaxField
    * @return String
    */
   public function Label() {
@@ -79,6 +79,11 @@ class FlatFeeTaxRate extends DataObject {
     return $this->Amount->Nice();
   }
   
+  /**
+   * Summary of the current tax rate
+   * 
+   * @return String
+   */
   public function SummaryOfRate() {
     return $this->Rate . ' %';
   }

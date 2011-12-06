@@ -1,6 +1,6 @@
 <?php
 /**
- * So that {@link FlatFeeShippingRate}s can be created in {@link SiteConfig}.
+ * So that {@link FlatFeeTaxRate}s can be created in {@link SiteConfig}.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -11,7 +11,7 @@
 class FlatFeeTaxConfigDecorator extends DataObjectDecorator {
 
   /**
-   * Attach {@link FlatFeeShippingRate}s to {@link SiteConfig}.
+   * Attach {@link FlatFeeTaxRate}s to {@link SiteConfig}.
    * 
    * @see DataObjectDecorator::extraStatics()
    */
@@ -24,7 +24,7 @@ class FlatFeeTaxConfigDecorator extends DataObjectDecorator {
 	}
 
 	/**
-	 * Create {@link ComplexTableField} for managing {@link FlatFeeShippingRate}s.
+	 * Create {@link ComplexTableField} for managing {@link FlatFeeTaxRate}s.
 	 * 
 	 * @see DataObjectDecorator::updateCMSFields()
 	 */

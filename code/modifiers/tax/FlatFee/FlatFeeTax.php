@@ -1,6 +1,6 @@
 <?php
 /**
- * Flat fee shipping, flat fees can be added for each supported shipping country from 
+ * Flat fee tax, flat fees can be added for each supported shipping country from 
  * the SiteConfig using {@link FlatFeeShippingRate}s.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
@@ -20,8 +20,9 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
   }
   
   /**
-   * Form fields for displaying on the Checkout form, a dropdown of {@link FlatFeeShippingRate}s
-   * that are filtered depending on the shipping country selected.
+   * Form fields for displaying on the Checkout form, a {@link FlatFeeTaxField} that has
+   * a hidden field with an ID for the {@link FlatFeeTaxRate} and a description of 
+   * how much the calculated tax amounts to for the current {@link Order}.
    * 
    * @see FlatFeeShippingRate
    * @see Modifier::combined_form_fields()
@@ -59,7 +60,6 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
     	  $fields->push($flatFeeTaxField);
 	    }
 	  }
-	  
 	  return $fields;
 	}
 	
@@ -76,6 +76,7 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
 
   /**
    * Get Amount for this modifier so that it can be saved into an {@link Order} {@link Modification}.
+   * Get the FlatFeeTaxRate and multiply the rate by the Order subtotal.
    * 
    * @see Modification
    * @param Order $order
@@ -126,6 +127,13 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
     return $description;
   }
   
+  /**
+   * Add modifider to an {@link Order} .
+   * 
+   * @see Modifier_Interface::addToOrder()
+   * @param Order $order
+   * @param Mixed $value
+   */
   public function addToOrder($order, $value) {
     
     $modification = new Modification();
