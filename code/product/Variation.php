@@ -108,7 +108,7 @@ class Variation extends DataObject {
     $amountField = new VariationMoneyField('Amount');
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
-    //$fields->push(new NumericField('Stock'));
+    $fields->push(new NumericField('Stock'));
     
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -294,6 +294,7 @@ class Variation extends DataObject {
     //Hacky way to get new option IDs from $this->record because $this->Options() returns existing options
     //not the new ones passed in POST data    
     $attributeIDs = $this->Product()->Attributes()->map();
+    $variationAttributeOptions = array();
     if ($attributeIDs) foreach ($attributeIDs as $attributeID => $title) {
       
       $attributeOptionID = $this->record['Options[' . $attributeID .']'];

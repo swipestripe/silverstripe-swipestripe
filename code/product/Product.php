@@ -40,7 +40,8 @@ class Product extends Page {
    * @var Array
    */
   public static $db = array(
-    'Amount' => 'Money'
+    'Amount' => 'Money',
+    'Stock' => 'Int'
   );
 
   /**
@@ -262,9 +263,16 @@ class Product extends Page {
     ));
     $fields->addFieldToTab("Root.Content.Gallery", $manager);
     
+    
+    //Product fields
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
+		
+		
+		//If variations then don't show stock
+		$stockField = new NumericField('Stock');
+		$fields->addFieldToTab('Root.Content.Main', $stockField, 'Content');
 		
 		//Product categories
     $manager = new ManyManyComplexTableField(
@@ -324,6 +332,9 @@ EOS;
     $attributes = $this->Attributes();
     if ($attributes && $attributes->exists()) {
       
+      //Remove the stock level field if there are variations, each variation has a stock field
+      $fields->removeByName('Stock');
+      
       $variationFieldList = array();
       
       $fields->addFieldToTab("Root.Content", new TabSet('Options'));
@@ -365,8 +376,7 @@ EOS;
         $fields->addFieldToTab("Root.Content.Options.".$attributeTabName, $manager);
       }
 
-      
-      //$variationFieldList['SummaryOfStock'] = 'Stock';
+      $variationFieldList['SummaryOfStock'] = 'Stock';
       $variationFieldList['SummaryOfPrice'] = 'Price Difference';
       $variationFieldList['Status'] = 'Status';
       
