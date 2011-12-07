@@ -269,10 +269,7 @@ class Product extends Page {
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
 		
-		
-		//If variations then don't show stock
-		$stockField = new NumericField('Stock');
-		$fields->addFieldToTab('Root.Content.Main', $stockField, 'Content');
+		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock'), 'Content');
 		
 		//Product categories
     $manager = new ManyManyComplexTableField(
