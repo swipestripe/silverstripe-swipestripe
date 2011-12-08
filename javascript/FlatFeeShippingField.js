@@ -20,7 +20,6 @@
     	}
     	$('#CheckoutForm_OrderForm_Shipping-Country').live('change', updateOrderFormCartAJAX).change();
     	$('div.flatfeeshipping select').live('change', updateOrderFormCartAJAX);
-    	
     	updateOrderFormCartAJAX(); //This ruins the modifier field being set to the correct value for some reason
     })
 })(jQuery);

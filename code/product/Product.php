@@ -272,7 +272,7 @@ class Product extends Page {
 		//$fields->addFieldToTab('Root.Content.Main', new StockField('Stock'), 'Content');
 		
 		//Product categories
-    $manager = new ManyManyComplexTableField(
+    $manager = new BelongsManyManyComplexTableField(
       $this,
       'ProductCategories',
       'ProductCategory',

@@ -108,7 +108,9 @@ class Variation extends DataObject {
     $amountField = new VariationMoneyField('Amount');
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
-    $fields->push(new NumericField('Stock'));
+    
+    //$fields->push(new NumericField('Stock'));
+    //$fields->push(new StockField('Stock'));
     
     $product = $this->Product();
     $attributes = $product->Attributes();
