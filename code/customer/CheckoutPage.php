@@ -510,44 +510,47 @@ class CheckoutPage_Controller extends Page_Controller {
 	 */
 	function updateOrderFormCart(SS_HTTPRequest $data) {
 
-	  $fields = array();
-    $validator = new OrderFormValidator();
-    $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
-    $order = CartControllerExtension::get_current_order();
-    
-    //Update the Order 
-    $order->addAddressesAtCheckout($data->requestVars());
-    $order->addModifiersAtCheckout($data->requestVars());
-    //TODO update personal details, notes and payment type?
-    
-    //Create the part of the form that displays the Order
-    $this->addItemFields($fields, $validator, $order);
-    $this->addModifierFields($fields, $validator, $order); //This is going to go through and add modifiers based on current Form DATA
-    
-    //TODO This should be constructed for non-dropdown fields as well
-    //Update modifier form fields so that the dropdown values are correct
-    $newModifierData = array();
-    foreach ($fields['Modifiers'] as $field) {
-
-      if (method_exists($field, 'updateValue')) {
-        $field->updateValue($order);
+	  if ($data->isPOST()) {
+	  
+  	  $fields = array();
+      $validator = new OrderFormValidator();
+      $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
+      $order = CartControllerExtension::get_current_order();
+      
+      //Update the Order 
+      $order->addAddressesAtCheckout($data->postVars());
+      $order->addModifiersAtCheckout($data->postVars());
+      //TODO update personal details, notes and payment type?
+  
+      //Create the part of the form that displays the Order
+      $this->addItemFields($fields, $validator, $order);
+      $this->addModifierFields($fields, $validator, $order); //This is going to go through and add modifiers based on current Form DATA
+      
+      //TODO This should be constructed for non-dropdown fields as well
+      //Update modifier form fields so that the dropdown values are correct
+      $newModifierData = array();
+      foreach ($fields['Modifiers'] as $field) {
+  
+        if (method_exists($field, 'updateValue')) {
+          $field->updateValue($order);
+        }
+  
+        $modifierClassName = get_class($field->getModifier());
+        $newModifierData['Modifiers'][$modifierClassName] = $field->Value();
       }
-
-      $modifierClassName = get_class($field->getModifier());
-      $newModifierData['Modifiers'][$modifierClassName] = $field->Value();
-    }
-    
-    //Add modifiers to the order again so that the new values are used
-    $order->addModifiersAtCheckout($newModifierData);
-
-    $actions = new FieldSet(
-      new FormAction('ProcessOrder', 'Proceed to pay')
-    );
-    $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
-    $form->disableSecurityToken();
-    $form->validate();
-
-	  return $form->renderWith('CheckoutFormOrder');
+  
+      //Add modifiers to the order again so that the new values are used
+      $order->addModifiersAtCheckout($newModifierData);
+  
+      $actions = new FieldSet(
+        new FormAction('ProcessOrder', 'Proceed to pay')
+      );
+      $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
+      $form->disableSecurityToken();
+      $form->validate();
+  
+  	  return $form->renderWith('CheckoutFormOrder');
+	  }
 	}
 
 }
