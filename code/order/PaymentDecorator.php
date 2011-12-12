@@ -120,4 +120,17 @@ class PaymentDecorator extends DataObjectDecorator {
 		  $order->onAfterPayment();
 		}
 	}
+	
+	/**
+	 * For the purpose of certain payment gateways.
+	 * 
+	 * @see PaystationHostedPayment_Handler::complete()
+	 */
+	function redirectToOrder() {
+	  $order = $this->owner->PaidObject();
+
+		if ($order && $order instanceof Order) {
+		  Director::redirect($order->Link());
+		}
+	}
 }

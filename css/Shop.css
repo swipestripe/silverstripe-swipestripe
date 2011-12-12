@@ -349,8 +349,8 @@ width: 100%;
 div.paymentfields {
 float: left;
 margin-bottom: 15px;
-margin-left: 20px;
 clear: left;
+border: 1px solid #ccc;
 }
 
 .creditCardField input {
@@ -358,6 +358,10 @@ clear: left;
   color: #333333;
   padding: 5px;
   width: 100px;
+}
+
+div.ChequePaymentFields {
+border: none;	
 }
 
 
