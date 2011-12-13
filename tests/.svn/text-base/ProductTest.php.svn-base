@@ -131,8 +131,6 @@ class ProductTest extends FunctionalTest {
 	  $versions = DB::query('SELECT * FROM "Product_versions" WHERE "RecordID" = ' . $productID);
 	  $versionsAfterPriceChange = array();
 	  foreach ($versions as $versionRow) $versionsAfterPriceChange[] = $versionRow;
-	  
-	  SS_Log::log(new Exception(print_r($versionsAfterPriceChange, true)), SS_Log::NOTICE);
 
 	  $this->assertTrue(count($versionsAfterPublished) + 1 == count($versionsAfterPriceChange));
 	  $this->assertEquals($versionsAfterPriceChange[2]['AmountAmount'], $newAmount->getAmount());

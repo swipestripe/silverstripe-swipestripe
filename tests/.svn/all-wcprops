@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/ltr/!svn/ver/6/trunk/shop/tests
+END
+CartTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/ltr/!svn/ver/6/trunk/shop/tests/CartTest.php
+END
+OrderModifierTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/ltr/!svn/ver/6/trunk/shop/tests/OrderModifierTest.php
+END
+ProductTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/ltr/!svn/ver/6/trunk/shop/tests/ProductTest.php
+END
+Shop.yml
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/ltr/!svn/ver/6/trunk/shop/tests/Shop.yml
+END
+CheckoutTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ltr/!svn/ver/6/trunk/shop/tests/CheckoutTest.php
+END
