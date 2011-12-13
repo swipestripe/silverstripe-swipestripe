@@ -69,6 +69,8 @@ class CustomerDecorator extends DataObjectDecorator {
 	/**
 	 * Retrieve the last used billing address for this Member from their previous saved addresses.
 	 * 
+	 * TODO make this more efficient
+	 * 
 	 * @return Address The last billing address
 	 */
   function BillingAddress() {
@@ -85,6 +87,8 @@ class CustomerDecorator extends DataObjectDecorator {
 	
 	/**
 	 * Retrieve the last used shipping address for this Member from their previous saved addresses.
+	 * 
+	 * TODO make this more efficient
 	 * 
 	 * @return Address The last shipping address
 	 */

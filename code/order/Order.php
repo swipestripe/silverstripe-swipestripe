@@ -673,6 +673,7 @@ class Order extends DataObject {
       if (isset($data['Billing']) && is_array($data['Billing'])) foreach ($data['Billing'] as $fieldName => $value) {
         $newData[$fieldName] = $value;
       }
+      if ($member->ID) $newData['MemberID'] = $member->ID;
       $existingBillingAddress->update($newData);
       $existingBillingAddress->write();
     }
@@ -698,6 +699,7 @@ class Order extends DataObject {
       if (isset($data['Shipping']) && is_array($data['Shipping'])) foreach ($data['Shipping'] as $fieldName => $value) {
         $newData[$fieldName] = $value;
       }
+      if ($member->ID) $newData['MemberID'] = $member->ID;
       $existingShippingAddress->update($newData);
       $existingShippingAddress->write();
     }
