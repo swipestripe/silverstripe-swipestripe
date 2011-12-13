@@ -282,10 +282,11 @@ class Order extends DataObject {
 		  $value = $item->dbObject('Amount')->Nice();
 		  $date = $item->dbObject('Created')->Format('j M y g:i a');
 		  $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
+		  $paymentMessage = $item->Message;
 
 		  $fields->addFieldToTab('Root.Actions', new DropdownField(
 		  	'Payments['.$item->ID.']', 
-		  	"$paymentType by $customerName <br />$value <br />$date", 
+		  	"$paymentType by $customerName <br />$value <br />$date <br />$paymentMessage", 
 		    singleton('Payment')->dbObject('Status')->enumValues(),
 		    $item->Status
 		  ));
