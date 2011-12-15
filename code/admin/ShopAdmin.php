@@ -232,18 +232,16 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 
 		if ($this->currentRecord instanceof Product || is_subclass_of($this->currentRecord->class, 'Product')) {
 		  
-		  //Allow products to be added to the site tree, or remain disconnected from it
-		  $product = $this->currentRecord;
-			$pages = DataObject::get('SiteTree', 'ParentID > -1 AND SiteTree.ID != ' . $product->ID);
-			$pageMapPrefix = array(
-			  -1 => 'Not part of site tree navigation',
-			  0 => 'Root'
-			);
-			$pageMap = $pages->map('ID', 'MenuTitle');
-			$pagesMap = $pageMapPrefix + $pageMap;
+		  //Add another option to ParentType field for when products are not part of the site tree
+		  $fields = $form->Fields();
+		  $parentTypeField = $fields->fieldByName('Root.Behaviour.ParentType');
 
-			$treeField = new DropdownField('ParentID', 'Parent page', $pagesMap, $product->ParentID);
-			$form->Fields()->addFieldToTab('Root.Behaviour', $treeField);
+		  if ($parentTypeField && $parentTypeField->exists() && $parentTypeField instanceof OptionsetField) {
+		    $source = $parentTypeField->getSource();
+		    $source['exempt'] = 'Not part of the site tree';
+		    $parentTypeField->setSource($source);
+		    $parentTypeField->setValue($this->currentRecord->getParentType());
+		  }
 		}
 		
 		if(is_subclass_of($this->currentRecord->class, "SiteTree")) {
