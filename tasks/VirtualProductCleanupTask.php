@@ -5,8 +5,16 @@
  * preventing linking directly to product downloads 
  * for extended periods of time.
  * 
- * @author frankmullenger
+ * This is a remnant of a previous cart which had Virtual Products
+ * 
  * @see VirutalProductDecorator::$downloadWindow
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package shop
+ * @subpackage tasks
+ * @version 1.0
+ * @deprecated
  */
 class VirtualProductCleanupTask extends HourlyTask {
 	

@@ -794,6 +794,57 @@ class Order extends DataObject {
 	}
 	
 	/**
+	 * Delete this data object.
+	 * $this->onBeforeDelete() gets called.
+	 * Note that in Versioned objects, both Stage and Live will be deleted.
+	 *  @uses DataObjectDecorator->augmentSQL()
+	 */
+	public function delete() {
+	  
+	  //Check that order is:
+	  //last active over an hour ago
+	  //Order is status Cart
+	  //Order does not have any payments against it
+	  SS_Log::log(new Exception(print_r("about to REALLY delete $this->ID", true)), SS_Log::NOTICE);
+	  //return;
+	  
+	  //Clean up 
+	  //Items -> ItemOption
+	  //Addresses
+	  //Modifications
+	  
+	  try {
+	    $items = $this->Items();
+	    if ($items && $items->exists()) foreach ($items as $item) {
+        $item->delete();
+        $item->destroy();
+	    }
+	    
+	    $addresses = $this->Addresses();
+	    if ($addresses && $addresses->exists()) foreach ($addresses as $address) {
+	      $address->delete();
+	      $address->destroy();
+	    }
+	    
+	    $modifications = $this->Modifications();
+	    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
+	      $modification->delete();
+	      $modification->destroy();
+	    }
+	    
+	    parent::delete();
+	  }
+	  catch (Exception $e) {
+	    //Rollback
+	  }
+
+	}
+	
+	function onAfterDelete() {
+	  //Update the stock on each item
+	}
+	
+	/**
 	 * Set an order timeout, must be less than session timeouts, 
 	 * timeout prevents products in the order being sold out in the mean 
 	 * time. Not yet implemented.

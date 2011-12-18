@@ -109,8 +109,7 @@ class Variation extends DataObject {
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
     
-    //$fields->push(new NumericField('Stock'));
-    //$fields->push(new StockField('Stock'));
+    $fields->push(new StockField('Stock'));
     
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -401,5 +400,9 @@ class Variation extends DataObject {
 		if (!in_array('Enabled', $variations->map('ID', 'Status'))) {
 		  $product->doUnpublish(); 
 		}
+	}
+	
+	public function replenishStockWith($quantity) {
+	  //get the latest version of this variation and increase the stock by quantity
 	}
 }

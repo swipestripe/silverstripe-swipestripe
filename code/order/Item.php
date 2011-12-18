@@ -252,4 +252,53 @@ class Item extends DataObject {
 	function RemainingDownloadLimit() {
 	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}
+	
+  public function delete() {
+	  
+	  //Check that order is:
+	  //last active over an hour ago
+	  //Order is status Cart
+	  //Order does not have any payments against it
+	  SS_Log::log(new Exception(print_r("about to REALLY delete $this->ID", true)), SS_Log::NOTICE);
+	  //return;
+	  
+	  //Clean up 
+	  //Items -> ItemOption
+	  //Addresses
+	  //Modifications
+	  
+	  try {
+	    
+	    $itemOptions = $this->ItemOptions();
+	    if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
+	      $itemOption->delete();
+	      $itemOption->destroy();
+	    }
+	    
+	    //Get the latest version of the Object and increase the stock by quantity
+  	  //Get a variation for this product  
+  	  
+	    //Get the product at the latest version, or the variation if it exists at the latest version
+	    //replace the stock for the most recent version of that product
+  	  
+  	  //$productVariation = $this->getProduct();
+  	  //$product->replaceStock($this->Quantity);
+  	  
+	    $object = $this->Object();
+	    $variation = $this->Variation();
+	    if ($variation && $variation->exists()) {
+	      $variation->replenishStockWith($this->Quantity);
+	    }
+	    if ($object && $object->exists() && $object instanceof Product) {
+	      $product->replenishStockWith($this->Quantity);
+	    }
+	    
+	    
+	    parent::delete();
+	  }
+	  catch (Exception $e) {
+	    //Rollback
+	  }
+	}
+
 }
