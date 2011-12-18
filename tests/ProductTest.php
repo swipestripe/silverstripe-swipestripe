@@ -131,8 +131,6 @@ class ProductTest extends FunctionalTest {
 	  $versions = DB::query('SELECT * FROM "Product_versions" WHERE "RecordID" = ' . $productID);
 	  $versionsAfterPriceChange = array();
 	  foreach ($versions as $versionRow) $versionsAfterPriceChange[] = $versionRow;
-	  
-	  SS_Log::log(new Exception(print_r($versionsAfterPriceChange, true)), SS_Log::NOTICE);
 
 	  $this->assertTrue(count($versionsAfterPublished) + 1 == count($versionsAfterPriceChange));
 	  $this->assertEquals($versionsAfterPriceChange[2]['AmountAmount'], $newAmount->getAmount());
@@ -266,13 +264,22 @@ class ProductTest extends FunctionalTest {
     $this->loginAs('buyer');
     $this->get(Director::makeRelative($teeshirtA->Link())); 
     
-    $data = $this->getFormData('AddToCartForm_AddToCartForm');
-    unset($data['Options[2]']);
-    unset($data['Options[3]']);
-    unset($data['Options[1]']);
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
     
-    $data['Options'][2] = 12;
-    $data['NextAttributeID'] = 3;
+    $data = $this->getFormData('AddToCartForm_AddToCartForm');
+    unset($data["Options[{$colorAttr->ID}]"]);
+    unset($data["Options[{$materialAttr->ID}]"]);
+    unset($data["Options[{$sizeAttr->ID}]"]);
+    
+    $data['Options'][$colorAttr->ID] = $teeshirtARedOpt->ID;
+    $data['NextAttributeID'] = $materialAttr->ID;
     
     $this->post(
       Director::absoluteURL($teeshirtA->Link() . '/options/'),
@@ -282,8 +289,8 @@ class ProductTest extends FunctionalTest {
     $decoded = json_decode($this->mainSession->lastContent());
     
     $expected = array(
-      '14' => 'Cotton',
-      '15' => 'Polyester'
+      $teeshirtACottonOpt->ID => $teeshirtACottonOpt->Title,
+      $teeshirtAPolyesterOpt->ID => $teeshirtAPolyesterOpt->Title
     );
     $actual = array();
     foreach ($decoded->options as $optionID => $optionName) {
@@ -307,17 +314,27 @@ class ProductTest extends FunctionalTest {
 	  $this->logOut();
 	  
 	  $this->loginAs('buyer');
-	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  $this->get(Director::makeRelative($teeshirtA->Link()));
+
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+	  $teeshirtAExtraLargeOpt = $this->objFromFixture('Option', 'optExtraLargeTeeshirt');
 	  
     $data = $this->getFormData('AddToCartForm_AddToCartForm');
-	  unset($data['Options[2]']);
-	  unset($data['Options[3]']);
-	  unset($data['Options[1]']);
+	  unset($data["Options[{$colorAttr->ID}]"]);
+    unset($data["Options[{$materialAttr->ID}]"]);
+    unset($data["Options[{$sizeAttr->ID}]"]);
 	  
-	  $data['Options'][2] = 12;
-	  $data['Options'][3] = 14;
-	  $data['NextAttributeID'] = 1;
-	  
+    $data['Options'][$colorAttr->ID] = $teeshirtARedOpt->ID;
+    $data['Options'][$materialAttr->ID] = $teeshirtACottonOpt->ID;
+    $data['NextAttributeID'] = $sizeAttr->ID;
+
 	  $this->post(
 	    Director::absoluteURL($teeshirtA->Link() . '/options/'),
 	    $data
@@ -326,8 +343,8 @@ class ProductTest extends FunctionalTest {
 	  $decoded = json_decode($this->mainSession->lastContent());
 	  
 	  $expected = array(
-	    '9' => 'Small',
-	    '11' => 'Extra Large'
+	    $teeshirtASmallOpt->ID => $teeshirtASmallOpt->Title,
+	    $teeshirtAExtraLargeOpt->ID => $teeshirtAExtraLargeOpt->Title
 	  );
 	  $actual = array();
 	  foreach ($decoded->options as $optionID => $optionName) {

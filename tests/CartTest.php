@@ -402,15 +402,24 @@ class CartTest extends FunctionalTest {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton');
 	  $this->assertEquals('Enabled', $teeshirtAVariation->Status);
 	  
-	  $this->assertEquals(9,  $teeshirtAVariation->getOptionForAttribute(1)->ID);
-	  $this->assertEquals(12, $teeshirtAVariation->getOptionForAttribute(2)->ID);
-	  $this->assertEquals(14, $teeshirtAVariation->getOptionForAttribute(3)->ID);
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  
+	  $this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
+	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
+	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 	  
 	  $order = CartControllerExtension::get_current_order();
@@ -446,15 +455,24 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals('Disabled', $teeshirtAVariation->Status);
 	  $this->assertFalse($teeshirtAVariation->isEnabled());
 	  
-	  $this->assertEquals(9,  $teeshirtAVariation->getOptionForAttribute(1)->ID);
-	  $this->assertEquals(12, $teeshirtAVariation->getOptionForAttribute(2)->ID);
-	  $this->assertEquals(14, $teeshirtAVariation->getOptionForAttribute(3)->ID);
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  
+	  $this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
+	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
+	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 	  
 	  $order = CartControllerExtension::get_current_order();
@@ -477,18 +495,27 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 
-	  $this->assertEquals(9,  $teeshirtAVariation->getOptionForAttribute(1)->ID);
-	  $this->assertEquals(12, $teeshirtAVariation->getOptionForAttribute(2)->ID);
-	  $this->assertEquals(14, $teeshirtAVariation->getOptionForAttribute(3)->ID);
-
-	  //Note to self: Cannot set values for POST that are not valid on the form
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtAMediumOpt = $this->objFromFixture('Option', 'optMediumTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  
+	  $this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
+	  $this->assertFalse($teeshirtAMediumOpt->ID == $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
+	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
+	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
 	  //Submit with incorrect variation values, for Medium, Red, Cotton
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 10,  //Medium
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtAMediumOpt->ID,  //Medium
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 	  
 	  $order = CartControllerExtension::get_current_order();
@@ -511,13 +538,26 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  
+	  $this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
+	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
+	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
+	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
@@ -529,11 +569,11 @@ class CartTest extends FunctionalTest {
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 2,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
@@ -556,13 +596,23 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
@@ -582,11 +632,11 @@ class CartTest extends FunctionalTest {
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 15, //Polyester
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtAPolyesterOpt->ID, //Polyester
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 
@@ -613,13 +663,26 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  
+	  $this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
+	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
+	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
+	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
@@ -644,11 +707,11 @@ class CartTest extends FunctionalTest {
 	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 14, //Cotton
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $lastItemOption = $items->Last()->ItemOptions()->Last();
@@ -674,13 +737,23 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 15, //Polyester
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtAPolyesterOpt->ID, //Polyester
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
@@ -721,10 +794,20 @@ class CartTest extends FunctionalTest {
 	  $options = $smallRedCotton->Options();
 	  $this->assertInstanceOf('ComponentSet', $options);
 	  $this->assertEquals(3, $options->Count());
+	  
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  
 	  $this->assertEquals(array(
-	    14 => 'Cotton',
-	    12 => 'Red',
-	    9  => 'Small'
+	    $teeshirtACottonOpt->ID => 'Cotton',
+	    $teeshirtARedOpt->ID => 'Red',
+	    $teeshirtASmallOpt->ID  => 'Small'
 	  ), $options->map('ID', 'Title'));
 	}
 	
@@ -796,13 +879,23 @@ class CartTest extends FunctionalTest {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
+	  //Add variation to the cart
+	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
+	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
+	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+	  
+	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
+	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
+	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+	  
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => $quantity,
-	    'Options[1]' => 9,  //Small
-	    'Options[2]' => 12, //Red
-	    'Options[3]' => 15, //Polyester
+	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
+	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
+	    "Options[{$materialAttr->ID}]" => $teeshirtAPolyesterOpt->ID, //Polyester
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
