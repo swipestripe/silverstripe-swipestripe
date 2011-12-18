@@ -76,11 +76,11 @@ class ShopSettings extends DataObjectDecorator {
       new Tab('Signature')
     );
 
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new EmailField('ReceiptFrom', 'Sender'));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', 'Sender'));
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', 'Subject line'));
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', new HtmlEditorField('ReceiptBody', 'Message (order details are included in the email)', 15));
 
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new EmailField('NotificationTo', 'Recipient'));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', 'Recipient'));
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', 'Subject line'));
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new HtmlEditorField('NotificationBody', 'Message (order details are included in the email)', 15));
     
