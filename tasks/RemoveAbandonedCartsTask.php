@@ -20,7 +20,7 @@ class RemoveAbandonedCartsTask extends QuarterHourlyTask {
 	
 	function process() {
 	  
-	  SS_Log::log(new Exception(print_r('not processing task at the moment', true)), SS_Log::NOTICE);
+	  //SS_Log::log(new Exception(print_r('not processing task at the moment', true)), SS_Log::NOTICE);
 	  return;
 	  
 	  //Get orders that:

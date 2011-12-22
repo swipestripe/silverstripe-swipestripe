@@ -41,7 +41,11 @@ class Product extends Page {
    */
   public static $db = array(
     'Amount' => 'Money',
-    'Stock' => 'Int'
+    //'Stock' => 'Int'
+  );
+  
+  public static $has_one = array(
+    'StockLevel' => 'StockLevel'
   );
 
   /**
@@ -166,6 +170,15 @@ class Product extends Page {
     parent::onBeforeWrite();
     if (!$this->ID) $this->firstWrite = true;
     
+    //If a stock level is set then update StockLevel
+    $request = Controller::curr()->getRequest();
+    if ($request && $newLevel = $request->requestVar('Stock')) {
+      $stockLevel = $this->StockLevel();
+      $stockLevel->Level = $newLevel;
+      $stockLevel->write();
+      $this->StockLevelID = $stockLevel->ID;
+    }
+    
     //If the ParentID is set to a ProductCategory, select that category for this Product
     $parent = $this->getParent();
     if ($parent && $parent instanceof ProductCategory) {
@@ -184,8 +197,10 @@ class Product extends Page {
    */
   function onAfterWrite() {
     parent::onAfterWrite();
-    
+
     if ($this->firstWrite) {
+      
+      //TODO Make sure there is a StockLevel for this product by default
       
       $original = DataObject::get_by_id($this->class, $this->original['ID']);
       if ($original) {
@@ -269,7 +284,9 @@ class Product extends Page {
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
 		
-		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock'), 'Content');
+		//Stock level field
+		$level = $this->StockLevel()->Level;
+		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock', null, $level), 'Content');
 		
 		//Product categories
     $manager = new BelongsManyManyComplexTableField(
@@ -410,7 +427,7 @@ EOS;
 
 		//Add field names in for Money fields
 		$fields['Amount'] = 0;
-		
+
 		return (array) $fields;
 	}
   
@@ -553,8 +570,12 @@ EOS;
 	  return $this->Amount->Nice();
 	}
 	
-  public function replenishStockWith($quantity) {
-	  //get the latest version of this product and increase the stock by quantity
+	public function updateStockBy($quantity) {
+	  //Negative quantity when adding to the cart
+	  //Positive quantity when removing from the cart
+	  $stockLevel = $this->StockLevel();
+	  $stockLevel->Level += $quantity;
+	  $stockLevel->write();
 	}
 
 }
@@ -719,10 +740,13 @@ class Product_Controller extends Page_Controller {
   function add(Array $data, Form $form) {
     CartControllerExtension::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     
-    $form->sessionMessage(
-			'The product was added to your cart.',
-			'good'
-		);
+    //Show feedback if redirecting back to the Product page
+    if (!$this->getRequest()->requestVar('Redirect')) {
+      $form->sessionMessage(
+  			'The product was added to your cart.',
+  			'good'
+  		);
+    }
     $this->goToNextPage();
   }
   

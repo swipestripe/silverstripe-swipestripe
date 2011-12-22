@@ -172,6 +172,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form Form that data was submitted from
 	 */
 	private function saveCart(Array $data, Form $form) {
+
 	  $currentOrder = CartControllerExtension::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 

@@ -22,7 +22,7 @@ class QuantityField extends TextField {
 		$quantity = $this->Value();
 		
     if ($quantity == null || !is_numeric($quantity) || $quantity <= 0) {
-	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be at least zero (0).');
+	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be at least one (1).');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}

@@ -20,7 +20,7 @@ class Variation extends DataObject {
    */
   public static $db = array(
     'Amount' => 'Money',
-    'Stock' => 'Int',
+    //'Stock' => 'Int',
   	'Status' => "Enum('Enabled,Disabled','Enabled')",
   );
 
@@ -31,7 +31,8 @@ class Variation extends DataObject {
    */
   public static $has_one = array(
     'Product' => 'Product',
-    'Image' => 'ProductImage'
+    'Image' => 'ProductImage',
+    'StockLevel' => 'StockLevel'
   );
   
   /**
@@ -49,7 +50,7 @@ class Variation extends DataObject {
    * @var Array
    */
   public static $defaults = array(
-    'Stock' => -1
+    //'Stock' => -1
   );
   
   /**
@@ -109,7 +110,10 @@ class Variation extends DataObject {
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
     
-    $fields->push(new StockField('Stock'));
+    //Stock level field
+    $level = $this->StockLevel()->Level;
+		$fields->push(new StockField('Stock', null, $level));
+		
     
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -171,10 +175,11 @@ class Variation extends DataObject {
    * @return String
    */
   public function SummaryOfStock() {
-    if ($this->Stock == -1) {
+    $level = $this->StockLevel()->Level;
+    if ($level == -1) {
       return 'unlimited';
     }
-    return $this->Stock;
+    return $level;
   }
   
   /**
@@ -192,11 +197,14 @@ class Variation extends DataObject {
    * @return Boolean
    */
   public function inStock() {
-    if ($this->Stock == -1) return true;
-    if ($this->Stock == 0) return false;
+    
+    return true;
+    
+    //if ($this->Stock == -1) return true;
+    //if ($this->Stock == 0) return false;
     
     //TODO need to check what is currently in people's carts
-    if ($this->Stock > 0) return true; 
+    //if ($this->Stock > 0) return true; 
   }
   
   /**
@@ -373,14 +381,13 @@ class Variation extends DataObject {
 	      'VariationDuplicateError'
 	    );
     }
-    
+
     if ($this->isNegativeAmount()) {
       $result->error(
 	      'Variation price difference is a negative amount',
 	      'VariationNegativeAmountError'
 	    );
     }
-    
     return $result;
 	}
 	
@@ -402,7 +409,23 @@ class Variation extends DataObject {
 		}
 	}
 	
-	public function replenishStockWith($quantity) {
-	  //get the latest version of this variation and increase the stock by quantity
+  function onBeforeWrite() {
+    parent::onBeforeWrite();
+    
+    //If a stock level is set then update StockLevel
+    $request = Controller::curr()->getRequest();
+    if ($request && $newLevel = $request->requestVar('Stock')) {
+      $stockLevel = $this->StockLevel();
+      $stockLevel->Level = $newLevel;
+      $stockLevel->write();
+      $this->StockLevelID = $stockLevel->ID;
+    }
+  }
+	
+  public function updateStockBy($quantity) {
+    
+    $stockLevel = $this->StockLevel();
+	  $stockLevel->Level += $quantity;
+	  $stockLevel->write();
 	}
 }

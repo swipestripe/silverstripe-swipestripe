@@ -48,7 +48,6 @@ class ItemOption extends DataObject {
 	 * @return DataObject 
 	 */
 	function Object() {
-	  //return DataObject::get_by_id($this->ObjectClass, $this->ObjectID);
 	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
 	}
 	
@@ -60,4 +59,16 @@ class ItemOption extends DataObject {
 	function validate() {
 	  return parent::validate();
 	}
+
+  public function onAfterWrite() {
+    
+    //Update stock levels if a variation is being saved here
+    parent::onAfterWrite();
+    $item = $this->Item();
+    $variation = $this->Object();
+	  if ($variation && $variation->exists() && $variation instanceof Variation) {
+	    $item->updateStockLevels();
+	  }
+	}
+
 }

@@ -22,6 +22,7 @@ class Item extends DataObject {
 	  'ObjectClass' => 'Varchar',
 		'ObjectVersion' => 'Int',
 	  'Amount' => 'Money',
+	  'PreviousQuantity' => 'Int',
 	  'Quantity' => 'Int',
 	  'DownloadCount' => 'Int' //If item represents a downloadable product,
 	);
@@ -50,6 +51,7 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	public static $defaults = array(
+	  'PreviousQuantity' => 0,
 	  'Quantity' => 1,
 	  'DownloadCount' => 0
 	);
@@ -75,11 +77,16 @@ class Item extends DataObject {
 	 */
 	public function onBeforeDelete() {
 	  parent::onBeforeDelete();
+
+	  $this->PreviousQuantity = $this->Quantity;
+	  $this->Quantity = 0;
+	  $this->updateStockLevels();
 	  
 	  $itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
 	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
 	    $itemOption->delete();
-	  } 
+	    $itemOption->destroy();
+	  }
 	}
 	
 	/**
@@ -136,6 +143,15 @@ class Item extends DataObject {
 	    }
 	  } 
 	  return $variation;
+	}
+	
+	function Product() {
+	  
+	  $product = $this->Object();
+	  if ($product && $product->exists() && $product instanceof Product) {
+	    return $product;
+	  }
+	  return null;
 	}
 	
 	/**
@@ -253,52 +269,32 @@ class Item extends DataObject {
 	  return $this->getDownloadLimit() - $this->DownloadCount;
 	}
 	
-  public function delete() {
-	  
-	  //Check that order is:
-	  //last active over an hour ago
-	  //Order is status Cart
-	  //Order does not have any payments against it
-	  SS_Log::log(new Exception(print_r("about to REALLY delete $this->ID", true)), SS_Log::NOTICE);
-	  //return;
-	  
-	  //Clean up 
-	  //Items -> ItemOption
-	  //Addresses
-	  //Modifications
-	  
-	  try {
-	    
-	    $itemOptions = $this->ItemOptions();
-	    if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
-	      $itemOption->delete();
-	      $itemOption->destroy();
-	    }
-	    
-	    //Get the latest version of the Object and increase the stock by quantity
-  	  //Get a variation for this product  
-  	  
-	    //Get the product at the latest version, or the variation if it exists at the latest version
-	    //replace the stock for the most recent version of that product
-  	  
-  	  //$productVariation = $this->getProduct();
-  	  //$product->replaceStock($this->Quantity);
-  	  
-	    $object = $this->Object();
-	    $variation = $this->Variation();
-	    if ($variation && $variation->exists()) {
-	      $variation->replenishStockWith($this->Quantity);
-	    }
-	    if ($object && $object->exists() && $object instanceof Product) {
-	      $product->replenishStockWith($this->Quantity);
-	    }
-	    
-	    
-	    parent::delete();
+  function onBeforeWrite() {
+    parent::onBeforeWrite();
+
+    //PreviousQuantity starts at 0
+    if ($this->isChanged('Quantity')) {
+      $this->PreviousQuantity = $this->original['Quantity'];
+    }
+  }
+	
+	public function onAfterWrite() {
+	  parent::onAfterWrite();
+	  $this->updateStockLevels();
+	}
+	
+	public function updateStockLevels() {
+	  //Get variation, update stock level
+	  //If no variation get the product and update the stock level
+	  //Keep in mind calling this from onAfterDelete() as well
+
+	  $quantityChange = $this->PreviousQuantity - $this->Quantity;
+
+	  if ($variation = $this->Variation()) {
+	    $variation->updateStockBy($quantityChange);
 	  }
-	  catch (Exception $e) {
-	    //Rollback
+	  else if ($product = $this->Product()) {
+	    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
 	  }
 	}
-
 }

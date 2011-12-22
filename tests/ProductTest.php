@@ -1,6 +1,6 @@
 <?php
 /**
- * Testing {@link Order} modifiers at checkout.
+ * Testing {@link Product} attributes and options on product pages.
  * 
  * Summary of tests:
  * -----------------
@@ -17,6 +17,12 @@
  * add product to multiple categories, check that it appears on each
  * disable all variations, product should be unpublished
  * try saving product with 'action_publish' passed as a Get var, when no enabled variations exist product should not be published
+ * 
+ * add product to cart, stock depletes latest version of product
+ * add variation to cart, stock depletes latest version of variation
+ * remove product from cart, stock replenishes latest version of product
+ * remote variation from cart, stock replenishes latest version of variation
+ * scheduled task deletes order and associated objects, replenishes stock
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger

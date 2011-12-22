@@ -1,6 +1,6 @@
 <?php
 /**
- * Testing {@link Order} modifiers at checkout.
+ * Testing {@link Product}s added and removed from {@link Order}s.
  * 
  * Summary of tests:
  * -----------------
@@ -26,6 +26,7 @@
  * TODO
  * ----
  * remove options from product and variaiton when the attribute is deleted
+ * Test saving a product with a new attribute, existing variations without this attribute should be disabled
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -37,10 +38,12 @@ class CartTest extends FunctionalTest {
   
 	static $fixture_file = 'shop/tests/Shop.yml';
 	static $disable_themes = false;
-	static $use_draft_site = true;
+	static $use_draft_site = false;
 	
   function setUp() {
 		parent::setUp();
+		
+		Director::set_environment_type('dev');
 
 		//Check that payment module is installed
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
@@ -95,36 +98,6 @@ class CartTest extends FunctionalTest {
 	  $this->assertInstanceOf('Product', $firstProduct);
 	  $this->assertEquals($productA->Title, $firstProduct->Title);
 	  $this->assertEquals($productA->dbObject('Amount')->getAmount(), $firstProduct->dbObject('Amount')->getAmount());
-	}
-	
-	/**
-	 * Adding non published product to a cart should fail
-	 */
-	function testAddNonPublishedProductToCart() {
-	  
-    $productA = $this->objFromFixture('Product', 'productA');
-    
-    $this->assertEquals(false, $productA->isPublished());
-    
-    $productALink = $productA->Link();
-	  $this->get(Director::makeRelative($productALink)); 
-	  
-	  $message = null;
-	  try {
-  	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-  	    'Quantity' => 1
-  	  ));
-	  }
-	  catch (Exception $e) {
-	    $message = $e->getMessage();
-	  }
-	  
-	  $this->assertStringEndsWith('Object not written.', $message);
-    
-	  $order = CartControllerExtension::get_current_order();
-	  $items = $order->Items();
-	  
-	  $this->assertEquals(0, $items->Count());
 	}
 	
 	/**
@@ -386,7 +359,7 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals($newAmount->getAmount(), $secondItem->Amount->getAmount());
 	  $this->assertEquals($newAmount->getCurrency(), $secondItem->Amount->getCurrency());
 	}
-	
+
 	/**
 	 * Add a product variation to the cart
 	 */
@@ -810,30 +783,7 @@ class CartTest extends FunctionalTest {
 	    $teeshirtASmallOpt->ID  => 'Small'
 	  ), $options->map('ID', 'Title'));
 	}
-	
-	/**
-	 * Test saving variation without all options set
-	 * Disabled validation for product variations because preventing disabling a variation
-	 *
-	function testSaveInvalidProductVariation() {
 
-	  //This variation only has 1 option instead of 2
-	  $brokenProductVariation = $this->objFromFixture('Variation', 'brokenMedium');
-	  $options = $brokenProductVariation->Options();
-	  $this->assertInstanceOf('ComponentSet', $options);
-	  $this->assertEquals(1, $options->Count());
-	  
-	  $e = null;
-	  try {
-	    $brokenProductVariation->write();
-	  }
-	  catch (ValidationException $e) {
-	    $message = $e->getMessage();
-	  }
-	  $this->assertInstanceOf('ValidationException', $e);
-	}
-	*/
-	
 	/**
 	 * Test saving duplicate product variations
 	 */
@@ -901,11 +851,69 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
 	  $this->assertEquals($expectedAmount, $order->SubTotal->getAmount());
 	}
-
+	
 	/**
-	 * TODO Test saving a product with a new attribute, existing variations without this attribute should be disabled
+	 * Test saving variation without all options set
+	 * Disabled validation for product variations because preventing disabling a variation
+	 * 
+	 * @deprecated
 	 */
-	function testSaveProductWithExtraAttribute() {
-	  //TODO create a product with one too many attributes in YAML fixture
+	function testSaveInvalidProductVariation() {
+
+	  return;
+	  
+	  //This variation only has 1 option instead of 2
+	  $brokenProductVariation = $this->objFromFixture('Variation', 'brokenMedium');
+	  $options = $brokenProductVariation->Options();
+	  $this->assertInstanceOf('ComponentSet', $options);
+	  $this->assertEquals(1, $options->Count());
+	  
+	  $e = null;
+	  try {
+	    $brokenProductVariation->write();
+	  }
+	  catch (ValidationException $e) {
+	    $message = $e->getMessage();
+	  }
+	  $this->assertInstanceOf('ValidationException', $e);
 	}
+
+  /**
+   * Have to use draft site for following test testAddNonPublishedProductToCart
+   */
+  function testSetDraftTrue() {
+	  self::$use_draft_site = true;
+	}
+	
+	/**
+	 * Adding non published product to a cart should fail
+	 */
+	function testAddNonPublishedProductToCart() {
+	  
+    $productA = $this->objFromFixture('Product', 'productA');
+    
+    $this->assertEquals(false, $productA->isPublished());
+    
+    $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+
+	  $message = null;
+	  try {
+  	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+  	    'Quantity' => 1
+  	  ));
+	  }
+	  catch (Exception $e) {
+	    $message = $e->getMessage();
+	  }
+	  
+	  $this->assertStringEndsWith('Object not written.', $message);
+    
+	  $order = CartControllerExtension::get_current_order();
+	  $items = $order->Items();
+	  
+	  $this->assertEquals(0, $items->Count());
+	}
+	
+	
 }

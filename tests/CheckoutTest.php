@@ -32,7 +32,7 @@ class CheckoutTest extends FunctionalTest {
   
 	static $fixture_file = 'shop/tests/Shop.yml';
 	static $disable_themes = false;
-	static $use_draft_site = true;
+	static $use_draft_site = false;
 	
   function setUp() {
 		parent::setUp();
@@ -40,6 +40,17 @@ class CheckoutTest extends FunctionalTest {
 		//Check that payment module is installed
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
 		$this->assertTrue(class_exists('ChequePayment'), 'Cheque Payment is installed.');
+		
+		//Need to publish a few pages because not using the draft site
+		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout');  
+		$accountPage = $this->objFromFixture('AccountPage', 'account');
+		$cartPage = $this->objFromFixture('CartPage', 'cart');
+		
+		$this->loginAs('admin');
+	  $checkoutPage->doPublish();
+	  $accountPage->doPublish();
+	  $cartPage->doPublish();
+	  $this->logOut();
 		
 		//Force payment method to be basic cheque payment
 		Payment::set_supported_methods(array(
@@ -87,6 +98,7 @@ class CheckoutTest extends FunctionalTest {
   function testCheckoutWithPublishedProduct() {
 
 		$productA = $this->objFromFixture('Product', 'productA');
+		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 
 	  $this->loginAs('admin');
 	  $productA->doPublish();
@@ -111,9 +123,7 @@ class CheckoutTest extends FunctionalTest {
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
 	  
-	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
-
 	  $this->submitForm('CheckoutForm_OrderForm', null, array(
 	    'Notes' => 'New order for test buyer.'
 	  ));
@@ -364,9 +374,13 @@ class CheckoutTest extends FunctionalTest {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
-	    'Notes' => 'This order should fail.'
-	  ));
+    try {
+  	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+  	    'Notes' => 'This order should fail.'
+  	  ));
+    }
+    catch (Exception $e) {
+    }
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());

@@ -1,4 +1,13 @@
 # ------------------------------------------
+# Stock Levels
+# ------------------------------------------  
+StockLevel:
+  levelProductA:
+    Level: 5
+  levelTeeshirtExtraLargePurpleCotton:
+    Level: 5
+
+# ------------------------------------------
 # Products
 # ------------------------------------------
 Product:
@@ -8,6 +17,7 @@ Product:
     AmountAmount: 500
     AmountCurrency: NZD
     Date: 2011-02-17 18:45:00
+    StockLevelID: =>StockLevel.levelProductA
   productB:
     Title: Product B
     URLSegment: product-b
@@ -269,49 +279,41 @@ Variation:
 # ------------------
   teeshirtSmallRedCotton:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
   teeshirtSmallRedPolyester:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 1.05 
   teeshirtSmallPurpleCotton:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00  
   teeshirtSmallPurplePolyester:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
   teeshirtMediumPurpleCotton:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
   teeshirtMediumPurpleSilk:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
   teeshirtExtraLargeRedCotton:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
   teeshirtExtraLargeRedPolyester:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
   teeshirtExtraLargePurpleCotton:
     ProductID: =>Product.teeshirtA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00 
+    StockLevelID: =>StockLevel.levelTeeshirtExtraLargePurpleCotton
      
 # Shorts Variations
 # Small, Red, Cotton
@@ -320,11 +322,10 @@ Variation:
 # Medium, Red, Cotton (todo)
 # Medium, Green, Silk (todo)
 #
-# Large, Red, Cotton
+# Large, Red, Cotton (todo)
 # ------------------
   shortsSmallRedCotton:
     ProductID: =>Product.shortsA
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
     Status: Enabled
@@ -337,17 +338,14 @@ Variation:
 # ------------------
   brokenSmallRed:
     ProductID: =>Product.brokenProduct
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
   brokenSmallRedDuplicate:
     ProductID: =>Product.brokenProduct
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
   brokenMedium:
     ProductID: =>Product.brokenProduct
-    Stock: -1
     AmountCurrency: NZD
     AmountAmount: 0.00
 
@@ -479,7 +477,6 @@ Variation_Options:
   variation_brokenMedium_Red:
     VariationID: =>Variation.brokenMedium
     OptionID: =>Option.optRedBroken 
-
   
 # ------------------------------------------
 # Cart pages
