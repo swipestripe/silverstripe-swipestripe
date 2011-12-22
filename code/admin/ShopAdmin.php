@@ -279,17 +279,18 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 			return Security::permissionFailure($this);
 		}
 
-		$response = new SS_HTTPResponse(
-			Convert::array2json(array(
-				'html' => $this->EditForm()->forAjaxTemplate(),
-				'message' => _t('ModelAdmin.PUBLISHED','Published')
-			)),				
-			200
-		);
-    
 		try {
   		$form->saveInto($this->currentRecord);		
   		$this->currentRecord->doPublish();
+  		
+  		$response = new SS_HTTPResponse(
+  			Convert::array2json(array(
+  				'html' => $this->EditForm()->forAjaxTemplate(),
+  			  //'html' => $this->edit($request),
+  				'message' => _t('ModelAdmin.PUBLISHED','Published')
+  			)),				
+  			200
+  		);
 		}
 		catch (ValidationException $e) {
 
@@ -318,8 +319,8 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 	 * @param SS_HttpRequest $request
 	 */
 	public function unpublish($data, $form, $request) {
-		if($this->currentRecord && !$this->currentRecord->canDeleteFromLive()) 
-			return Security::permissionFailure($this);
+	  
+		if ($this->currentRecord && !$this->currentRecord->canDeleteFromLive()) return Security::permissionFailure($this);
 		
 		$this->currentRecord->doUnpublish();
 		
@@ -360,7 +361,9 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 	 * @param SS_HttpRequest $request
 	 */
 	public function rollback($data, $form, $request) {
+	  
 		$record = $this->performRollback($this->currentRecord->ID, "Live");
+		
 		if(Director::is_ajax()) {
 			return new SS_HTTPResponse(
 				Convert::array2json(array(
@@ -383,8 +386,7 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 	 */
 	public function delete($data, $form, $request) {
 		$record = $this->currentRecord;
-		if($record && !$record->canDelete())
-			return Security::permissionFailure();
+		if($record && !$record->canDelete()) return Security::permissionFailure();
 		
 		// save ID and delete record
 		$recordID = $record->ID;
