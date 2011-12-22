@@ -6,6 +6,10 @@ StockLevel:
     Level: 5
   levelTeeshirtExtraLargePurpleCotton:
     Level: 5
+  levelTeeshirtSmallPurpleCotton:
+    Level: -1
+  levelProductB:
+    Level: -1
 
 # ------------------------------------------
 # Products
@@ -24,6 +28,7 @@ Product:
     AmountAmount: 19.95
     AmountCurrency: NZD 
     Date: 2011-01-31 20:48:00
+    StockLevelID: =>StockLevel.levelProductB
   teeshirtA:
     Title: Stripey Tee
     URLSegment: stripey-tee
@@ -288,7 +293,8 @@ Variation:
   teeshirtSmallPurpleCotton:
     ProductID: =>Product.teeshirtA
     AmountCurrency: NZD
-    AmountAmount: 0.00  
+    AmountAmount: 0.00 
+    StockLevelID: =>StockLevel.levelTeeshirtSmallPurpleCotton
   teeshirtSmallPurplePolyester:
     ProductID: =>Product.teeshirtA
     AmountCurrency: NZD

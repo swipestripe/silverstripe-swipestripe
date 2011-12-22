@@ -9,11 +9,17 @@
  * remove product from cart, stock is replenished for product
  * add product variation to cart, stock is reduced for product variation
  * remove product variation from cart, stock is replenished for product variation
+ * stock level cannot be reduced < 0 for products and variations
+ * stock level can be reduced to = 0 for products and variations
+ * stock levels set at unlimited (-1) are unaffected by adding/removing to cart for Product and Variation
  * 
  * TODO
  * ----
  * scheduled task deletes order and associated objects, replenishes stock
- * stock level cannot go below -1
+ * 
+ * add to cart form disappears when 0 stock left
+ * cannot add to cart when 0 stock
+ * cannot checkout when 0 stock
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -21,7 +27,7 @@
  * @subpackage tests
  * @version 1.0
  */
-class ProductStockTest extends FunctionalTest {
+class StockLevelTest extends FunctionalTest {
   
 	static $fixture_file = 'shop/tests/Shop.yml';
 	static $disable_themes = false;
@@ -259,4 +265,190 @@ class ProductStockTest extends FunctionalTest {
 	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
 	}
 	
+	/**
+	 * Stock levels cannot be reduced < 0, need to check bounds of stock level being set
+	 * e.g: If stock level = 4 try adding 6 to a cart
+	 */
+	function testCheckBoundsWhenReducingProductStock() {
+	  
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  $this->logInAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+	  
+	  $this->get(Director::makeRelative($productA->Link())); 
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	    'Quantity' => 6
+	  ));
+	  
+	  //Flush the cache
+	  DataObject::flush_and_destroy_cache();
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(0, $productA->StockLevel()->Level);
+	}
+	
+	/**
+	 * Stock levels cannot be reduced < 0, need to check bounds of stock level being set
+	 * e.g: If stock level = 5 try adding 6 to a cart
+	 */
+	function testCheckBoundsWhenReducingProductVariationStock() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
+	  
+	  //Add variation to the cart
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  $data = array('Quantity' => 7);
+	  foreach ($teeshirtAVariation->Options() as $option) {
+	    $data["Options[{$option->AttributeID}]"] = $option->ID;
+	  }
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, $data);
+	  
+	  DataObject::flush_and_destroy_cache();
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals(0, $teeshirtAVariation->StockLevel()->Level);
+	}
+	
+	/**
+	 * Stock levels can be reduced to exactly 0 for products
+	 */
+	function testProductStockLevelReducedToZero() {
+	  
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  $this->logInAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+	  
+	  $this->get(Director::makeRelative($productA->Link())); 
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	    'Quantity' => 4
+	  ));
+	  
+	  //Flush the cache
+	  DataObject::flush_and_destroy_cache();
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(0, $productA->StockLevel()->Level);
+	}
+	
+	/**
+	 * Stock levels can be reduced to exactly 0 for product variations
+	 */
+	function testProductVariationStockLevelReducedToZero() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
+	  
+	  //Add variation to the cart
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  $data = array('Quantity' => 5);
+	  foreach ($teeshirtAVariation->Options() as $option) {
+	    $data["Options[{$option->AttributeID}]"] = $option->ID;
+	  }
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, $data);
+	  
+	  DataObject::flush_and_destroy_cache();
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals(0, $teeshirtAVariation->StockLevel()->Level);
+	}
+	
+	/**
+	 * Add and remove product to cart with unlimited stock (-1), stock level unaffected
+	 */
+	function testProductUnlimitedStockUnaffected() {
+
+	  $productB = $this->objFromFixture('Product', 'productB');
+	  $this->assertEquals(-1, $productB->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  $this->logInAs('admin');
+	  $productB->doPublish();
+	  $this->logOut();
+	  
+	  $variations = $productB->Variations();
+	  $this->assertEquals(false, $variations->exists());
+	  
+	  $this->get(Director::makeRelative($productB->Link())); 
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	    'Quantity' => 3
+	  ));
+	  $productB = $this->objFromFixture('Product', 'productB');
+	  $this->assertEquals(-1, $productB->StockLevel()->Level);
+	  
+	  
+	  //Remove the Item from the Order
+	  $cartPage = $this->objFromFixture('CartPage', 'cart');
+	  $this->get(Director::makeRelative($cartPage->Link()));
+
+	  $order = CartControllerExtension::get_current_order();
+	  $item = $order->Items()->First();
+	  
+	  $this->submitForm('CartForm_CartForm', null, array(
+	    "Quantity[{$item->ID}]" => 0
+	  ));
+	  
+	  $order = CartControllerExtension::get_current_order();
+	  $this->assertEquals(false, $order->Items()->exists());
+
+	  $productB = $this->objFromFixture('Product', 'productB');
+	  $this->assertEquals(-1, $productB->StockLevel()->Level);
+	}
+
+	/**
+	 * Add and remove product variation to cart with unlimited stock (-1), stock level unaffected
+	 */
+	function testProductVariationUnlimitedStockUnaffected() {
+	  
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallPurpleCotton');
+	  $this->assertEquals('Enabled', $teeshirtAVariation->Status);
+	  $this->assertEquals(-1, $teeshirtAVariation->StockLevel()->Level);
+
+	  //Add variation to the cart
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+	  $data = array('Quantity' => 1);
+	  foreach ($teeshirtAVariation->Options() as $option) {
+	    $data["Options[{$option->AttributeID}]"] = $option->ID;
+	  }
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, $data);
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallPurpleCotton');
+	  $this->assertEquals(-1, $teeshirtAVariation->StockLevel()->Level);
+	  
+	  
+	  //Remove the Item from the Order
+	  $cartPage = $this->objFromFixture('CartPage', 'cart');
+	  $this->get(Director::makeRelative($cartPage->Link()));
+
+	  $order = CartControllerExtension::get_current_order();
+	  $item = $order->Items()->First();
+	  
+	  $this->submitForm('CartForm_CartForm', null, array(
+	    "Quantity[{$item->ID}]" => 0
+	  ));
+
+	  //Flush the cache
+	  DataObject::flush_and_destroy_cache();
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallPurpleCotton');
+	  $this->assertEquals(-1, $teeshirtAVariation->StockLevel()->Level);
+	}
 }

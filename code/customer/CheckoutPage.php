@@ -111,8 +111,6 @@ class CheckoutPage_Controller extends Page_Controller {
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('shop/javascript/CheckoutPage.js');
 		
-		SS_Log::log(new Exception(print_r('making it to here', true)), SS_Log::NOTICE);
-
     return array( 
        'Content' => $this->Content, 
        'Form' => $this->Form 

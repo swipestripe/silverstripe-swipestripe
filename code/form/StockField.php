@@ -51,6 +51,7 @@ class StockField extends FormField {
     
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('shop/javascript/StockField.js');
+		Requirements::customCSS('.HiddenStock{display:none;}');
 		return $this->renderWith($this->template);
 	}
 	

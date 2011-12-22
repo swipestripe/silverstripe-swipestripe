@@ -41,9 +41,13 @@ class Product extends Page {
    */
   public static $db = array(
     'Amount' => 'Money',
-    //'Stock' => 'Int'
   );
   
+  /**
+   * Has one relations for Product
+   * 
+   * @var Array
+   */
   public static $has_one = array(
     'StockLevel' => 'StockLevel'
   );
@@ -172,11 +176,14 @@ class Product extends Page {
     
     //If a stock level is set then update StockLevel
     $request = Controller::curr()->getRequest();
-    if ($request && $newLevel = $request->requestVar('Stock')) {
-      $stockLevel = $this->StockLevel();
-      $stockLevel->Level = $newLevel;
-      $stockLevel->write();
-      $this->StockLevelID = $stockLevel->ID;
+    if ($request) {
+      $newLevel = $request->requestVar('Stock');
+      if (isset($newLevel)) {
+        $stockLevel = $this->StockLevel();
+        $stockLevel->Level = $newLevel;
+        $stockLevel->write();
+        $this->StockLevelID = $stockLevel->ID;
+      }
     }
     
     //If the ParentID is set to a ProductCategory, select that category for this Product
@@ -569,14 +576,17 @@ EOS;
 	function SummaryOfPrice() {
 	  return $this->Amount->Nice();
 	}
-	
 
 	public function updateStockBy($quantity) {
 	  //Negative quantity when adding to the cart
 	  //Positive quantity when removing from the cart
 	  $stockLevel = $this->StockLevel();
-	  $stockLevel->Level += $quantity;
-	  $stockLevel->write();
+    //Do not change stock level if it is already set to unlimited (-1)
+	  if ($stockLevel->Level != -1) {
+      $stockLevel->Level += $quantity;
+  	  if ($stockLevel->Level < 0) $stockLevel->Level = 0;
+  	  $stockLevel->write();
+    }
 	}
   
 	/**

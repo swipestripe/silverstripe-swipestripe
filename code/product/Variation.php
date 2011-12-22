@@ -20,7 +20,6 @@ class Variation extends DataObject {
    */
   public static $db = array(
     'Amount' => 'Money',
-    //'Stock' => 'Int',
   	'Status' => "Enum('Enabled,Disabled','Enabled')",
   );
 
@@ -411,21 +410,28 @@ class Variation extends DataObject {
 	
   function onBeforeWrite() {
     parent::onBeforeWrite();
-    
+
     //If a stock level is set then update StockLevel
     $request = Controller::curr()->getRequest();
-    if ($request && $newLevel = $request->requestVar('Stock')) {
-      $stockLevel = $this->StockLevel();
-      $stockLevel->Level = $newLevel;
-      $stockLevel->write();
-      $this->StockLevelID = $stockLevel->ID;
+    if ($request) {
+      $newLevel = $request->requestVar('Stock');
+      if (isset($newLevel)) {
+        $stockLevel = $this->StockLevel();
+        $stockLevel->Level = $newLevel;
+        $stockLevel->write();
+        $this->StockLevelID = $stockLevel->ID;
+      }
     }
   }
 	
   public function updateStockBy($quantity) {
     
     $stockLevel = $this->StockLevel();
-	  $stockLevel->Level += $quantity;
-	  $stockLevel->write();
+    //Do not change stock level if it is already set to unlimited (-1)
+	  if ($stockLevel->Level != -1) {
+      $stockLevel->Level += $quantity;
+  	  if ($stockLevel->Level < 0) $stockLevel->Level = 0;
+  	  $stockLevel->write();
+    }
 	}
 }
