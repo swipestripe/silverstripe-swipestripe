@@ -81,5 +81,11 @@ $(document).ready(function() {
 		//alert('Please save after changing product attributes and check that options are correct for any new attributes and variations are correct.');
 	});
 	
+	//Radio field for setting parent ID @see CMSMail_right.js line 108
+	$('#Form_EditForm_ParentType_exempt').live('click', function(){
+		$('#Form_EditForm_ParentID').val(-1);
+		$('#ParentID').css('display', 'none');
+	});
+	
 });
 })(jQuery);

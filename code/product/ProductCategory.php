@@ -39,6 +39,7 @@ class ProductCategory extends Page {
 	function getCMSFields() {
     $fields = parent::getCMSFields();
     
+    /*
     //Product categories
     $manager = new ManyManyComplexTableField(
       $this,
@@ -49,6 +50,7 @@ class ProductCategory extends Page {
     );
     $manager->setPermissions(array());
     $fields->addFieldToTab("Root.Content.Products", $manager);
+		*/
     
     return $fields;
 	}

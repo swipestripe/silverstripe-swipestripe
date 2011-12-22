@@ -570,12 +570,34 @@ EOS;
 	  return $this->Amount->Nice();
 	}
 	
+
 	public function updateStockBy($quantity) {
 	  //Negative quantity when adding to the cart
 	  //Positive quantity when removing from the cart
 	  $stockLevel = $this->StockLevel();
 	  $stockLevel->Level += $quantity;
 	  $stockLevel->write();
+	}
+  
+	/**
+	 * Get parent type for Product, extra parent type of exempt where the product is not
+	 * part of the site tree (instead associated to product categories).
+	 * 
+	 * @see SiteTree::getParentType()
+	 * @return String Returns root, exempt or subpage
+	 */
+  function getParentType() {
+    $parentType = null;
+    if ($this->ParentID == 0) {
+      $parentType = 'root';
+    }
+    else if ($this->ParentID == -1) {
+      $parentType = 'exempt';
+    }
+    else {
+      $parentType = 'subpage';
+    }
+    return $parentType;
 	}
 
 }
