@@ -456,7 +456,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->loginAs('admin');
 	  $shortsA->doPublish();
 	  $this->logOut();
-	  
+
 	  $this->assertTrue($shortsA->isPublished());
 	  
 	  //Add product to cart, buyer has one Order existing from fixture
@@ -465,7 +465,7 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  $this->loginAs('buyer');
 
-	  $this->get(Director::makeRelative($shortsA->Link())); 
+	  $this->get(Director::makeRelative($shortsA->Link()));
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
@@ -490,6 +490,8 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
+	  
+	  
 	}
 	
 	/**

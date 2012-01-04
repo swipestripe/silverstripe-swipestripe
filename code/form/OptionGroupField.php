@@ -40,19 +40,7 @@ class OptionGroupField extends CompositeField {
     if ($attributes) foreach ($attributes as $id => $title) {
       
       $options = $this->product->getOptionsForAttribute($id);
-      
-      /*
-      $variations = $product->Variations();
-      $options = new DataObjectSet();
-      if ($variations && $variations->exists()) foreach ($variations as $variation) {
-        
-        if ($variation->isEnabled()) {
-          $option = $variation->getOptionForAttribute($id);
-          if ($option) $options->push($option); 
-        }
-      }
-      */
-      
+
       if ($options->exists()) {
         $optionsField = new OptionField($id, $title, $options);
         $items->push($optionsField);

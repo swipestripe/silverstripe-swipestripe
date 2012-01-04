@@ -12,14 +12,14 @@
  * stock level cannot be reduced < 0 for products and variations
  * stock level can be reduced to = 0 for products and variations
  * stock levels set at unlimited (-1) are unaffected by adding/removing to cart for Product and Variation
+ * add to cart form disappears when 0 stock left for products & products with variations
  * 
  * TODO
  * ----
  * scheduled task deletes order and associated objects, replenishes stock
- * 
- * add to cart form disappears when 0 stock left
  * cannot add to cart when 0 stock
  * cannot checkout when 0 stock
+ * variations out of stock are not available in add to cart form
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -202,6 +202,7 @@ class StockLevelTest extends FunctionalTest {
 	  
 	  //Add variation to the cart
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+
 	  $data = array('Quantity' => 1);
 	  foreach ($teeshirtAVariation->Options() as $option) {
 	    $data["Options[{$option->AttributeID}]"] = $option->ID;
@@ -321,7 +322,7 @@ class StockLevelTest extends FunctionalTest {
 	 * Stock levels can be reduced to exactly 0 for products
 	 */
 	function testProductStockLevelReducedToZero() {
-	  
+
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
 	  
@@ -450,5 +451,62 @@ class StockLevelTest extends FunctionalTest {
 	  DataObject::flush_and_destroy_cache();
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallPurpleCotton');
 	  $this->assertEquals(-1, $teeshirtAVariation->StockLevel()->Level);
+	}
+	
+	/**
+	 * Check that out of stock products do not display add to cart form
+	 */
+	function testProductOutOfStockNoAddForm() {
+	  
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  $this->logInAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+	  
+	  $this->get(Director::makeRelative($productA->Link())); 
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	    'Quantity' => 4
+	  ));
+	  
+	  //Flush the cache
+	  DataObject::flush_and_destroy_cache();
+	  $productA = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(0, $productA->StockLevel()->Level);
+	  
+	  $this->get(Director::makeRelative($productA->Link())); 
+
+	  $page = $this->mainSession->lastPage();
+	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
+	  $this->assertEquals(false, $form);
+	}
+	
+	/**
+	 * Check that products with all out of stock variations do not have add to cart forms
+	 */
+	function testProductWithVariationsOutOfStockNoAddForm() {
+
+	  /*
+	  $product = $this->objFromFixture('Product', 'shortsA');
+	  $this->assertEquals(-1, $product->StockLevel()->Level);
+	  
+	  $variation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+	  $this->assertEquals(0, $variation->StockLevel()->Level);
+	  
+	  $this->logInAs('admin');
+	  $product->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($product->Link())); 
+
+	  $page = $this->mainSession->lastPage();
+	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
+	  $this->assertEquals(false, $form);
+	  */
+	}
+	
+	function testProductOutOfStockNoAddToCart() {
+	  
 	}
 }

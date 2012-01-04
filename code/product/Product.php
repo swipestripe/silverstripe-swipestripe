@@ -515,7 +515,7 @@ EOS;
    * @return DataObjectSet
    */
   public function getOptionsForAttribute($attributeID) {
-    
+
     $options = new DataObjectSet();
     $variations = $this->Variations();
     
@@ -608,6 +608,34 @@ EOS;
       $parentType = 'subpage';
     }
     return $parentType;
+	}
+	
+	public function InStock() {
+	  //if has variations, check if any variations in stock
+	  //else check if this is in stock
+	  $inStock = false;
+	  if ($this->requiresVariation()) {
+
+	    //Check variations for stock levels
+	    $variations = $this->Variations();
+	    if ($variations && $variations->exists()) foreach ($variations as $variation) {
+	      //If there is a single variation in stock, then this product is in stock
+	      if ($variation->InStock()) {
+	        $inStock = true;
+	        continue;
+	      } 
+	    }
+	    else {
+	      $inStock = false;
+	    }
+	  }
+	  else {
+	    $stockLevel = $this->StockLevel();
+	    if ($stockLevel && $stockLevel->exists() && $stockLevel->Level != 0) {
+	      $inStock = true;
+	    }
+	  }
+	  return $inStock;
 	}
 
 }
@@ -729,6 +757,11 @@ class Product_Controller extends Page_Controller {
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
     $product = $this->data();
+
+    //Disable add to cart form when product out of stock, belt and braces this is also checked in Product template
+    if (!$product->InStock()) {
+      return;
+    }
     
     $fields = new FieldSet(
       new HiddenField('ProductClass', 'ProductClass', $product->ClassName),
@@ -756,10 +789,7 @@ class Product_Controller extends Page_Controller {
     $controller = Controller::curr();
     $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);
     $form->disableSecurityToken();
-    
-    //Change the action to accommodate product pages not in the site tree (ParentID = -1)
-	  //$form->setFormAction('/product/'.$this->URLSegment.'/add');
-    
+
     return $form;
 	}
   

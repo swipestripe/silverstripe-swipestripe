@@ -10,6 +10,16 @@ StockLevel:
     Level: -1
   levelProductB:
     Level: -1
+  levelJeans: #Should be superceded by levelJeansSmall and levelJeansMedium
+    Level: -1
+  levelJeansSmall:
+    Level: 0
+  levelJeansMedium:
+    Level: 0
+  levelShortsSmallRedCotton:
+    Level: -1
+  levelShortsA:
+    Level: -1
 
 # ------------------------------------------
 # Products
@@ -41,6 +51,13 @@ Product:
     AmountAmount: 24.95
     AmountCurrency: NZD 
     Date: 2011-01-31 20:49:00
+    StockLevelID: =>StockLevel.levelShortsA
+  jeans:
+    Title: Jeans
+    URLSegment: jeans
+    AmountAmount: 34.99
+    AmountCurrency: NZD 
+    StockLevelID: =>StockLevel.levelJeans #This level should be superceded by variation stock level
   brokenProduct:
     Title: Broken Product
     URLSegment: broken-product
@@ -115,9 +132,9 @@ Option:
     AttributeID: =>Attribute.attrCut
     
 # TeeshirtA Options
-# Sizes: Small 9, Medium 10, Extra Large 11
-# Colors: Red 12, Purple 13
-# Materials: Cotton 14, Polyester 15, Silk 16
+# Sizes: Small, Medium, Extra Large
+# Colors: Red, Purple
+# Materials: Cotton, Polyester, Silk
 # ------------------
   optSmallTeeshirt:
     Title: Small
@@ -201,6 +218,20 @@ Option:
     AttributeID: =>Attribute.attrMaterial
     ProductID: =>Product.shortsA
 
+# Jeans Options
+# Sizes: Small, Medium
+# ------------------
+  optSmallJeans:
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.jeans
+  optMediumJeans:
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.jeans
+
 # Broken Product Options
 # Sizes: Small, Medium
 # Colors: Red, Green
@@ -254,6 +285,12 @@ Product_Attributes:
   shortsMaterialAttr:
     ProductID: =>Product.shortsA
     AttributeID: =>Attribute.attrMaterial
+    
+# Jeans
+# ------------------  
+  jeansSizeAttr:
+    ProductID: =>Product.jeans
+    AttributeID: =>Attribute.attrSize
     
 # BrokenProduct
 # ------------------  
@@ -335,6 +372,24 @@ Variation:
     AmountCurrency: NZD
     AmountAmount: 0.00
     Status: Enabled
+    StockLevelID: =>StockLevel.levelShortsSmallRedCotton
+    
+# Jeans Variations
+# Small
+# Medium
+# ------------------
+  jeansSmall:
+    ProductID: =>Product.jeans
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    Status: Enabled
+    StockLevelID: =>StockLevel.levelJeansSmall
+  jeansMedium:
+    ProductID: =>Product.jeans
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    Status: Enabled
+    StockLevelID: =>StockLevel.levelJeansMedium
     
 # Broken product Variations
 # Small, Red
@@ -461,6 +516,16 @@ Variation_Options:
   variation_shortsSmallRedCotton_Cotton:
     VariationID: =>Variation.shortsSmallRedCotton
     OptionID: =>Option.optCottonShorts
+    
+# Jeans Options
+# Sizes: Small, Medium
+# ------------------------------------------ 
+  variation_jeansSmall_Small:
+    VariationID: =>Variation.jeansSmall
+    OptionID: =>Option.optSmallJeans
+  variation_jeansMedium_Medium:
+    VariationID: =>Variation.jeansMedium
+    OptionID: =>Option.optMediumJeans
     
 # Broken product Options
 # Sizes: Small, Medium

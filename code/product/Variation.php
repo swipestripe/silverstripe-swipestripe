@@ -195,15 +195,15 @@ class Variation extends DataObject {
    * 
    * @return Boolean
    */
-  public function inStock() {
+  public function InStock() {
     
-    return true;
+    $inStock = false;
     
-    //if ($this->Stock == -1) return true;
-    //if ($this->Stock == 0) return false;
-    
-    //TODO need to check what is currently in people's carts
-    //if ($this->Stock > 0) return true; 
+    $stockLevel = $this->StockLevel();
+    if ($stockLevel && $stockLevel->exists() && $stockLevel->Level != 0) {
+      $inStock = true;
+    }
+    return $inStock;
   }
   
   /**
