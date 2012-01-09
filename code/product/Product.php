@@ -757,11 +757,11 @@ class Product_Controller extends Page_Controller {
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
     $product = $this->data();
-
+    
     //Disable add to cart form when product out of stock, belt and braces this is also checked in Product template
-    if (!$product->InStock()) {
-      return;
-    }
+    //if (!$product->InStock()) {
+    //  return;
+    //}
     
     $fields = new FieldSet(
       new HiddenField('ProductClass', 'ProductClass', $product->ClassName),

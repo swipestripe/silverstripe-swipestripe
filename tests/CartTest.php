@@ -55,6 +55,33 @@ class CartTest extends FunctionalTest {
 	function logOut() {
 	  $this->session()->clear('loggedInAs');
 	}
+	
+	/**
+   * Helper to get data from a form.
+   * 
+   * @param String $formID
+   * @return Array
+   */
+  function getFormData($formID) {
+    $page = $this->mainSession->lastPage();
+    $data = array();
+    
+    if ($page) {
+  		$form = $page->getFormById($formID);
+  		if (!$form) user_error("Function getFormData() failed to find the form {$formID}", E_USER_ERROR);
+  
+  	  foreach ($form->_widgets as $widget) {
+  
+  	    $fieldName = $widget->getName();
+  	    $fieldValue = $widget->getValue();
+  	    
+  	    $data[$fieldName] = $fieldValue;
+  	  }
+    }
+    else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
+    
+    return $data;
+  }
 
 	/**
 	 * Create product and check basic attributes
@@ -387,20 +414,20 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
 	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
-	  
+
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $itemOptions = $firstItem->ItemOptions();
 	  $variation = $itemOptions->First()->Object();
-	  
+
 	  $this->assertEquals(1, $itemOptions->Count());
 	  $this->assertEquals($teeshirtAVariation->ID, $variation->ID);
 	  $this->assertEquals($teeshirtAVariation->Version, $variation->Version);
@@ -441,12 +468,16 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-	    'Quantity' => 1,
-	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
-	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
-	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
-	  ));
+	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
+    $data['Quantity'] = 1;
+    $data["Options[{$sizeAttr->ID}]"] = $teeshirtASmallOpt->ID; //Small
+    $data["Options[{$colorAttr->ID}]"] = $teeshirtARedOpt->ID; //Red
+    $data["Options[{$materialAttr->ID}]"] = $teeshirtACottonOpt->ID; //Cotton
+ 
+    $this->post(
+      Director::absoluteURL($teeshirtA->Link() . '/AddToCartForm/'),
+      $data
+    );
 	  
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
@@ -484,13 +515,25 @@ class CartTest extends FunctionalTest {
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
 	  //Submit with incorrect variation values, for Medium, Red, Cotton
+	  /*
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtAMediumOpt->ID,  //Medium
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
-	  
+	  */
+	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
+    $data['Quantity'] = 1;
+    $data["Options[{$sizeAttr->ID}]"] = $teeshirtAMediumOpt->ID; //Medium
+    $data["Options[{$colorAttr->ID}]"] = $teeshirtARedOpt->ID; //Red
+    $data["Options[{$materialAttr->ID}]"] = $teeshirtACottonOpt->ID; //Cotton
+    
+    $this->post(
+      Director::absoluteURL($teeshirtA->Link() . '/AddToCartForm/'),
+      $data
+    );
+
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
 

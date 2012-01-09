@@ -8,6 +8,10 @@ StockLevel:
     Level: 5
   levelTeeshirtSmallPurpleCotton:
     Level: -1
+  levelTeeshirtSmallRedCotton:
+    Level: -1
+  levelTeeshirtSmallRedPolyester:
+    Level: -1
   levelProductB:
     Level: -1
   levelJeans: #Should be superceded by levelJeansSmall and levelJeansMedium
@@ -323,10 +327,12 @@ Variation:
     ProductID: =>Product.teeshirtA
     AmountCurrency: NZD
     AmountAmount: 0.00
+    StockLevelID: =>StockLevel.levelTeeshirtSmallRedCotton
   teeshirtSmallRedPolyester:
     ProductID: =>Product.teeshirtA
     AmountCurrency: NZD
     AmountAmount: 1.05 
+    StockLevelID: =>StockLevel.levelTeeshirtSmallRedPolyester
   teeshirtSmallPurpleCotton:
     ProductID: =>Product.teeshirtA
     AmountCurrency: NZD
