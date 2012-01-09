@@ -437,6 +437,31 @@ EOS;
 
 		return (array) $fields;
 	}
+	
+	/**
+	 * emoving generic entries for "AmountAmount", "AmountCurrency" because they are ambiguous when two dataobjects have those columns
+	 * @see Money::addToQuery()
+	 * 
+	 * Build a {@link SQLQuery} object to perform the given query.
+	 *
+	 * @param string $filter A filter to be inserted into the WHERE clause.
+	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
+	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
+	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
+	 * @param boolean $restictClasses Restrict results to only objects of either this class of a subclass of this class
+	 * @param string $having A filter to be inserted into the HAVING clause.
+	 *
+	 * @return SQLQuery Query built.
+	 */
+	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
+	  
+	  $query = parent::buildSQL($filter, $sort, $limit, $join, $restrictClasses, $having);
+
+	  if (isset($query->select[0])) unset($query->select[0]);
+	  if (isset($query->select[1])) unset($query->select[1]);
+	  
+	  return $query;
+	}
   
   /**
    * Duplicate product images, useful when duplicating a product. 

@@ -699,5 +699,23 @@ FlatFeeShippingRate:
 # ------------------------------------------
 # Product categories
 # ------------------------------------------ 
+ProductCategory:
+  general:
+    Title: General Category
+    URLSegment: general
+    
+# ------------------------------------------
+# Product category products
+# ------------------------------------------ 
+ProductCategory_Products:
+  generalProductA:
+    ProductCategoryID: =>ProductCategory.general
+    ProductID: =>Product.productA
+  generalProductB:
+    ProductCategoryID: =>ProductCategory.general
+    ProductID: =>Product.productB
+ 
+ 
+ 
     
     
