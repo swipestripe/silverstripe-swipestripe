@@ -29,8 +29,10 @@ class ReceiptEmail extends ProcessedEmail {
 	  if ($customer->Email) $this->to = $customer->Email; 
 	  if ($siteConfig->ReceiptSubject) $this->subject = $siteConfig->ReceiptSubject . ' - Order #'.$order->ID;
 	  if ($siteConfig->ReceiptBody) $this->body = $siteConfig->ReceiptBody;
+	  
 	  if ($siteConfig->ReceiptFrom) $this->from = $siteConfig->ReceiptFrom;
 	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
+	  
 	  if ($siteConfig->EmailSignature) $this->signature = $siteConfig->EmailSignature;
 
 	  //Get css for Email by reading css file and put css inline for emogrification

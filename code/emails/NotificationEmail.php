@@ -30,7 +30,10 @@ class NotificationEmail extends ProcessedEmail {
 	  if ($siteConfig->NotificationTo) $this->to = $siteConfig->NotificationTo; 
 	  if ($siteConfig->NotificationSubject) $this->subject = $siteConfig->NotificationSubject . ' - Order #'.$order->ID;
 	  if ($siteConfig->NotificationBody) $this->body = $siteConfig->NotificationBody;
-	  if (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
+	  
+	  if ($customer->Email) $this->from = $customer->Email; 
+	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
+	  
 	  $this->signature = '';
 	  $adminLink = Director::absoluteURL('/admin/shop/');
 

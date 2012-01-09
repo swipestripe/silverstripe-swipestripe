@@ -76,15 +76,24 @@ class ShopSettings extends DataObjectDecorator {
       new Tab('Signature')
     );
 
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', 'Sender'));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', 'From'));
+    $receiptTo = new TextField('ReceiptTo', 'To');
+    $receiptTo->setValue('Sent to customer');
+    $receiptTo = $receiptTo->performReadonlyTransformation();
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', $receiptTo);
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', 'Subject line'));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new HtmlEditorField('ReceiptBody', 'Message (order details are included in the email)', 15));
-
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', 'Recipient'));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', 'Subject line'));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new HtmlEditorField('NotificationBody', 'Message (order details are included in the email)', 15));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('ReceiptBody', 'Message (order details are included in the email)', 8));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('EmailSignature', 'Signature', 8));
     
-    $fields->addFieldToTab('Root.Shop.Emails.Signature', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
+    $notificationFrom = new TextField('NotificationFrom', 'From');
+    $notificationFrom->setValue('Customer email address');
+    $notificationFrom = $notificationFrom->performReadonlyTransformation();
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', $notificationFrom);
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', 'To'));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', 'Subject line'));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', 'Message (order details are included in the email)', 10));
+    
+    //$fields->addFieldToTab('Root.Shop.Emails.Signature', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
 	}
 
 }
