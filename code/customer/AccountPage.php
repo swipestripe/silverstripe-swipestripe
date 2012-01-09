@@ -86,6 +86,18 @@ class AccountPage extends Page {
 	  $actions->removeByName('action_unpublish');
 	  return $actions;
 	}
+	
+	/**
+	 * Remove page type dropdown to prevent users from changing page type.
+	 * 
+	 * @see Page::getCMSFields()
+	 * @return FieldSet
+	 */
+  function getCMSFields() {
+    $fields = parent::getCMSFields();
+    $fields->removeByName('ClassName');
+    return $fields;
+	}
 }
 
 /**
