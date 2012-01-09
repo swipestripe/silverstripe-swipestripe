@@ -15,7 +15,7 @@ StockLevel:
   levelJeansSmall:
     Level: 0
   levelJeansMedium:
-    Level: 0
+    Level: 1
   levelShortsSmallRedCotton:
     Level: -1
   levelShortsA:

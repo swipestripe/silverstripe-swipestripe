@@ -13,13 +13,13 @@
  * stock level can be reduced to = 0 for products and variations
  * stock levels set at unlimited (-1) are unaffected by adding/removing to cart for Product and Variation
  * add to cart form disappears when 0 stock left for products & products with variations
+ * variations out of stock are not available in add to cart form
+ * scheduled task deletes order and associated objects, replenishes stock
  * 
  * TODO
  * ----
- * scheduled task deletes order and associated objects, replenishes stock
- * cannot add to cart when 0 stock
+ * cannot add to cart when 0 stock - belt and braces, the add to cart form is hidden anyway
  * cannot checkout when 0 stock
- * variations out of stock are not available in add to cart form
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
@@ -487,26 +487,162 @@ class StockLevelTest extends FunctionalTest {
 	 */
 	function testProductWithVariationsOutOfStockNoAddForm() {
 
-	  /*
-	  $product = $this->objFromFixture('Product', 'shortsA');
+	  $product = $this->objFromFixture('Product', 'jeans');
 	  $this->assertEquals(-1, $product->StockLevel()->Level);
 	  
-	  $variation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+	  $variation = $this->objFromFixture('Variation', 'jeansSmall');
 	  $this->assertEquals(0, $variation->StockLevel()->Level);
+	  
+	  $variation = $this->objFromFixture('Variation', 'jeansMedium');
+	  $this->assertEquals(1, $variation->StockLevel()->Level);
+	  
+	  $stockLevel = $this->objFromFixture('StockLevel', 'levelJeansMedium');
+	  
+	  $this->logInAs('admin');
+	  $stockLevel->Level = 0;
+	  $stockLevel->write();
+	  $product->doPublish();
+	  $this->logOut();
+	  
+	  $variation = $this->objFromFixture('Variation', 'jeansMedium');
+	  $this->assertEquals(0, $variation->StockLevel()->Level);
+
+	  $this->get(Director::makeRelative($product->Link())); 
+	  
+	  $page = $this->mainSession->lastPage();
+	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
+	  $this->assertEquals(false, $form);
+	}
+
+	/**
+	 * Test that only in stock variations are available on the add to cart form.
+	 */
+	function testOutOfStockVariationsNotAvailable() {
+	  
+	  $product = $this->objFromFixture('Product', 'jeans');
+	  $this->assertEquals(-1, $product->StockLevel()->Level);
+	  
+	  $variation = $this->objFromFixture('Variation', 'jeansSmall');
+	  $this->assertEquals(0, $variation->StockLevel()->Level);
+	  $this->assertEquals(false, $variation->InStock());
+	  
+	  $variation = $this->objFromFixture('Variation', 'jeansMedium');
+	  $this->assertEquals(1, $variation->StockLevel()->Level);
 	  
 	  $this->logInAs('admin');
 	  $product->doPublish();
 	  $this->logOut();
-
+	  
 	  $this->get(Director::makeRelative($product->Link())); 
 
-	  $page = $this->mainSession->lastPage();
-	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
-	  $this->assertEquals(false, $form);
-	  */
-	}
-	
-	function testProductOutOfStockNoAddToCart() {
+	  $firstAttributeID = array_shift(array_keys($product->Attributes()->map()));
+	  $firstAttributeOptions = $product->getOptionsForAttribute($firstAttributeID)->map();
+
+	  //Check that first option select has valid options in it
+	  $productPage = new DOMDocument();
+	  $productPage->loadHTML($this->mainSession->lastContent());
+	  //echo $productPage->saveHTML();
+
+	  //Find the options for the first attribute select
+	  $selectFinder = new DomXPath($productPage);
+	  $firstAttributeSelectID = 'AddToCartForm_AddToCartForm_Options-'.$firstAttributeID;
+	  $firstSelect = $selectFinder->query("//select[@id='$firstAttributeSelectID']");
+	  
+	  foreach ($firstSelect as $node) {
+
+	    $tmp_doc = new DOMDocument(); 
+      $tmp_doc->appendChild($tmp_doc->importNode($node, true));        
+      $innerHTML = $tmp_doc->saveHTML();
+
+      $optionFinder = new DomXPath($tmp_doc);
+
+  	  if ($firstAttributeOptions) foreach ($firstAttributeOptions as $optionID => $optionTitle) {
+  	    $options = $optionFinder->query("//option[@value='$optionID']");
+  	    $this->assertEquals(1, $options->length);
+  	  }
+	  }
 	  
 	}
+	
+	/**
+	 * Clean up abandoned carts, restock products in the orders that are deleted
+	 */
+	function testRemoveAbandonedCartsWithProductsTask() {
+	  //use Order delete_abandoned()
+	  //create some orders in the fixture
+	  //check the stock levels afterward
+
+	  $product = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(4, $product->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $orders = $buyer->Orders();
+	  $this->assertEquals(1, $orders->Count());
+	  $order = $orders->First();
+
+	  $this->logInAs('admin');
+	  $order->LastActive = '2011-12-22 17:02:49';
+	  $order->Status = 'Cart';
+	  $order->write();
+	  $this->logOut();
+
+	  //ini_set('display_errors', 1);
+	  //error_reporting(E_ALL);
+	  //error_reporting(E_ERROR | E_PARSE);
+	  //error_reporting(E_USER_ERROR);
+	  //trigger_error("Cannot divide by infinity and beyond", E_ERROR);
+	  
+	  Order::delete_abandoned();
+	  
+	  DataObject::flush_and_destroy_cache();
+	  $orders = $buyer->Orders();
+	  $this->assertEquals(0, $orders->Count());
+
+	  $product = $this->objFromFixture('Product', 'productA');
+	  $this->assertEquals(5, $product->StockLevel()->Level); 
+	}
+	
+	/**
+	 * Add a product variation to the cart, change the cart so that it is out of date
+	 * then delete it
+	 */
+	function testRemoveAbandonedCartsWithProductVariationsTask() {
+
+	  $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals('Enabled', $teeshirtAVariation->Status);
+	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
+
+	  //Add variation to the cart
+	  $this->get(Director::makeRelative($teeshirtA->Link())); 
+
+	  $data = array('Quantity' => 1);
+	  foreach ($teeshirtAVariation->Options() as $option) {
+	    $data["Options[{$option->AttributeID}]"] = $option->ID;
+	  }
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, $data);
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals(4, $teeshirtAVariation->StockLevel()->Level);
+	  
+	  $order = CartControllerExtension::get_current_order();
+	  
+	  $this->logInAs('admin');
+	  $order->LastActive = '2011-12-22 17:02:49';
+	  $order->Status = 'Cart';
+	  $order->write();
+	  $this->logOut();
+
+	  Order::delete_abandoned();
+	  DataObject::flush_and_destroy_cache();
+	  
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
+	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
+	}
+
 }

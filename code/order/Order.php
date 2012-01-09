@@ -807,7 +807,7 @@ class Order extends DataObject {
 	  //last active over an hour ago
 	  //Order is status Cart
 	  //Order does not have any payments against it
-	  SS_Log::log(new Exception(print_r("about to REALLY delete $this->ID", true)), SS_Log::NOTICE);
+	  //SS_Log::log(new Exception(print_r("about to REALLY delete $this->ID", true)), SS_Log::NOTICE);
 	  //return;
 	  
 	  //Clean up 
@@ -839,11 +839,6 @@ class Order extends DataObject {
 	  catch (Exception $e) {
 	    //Rollback
 	  }
-
-	}
-	
-	function onAfterDelete() {
-	  //Update the stock on each item
 	}
 	
 	/**
@@ -902,5 +897,36 @@ class Order extends DataObject {
 	    }
 	  }
 	  return $virtualItems;
+	}
+
+	
+	public static function delete_abandoned() {
+
+	  $oneHourAgo = date('Y-m-d H:i:s', strtotime('-1 hour'));
+	  
+	  /*
+	  $query = singleton('Order')->extendedSQL(
+	    "\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL",
+	    '',
+	    '',
+	    "LEFT JOIN \"Payment\" ON \"Payment\".\"OrderID\" = \"Order\".\"ID\""
+	  );
+	  SS_Log::log(new Exception(print_r($query->sql(), true)), SS_Log::NOTICE);
+	  */
+	  
+	  //Get orders that were last active over an hour ago and have not been paid at all
+	  $orders = DataObject::get(
+	  	'Order',
+	    "\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL",
+	    '',
+	    "LEFT JOIN \"Payment\" ON \"Payment\".\"OrderID\" = \"Order\".\"ID\""
+	  );
+
+	  if ($orders && $orders->exists()) foreach ($orders as $order) {
+	    //Delete the order AND return the stock to the Product/Variation
+	    //Should be done in a transaction really
+      $order->delete();
+      $order->destroy();      
+	  }
 	}
 }

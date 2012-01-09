@@ -521,7 +521,7 @@ EOS;
     
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
-      if ($variation->isEnabled()) {
+      if ($variation->isEnabled() && $variation->InStock()) {
         $option = $variation->getOptionForAttribute($attributeID);
         if ($option) $options->push($option); 
       }
