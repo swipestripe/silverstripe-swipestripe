@@ -1,5 +1,5 @@
-SimpleCart Module
-==============
+Swipe Stripe Ecommerce Module
+=============================
 
 Maintainer Contact
 ------------------
@@ -12,15 +12,11 @@ Requirements
 
 Documentation
 -------------
-This is a simple shopping cart, based on the silverstripe payment-test and ecommerce modules. 
+Simple shopping cart.
 
 Installation Instructions
 -------------------------
 
-
 Usage Overview
 --------------
 
-Known Issues
-------------
-All products need to be in the same currency.
