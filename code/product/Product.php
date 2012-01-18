@@ -411,6 +411,8 @@ EOS;
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
     
+		$this->extend('updateCMSFields', $fields);
+    
     return $fields;
 	}
 
@@ -743,6 +745,8 @@ class Product_Controller extends Page_Controller {
         }
       }
     }
+    
+    $this->extend('onInit');
   }
   
   /**

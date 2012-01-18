@@ -79,16 +79,17 @@ class ProductCategory_Controller extends Page_Controller {
     if(!isset($_GET['start']) || !is_numeric($_GET['start']) || (int)$_GET['start'] < 1) $_GET['start'] = 0;
       
     $SQL_start = (int)$_GET['start'];
-
-    $doSet = DataObject::get( 
+    $products = DataObject::get( 
        'Product', 
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
        "Created DESC", 
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
        "{$SQL_start}, 3"
     ); 
-   
-    return $doSet ? $doSet : false;
+    
+    $this->extend('updateCategoryProducts', $products);
+
+    return $products ? $products : false;
   }
 
 }
