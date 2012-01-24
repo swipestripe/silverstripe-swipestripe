@@ -11,13 +11,13 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage tests
  * @version 1.0
  */
 class ProductCategoryTest extends FunctionalTest {
   
-	static $fixture_file = 'shop/tests/Shop.yml';
+	static $fixture_file = 'swipestripe/tests/Shop.yml';
 	static $disable_themes = true;
 	static $use_draft_site = false;
 	

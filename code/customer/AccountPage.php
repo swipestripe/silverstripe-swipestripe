@@ -6,7 +6,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage customer
  * @version 1.0
  */
@@ -105,7 +105,7 @@ class AccountPage extends Page {
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage customer
  * @version 1.0
  */
@@ -131,7 +131,7 @@ class AccountPage_Controller extends Page_Controller {
    */
   function index() {
     
-    Requirements::css('shop/css/Shop.css');
+    Requirements::css('swipestripe/css/Shop.css');
     
     $memberID = Member::currentUserID();
     if (!$memberID) {
@@ -155,7 +155,7 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function order($request) {
 
-	  Requirements::css('shop/css/Shop.css');
+	  Requirements::css('swipestripe/css/Shop.css');
     
 		$memberID = Member::currentUserID();
 	  if (!Member::currentUserID()) {

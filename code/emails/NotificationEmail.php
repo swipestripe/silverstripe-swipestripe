@@ -5,7 +5,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage emails
  * @version 1.0
  */
@@ -35,7 +35,7 @@ class NotificationEmail extends ProcessedEmail {
 	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
 	  
 	  $this->signature = '';
-	  $adminLink = Director::absoluteURL('/admin/shop/');
+	  $adminLink = Director::absoluteURL('/admin/swipestripe/');
 
 	  //Get css for Email by reading css file and put css inline for emogrification
 	  $this->setTemplate('Order_NotificationEmail');
@@ -43,7 +43,7 @@ class NotificationEmail extends ProcessedEmail {
 	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/Shop.css'));
 	  }
 	  else {
-	    $css = file_get_contents(Director::getAbsFile('shop/css/Shop.css'));
+	    $css = file_get_contents(Director::getAbsFile('swipestripe/css/Shop.css'));
 	  }
 
     $this->populateTemplate(

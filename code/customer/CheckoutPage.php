@@ -6,7 +6,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage customer
  * @version 1.0
  */
@@ -104,7 +104,7 @@ class CheckoutPage extends Page {
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage customer
  * @version 1.0
  */
@@ -119,9 +119,9 @@ class CheckoutPage_Controller extends Page_Controller {
    */
   function index() {
 
-    Requirements::css('shop/css/Shop.css');
+    Requirements::css('swipestripe/css/Shop.css');
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript('shop/javascript/CheckoutPage.js');
+		Requirements::javascript('swipestripe/javascript/CheckoutPage.js');
 		
     return array( 
        'Content' => $this->Content, 

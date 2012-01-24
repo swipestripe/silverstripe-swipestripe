@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage product
  * @version 1.0
  * @deprecated
@@ -17,7 +17,7 @@ class VirtualProduct extends Product {
    * 
    * @var String
    */
-  public static $downloadFolder = 'shop/downloads/';
+  public static $downloadFolder = 'swipestripe/downloads/';
   
   /**
    * Number of times the product can be downloaded
@@ -88,7 +88,7 @@ class VirtualProduct extends Product {
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage product
  * @version 1.0
  * @deprecated

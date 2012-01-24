@@ -18,4 +18,4 @@ Director::addRules(50, array(
 ));
 
 //TODO is this necessary?
-LeftAndMain::require_css('shop/css/ShopAdmin.css');
+LeftAndMain::require_css('swipestripe/css/ShopAdmin.css');

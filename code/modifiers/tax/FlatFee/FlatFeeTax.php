@@ -5,7 +5,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage shipping
  * @version 1.0
  */
@@ -62,7 +62,7 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
 	  }
 	  
 	  //Include the js for tax fields in either case
-	  if (!$fields->exists()) Requirements::javascript('shop/javascript/FlatFeeTaxField.js');
+	  if (!$fields->exists()) Requirements::javascript('swipestripe/javascript/FlatFeeTaxField.js');
 	  
 	  return $fields;
 	}

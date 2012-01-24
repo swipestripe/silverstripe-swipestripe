@@ -6,7 +6,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage customer
  * @version 1.0
  */
@@ -94,7 +94,7 @@ class CartPage extends Page {
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage customer
  * @version 1.0
  */
@@ -107,7 +107,7 @@ class CartPage_Controller extends Page_Controller {
    */
   function index() {
 
-    Requirements::css('shop/css/Shop.css');
+    Requirements::css('swipestripe/css/Shop.css');
 
     return array( 
        'Content' => $this->Content, 

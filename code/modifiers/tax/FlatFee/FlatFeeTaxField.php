@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage shipping
  * @version 1.0
  */
@@ -25,7 +25,7 @@ class FlatFeeTaxField extends ModifierHiddenField {
    */
   function FieldHolder() {
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-    Requirements::javascript('shop/javascript/FlatFeeTaxField.js');
+    Requirements::javascript('swipestripe/javascript/FlatFeeTaxField.js');
     return $this->renderWith($this->template);
   }
 

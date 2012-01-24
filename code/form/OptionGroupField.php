@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage form
  * @version 1.0
  */
@@ -67,7 +67,7 @@ class OptionGroupField extends CompositeField {
 	 */
 	function FieldHolder() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript('shop/javascript/OptionGroupField.js');
+		Requirements::javascript('swipestripe/javascript/OptionGroupField.js');
 		return parent::FieldHolder();
 	}
 }

@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage form
  * @version 1.0
  */
@@ -50,7 +50,7 @@ class StockField extends FormField {
   function FieldHolder() {
     
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript('shop/javascript/StockField.js');
+		Requirements::javascript('swipestripe/javascript/StockField.js');
 		Requirements::customCSS('.HiddenStock{display:none;}');
 		return $this->renderWith($this->template);
 	}

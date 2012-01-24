@@ -4,7 +4,7 @@
  * Emogrifier to merge css rules inline before sending.
  * 
  * @author Mark Guinn
- * @package shop
+ * @package swipestripe
  * @subpackage emails
  * @version 1.0
  */

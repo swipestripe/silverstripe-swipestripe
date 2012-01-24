@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage admin
  * @version 1.0
  */
@@ -101,18 +101,18 @@ class ShopAdmin extends ModelAdmin {
 	    parent::init();
 	    
 	    //For managing Orders
-	    Requirements::css('shop/css/Shop.css');
-    	Requirements::css('shop/css/ShopAdmin.css');
+	    Requirements::css('swipestripe/css/Shop.css');
+    	Requirements::css('swipestripe/css/ShopAdmin.css');
     	
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.datepicker.css');
-    	Requirements::css('shop/css/libs/ui.daterangepicker.css');
+    	Requirements::css('swipestripe/css/libs/ui.daterangepicker.css');
     	
     	Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.core.js');
     	Requirements::javascript('sapphire/thirdparty/jquery-ui/jquery.ui.datepicker.js');
-    	Requirements::javascript('shop/javascript/libs/daterangepicker.jquery.js');
+    	Requirements::javascript('swipestripe/javascript/libs/daterangepicker.jquery.js');
     	
-    	Requirements::javascript('shop/javascript/ShopAdmin.js');
+    	Requirements::javascript('swipestripe/javascript/ShopAdmin.js');
 	    
 	    // Remove all the junk that will break ModelAdmin
 	    $config = HtmlEditorConfig::get_active();
@@ -167,7 +167,7 @@ class ShopAdmin extends ModelAdmin {
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage admin
  * @version 1.0
  */
@@ -215,7 +215,7 @@ class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage admin
  * @version 1.0
  */

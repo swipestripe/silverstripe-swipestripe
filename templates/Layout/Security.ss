@@ -1,4 +1,4 @@
-<% require css(shop/css/Shop.css) %>
+<% require css(swipestripe/css/Shop.css) %>
 
 <div id="Security">
 	<h1>$Title</h1>

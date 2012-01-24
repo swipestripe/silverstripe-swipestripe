@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage emails
  * @version 1.0
  */
@@ -41,7 +41,7 @@ class ReceiptEmail extends ProcessedEmail {
 	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/Shop.css'));
 	  }
 	  else {
-	    $css = file_get_contents(Director::getAbsFile('shop/css/Shop.css'));
+	    $css = file_get_contents(Director::getAbsFile('swipestripe/css/Shop.css'));
 	  }
 
     $this->populateTemplate(

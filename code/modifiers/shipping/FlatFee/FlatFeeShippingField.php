@@ -4,7 +4,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage shipping
  * @version 1.0
  */
@@ -18,7 +18,7 @@ class FlatFeeShippingField extends ModifierSetField {
    */
   function FieldHolder() {
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-    Requirements::javascript('shop/javascript/FlatFeeShippingField.js');
+    Requirements::javascript('swipestripe/javascript/FlatFeeShippingField.js');
     return $this->renderWith($this->template);
   }
 

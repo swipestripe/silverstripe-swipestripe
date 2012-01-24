@@ -8,7 +8,7 @@
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage product
  * @version 1.0
  */
@@ -674,7 +674,7 @@ EOS;
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
- * @package shop
+ * @package swipestripe
  * @subpackage product
  * @version 1.0
  */
@@ -724,7 +724,7 @@ class Product_Controller extends Page_Controller {
   function init() {
     parent::init();
     
-    Requirements::css('shop/css/Shop.css');
+    Requirements::css('swipestripe/css/Shop.css');
     
     //Get current product page for products that are not part of the site tree
     //and do not have a ParentID set, they are accessed via this controller using
