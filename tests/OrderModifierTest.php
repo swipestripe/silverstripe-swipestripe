@@ -17,8 +17,8 @@
 class OrderModifierTest extends FunctionalTest {
   
 	static $fixture_file = 'shop/tests/Shop.yml';
-	static $disable_themes = false;
-	static $use_draft_site = true;
+	static $disable_themes = true;
+	static $use_draft_site = false;
 	
   function setUp() {
 		parent::setUp();
@@ -80,9 +80,14 @@ class OrderModifierTest extends FunctionalTest {
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreNewZealand');
 	  $shippingAmount = $shippingMainCentreNZ->Amount->getAmount();
+	  
+	  $checkoutPage = DataObject::get_one('CheckoutPage');
+	  $accountPage = DataObject::get_one('AccountPage');
 
 	  $this->loginAs('admin');
 	  $productA->doPublish();
+	  $checkoutPage->doPublish();
+	  $accountPage->doPublish();
 	  $this->logOut();
 	  
 	  $this->assertTrue($productA->isPublished());
@@ -104,9 +109,7 @@ class OrderModifierTest extends FunctionalTest {
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals($productA->ID, $items->First()->Object()->ID);
 	  
-	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
-
 	  $this->submitForm('CheckoutForm_OrderForm', null, array(
 	    'Shipping[Country]' => 'NZ',
 	    'Modifiers[FlatFeeShipping]' => $shippingMainCentreNZ->ID
@@ -132,10 +135,15 @@ class OrderModifierTest extends FunctionalTest {
 	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreNewZealand');
 	  $shippingID = $shippingMainCentreNZ->ID;
 	  $shippingAmount = $shippingMainCentreNZ->Amount->getAmount();
+	  
+	  $checkoutPage = DataObject::get_one('CheckoutPage');
+	  $accountPage = DataObject::get_one('AccountPage');
 
 	  $this->loginAs('admin');
 	  $productA->doPublish();
 	  $shippingMainCentreNZ->delete();
+	  $checkoutPage->doPublish();
+	  $accountPage->doPublish();
 	  $this->logOut();
 	  
 	  $this->assertTrue($productA->isPublished());
@@ -187,9 +195,14 @@ class OrderModifierTest extends FunctionalTest {
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $shippingMainCentreAustralia = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreAustralia');
 	  $shippingAmount = $shippingMainCentreAustralia->Amount->getAmount();
+	  
+	  $checkoutPage = DataObject::get_one('CheckoutPage');
+	  $accountPage = DataObject::get_one('AccountPage');
 
 	  $this->loginAs('admin');
 	  $productA->doPublish();
+	  $checkoutPage->doPublish();
+	  $accountPage->doPublish();
 	  $this->logOut();
 	  
 	  $this->assertTrue($productA->isPublished());

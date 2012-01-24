@@ -12,7 +12,11 @@
   <p id="ProductPrice"><span id="PriceTotal">$Product.Amount.Nice</span> <span id="VariationPrice"></span></p>
 
   <div id="ProductAdd">
-    $AddToCartForm(1)
+    <% if Product.InStock %>
+      $AddToCartForm(1)
+    <% else %>
+      <p>Sorry this product is out of stock. Please check back soon.</p>
+    <% end_if %>
   </div>
 
 

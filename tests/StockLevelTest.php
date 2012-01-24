@@ -30,7 +30,7 @@
 class StockLevelTest extends FunctionalTest {
   
 	static $fixture_file = 'shop/tests/Shop.yml';
-	static $disable_themes = false;
+	static $disable_themes = true;
 	static $use_draft_site = false;
 	
   function setUp() {
@@ -478,6 +478,7 @@ class StockLevelTest extends FunctionalTest {
 	  $this->get(Director::makeRelative($productA->Link())); 
 
 	  $page = $this->mainSession->lastPage();
+
 	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
 	  $this->assertEquals(false, $form);
 	}

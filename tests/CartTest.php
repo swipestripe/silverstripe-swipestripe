@@ -332,7 +332,6 @@ class CartTest extends FunctionalTest {
 	
 	/**
 	 * Change product price after it is in the cart, check that price has not changed in cart
-	 * TODO remove? this is kinda stupid
 	 */
 	function testAddProductToCartChangePrice() {
 	  

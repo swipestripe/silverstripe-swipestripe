@@ -18,7 +18,7 @@
 class ProductCategoryTest extends FunctionalTest {
   
 	static $fixture_file = 'shop/tests/Shop.yml';
-	static $disable_themes = false;
+	static $disable_themes = true;
 	static $use_draft_site = false;
 	
   function setUp() {
