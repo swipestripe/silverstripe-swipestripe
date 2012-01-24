@@ -411,7 +411,8 @@ EOS;
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
     
-		$this->extend('updateCMSFields', $fields);
+    //Ability to edit fields added to CMS here
+		$this->extend('updateProductCMSFields', $fields);
     
     return $fields;
 	}

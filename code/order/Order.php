@@ -311,6 +311,9 @@ class Order extends DataObject {
 		}
 		*/
 		
+		//Ability to edit fields added to CMS here
+		$this->extend('updateOrderCMSFields', $fields);
+		
 	  return $fields;
 	}
 	
