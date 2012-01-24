@@ -60,6 +60,10 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
     	  $fields->push($flatFeeTaxField);
 	    }
 	  }
+	  
+	  //Include the js for tax fields in either case
+	  if (!$fields->exists()) Requirements::javascript('shop/javascript/FlatFeeTaxField.js');
+	  
 	  return $fields;
 	}
 	

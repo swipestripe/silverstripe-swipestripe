@@ -84,7 +84,7 @@ class ProductCategory_Controller extends Page_Controller {
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
        "Created DESC", 
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
-       "{$SQL_start}, 3"
+       "{$SQL_start}, 9"
     ); 
     
     $this->extend('updateCategoryProducts', $products);
