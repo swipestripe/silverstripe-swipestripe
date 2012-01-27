@@ -165,7 +165,7 @@ class AccountPage_Controller extends Page_Controller {
 		if($orderID = $request->param('ID')) {
 		  
 		  $order = DataObject::get_one('Order', "`Order`.`ID` = $orderID");
-		  $member = Member::currentUser();
+		  $member = Customer::currentUser();
   		if (!$member->ID) {
         return Security::permissionFailure($this, 'You must be logged in to view this page.');
       }

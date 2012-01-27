@@ -153,8 +153,8 @@ class StockLevelTest extends FunctionalTest {
 	  $productA->doPublish();
 	  $this->logOut();
 	  
-	  $this->loginAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
     
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -234,8 +234,8 @@ class StockLevelTest extends FunctionalTest {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
 	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
 	  
-	  $this->loginAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  
 	  //Add variation to the cart
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
@@ -576,7 +576,7 @@ class StockLevelTest extends FunctionalTest {
 	  $product = $this->objFromFixture('Product', 'productA');
 	  $this->assertEquals(4, $product->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
 	  
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
 	  $order = $orders->First();
@@ -596,6 +596,7 @@ class StockLevelTest extends FunctionalTest {
 	  Order::delete_abandoned();
 	  
 	  DataObject::flush_and_destroy_cache();
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(0, $orders->Count());
 
@@ -645,5 +646,4 @@ class StockLevelTest extends FunctionalTest {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
 	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
 	}
-
 }

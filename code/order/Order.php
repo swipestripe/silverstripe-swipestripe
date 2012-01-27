@@ -73,7 +73,7 @@ class Order extends DataObject {
 	 * @var Array
 	 */
 	public static $has_one = array(
-		'Member' => 'Member'
+	  'Member' => 'Customer'
 	);
 
 	/*
@@ -664,7 +664,7 @@ class Order extends DataObject {
 	 */
 	function addAddressesAtCheckout(Array $data) {
 	  
-	  $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
+	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = CartControllerExtension::get_current_order();
     
     //If there is a current billing and shipping address, update them, otherwise create new ones

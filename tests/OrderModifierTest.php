@@ -92,8 +92,8 @@ class OrderModifierTest extends FunctionalTest {
 	  
 	  $this->assertTrue($productA->isPublished());
 	  
-	  $this->loginAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
@@ -149,8 +149,8 @@ class OrderModifierTest extends FunctionalTest {
 	  $this->assertTrue($productA->isPublished());
 	  $this->assertEquals(false, $shippingMainCentreNZ->isInDB());
 	  
-	  $this->loginAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
@@ -207,8 +207,8 @@ class OrderModifierTest extends FunctionalTest {
 	  
 	  $this->assertTrue($productA->isPublished());
 	  
-	  $this->loginAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());

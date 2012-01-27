@@ -138,8 +138,10 @@ class CheckoutPage_Controller extends Page_Controller {
 	function OrderForm() {
     $fields = array();
     $validator = new OrderFormValidator();
-    $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
+    
+    $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = CartControllerExtension::get_current_order();
+
     $billingAddress = $member->BillingAddress();
     $shippingAddress = $member->ShippingAddress();
 
@@ -400,7 +402,7 @@ class CheckoutPage_Controller extends Page_Controller {
 			return;
 		}
 
-		//Save or create a new member
+		//Save or create a new customer/member
 		//Need to save billing address info to Member for Payment class to work
 
 		$memberData = array(
@@ -415,7 +417,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		);
 
 	  if (!$member = DataObject::get_one('Member', "\"Email\" = '".$data['Email']."'")) {
-			$member = new Member();
+			$member = new Customer();
 			
 			$form->saveInto($member);
 			$member->FirstName = $data['Billing']['FirstName'];
@@ -434,7 +436,7 @@ class CheckoutPage_Controller extends Page_Controller {
 		}
 		else {
 		  
-		  if (Member::currentUser() && Member::currentUser()->Email == $data['Email']) {
+		  if (Customer::currentUser() && Customer::currentUser()->Email == $data['Email']) {
 		    $member->update($data);
 			  $member->write();
 		  }
@@ -526,7 +528,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  
   	  $fields = array();
       $validator = new OrderFormValidator();
-      $member = Member::currentUser() ? Member::currentUser() : singleton('Member');
+      $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
       $order = CartControllerExtension::get_current_order();
       
       //Update the Order 

@@ -1,7 +1,6 @@
 <?php
 
 //Decorators
-Object::add_extension('Member', 'CustomerDecorator');
 Object::add_extension('Payment', 'PaymentDecorator');
 Object::add_extension('SiteConfig', 'ShopSettings');
 

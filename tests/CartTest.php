@@ -312,12 +312,12 @@ class CartTest extends FunctionalTest {
 	  $productA->doPublish();
 	  $this->logOut();
 	  
-	  $this->logInAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->logInAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $loggedInAs = $this->session()->get('loggedInAs');
 	  $this->assertEquals($buyer->ID, $loggedInAs);
 	  
-	  $member = Member::currentUser();
+	  $member = Customer::currentUser();
 	  $this->assertEquals(true, $member->inGroup('customers'));
 
 	  $productALink = $productA->Link();

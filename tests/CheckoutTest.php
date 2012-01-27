@@ -96,8 +96,8 @@ class CheckoutTest extends FunctionalTest {
 	 * Create product and check basic attributes
 	 */
   function testCheckoutWithPublishedProduct() {
-
-		$productA = $this->objFromFixture('Product', 'productA');
+    
+    $productA = $this->objFromFixture('Product', 'productA');
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 
 	  $this->loginAs('admin');
@@ -106,8 +106,8 @@ class CheckoutTest extends FunctionalTest {
 	  
 	  $this->assertTrue($productA->isPublished());
 	  
-	  $this->loginAs('buyer');
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -146,10 +146,10 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertTrue($productA->isPublished());
 
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -172,7 +172,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
@@ -198,10 +198,10 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertTrue($productA->isPublished());
 
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -224,7 +224,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
@@ -250,10 +250,10 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertTrue($shortsA->isPublished());
 
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($shortsA->Link())); 
 	  
@@ -283,7 +283,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
@@ -309,10 +309,10 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertTrue($shortsA->isPublished());
 
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($shortsA->Link())); 
 	  
@@ -341,7 +341,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
@@ -359,11 +359,11 @@ class CheckoutTest extends FunctionalTest {
 	function testCheckoutWithoutProducts() {
 	  
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  
 	  $order = CartControllerExtension::get_current_order();
 	  $items = $order->Items();
@@ -400,10 +400,10 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertTrue($shortsA->requiresVariation());
 
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($shortsA->Link())); 
 	  
@@ -433,7 +433,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
@@ -460,10 +460,10 @@ class CheckoutTest extends FunctionalTest {
 	  $this->assertTrue($shortsA->isPublished());
 	  
 	  //Add product to cart, buyer has one Order existing from fixture
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($shortsA->Link()));
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -505,10 +505,10 @@ class CheckoutTest extends FunctionalTest {
 	  $productA->doPublish();
 	  $this->logOut();
 	  
-	  $buyer = $this->objFromFixture('Member', 'buyer');
+	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 

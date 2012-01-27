@@ -40,7 +40,7 @@ $(document).ready(function() {
    $('#tab-ModelAdmin_Product').html('Products');
    $('#tab-ModelAdmin_Attribute').html('Attributes');
    $('#tab-ModelAdmin_Order').html('Orders');
-   $('#tab-ModelAdmin_SiteConfig').html('Settings');
+   $('#tab-ModelAdmin_Customer').html('Customers');
    
    //Order date picker
 	$('#Form_SearchForm_Order_OrderedOn').daterangepicker({

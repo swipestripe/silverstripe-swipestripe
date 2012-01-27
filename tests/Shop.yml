@@ -593,6 +593,11 @@ Member:
     Email: admin@test.com
     Password: password
     Groups: =>Group.admin
+
+# ------------------------------------------
+# Customers
+# ------------------------------------------ 
+Customer:
   buyer:
     FirstName: Test
     Surname: Buyer
@@ -626,7 +631,7 @@ Order:
     TotalAmount: 500
     SubTotalCurrency: NZD
     SubTotalAmount: 500
-    MemberID: =>Member.buyer
+    MemberID: =>Customer.buyer
     Notes: Some notes about order one.
 
 # ------------------------------------------
@@ -648,7 +653,7 @@ Item:
 Address:
   orderOneBillingAddress:
     OrderID: =>Order.orderOne     
-    MemberID: =>Member.buyer
+    MemberID: =>Customer.buyer
     Type: Billing
     FirstName: Test
     Surname: Buyer
@@ -661,7 +666,7 @@ Address:
     Country: NZ
   orderOneShippingAddress:
     OrderID: =>Order.orderOne     
-    MemberID: =>Member.buyer
+    MemberID: =>Customer.buyer
     Type: Shipping
     FirstName: Jane
     Surname: Doe
@@ -715,7 +720,3 @@ ProductCategory_Products:
     ProductCategoryID: =>ProductCategory.general
     ProductID: =>Product.productB
  
- 
- 
-    
-    

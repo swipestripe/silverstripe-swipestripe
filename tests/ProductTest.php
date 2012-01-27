@@ -208,7 +208,7 @@ class ProductTest extends FunctionalTest {
     $teeshirtA->doPublish();	  
 	  $this->logOut();
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
 	  //Check that options fields exist for each attribute
@@ -267,7 +267,7 @@ class ProductTest extends FunctionalTest {
     $teeshirtA->doPublish();	  
     $this->logOut();
     
-    $this->loginAs('buyer');
+    $this->loginAs($this->objFromFixture('Customer', 'buyer'));
     $this->get(Director::makeRelative($teeshirtA->Link())); 
     
 	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
@@ -319,7 +319,7 @@ class ProductTest extends FunctionalTest {
     $teeshirtA->doPublish();	  
 	  $this->logOut();
 	  
-	  $this->loginAs('buyer');
+	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $this->get(Director::makeRelative($teeshirtA->Link()));
 
 	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
