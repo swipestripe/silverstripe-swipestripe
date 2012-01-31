@@ -112,4 +112,23 @@ height: 19px;
 	display:none;
 }
 
+#Form_EditForm_AboutHeader {
+background: url('http://swipestripe.com/external/logo_md.png') no-repeat top left;
+text-indent: -2000px;
+height: 100px;
+}
 
+#ShopAttribution {
+margin: 1em;
+border: 1px solid #AAA;
+background: #fff;
+padding: 1em;
+text-align: center;
+}
+
+#ShopAttribution p {
+	float:left;
+	margin-top: 15px;
+	color: #666;
+	margin-left: 20px;
+}

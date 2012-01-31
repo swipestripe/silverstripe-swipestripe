@@ -87,5 +87,8 @@ $(document).ready(function() {
 		$('#ParentID').css('display', 'none');
 	});
 	
+	//Attribution
+	$('#left').append('<div id="ShopAttribution"><table><tbody><tr><td><p>shop module by</p></td><td><a href="http://swipestripe.com" target="_blank"><img src="http://swipestripe.com/external/logo_sm.png" /></a></td></tr></tbody></table></div>');
+	
 });
 })(jQuery);
