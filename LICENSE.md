@@ -28,6 +28,7 @@ You are NOT permitted to
 * Use the Software in more than one instance or location (URL, domain, subdomain, etc.);
 * Modify the software and/or create applications and modules which allow the Software to function in more than one instance or location (URL, domain, subdomain, etc.);
 * Modify and/or remove attribution notices or labels displayed in the admin area of the Software.
+* Modify and/or remove swipestripe.xml or prevent swipestripe.xml from being publicly available.
 * Copy the Software and install that single program for simultaneous use on multiple machines;
 * Swipe Stripe does not provide update files for modified versions of the software. A version of the software is considered modified if some files are modified in the folder swipestripe or other swipestripe folders, or the structure and integrity of files and folders has been tampered with. The current conditions apply to modifications made by the licensee or a third party, as well as to modifications made by Swipe Stripe upon an agreement with the licensee.
 

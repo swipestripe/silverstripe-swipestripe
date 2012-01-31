@@ -27,6 +27,15 @@ class ShopSettings extends DataObjectDecorator {
   public static function set_license_key($key) {
     self::$license_key = $key;
   }
+  
+	/**
+   * Get the license key
+   * 
+   * @return String License key
+   */
+  public static function get_license_key() {
+    return self::$license_key;
+  }
 
   /**
    * Add database fields for shop settings like emails etc.
@@ -95,5 +104,32 @@ class ShopSettings extends DataObjectDecorator {
     
     //$fields->addFieldToTab('Root.Shop.Emails.Signature', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
 	}
+
+}
+
+/**
+ * Controller to display a shop settings such as the license key publicly.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ * @version 1.0
+ */
+class ShopSettings_Controller extends Page_Controller {
+
+  public function init() {
+
+    header ("content-type: text/xml");
+    $licenseKey = ShopSettings::get_license_key();
+    $xml = <<<EOS
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<SwipeStripe>
+	<License>$licenseKey</License>
+</SwipeStripe>
+EOS;
+    echo $xml;
+    exit;
+  }
 
 }
