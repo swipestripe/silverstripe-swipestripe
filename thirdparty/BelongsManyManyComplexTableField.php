@@ -108,5 +108,3 @@ class BelongsManyManyComplexTableField_Item extends ComplexTableField_Item {
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
 	}
 }
-
-?>
