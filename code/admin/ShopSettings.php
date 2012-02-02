@@ -81,8 +81,7 @@ class ShopSettings extends DataObjectDecorator {
     );
     $fields->addFieldToTab("Root.Shop.Emails", 
       new Tab('Receipt'),
-      new Tab('Notification'),
-      new Tab('Signature')
+      new Tab('Notification')
     );
 
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', 'From'));
@@ -102,7 +101,14 @@ class ShopSettings extends DataObjectDecorator {
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', 'Subject line'));
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', 'Message (order details are included in the email)', 10));
     
-    //$fields->addFieldToTab('Root.Shop.Emails.Signature', new HtmlEditorField('EmailSignature', 'Signature for all emails', 15));
+    if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
+			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
+				'<p class="message warning">
+					 Warning: You have SwipeStripe installed without a license key. 
+					 Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
+				</p>'
+			), "Title");
+		}
 	}
 
 }
