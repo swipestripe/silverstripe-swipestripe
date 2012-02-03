@@ -274,7 +274,9 @@ class Item extends DataObject {
 
     //PreviousQuantity starts at 0
     if ($this->isChanged('Quantity')) {
-      $this->PreviousQuantity = $this->original['Quantity'];
+		if(isset($this->original['Quantity'])) {
+			$this->PreviousQuantity = $this->original['Quantity'];
+		}
     }
   }
 	
