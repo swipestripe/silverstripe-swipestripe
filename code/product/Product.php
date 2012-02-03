@@ -451,7 +451,7 @@ EOS;
 	}
 	
 	/**
-	 * emoving generic entries for "AmountAmount", "AmountCurrency" because they are ambiguous when two dataobjects have those columns
+	 * Removing generic entries for "AmountAmount", "AmountCurrency" because they are ambiguous when two dataobjects have those columns
 	 * @see Money::addToQuery()
 	 * 
 	 * Build a {@link SQLQuery} object to perform the given query.
@@ -469,9 +469,18 @@ EOS;
 	  
 	  $query = parent::buildSQL($filter, $sort, $limit, $join, $restrictClasses, $having);
 
-	  if (isset($query->select[0])) unset($query->select[0]);
-	  if (isset($query->select[1])) unset($query->select[1]);
-	  
+	  if (isset($query->select[0]) 
+	      && isset($query->select[1])
+	      && isset($query->select[2])
+	      && isset($query->select[3])) {
+	    unset($query->select[0]);
+  	  unset($query->select[1]);
+  	  $query->select[0] = $query->select[2];
+  	  $query->select[1] = $query->select[3];
+  	  unset($query->select[2]);
+  	  unset($query->select[3]);
+	  }
+
 	  return $query;
 	}
   
