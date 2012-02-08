@@ -149,13 +149,8 @@ class Product extends Page {
 		$statusField->setHasEmptyDefault(true);
 		$fieldSet->push($statusField);
 		
-		$categories = DataObject::get('ProductCategory');
-		$categoryOptions = array();
-		if ($categories) foreach ($categories as $productCategory) {
-		  $categoryOptions[$productCategory->ID] = $productCategory->MenuTitle;
-		}
-
-		if ($categoryOptions) {
+		if($categories = DataObject::get('ProductCategory')) {
+		  $categoryOptions = $categories->map("ID", "MenuTitle");
 		  $fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
 		}
 
