@@ -105,14 +105,7 @@ class Variation extends DataObject {
 
     $fields = new FieldSet();
     
-    $amountField = new VariationMoneyField('Amount');
-		$amountField->setAllowedCurrencies(Product::$allowed_currency);
-    $fields->push($amountField);
-    
-    //Stock level field
-    $level = $this->StockLevel()->Level;
-		$fields->push(new StockField('Stock', null, $level));
-		
+    $fields->push(new HeaderField('VariationHeader', 'Product Variation', 4));
     
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -125,8 +118,16 @@ class Variation extends DataObject {
       $fields->push($optionField);
     }
     
-    $fields->push(new DropdownField('Status', 'Status', $this->dbObject('Status')->enumValues()));
+    //Stock level field
+    $level = $this->StockLevel()->Level;
+		$fields->push(new StockField('Stock', null, $level));
+		
+		$fields->push(new DropdownField('Status', 'Status (you can disable a variation to prevent it being sold)', $this->dbObject('Status')->enumValues()));
     
+    $amountField = new VariationMoneyField('Amount', 'Amount that this variation will increase the base product price by');
+		$amountField->setAllowedCurrencies(Product::$allowed_currency);
+    $fields->push($amountField);
+
     return $fields;
   }
   

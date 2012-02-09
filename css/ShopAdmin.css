@@ -100,7 +100,7 @@ font-weight: normal;
 }
 
 .ShopAdmin #Amount .fieldgroupField {
-margin-right: 5px;
+margin-right: 15px;
 }
 
 .ShopAdmin .option select {
@@ -132,3 +132,4 @@ text-align: center;
 	color: #666;
 	margin-left: 20px;
 }
+

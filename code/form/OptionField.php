@@ -31,6 +31,8 @@ class OptionField extends DropdownField {
 	    $source[$option->ID] = $option->Title;
 	  }
 	  
+	  $this->addExtraClass('dropdown');
+	  
 		parent::__construct($name, $title, $source, $value, $form, $emptyString);
 	}
 	
