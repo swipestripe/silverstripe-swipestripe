@@ -305,8 +305,8 @@ class Variation extends DataObject {
     $variationAttributeOptions = array();
     if ($attributeIDs) foreach ($attributeIDs as $attributeID => $title) {
       
-      $attributeOptionID = $this->record['Options[' . $attributeID .']'];
-      if (isset($attributeOptionID)) {
+      $attributeOptionID = (isset($this->record['Options[' . $attributeID .']'])) ? $this->record['Options[' . $attributeID .']'] : null;
+      if ($attributeOptionID) {
         $variationAttributeOptions[$attributeID] = $attributeOptionID;
       }
     }
