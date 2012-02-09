@@ -399,27 +399,24 @@ float: left;
 /* 
   Account ========================================
 */
-#Orders {
-color: #777;	
+
+.swipestripe-orders {
+width: 100%;
+font-size: 12px;
 }
 
-#Orders h4 {
-color: #333;
-font-size: 14px;
+.swipestripe-orders th {
+padding: 5px;
+font-weight: bold;
 }
 
-#Orders li {
-list-style-type: none;
-border-bottom: 1px solid #CFCFCF;
-padding: 15px 10px;
+.swipestripe-orders td {
+padding: 5px;
 }
 
-#Orders li.LastOrder {
-border: none;	
-}
-
-#Orders li p {
-margin-left: 10px;	
+.swipestripe-orders tbody tr {
+border-top: 1px solid #ccc;
+border-bottom: 1px solid #CDDDDD;
 }
 
 /* 

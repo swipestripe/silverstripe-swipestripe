@@ -22,7 +22,7 @@ class AccountPage extends Page {
 		if (!DataObject::get_one('AccountPage')) {
 			$page = new AccountPage();
 			$page->Title = 'Account';
-			$page->Content = '<p>View your previous orders below.</p>';
+			$page->Content = '';
 			$page->URLSegment = 'account';
 			$page->ShowInMenus = 0;
 			$page->writeToStage('Stage');
@@ -144,7 +144,8 @@ class AccountPage_Controller extends Page_Controller {
     return array( 
       'Content' => $this->Content, 
       'Form' => $this->Form,
-      'Orders' => $Orders
+      'Orders' => $Orders,
+      'Customer' => Customer::currentUser()
     );
   }
 

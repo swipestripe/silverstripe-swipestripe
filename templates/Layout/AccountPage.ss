@@ -1,28 +1,43 @@
 <h2>$Title</h2>
+
+<p>
+Hi <strong>$Customer.FirstName</strong>, from your account dashboard you can view your recent orders.
+</p>
+
 $Content
 
 <% if Orders %>
-	<ul id="Orders">
-	<% control Orders %>
-	  <li <% if Last %>class="LastOrder"<% end_if %>>
-	    <div>
-	      <h4><a href="$Link">Order #$ID - $Status <span class="payment_status">($PaymentStatus)</span></a></h4>
-	      <p>
-	        Date: $OrderedOn.Format(j M y). <br />
-	        Total: $Total.Nice. <br />
-	        
-	        Items: 
-	        <% control Products %>
-	          <a href="$Link" target="_blank">$Title</a><% if Last %>.<% else %>, <% end_if %>
-	        <% end_control %>
-	        <br />
-	        
-	        <% if Downloads %>
-	        <em>You can access downloads by <a href="$Link#DownloadsTable">viewing this order</a>.</em>
-	        <% end_if %>
-	      </p>
-	    </div>
-	  </li>
-	<% end_control %>
-	</ul>
+  <table class="swipestripe-orders">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Ship to</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% control Orders %>
+      <tr>
+        <td>$ID</td>
+        <td>$OrderedOn.Format(j M y)</td>
+        <td>
+          <% control ShippingAddress %>
+		        <% if Address %>$Address<br /><% end_if %>
+		        <% if AddressLine2 %>$AddressLine2<br /><% end_if %>
+		        <% if City %>$City<br /><% end_if %>
+		        <% if PostalCode %>$PostalCode<br /><% end_if %>
+		        <% if State %>$State<br /><% end_if %>
+		        <% if Country %>$Country<br /><% end_if %>
+		      <% end_control %>
+        </td>
+        <td>$Total.Nice</td>
+        <td>$Status ($PaymentStatus)</td>
+        <td><a href="$Link">View order</a></td>
+      </tr>
+      <% end_control %>
+    </tbody>
+  </table>
 <% end_if %>
