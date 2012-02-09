@@ -47,7 +47,7 @@ class Customer extends Member {
 	 * 
 	 * @see Member::canDelete()
 	 */
-  public function canDelete($member = null){
+  public function canDelete($member = null) {
 	  return false;
 	}
 

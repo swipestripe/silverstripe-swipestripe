@@ -35,7 +35,7 @@ $Content
         </td>
         <td>$Total.Nice</td>
         <td>$Status ($PaymentStatus)</td>
-        <td><a href="$Link">View order</a></td>
+        <td><a href="$Link">View this order</a></td>
       </tr>
       <% end_control %>
     </tbody>

@@ -11,11 +11,11 @@
 			<h3>Hi $Customer.Name,</h3>
 			$Message
 	
-	    <p>&nbsp;</p>
+	    <p><br /></p>
 	
 		  <% control Order %>
 	    
-	      <h3>Order #$ID - $Status &nbsp;&nbsp;&nbsp; <a href="$Link" id="OrderLink">View this order</a></h3>
+	      <h3>Order #$ID - $Status <a href="$Link" id="OrderLink">View this order</a></h3>
 	      
 	      <p class="OrderMeta">
 	        $Created.Format(j M Y - g:i a)<br />
