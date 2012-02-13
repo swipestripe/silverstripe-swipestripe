@@ -283,7 +283,7 @@ div.shipping-firstname {
 clear:both;
 }
 
-#Checkout input.text, #Checkout textarea, #LeftCheckout.select, #RightCheckout.select {
+#Checkout input.text, #Checkout textarea, #LeftCheckout select, #RightCheckout select {
 width:200px;
 padding:5px;
 color:#333;
