@@ -107,6 +107,10 @@ class Variation extends DataObject {
     
     $fields->push(new HeaderField('VariationHeader', 'Product Variation', 4));
     
+    $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
+		$mainTab->setTitle(_t('SiteTree.TABMAIN', "Main"));
+		$fields->addFieldToTab("Root", new Tab('Advanced'));
+
     $product = $this->Product();
     $attributes = $product->Attributes();
     if ($attributes && $attributes->exists()) foreach ($attributes as $attribute) {
@@ -115,18 +119,22 @@ class Variation extends DataObject {
       $currentOptionID = ($currentOption = $this->Options()->find('AttributeID', $attribute->ID)) ?$currentOption->ID :null;
       $optionField = new OptionField($attribute->ID, $attribute->Title, $options, $currentOptionID);
       $optionField->setHasEmptyDefault(false);
-      $fields->push($optionField);
+      $fields->addFieldToTab('Root.Main', $optionField);
     }
     
     //Stock level field
     $level = $this->StockLevel()->Level;
-		$fields->push(new StockField('Stock', null, $level));
+    $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level));
 		
-		$fields->push(new DropdownField('Status', 'Status (you can disable a variation to prevent it being sold)', $this->dbObject('Status')->enumValues()));
+    $fields->addFieldToTab('Root.Advanced', new DropdownField(
+    	'Status', 
+    	'Status (you can disable a variation to prevent it being sold)', 
+      $this->dbObject('Status')->enumValues()
+    ));
     
     $amountField = new VariationMoneyField('Amount', 'Amount that this variation will increase the base product price by');
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
-    $fields->push($amountField);
+    $fields->addFieldToTab('Root.Advanced',$amountField);
 
     return $fields;
   }
