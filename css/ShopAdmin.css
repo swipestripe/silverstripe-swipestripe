@@ -81,7 +81,8 @@ background:none;
 }
 
 body.ModelAdmin #left {
-width:307px!important;
+width: 307px !important;
+width: 307px;
 }
 
 p.ProductHelp {
