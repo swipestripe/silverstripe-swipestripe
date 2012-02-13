@@ -847,8 +847,12 @@ class Product_Controller extends Page_Controller {
     
     //Show feedback if redirecting back to the Product page
     if (!$this->getRequest()->requestVar('Redirect')) {
+      $cartPage = DataObject::get_one('CartPage');
+      $message = ($cartPage) 
+        ? 'The product was added to <a href="' . $cartPage->Link() . '">your cart</a>.'
+        : "The product was added to your cart.";
       $form->sessionMessage(
-  			'The product was added to your cart.',
+  			$message,
   			'good'
   		);
     }
