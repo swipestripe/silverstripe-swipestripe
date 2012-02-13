@@ -163,6 +163,21 @@ class CartPage_Controller extends Page_Controller {
 	}
 	
 	/**
+	 * Remove an item from the cart
+	 * 
+	 * @see CartPage::updateCart()
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
+	 */
+	function removeItem(Array $data, Form $form) {
+	  $itemID = isset($data['action_removeItem']) ? $data['action_removeItem'] : null;
+	  if ($itemID) {
+	    $data['Quantity'][$itemID] = 0;
+	  }
+	  $this->updateCart($data, $form);
+	}
+	
+	/**
 	 * Update the current cart quantities and redirect to checkout.
 	 * 
 	 * @param Array $data Data submitted from the form via POST

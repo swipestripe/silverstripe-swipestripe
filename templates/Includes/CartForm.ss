@@ -11,6 +11,7 @@
 	<table id="InformationTable" class="infotable">
     <thead>
       <tr>
+        <th scope="col" class="left">&nbsp;</th>
         <th scope="col" class="left">Product</th>
         <th scope="col" class="left">Options</th>
         <th scope="col" class="left">Unit Price ($Cart.Total.Currency)</th>

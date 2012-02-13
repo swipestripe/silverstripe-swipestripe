@@ -396,6 +396,13 @@ width:100%;
 float: left;
 }
 
+input[type="submit"].remove-item-action, input[type="submit"].remove-item-action:hover {
+background: url(../images/delete-item.png) no-repeat top left;
+border: none;
+text-indent: -2000px;
+margin: 5px;
+}
+
 /* 
   Account ========================================
 */

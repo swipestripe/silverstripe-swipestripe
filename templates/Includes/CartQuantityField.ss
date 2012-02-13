@@ -1,6 +1,10 @@
 
 <tr  class="itemRow $EvenOdd $FirstLast">
 
+  <td>
+    $RemoveItemAction
+  </td>
+
   <td class="title" scope="row"> 
     <% if Item.Object.isPublished %>
       <a href="$Item.Object.Link" target="_blank">$Item.Object.Title</a>

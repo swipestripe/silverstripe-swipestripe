@@ -139,4 +139,13 @@ class CartQuantityField extends TextField {
 	  return $valid;
 	}
 	
+	/**
+	 * Get a form action to remove an order item.
+	 * 
+	 * @return RemoveItemAction Type of FormAction
+	 */
+	function RemoveItemAction() {
+	  return new RemoveItemAction('removeItem', $this->Item()->ID, null, null, 'remove-item-action');
+	}
+	
 }
