@@ -102,13 +102,14 @@ class Variation extends DataObject {
 	 * @return FieldSet
 	 */
   public function getCMSFields_forPopup() {
+    
+    $fields = $this->getCMSFields(array(
+			'includeRelations' => false,
+    ));
+    $fields->removeByName('Image');
+    $fields->removeByName('StockLevelID');
+    $fields->removeByName('Version');
 
-    $fields = new FieldSet();
-    
-    $fields->push(new HeaderField('VariationHeader', 'Product Variation', 4));
-    
-    $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
-		$mainTab->setTitle(_t('SiteTree.TABMAIN', "Main"));
 		$fields->addFieldToTab("Root", new Tab('Advanced'));
 
     $product = $this->Product();

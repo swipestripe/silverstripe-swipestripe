@@ -91,11 +91,11 @@ class ProductCategory_Controller extends Page_Controller {
     $products = DataObject::get( 
        'Product', 
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
-       "Created DESC", 
+       "\"Created\" DESC", 
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
        "{$SQL_start}, 9"
     ); 
-    
+
     $this->extend('updateCategoryProducts', $products);
 
     return $products ? $products : false;
