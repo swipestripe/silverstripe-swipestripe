@@ -44,13 +44,16 @@ class Variation extends DataObject {
   );
   
   /**
-   * Default values for a Variation
+   * Summary fields for displaying Variations in the CMS
    * 
+   * @see Product::getCMSFields()
    * @var Array
    */
-  public static $defaults = array(
-    //'Stock' => -1
-  );
+  public static $summary_fields = array(
+    'SummaryOfStock' => 'Stock',
+    'SummaryOfPrice' => 'Added Price',
+    'Status' => 'Status',
+	);
   
   /**
    * Versioning for a Variation, so that Orders can access the version 

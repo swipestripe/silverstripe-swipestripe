@@ -392,10 +392,8 @@ EOS;
         $fields->addFieldToTab("Root.Content.Options.".$attributeTabName, $manager);
       }
 
-      $variationFieldList['SummaryOfStock'] = 'Stock';
-      $variationFieldList['SummaryOfPrice'] = 'Price Difference';
-      $variationFieldList['Status'] = 'Status';
-      
+      $variationFieldList = array_merge($variationFieldList, singleton('Variation')->summaryFields());
+
       $manager = new VariationComplexTableField(
         $this,
         'Variations',
