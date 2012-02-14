@@ -64,7 +64,9 @@ class ShopSettings extends DataObjectDecorator {
 	 */
   function updateCMSFields(FieldSet &$fields) {
 
-    $fields->addFieldToTab("Root", new TabSet('Shop')); 
+    //$fields->addFieldToTab("Root", new TabSet('Shop')); 
+    
+    $fields->findOrMakeTabSet('Root.Shop');
     
     //License key
     $fields->addFieldToTab("Root.Shop", 
