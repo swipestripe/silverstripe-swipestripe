@@ -33,6 +33,7 @@ class NotificationEmail extends ProcessedEmail {
 	  
 	  if ($customer->Email) $this->from = $customer->Email; 
 	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
+	  else $this->from = 'no-reply@' . $_SERVER['HTTP_HOST'];
 	  
 	  $this->signature = '';
 	  $adminLink = Director::absoluteURL('/admin/swipestripe/');

@@ -32,6 +32,7 @@ class ReceiptEmail extends ProcessedEmail {
 	  
 	  if ($siteConfig->ReceiptFrom) $this->from = $siteConfig->ReceiptFrom;
 	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
+	  else $this->from = 'no-reply@' . $_SERVER['HTTP_HOST'];
 	  
 	  if ($siteConfig->EmailSignature) $this->signature = $siteConfig->EmailSignature;
 
