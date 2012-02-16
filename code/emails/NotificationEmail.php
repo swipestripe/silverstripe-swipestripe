@@ -36,7 +36,7 @@ class NotificationEmail extends ProcessedEmail {
 	  else $this->from = 'no-reply@' . $_SERVER['HTTP_HOST'];
 	  
 	  $this->signature = '';
-	  $adminLink = Director::absoluteURL('/admin/swipestripe/');
+	  $adminLink = Director::absoluteURL('/admin/shop/');
 
 	  //Get css for Email by reading css file and put css inline for emogrification
 	  $this->setTemplate('Order_NotificationEmail');

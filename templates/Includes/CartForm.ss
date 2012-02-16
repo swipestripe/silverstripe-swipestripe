@@ -29,7 +29,7 @@
 	      
 	      <% control Cart %>
 	      <tr class="gap summary total" id="SubTotal">
-		      <td class="threeColHeader total" colspan="4">Sub Total</td>
+		      <td class="threeColHeader total" colspan="5">Sub Total</td>
 		      <td class="right">$SubTotal.Nice ($SubTotal.Currency)</td>
 		    </tr>
 		    <% end_control %>
@@ -37,7 +37,7 @@
 	    <% else %>
 	      <tr  class="itemRow">
       
-	        <td colspan="5">
+	        <td colspan="6">
 	          <span class="error">There are no items in your cart.</span>
 	        </td>
 	
