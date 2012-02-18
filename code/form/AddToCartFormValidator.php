@@ -31,7 +31,7 @@ class AddToCartFormValidator extends RequiredFields {
 	  $productVariations = new DataObjectSet();
     $options = $request->postVar('Options');
     $product = DataObject::get_by_id($data['ProductClass'], $data['ProductID']);
-    $variations = $product->Variations();
+    $variations = ($product) ? $product->Variations() : new DataObjectSet();
 
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
       
@@ -41,7 +41,7 @@ class AddToCartFormValidator extends RequiredFields {
       }
     }
     
-	  if ((!$productVariations || !$productVariations->exists()) && $product->requiresVariation()) {
+	  if ((!$productVariations || !$productVariations->exists()) && $product && $product->requiresVariation()) {
 	    $this->form->sessionMessage(
   		  _t('Form.VARIATIONS_REQUIRED', 'This product requires options before it can be added to the cart.'),
   		  'bad'
@@ -50,7 +50,43 @@ class AddToCartFormValidator extends RequiredFields {
   		//Have to set an error for Form::validate()
   		$this->errors[] = true;
   		$valid = false;
+  		return $valid;
 	  }
+	  
+	  //Validate that the product/variation being added is inStock()
+	  $stockLevel = 0;
+	  if ($product) {
+	    if ($product->requiresVariation()) {
+	      $stockLevel = $productVariations->First()->StockLevel()->Level;
+	    }
+	    else {
+	      $stockLevel = $product->StockLevel()->Level;
+	    }
+	  }
+	  if ($stockLevel == 0) {
+	    $this->form->sessionMessage(
+  		  _t('Form.STOCK_LEVEL', ''), //"Sorry, this product is out of stock." - similar message will already be displayed on product page
+  		  'bad'
+  		);
+  		
+  		//Have to set an error for Form::validate()
+  		$this->errors[] = true;
+  		$valid = false;
+	  }
+	  
+	  //Validate the quantity is not greater than the available stock
+	  $quantity = $request->postVar('Quantity');
+	  if ($stockLevel > 0 && $stockLevel < $quantity) {
+	    $this->form->sessionMessage(
+  		  _t('Form.STOCK_LEVEL_MORE_THAN_QUANTITY', 'The quantity is greater than available stock for this product.'),
+  		  'bad'
+  		);
+  		
+  		//Have to set an error for Form::validate()
+  		$this->errors[] = true;
+  		$valid = false;
+	  }
+
 		return $valid;
 	}
 	

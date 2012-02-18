@@ -34,7 +34,7 @@ class QuantityField extends TextField {
 			);
 	    $valid = false;
 	  }
-	  
+
 	  return $valid;
 	}
 	

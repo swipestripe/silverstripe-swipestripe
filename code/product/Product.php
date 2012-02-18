@@ -649,6 +649,12 @@ EOS;
     return $parentType;
 	}
 	
+	/**
+	 * Product is in stock if stock level for product is != 0 or if ANY of its product
+	 * variations is in stock.
+	 * 
+	 * @return Boolean 
+	 */
 	public function InStock() {
 	  //if has variations, check if any variations in stock
 	  //else check if this is in stock
@@ -825,9 +831,9 @@ class Product_Controller extends Page_Controller {
     );
     $validator->setJavascriptValidationHandler('none'); 
     
-    //Disable add to cart form when product out of stock, belt and braces this is also checked in Product template
+    //Disable add to cart function when product out of stock
     if (!$product->InStock()) {
-      $fields = new FieldSet(new LiteralField('ProductNotInStock', '<p>Sorry this product is currently out of stock. Please check back soon.</p>'));
+      $fields = new FieldSet(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
       $actions = new FieldSet();
     }
     
@@ -862,7 +868,7 @@ class Product_Controller extends Page_Controller {
   }
   
 	/**
-   * Find a product based on current request
+   * Find a product based on current request - maybe shoul dbe deprecated?
    * 
    * @see SS_HTTPRequest
    * @return DataObject 
@@ -904,7 +910,7 @@ class Product_Controller extends Page_Controller {
    */
   private function getQuantity() {
     $quantity = $this->getRequest()->requestVar('Quantity');
-    return (isset($quantity)) ?$quantity :1;
+    return (isset($quantity)) ? $quantity : 1;
   }
   
   /**

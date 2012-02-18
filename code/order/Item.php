@@ -130,7 +130,7 @@ class Item extends DataObject {
 	 * Get the variation for the item if a Variation exists in the ItemOptions
 	 * This assumes only one variation per item.
 	 * 
-	 * @return Variation
+	 * @return Mixed Variation if it exists, otherwise null
 	 */
 	function Variation() {
 	  $itemOptions = $this->ItemOptions();
@@ -145,6 +145,11 @@ class Item extends DataObject {
 	  return $variation;
 	}
 	
+	/**
+	 * Get the product for the item
+	 * 
+	 * @return Mixed Product if it exists, otherwise null
+	 */
 	function Product() {
 	  
 	  $product = $this->Object();
