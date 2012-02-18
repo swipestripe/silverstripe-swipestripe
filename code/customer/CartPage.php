@@ -106,6 +106,9 @@ class CartPage_Controller extends Page_Controller {
    * @return Array Contents for page rendering
    */
   function index() {
+    
+    //Update stock levels
+    Order::delete_abandoned();
 
     Requirements::css('swipestripe/css/Shop.css');
 

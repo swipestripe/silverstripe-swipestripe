@@ -130,7 +130,7 @@ class Product extends Page {
    * @var Array
    */
 	public static $casting = array(
-		'Category' => 'Varchar'
+		'Category' => 'Varchar',
 	);
 	
 	/**
@@ -767,6 +767,9 @@ class Product_Controller extends Page_Controller {
    * @param SS_HTTPRequest $request
    */
   function index(SS_HTTPRequest $request) {
+    
+    //Update stock levels before displaying product
+    Order::delete_abandoned();
 
     $product = $this->data();
 
