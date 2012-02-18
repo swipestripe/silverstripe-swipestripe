@@ -454,7 +454,9 @@ class StockLevelTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Check that out of stock products do not display add to cart form
+	 * Check that out of stock products do not display a functioning add to cart form
+	 * the add to cart form will be present, in order to display form messages, but no quantity
+	 * field or actions will be available
 	 */
 	function testProductOutOfStockNoAddForm() {
 	  
@@ -478,13 +480,16 @@ class StockLevelTest extends FunctionalTest {
 	  $this->get(Director::makeRelative($productA->Link())); 
 
 	  $page = $this->mainSession->lastPage();
-
-	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
-	  $this->assertEquals(false, $form);
+	  //$form = $page->getFormById('AddToCartForm_AddToCartForm');
+	  //$this->assertEquals(false, $form);
+	  
+	  $formAction = $page->getField(new SimpleById('AddToCartForm_AddToCartForm_action_add'));
+	  $this->assertEquals(null, $formAction);
 	}
 	
 	/**
-	 * Check that products with all out of stock variations do not have add to cart forms
+	 * Check that products with all out of stock variations do not have add to cart forms that function
+	 * the forms will be present but without quantity fields and actions
 	 */
 	function testProductWithVariationsOutOfStockNoAddForm() {
 
@@ -511,8 +516,11 @@ class StockLevelTest extends FunctionalTest {
 	  $this->get(Director::makeRelative($product->Link())); 
 	  
 	  $page = $this->mainSession->lastPage();
-	  $form = $page->getFormById('AddToCartForm_AddToCartForm');
-	  $this->assertEquals(false, $form);
+	  //$form = $page->getFormById('AddToCartForm_AddToCartForm');
+	  //$this->assertEquals(false, $form);
+	  
+	  $formAction = $page->getField(new SimpleById('AddToCartForm_AddToCartForm_action_add'));
+	  $this->assertEquals(null, $formAction);
 	}
 
 	/**

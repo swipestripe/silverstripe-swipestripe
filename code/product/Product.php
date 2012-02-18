@@ -801,12 +801,7 @@ class Product_Controller extends Page_Controller {
   function AddToCartForm($quantity = null, $redirectURL = null) {
     
     $product = $this->data();
-    
-    //Disable add to cart form when product out of stock, belt and braces this is also checked in Product template
-    //if (!$product->InStock()) {
-    //  return;
-    //}
-    
+
     $fields = new FieldSet(
       new HiddenField('ProductClass', 'ProductClass', $product->ClassName),
       new HiddenField('ProductID', 'ProductID', $product->ID),
@@ -829,6 +824,12 @@ class Product_Controller extends Page_Controller {
       'Quantity'
     );
     $validator->setJavascriptValidationHandler('none'); 
+    
+    //Disable add to cart form when product out of stock, belt and braces this is also checked in Product template
+    if (!$product->InStock()) {
+      $fields = new FieldSet(new LiteralField('ProductNotInStock', '<p>Sorry this product is currently out of stock. Please check back soon.</p>'));
+      $actions = new FieldSet();
+    }
     
     $controller = Controller::curr();
     $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);
