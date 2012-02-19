@@ -268,6 +268,7 @@ class StockLevelTest extends FunctionalTest {
 	
 	/**
 	 * Stock levels cannot be reduced < 0, need to check bounds of stock level being set
+	 * Form validation now prevents quantity added greater than available stock levels
 	 * e.g: If stock level = 4 try adding 6 to a cart
 	 */
 	function testCheckBoundsWhenReducingProductStock() {
@@ -283,15 +284,16 @@ class StockLevelTest extends FunctionalTest {
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 6
 	  ));
-	  
+
 	  //Flush the cache
 	  DataObject::flush_and_destroy_cache();
 	  $productA = $this->objFromFixture('Product', 'productA');
-	  $this->assertEquals(0, $productA->StockLevel()->Level);
+	  $this->assertEquals(4, $productA->StockLevel()->Level);
 	}
 	
 	/**
 	 * Stock levels cannot be reduced < 0, need to check bounds of stock level being set
+	 * Form validation now prevents quantity added greater than available stock levels
 	 * e.g: If stock level = 5 try adding 6 to a cart
 	 */
 	function testCheckBoundsWhenReducingProductVariationStock() {
@@ -315,7 +317,7 @@ class StockLevelTest extends FunctionalTest {
 	  
 	  DataObject::flush_and_destroy_cache();
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
-	  $this->assertEquals(0, $teeshirtAVariation->StockLevel()->Level);
+	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
 	}
 	
 	/**
