@@ -149,7 +149,7 @@ class CartQuantityField extends TextField {
 	    else {
 	      $stockLevel = $product->StockLevel()->Level;
 	    }
-	    if ($quantityChange > 0 && $quantityChange > $stockLevel) {
+	    if ($quantityChange > 0 && $quantityChange > $stockLevel && $stockLevel > -1) {
 	      //If the change in quantity is greater than the remaining stock level then there is a problem
 	      $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'Quantity is greater than remaining stock.');
   			if ($msg = $this->getCustomValidationMessage()) {
