@@ -288,7 +288,7 @@ class Product extends Page {
 		
 		//Stock level field
 		$level = $this->StockLevel()->Level;
-		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock', null, $level), 'Content');
+		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock', null, $level, $this), 'Content');
 		
 		//Product categories
     $manager = new BelongsManyManyComplexTableField(
@@ -681,6 +681,34 @@ EOS;
 	    }
 	  }
 	  return $inStock;
+	}
+	
+	/**
+	 * Get the quantity of this product that is currently in shopping carts
+	 * or unprocessed orders
+	 * 
+	 * @return Int
+	 */
+	function getUnprocessedQuantity() {
+	  
+	  //Get items with this objectID/objectClass (nevermind the version)
+	  //where the order status is either cart, pending or processing
+	  $objectID = $this->ID;
+	  $objectClass = $this->class;
+	  $totalQuantity = 0;
+
+	  //TODO refactor using COUNT(Item.Quantity)
+	  $items = DataObject::get(
+	  	'Item', 
+	    "\"Item\".\"ObjectID\" = $objectID AND \"Item\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')",
+	    '',
+	    "INNER JOIN \"Order\" ON \"Order\".\"ID\" = \"Item\".\"OrderID\""
+	  );
+	  
+	  if ($items && $items->exists()) foreach ($items as $item) {
+	    $totalQuantity += $item->Quantity;
+	  }
+	  return $totalQuantity;
 	}
 
 }

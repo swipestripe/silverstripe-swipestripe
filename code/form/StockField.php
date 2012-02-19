@@ -16,9 +16,12 @@ class StockField extends FormField {
   
   protected $stockLevelField;
   
-  function __construct($name, $title = null, $value = "", $maxLength = null, $form = null) {
+  function __construct($name, $title = null, $value = "", $object, $maxLength = null, $form = null) {
 
-    $stockChoiceField = new OptionsetField('StockChoice', 'Stock', array(
+    $quantity = $object->getUnprocessedQuantity();
+    $label = "Stock : $quantity are currently in shopping carts or orders that have not been dispatched.";
+    
+    $stockChoiceField = new OptionsetField('StockChoice', $label, array(
 		  0 => 'Unlimited',
 		  1 => 'Specify Stock'
 		));

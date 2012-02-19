@@ -128,7 +128,7 @@ class Variation extends DataObject {
     
     //Stock level field
     $level = $this->StockLevel()->Level;
-    $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level));
+    $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this));
 		
     $fields->addFieldToTab('Root.Advanced', new DropdownField(
     	'Status', 
@@ -447,4 +447,34 @@ class Variation extends DataObject {
   	  $stockLevel->write();
     }
 	}
+	
+	/**
+	 * Get the quantity of this product that is currently in shopping carts
+	 * or unprocessed orders
+	 * 
+	 * @return Int
+	 */
+  function getUnprocessedQuantity() {
+	  
+	  //Get items with this objectID/objectClass (nevermind the version)
+	  //where the order status is either cart, pending or processing
+	  $objectID = $this->ID;
+	  $objectClass = $this->class;
+	  $totalQuantity = 0;
+
+	  //TODO refactor using COUNT(Item.Quantity)
+	  $itemOptions = DataObject::get(
+	  	'ItemOption', 
+	    "\"ItemOption\".\"ObjectID\" = $objectID AND \"ItemOption\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')",
+	    '',
+	    "INNER JOIN \"Item\" ON \"Item\".\"ID\" = \"ItemOption\".\"ItemID\" INNER JOIN \"Order\" ON \"Order\".\"ID\" = \"Item\".\"OrderID\""
+	  );
+	  
+	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
+	    $totalQuantity += $itemOption->Item()->Quantity;
+	  }
+	  return $totalQuantity;
+	}
 }
+
+
