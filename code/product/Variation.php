@@ -460,7 +460,10 @@ class Variation extends DataObject {
 	  //where the order status is either cart, pending or processing
 	  $objectID = $this->ID;
 	  $objectClass = $this->class;
-	  $totalQuantity = 0;
+	  $totalQuantity = array(
+	    'InCarts' => 0,
+	    'InOrders' => 0
+	  );
 
 	  //TODO refactor using COUNT(Item.Quantity)
 	  $itemOptions = DataObject::get(
@@ -471,7 +474,10 @@ class Variation extends DataObject {
 	  );
 	  
 	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
-	    $totalQuantity += $itemOption->Item()->Quantity;
+
+	    $item = $itemOption->Item();
+	    if ($item->Order()->Status == 'Cart') $totalQuantity['InCarts'] += $item->Quantity;
+	    else $totalQuantity['InOrders'] += $item->Quantity;
 	  }
 	  return $totalQuantity;
 	}

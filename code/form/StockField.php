@@ -19,7 +19,9 @@ class StockField extends FormField {
   function __construct($name, $title = null, $value = "", $object, $maxLength = null, $form = null) {
 
     $quantity = $object->getUnprocessedQuantity();
-    $label = "Stock : $quantity are currently in shopping carts or orders that have not been dispatched.";
+    $cartQuantity = $quantity['InCarts'];
+    $orderQuantity = $quantity['InOrders'];
+    $label = "Stock : $cartQuantity are currently in shopping carts, $orderQuantity in orders that have not been dispatched.";
     
     $stockChoiceField = new OptionsetField('StockChoice', $label, array(
 		  0 => 'Unlimited',

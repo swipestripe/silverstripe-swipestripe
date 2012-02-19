@@ -687,7 +687,7 @@ EOS;
 	 * Get the quantity of this product that is currently in shopping carts
 	 * or unprocessed orders
 	 * 
-	 * @return Int
+	 * @return Array Number in carts and number in orders
 	 */
 	function getUnprocessedQuantity() {
 	  
@@ -695,7 +695,10 @@ EOS;
 	  //where the order status is either cart, pending or processing
 	  $objectID = $this->ID;
 	  $objectClass = $this->class;
-	  $totalQuantity = 0;
+	  $totalQuantity = array(
+	    'InCarts' => 0,
+	    'InOrders' => 0
+	  );
 
 	  //TODO refactor using COUNT(Item.Quantity)
 	  $items = DataObject::get(
@@ -706,7 +709,8 @@ EOS;
 	  );
 	  
 	  if ($items && $items->exists()) foreach ($items as $item) {
-	    $totalQuantity += $item->Quantity;
+	    if ($item->Order()->Status == 'Cart') $totalQuantity['InCarts'] += $item->Quantity;
+	    else $totalQuantity['InOrders'] += $item->Quantity;
 	  }
 	  return $totalQuantity;
 	}
