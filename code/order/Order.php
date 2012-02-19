@@ -34,11 +34,15 @@ class Order extends DataObject {
   const STATUS_DISPATCHED = 'Dispatched';
   
   /**
-   * Related to timeouts on checkout page for stock management. Not implemented yet.
+   * Life of shopping cart, how long the cart will remain after abandoned.
+   * e.g: A cart is considered abandoned 1 hour after the last page request and will be deleted
+   * thereby releasing the stock in the cart back to the system. 
    * 
-   * @var Int
+   * @see http://www.php.net/manual/en/datetime.formats.relative.php
+   * @see Order::delete_abandoned()
+   * @var String Relative format for strtotime()
    */
-  protected static $timeout = 0;
+  protected static $timeout = '-1 hour';
 
   /**
    * DB fields for Order, such as Stauts, Payment Status etc.
@@ -845,44 +849,39 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Set an order timeout, must be less than session timeouts, 
-	 * timeout prevents products in the order being sold out in the mean 
-	 * time. Not yet implemented.
+	 * Set order timeout, how long the cart will remain after abandoned.
+   * e.g: A cart is considered abandoned 1 hour after the last page request and will be deleted
+   * thereby releasing the stock in the cart back to the system. 
 	 * 
-	 * @param Int $timeout
+	 * @see http://www.php.net/manual/en/datetime.formats.relative.php
+   * @see Order::delete_abandoned()
+	 * @param String $interval Relative time format for strtotime()
 	 */
-  public static function set_timeout($timeout) {
-    
-    //TODO check that session 
-    $ssSessionTimeout = Session::get_timeout();
-    $phpSessionTimeout = session_cache_expire();
-    
-		self::$timeout = intval($timeout);
+  public static function set_timeout($interval) {
+		self::$timeout = $interval;
 	}
 	
 	/**
-	 * Get the order timeout, for managing stock levels. Not yet implemented.
+	 * Get the order timeout, for managing stock levels. 
 	 * 
-	 * @return Int
+	 * @return String Relative time format for strtotime()
 	 */
 	public static function get_timeout() {
 		return self::$timeout;
 	}
 	
+	/**
+	 * Delete abandoned carts according to the Order timeout. This will release the stock 
+	 * in the carts back to the shop. Can be run from a cron job task, also run on Product, Cart and
+	 * Checkout pages so that cron job is not necessary.
+	 * 
+	 * @return Void
+	 */
 	public static function delete_abandoned() {
 
-	  $oneHourAgo = date('Y-m-d H:i:s', strtotime('-1 hour'));
-	  
-	  /*
-	  $query = singleton('Order')->extendedSQL(
-	    "\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL",
-	    '',
-	    '',
-	    "LEFT JOIN \"Payment\" ON \"Payment\".\"OrderID\" = \"Order\".\"ID\""
-	  );
-	  SS_Log::log(new Exception(print_r($query->sql(), true)), SS_Log::NOTICE);
-	  */
-	  
+	  $timeout = self::get_timeout();
+	  $oneHourAgo = date('Y-m-d H:i:s', strtotime($timeout));
+
 	  //Get orders that were last active over an hour ago and have not been paid at all
 	  $orders = DataObject::get(
 	  	'Order',
