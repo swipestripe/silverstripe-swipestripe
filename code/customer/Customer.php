@@ -124,7 +124,7 @@ class Customer extends Member {
 	 * @return DataObjectSet Set of previous orders for this member
 	 */
 	function Orders() {
-	  $orders = DataObject::get('Order', "`MemberID` = " . $this->ID . " AND `Order`.`Status` != 'Cart'", "`Created` DESC");
+	  $orders = DataObject::get('Order', "\"MemberID\" = " . $this->ID . " AND \"Order\".\"Status\" != 'Cart'", "\"Created\" DESC");
 	  if (!$orders) $orders = new DataObjectSet(); //No idea why this is necessary, StockLevelTest was failing suddenly though
 	  return $orders;
 	}

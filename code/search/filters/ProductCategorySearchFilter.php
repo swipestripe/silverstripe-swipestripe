@@ -26,12 +26,12 @@ class ProductCategorySearchFilter extends SearchFilter {
 		  
 		  $query->innerJoin(
   			$table = 'ProductCategory_Products', // framework already applies quotes to table names here!
-  			$onPredicate = "`ProductCategory_Products`.`ProductID` = `Product`.`ID`",
+  			$onPredicate = "\"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
   			$tableAlias = null
   		);
 		  
 			foreach ($values as $value) {
-				$matches[] = "`ProductCategory_Products`.`ProductCategoryID` LIKE " . Convert::raw2sql($value);
+				$matches[] = "\"ProductCategory_Products\".\"ProductCategoryID\" LIKE " . Convert::raw2sql($value);
 			}
 			$query->where(implode(" OR ", $matches));
 		}

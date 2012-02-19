@@ -202,7 +202,7 @@ class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
 		if(!is_subclass_of($this->getModelClass(),"SiteTree")) {
 			return $query;
 		}
-		$query->orderby("`SiteTree`.LastEdited DESC");
+		$query->orderby("\"SiteTree\".\"LastEdited\" DESC");
 		if($page = $this->parentController->getParentPage()) {
 			$query->where[] = "ParentID = $page->ID";					
 		}
