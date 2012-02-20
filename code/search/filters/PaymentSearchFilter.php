@@ -20,7 +20,7 @@ class PaymentSearchFilter extends SearchFilter {
 		$value = $this->getValue();
 
 		if ($value == 0 || $value == 1) {
-			$query->innerJoin(
+			$query->leftJoin(
 				$table = "Payment", // framework already applies quotes to table names here!
 				$onPredicate = "\"Payment\".\"OrderID\" = \"Order\".\"ID\"",
 				$tableAlias = 'Payment'
