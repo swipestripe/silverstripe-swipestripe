@@ -273,7 +273,7 @@ class Order extends DataObject {
 		
 		$fields->addFieldToTab('Root.Actions', new HeaderField('OrderStatus', 'Order Status', 3));
 		$statuses = $this->dbObject('Status')->enumValues();
-		unset($statuses['Cart']);
+		//unset($statuses['Cart']);
 		$fields->addFieldToTab('Root.Actions', new DropdownField('Status', 'Status', $statuses));
 		
 		$fields->addFieldToTab('Root.Actions', new HeaderField('PaymentStatus', 'Payments Status', 3));
@@ -282,7 +282,7 @@ class Order extends DataObject {
 		
 		if ($this->Payments()) foreach ($this->Payments() as $item) {
 		  
-		  $customerName = DataObject::get_by_id('Member', $item->PaidByID)->getName();
+		  $customerName = (DataObject::get_by_id('Member', $item->PaidByID)) ? DataObject::get_by_id('Member', $item->PaidByID)->getName() : '';
 		  $value = $item->dbObject('Amount')->Nice();
 		  $date = $item->dbObject('Created')->Format('j M y g:i a');
 		  $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
@@ -897,6 +897,17 @@ class Order extends DataObject {
       $order->destroy();      
 	  }
 	}
+	
+	/**
+	 * Set the LastActive time when {@link Order} first created.
+	 * 
+	 * (non-PHPdoc)
+	 * @see DataObject::onBeforeWrite()
+	 */
+  function onBeforeWrite() {
+    parent::onBeforeWrite();
+    if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
+  }
 	
 	/**
 	 * Testing to add auto increment to table
