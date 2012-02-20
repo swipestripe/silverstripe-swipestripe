@@ -18,13 +18,18 @@ class PaymentSearchFilter extends SearchFilter {
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
-		if($value) {
-			return $query->innerJoin(
+
+		if ($value == 0 || $value == 1) {
+			$query->innerJoin(
 				$table = "Payment", // framework already applies quotes to table names here!
 				$onPredicate = "\"Payment\".\"OrderID\" = \"Order\".\"ID\"",
-				$tableAlias = null
+				$tableAlias = 'Payment'
 			);
+			
+			if ($value == 0) $query->where('"Payment"."ID" IS NULL');
+			if ($value == 1) $query->where('"Payment"."ID" IS NOT NULL');
 		}
+		return $query;
 	}
 
 	/**
@@ -35,7 +40,7 @@ class PaymentSearchFilter extends SearchFilter {
 	 * @return Boolean
 	 */
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+		return $this->getValue() == null || $this->getValue() == ''; //|| $this->getValue() == 0;
 	}
 }
 
