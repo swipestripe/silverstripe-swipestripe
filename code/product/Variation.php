@@ -421,6 +421,12 @@ class Variation extends DataObject {
 		}
 	}
 	
+	/**
+	 * Update stock level associated with this Variation.
+	 * 
+	 * (non-PHPdoc)
+	 * @see DataObject::onBeforeWrite()
+	 */
   function onBeforeWrite() {
     parent::onBeforeWrite();
 
@@ -437,6 +443,14 @@ class Variation extends DataObject {
     }
   }
 	
+  /**
+	 * Update the stock level for this {@link Product}. A negative quantity is passed 
+	 * when product is added to a cart, a positive quantity when product is removed from a 
+	 * cart.
+	 * 
+	 * @param Int $quantity
+	 * @return Void
+	 */
   public function updateStockBy($quantity) {
     
     $stockLevel = $this->StockLevel();

@@ -616,9 +616,15 @@ EOS;
 	  return $this->Amount->Nice();
 	}
 
+	/**
+	 * Update the stock level for this {@link Product}. A negative quantity is passed 
+	 * when product is added to a cart, a positive quantity when product is removed from a 
+	 * cart.
+	 * 
+	 * @param Int $quantity
+	 * @return Void
+	 */
 	public function updateStockBy($quantity) {
-	  //Negative quantity when adding to the cart
-	  //Positive quantity when removing from the cart
 	  $stockLevel = $this->StockLevel();
     //Do not change stock level if it is already set to unlimited (-1)
 	  if ($stockLevel->Level != -1) {
