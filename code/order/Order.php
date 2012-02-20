@@ -113,7 +113,8 @@ class Order extends DataObject {
 	 */
 	public static $summary_fields = array(
 	  'ID' => 'Order No',
-		'OrderedOn' => 'Date',
+		'OrderedOn' => 'Ordered On',
+	  //'LastActive' => 'Last Active',
 		'Member.Name' => 'Customer',
 		'SummaryOfTotal' => 'Total',
 		'Status' => 'Status'
