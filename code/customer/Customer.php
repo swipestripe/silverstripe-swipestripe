@@ -1,10 +1,20 @@
 <?php
-
+/**
+ * Represents a {@link Customer}, a type of {@link Member}.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage customer
+ * @version 1.0
+ */
 class Customer extends Member {
   
   /**
    * Extra DB fields, mostly for address - requirements for the Payment class.
    * Also ties Member class with Address and Order classes.
+   * 
+   * @var Array
    */
   static $db = array(
 		'Address' => 'Varchar(255)',
@@ -17,6 +27,11 @@ class Customer extends Member {
 		'Notes' => 'HTMLText' //TODO remove? Is this necessary for Payment class or something?
 	);
 	
+	/**
+	 * Link customers to {@link Address}es and {@link Order}s.
+	 * 
+	 * @var Array
+	 */
 	static $has_many = array(
 	  'Addresses' => 'Address',
 	  'Orders' => 'Order'
@@ -24,7 +39,7 @@ class Customer extends Member {
 	
 	/**
 	 * If this Member has Orders, then prevent member from being deleted.
-	 * Belt and braces now, s@see Customer::canDelete()
+	 * Belt and braces now, @see Customer::canDelete()
 	 * 
 	 * @see DataObject::onBeforeDelete()
 	 */
@@ -83,7 +98,6 @@ class Customer extends Member {
 	
 	/**
 	 * Retrieve the last used billing address for this Member from their previous saved addresses.
-	 * 
 	 * TODO make this more efficient
 	 * 
 	 * @return Address The last billing address
@@ -102,7 +116,6 @@ class Customer extends Member {
 	
 	/**
 	 * Retrieve the last used shipping address for this Member from their previous saved addresses.
-	 * 
 	 * TODO make this more efficient
 	 * 
 	 * @return Address The last shipping address

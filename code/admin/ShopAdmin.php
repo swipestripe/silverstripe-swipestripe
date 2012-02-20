@@ -119,7 +119,6 @@ class ShopAdmin extends ModelAdmin {
 	    $config = HtmlEditorConfig::get_active();
 	    $buttons = array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','spellchecker','separator','sslink','unlink','anchor','separator','advcode','search','replace','selectall','visualaid','separator');
 	    $config->setButtonsForLine(2,$buttons);
-	    
 	}
 
 	/**
