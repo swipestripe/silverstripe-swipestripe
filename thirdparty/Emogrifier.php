@@ -1,4 +1,11 @@
 <?php
+/**
+ * For including inline CSS into email templates, strips out unnecessary selectors.
+ * 
+ * @package swipestripe
+ * @subpackage thirdparty
+ */
+
 /*
 UPDATES
 
@@ -21,8 +28,6 @@ UPDATES
     2010-07-26  Fixed bug where '0' values were getting discarded because of php's empty() function... Thanks Scott!
     2010-09-03  Added checks to invisible node removal to ensure that we don't try to remove non-existent child nodes of parents that have already been deleted
     2011-04-08  Fixed errors in CSS->XPath conversion for adjacent sibling selectors and id/class combinations... Thanks Bob V.!
-
-
 */
 class Emogrifier {
 

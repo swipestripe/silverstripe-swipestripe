@@ -1,7 +1,7 @@
 <?php
 /**
  * Patched ManyManyComplexTableField 
- * @see http://open.silverstripe.org/attachment/ticket/6737/mmctf.diff
+ * http://open.silverstripe.org/attachment/ticket/6737/mmctf.diff
  * 
  * Special ComplexTableField for editing a many_many relation.
  * 
@@ -10,15 +10,15 @@
  * Its most useful when you want to manage the relationship itself 
  * thanks to the check boxes present on each line of the table.
  * 
- * See {@link ComplexTableField} for more documentation on the base-class.
- * See {@link HasManyComplexTableField} for more documentation on the relation table base-class.
+ * {@link ComplexTableField} for more documentation on the base-class.
+ * {@link HasManyComplexTableField} for more documentation on the relation table base-class.
  * 
  * Note: This class relies on the fact that both sides of the relation have database tables. 
  * If you are only creating a class as a logical extension (that is, it doesn't have any database fields), 
  * then you will need to create a dummy static $db array because SilverStripe won't create a database 
  * table unless needed.
  * 
- * <b>Usage</b>
+ * Usage
  * 
  * <code>
  * $tablefield = new ManyManyComplexTableField(
@@ -33,8 +33,8 @@
  * );
  * </code>
  * 
- * @package forms
- * @subpackage fields-relational
+ * @package swipestripe
+ * @subpackage thirdparty
  */
 class BelongsManyManyComplexTableField extends HasManyComplexTableField {
 	
@@ -78,7 +78,7 @@ class BelongsManyManyComplexTableField extends HasManyComplexTableField {
 	}
 		
 	function getQuery() {
-		$query = parent::getQuery();//var_dump($query);die;
+		$query = parent::getQuery();
 		$query->select[] = "CASE WHEN \"{$this->manyManyTable}\".\"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END AS \"Checked\"";
 		$query->groupby[] = "\"{$this->manyManyTable}\".\"{$this->manyManyParentClass}ID\""; // necessary for Postgres
 
@@ -92,8 +92,8 @@ class BelongsManyManyComplexTableField extends HasManyComplexTableField {
 
 /**
  * One record in a {@link BelongsManyManyComplexTableField}.
- * @package forms
- * @subpackage fields-relational
+ * @package swipestripe
+ * @subpackage thirdparty
  */
 class BelongsManyManyComplexTableField_Item extends ComplexTableField_Item {
 	
