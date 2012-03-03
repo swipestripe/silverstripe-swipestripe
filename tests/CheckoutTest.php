@@ -56,6 +56,9 @@ class CheckoutTest extends FunctionalTest {
 		Payment::set_supported_methods(array(
       'ChequePayment' => 'Cheque Or Pay On Site'
     ));
+    
+    //Enable shipping countries
+    Shipping::set_supported_countries(array('NZ', 'AU'));
 	}
 	
 	/**
@@ -127,7 +130,7 @@ class CheckoutTest extends FunctionalTest {
 	  $this->submitForm('CheckoutForm_OrderForm', null, array(
 	    'Notes' => 'New order for test buyer.'
 	  ));
-	  
+
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(2, $orders->Count());
 	}

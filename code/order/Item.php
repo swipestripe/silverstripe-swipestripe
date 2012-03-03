@@ -221,6 +221,12 @@ class Item extends DataObject {
 	  return $result;
 	}
 	
+	/**
+	 * Update the quantity of the item. 
+	 * PreviousQuantity starts at 0.
+	 * 
+	 * @see DataObject::onBeforeWrite()
+	 */
   function onBeforeWrite() {
     parent::onBeforeWrite();
 
@@ -232,15 +238,24 @@ class Item extends DataObject {
     }
   }
 	
+  /**
+   * Update stock levels for {@link Item}.
+   * 
+   * @see DataObject::onAfterWrite()
+   */
 	public function onAfterWrite() {
 	  parent::onAfterWrite();
 	  $this->updateStockLevels();
 	}
 	
+	/**
+	 * Update {@link StockLevel} for {@link Product} - or {@link Variation} if it
+	 * exists. 
+	 * 
+	 * @see Item::onBeforeDelete()
+	 * @see Item::onAfterWrite()
+	 */
 	public function updateStockLevels() {
-	  //Get variation, update stock level
-	  //If no variation get the product and update the stock level
-	  //Keep in mind calling this from onAfterDelete() as well
 
 	  $quantityChange = $this->PreviousQuantity - $this->Quantity;
 
