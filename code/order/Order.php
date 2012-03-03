@@ -921,25 +921,5 @@ class Order extends DataObject {
 //	  
 	  //SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
 	}
-	
-	/**
-	 * Retrieving the downloadable virtual products for this order. This is a remanant of
-	 * a previous version of the cart.
-	 * 
-	 * @return DataObjectSet Items for this order that can be downloaded
-	 * @deprecated
-	 */
-	function Downloads() {
-	  
-	  $virtualItems = new DataObjectSet();
-	  $items = $this->Items();
-	  
-	  foreach ($items as $item) {
-	    
-	    if (isset($item->Object()->FileLocation) && $item->Object()->FileLocation) {
-	      $virtualItems->push($item);
-	    }
-	  }
-	  return $virtualItems;
-	}
+
 }

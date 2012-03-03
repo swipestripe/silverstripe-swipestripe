@@ -221,67 +221,14 @@ class Item extends DataObject {
 	  return $result;
 	}
 	
-	/**
-	 * Return the link that should be used for downloading the 
-	 * virtual product represented by this item.
-	 * This is a remanant of an earlier cart and not currently used.
-	 * 
-	 * @return Mixed URL to download or false
-	 * @deprecated
-	 */
-	function DownloadLink() {
-
-	  if ($this->DownloadCount < $this->getDownloadLimit()) {
-	    
-	    //If order is not paid do not provide access to download
-	    $order = $this->Order();
-	    if (!$order->getPaid()) {
-	      return false;
-	    }
-	  
-  	  if ($accountPage = DataObject::get_one('AccountPage')) {
-  	    return $accountPage->Link() . 'downloadproduct/?ItemID='.$this->ID;
-  	  }
-  	  else {
-  	    return false;
-  	  }
-	  
-	  }
-	  else {
-	    return false;
-	  }
-	}
-	
-	/**
-	 * Number of times this item can be downloaded for this order.
-	 * This is a remenant of an earlier cart.
-	 * 
-	 * @return Int
-	 * @deprecated
-	 */
-	function getDownloadLimit() {
-	  return VirutalProductDecorator::$downloadLimit * $this->Quantity;
-	}
-	
-	/**
-	 * Calculate remaining number of downloads for this item,
-	 * Remenant of an earlier cart.
-	 * 
-	 * @return Int
-	 * @deprecated
-	 */
-	function RemainingDownloadLimit() {
-	  return $this->getDownloadLimit() - $this->DownloadCount;
-	}
-	
   function onBeforeWrite() {
     parent::onBeforeWrite();
 
     //PreviousQuantity starts at 0
     if ($this->isChanged('Quantity')) {
-		if(isset($this->original['Quantity'])) {
-			$this->PreviousQuantity = $this->original['Quantity'];
-		}
+  		if(isset($this->original['Quantity'])) {
+  			$this->PreviousQuantity = $this->original['Quantity'];
+  		}
     }
   }
 	

@@ -202,47 +202,5 @@ class AccountPage_Controller extends Page_Controller {
     Director::redirect("home/");
   }
 	
-	/**
-	 * Redirect browser to the download location, increment number of times
-	 * this item has been downloaded.
-	 * 
-	 * If the item has been downloaded too many times redirects back with 
-	 * error message.
-	 * 
-	 * This is a remnant of an earlier version of the cart which also had virtual products
-	 * and should be ignored for now.
-	 * 
-	 * @param SS_HTTPRequest $request
-	 * @deprecated
-	 */
-	function downloadproduct(SS_HTTPRequest $request) {
-	  
-	  $memberID = Member::currentUserID();
-	  if (!Member::currentUserID()) {
-      return Security::permissionFailure($this, 'You must be logged in to view this page.');
-    }
-	  
-	  //TODO can only download product if order has been paid for
-
-	  $item = DataObject::get_by_id('Item', $request->requestVar('ItemID'));
-	  if ($item->exists()) {
-	    
-	    $virtualProduct = $item->Object();
-	    
-	    if (isset($virtualProduct->FileLocation) && $virtualProduct->FileLocation) {
-  	    if ($downloadLocation = $virtualProduct->downloadLocation()) {
-    	    $item->DownloadCount = $item->DownloadCount + 1;
-    	    $item->write();
-
-    	    Director::redirect($downloadLocation);
-    	    return;
-    	  }
-	    }
-	  }
-
-	  //TODO set an error message
-	  Director::redirectBack();
-	}
-
 }
 
