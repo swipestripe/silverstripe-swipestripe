@@ -151,7 +151,11 @@ class Product extends Page {
 		
 		if($categories = DataObject::get('ProductCategory')) {
 		  $categoryOptions = $categories->map("ID", "MenuTitle");
-		  $fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
+		  //$fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
+		  
+		  $dropDown = new DropdownField('Category', 'Category', $categoryOptions);
+		  $dropDown->setHasEmptyDefault(true);
+		  $fieldSet->push($dropDown);
 		}
 
 		return $fieldSet;
