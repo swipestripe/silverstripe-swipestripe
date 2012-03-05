@@ -401,6 +401,8 @@ background: url(../images/delete-item.png) no-repeat top left;
 border: none;
 text-indent: -2000px;
 margin: 5px;
+height: 16px;
+width: 16px;
 }
 
 /* 
@@ -415,6 +417,7 @@ font-size: 12px;
 .swipestripe-orders th {
 padding: 5px;
 font-weight: bold;
+text-align: left;
 }
 
 .swipestripe-orders td {

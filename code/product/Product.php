@@ -296,8 +296,11 @@ class Product extends Page {
       'ProductCategories',
       'ProductCategory',
       array(),
-      'getCMSFields_forPopup'
+      'getCMSFields_forPopup',
+      '',
+      '"Title" ASC'
     );
+    $manager->setPageSize(20);
     $manager->setPermissions(array());
     $fields->addFieldToTab("Root.Content.Categories", new HeaderField(
     	'CategoriesHeading', 

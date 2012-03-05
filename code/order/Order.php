@@ -297,25 +297,6 @@ class Order extends DataObject {
 		  ));
 		}
 		
-		//Remnant of an earlier version of the cart.
-		//TODO move this to virtual products
-		/*
-		if ($this->Downloads() && $this->Downloads()->exists()) {
-  		$fields->addFieldToTab('Root.Actions', new HeaderField('DownloadCount', 'Reset Download Counts', 3));
-  		$fields->addFieldToTab('Root.Actions', new LiteralField(
-  			'UpdateDownloadLimit', 
-  			'<p>Reset the download count for items below, can be used to allow customers to download items more times.</p>'
-  		));
-  		foreach ($this->Downloads() as $item) {
-  		  $fields->addFieldToTab('Root.Actions', new TextField(
-  		  	'DownloadCountItem['.$item->ID.']', 
-  		  	'Download Count for '.$item->Object()->Title.' (download limit = '.$item->getDownloadLimit() .')', 
-  		    $item->DownloadCount
-  		  ));
-  		}
-		}
-		*/
-		
 		//Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);
 		
@@ -425,6 +406,8 @@ class Order extends DataObject {
 	    $this->sendReceipt();
 	    $this->sendNotification();
 	  }
+	  
+	  $this->extend('onAfterPayment');
 	}
 	
 	/**
