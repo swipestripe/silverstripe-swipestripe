@@ -26,7 +26,8 @@ class ProductCategory extends Page {
    * @var Array
    */
   public static $summary_fields = array(
-	  'MenuTitle' => 'Name'
+	  'Title' => 'Name',
+    'MenuTitle' => 'Menu Title'
 	);
     
 	/**

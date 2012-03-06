@@ -40,7 +40,7 @@ class Product extends Page {
    * @var Array
    */
   public static $db = array(
-    'Amount' => 'Money',
+    'Amount' => 'Money'
   );
   
   /**
@@ -150,6 +150,7 @@ class Product extends Page {
 		$fieldSet->push($statusField);
 		
 		if($categories = DataObject::get('ProductCategory')) {
+		  $categories->sort('MenuTitle');
 		  $categoryOptions = $categories->map("ID", "MenuTitle");
 		  //$fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
 		  
@@ -727,7 +728,6 @@ EOS;
 	  }
 	  return $totalQuantity;
 	}
-
 }
 
 /**

@@ -317,7 +317,7 @@ width: 100%;
 
 p#ShipToBillingAddress {
 float: left;
-margin-left: 15px;
+margin-left: 25px;
 padding: 2px;
 }
 
@@ -489,7 +489,7 @@ min-width: 100px;
 }
 
 #AddToCartForm_AddToCartForm .Actions {
-padding: 15px;	
+
 }
 
 #ProductAdd {

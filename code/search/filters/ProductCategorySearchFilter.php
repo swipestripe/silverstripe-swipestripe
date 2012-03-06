@@ -20,6 +20,20 @@ class ProductCategorySearchFilter extends SearchFilter {
 	public function apply(SQLQuery $query) {
 	  
 	  $query = $this->applyRelation($query);
+	  $value = $this->getValue();
+
+	  if ($value) {
+	    
+	    $query->innerJoin(
+  			$table = 'ProductCategory_Products', // framework already applies quotes to table names here!
+  			$onPredicate = "\"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
+  			$tableAlias = null
+  		);
+  		$query->where("\"ProductCategory_Products\".\"ProductCategoryID\" = " . Convert::raw2sql($value));
+	  }
+	  return $query;
+	  
+	  /*
 	  $values = $this->getValue();
 
 		if (count($values)) {
@@ -36,6 +50,7 @@ class ProductCategorySearchFilter extends SearchFilter {
 			$query->where(implode(" OR ", $matches));
 		}
 		return $query;
+		*/
 	}
 
 	/**
@@ -47,11 +62,15 @@ class ProductCategorySearchFilter extends SearchFilter {
 	 */
 	public function isEmpty() {
 	  
+	  return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+	  
+	  /*
 		if(is_array($this->getValue())) {
 			return count($this->getValue()) == 0;
 		}
 		else {
 			return $this->getValue() == null || $this->getValue() == '';
 		}
+		*/
 	}
 }
