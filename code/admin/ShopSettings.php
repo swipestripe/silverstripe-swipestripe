@@ -12,12 +12,20 @@
 class ShopSettings extends DataObjectDecorator {
   
   /**
-   * To hold the license key for the shop. Usually set in mysite/_config file.
+   * To hold the license key for SwipeStripe. Usually set in mysite/_config file.
    * 
    * @see ShopSettings::set_license_key()
    * @var String License key 
    */
   private static $license_key;
+  
+  /**
+   * To hold the license keys for SwipeStripe extensions. Usually set in mysite/_config file.
+   * 
+   * @see ShopSettings::set_extension_license_keys()
+   * @var String License key 
+   */
+  private static $extension_license_keys;
   
   /**
    * Set the license key, usually called in mysite/_config.
@@ -35,6 +43,24 @@ class ShopSettings extends DataObjectDecorator {
    */
   public static function get_license_key() {
     return self::$license_key;
+  }
+  
+  /**
+   * Set extension license keys, usually called in mysite/_config.
+   * 
+   * @param Array $key 
+   */
+  public static function set_extension_license_keys(Array $keys) {
+    self::$extension_license_keys = $keys;
+  } 
+
+  /**
+   * Get extension license keys
+   * 
+   * @return Array Extension license keys
+   */
+  public static function get_extension_license_keys() {
+    return self::$extension_license_keys;
   }
 
   /**
@@ -110,7 +136,6 @@ class ShopSettings extends DataObjectDecorator {
 			), "Title");
 		}
 	}
-
 }
 
 /**
@@ -124,18 +149,62 @@ class ShopSettings extends DataObjectDecorator {
  */
 class ShopSettings_Controller extends Page_Controller {
 
+  /**
+   * Output license keys in XML format
+   * 
+   * @see Page_Controller::init()
+   */
   public function init() {
 
+    $data = array();
+    $data['Key'] = ShopSettings::get_license_key();
+    
+    //Find folders that start with swipestripe_, get their license keys
+    $base = Director::baseFolder() . '/swipestripe_';
+    $dirs = glob($base . '*', GLOB_ONLYDIR);
+    $extensionLicenseKeys = ShopSettings::get_extension_license_keys();
+    
+    if ($dirs && is_array($dirs)) {
+      $data['Extensions'] = array();
+      foreach ($dirs as $dir) {
+        $extensionName = str_replace($base, '', $dir);
+        if ($extensionName){
+          $data['Extensions'][]['Extension'] = array(
+          	'Name' => $extensionName,
+            'Key' => $extensionLicenseKeys[$extensionName]
+          );
+        } 
+      }
+    }
+
+    $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><SwipeStripe></SwipeStripe>");
+    $this->array_to_xml($data, $xml);
+    
     header ("content-type: text/xml");
-    $licenseKey = ShopSettings::get_license_key();
-    $xml = <<<EOS
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<SwipeStripe>
-	<License>$licenseKey</License>
-</SwipeStripe>
-EOS;
-    echo $xml;
+    print $xml->asXML();
     exit;
   }
-
+  
+  /**
+   * Helper to convert arrays into xml.
+   * 
+   * @param Array $data
+   * @param SimpleXMLElement $xml
+   */
+  public function array_to_xml($data, &$xml) {
+    foreach ($data as $key => $value) {
+      if (is_array($value)) {
+        if (!is_numeric($key)){
+          $subnode = $xml->addChild("$key");
+          self::array_to_xml($value, $subnode);
+        }
+        else{
+          self::array_to_xml($value, $xml);
+        }
+      }
+      else {
+        $xml->addChild("$key","$value");
+      }
+    }
+  }
 }
