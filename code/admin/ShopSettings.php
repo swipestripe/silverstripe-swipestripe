@@ -96,7 +96,7 @@ class ShopSettings extends DataObjectDecorator {
     $fields->addFieldToTab("Root.Shop", 
       new Tab('LicenseKey')
     );
-    $licenseKeyField = new TextField('LicenseKey', 'License Key', self::$license_key);
+    $licenseKeyField = new TextField('LicenseKey', _t('ShopSettings.LICENSEKEY', 'License Key'), self::$license_key);
     $fields->addFieldToTab('Root.Shop.LicenseKey', $licenseKeyField->performReadonlyTransformation());
     
     //TODO include the license here in a text area field and some info about setting the license key perhaps
@@ -110,22 +110,22 @@ class ShopSettings extends DataObjectDecorator {
       new Tab('Notification')
     );
 
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', 'From'));
-    $receiptTo = new TextField('ReceiptTo', 'To');
-    $receiptTo->setValue('Sent to customer');
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', _t('ShopSettings.FROM', 'From')));
+    $receiptTo = new TextField('ReceiptTo', _t('ShopSettings.TO', 'To'));
+    $receiptTo->setValue(_t('ShopSettings.RECEIPT_TO', 'Sent to customer'));
     $receiptTo = $receiptTo->performReadonlyTransformation();
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', $receiptTo);
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', 'Subject line'));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('ReceiptBody', 'Message (order details are included in the email)', 8));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('EmailSignature', 'Signature', 8));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'), 8));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature'), 8));
     
-    $notificationFrom = new TextField('NotificationFrom', 'From');
-    $notificationFrom->setValue('Customer email address');
+    $notificationFrom = new TextField('NotificationFrom', _t('ShopSettings.FROM', 'From'));
+    $notificationFrom->setValue(_t('ShopSettings.NOTIFICATION_FROM', 'Customer email address'));
     $notificationFrom = $notificationFrom->performReadonlyTransformation();
     $fields->addFieldToTab('Root.Shop.Emails.Notification', $notificationFrom);
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', 'To'));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', 'Subject line'));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', 'Message (order details are included in the email)', 10));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', _t('ShopSettings.TO', 'To')));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'), 10));
     
     if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
 			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
