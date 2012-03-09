@@ -134,3 +134,7 @@ text-align: center;
 	margin-left: 20px;
 }
 
+/* Fix for tabstrip in ModelAdmin */
+#SearchForm_holder ul.tabstrip li {
+  margin: 0 1px 0 0;
+}
