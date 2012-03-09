@@ -10,44 +10,50 @@
   
   <fieldset>
   
-    <div id="Addresses">
-	    <div id="LeftCheckout">
+    <section class="addresses">
+	    <div id="address-billing" class="address-left">
 		    <% control Fields(BillingAddress) %>
 		      $FieldHolder
 		    <% end_control %>
 	    </div>
 	    
-	    <div id="RightCheckout">
+	    <div id="address-shipping" class="address-right">
 	      <% control Fields(ShippingAddress) %>
 	        $FieldHolder
 	      <% end_control %>
 	    </div>
-    </div>
+    </section>
     
-    <span class="seperator"></span>
+    <hr />
     
-    <% control Fields(PersonalDetails) %>
-      $FieldHolder
-    <% end_control %>
+    <section class="personal-details">
+	    <% control Fields(PersonalDetails) %>
+	      $FieldHolder
+	    <% end_control %>
+    </section>
     
-    <span class="seperator"></span>
+    <hr />
 
-    <div id="Order">
+    <section class="order-details">
 	    <h3>Your Order</h3>
 	    <% include CheckoutFormOrder %>
-    </div>
+    </section>
     
-    <% control Fields(Notes) %>
-      $FieldHolder
-    <% end_control %>
+    <section class="notes">
+	    <% control Fields(Notes) %>
+	      $FieldHolder
+	    <% end_control %>
+    </section>
     
-    <span class="seperator"></span>
+    <hr />
     
-    <% control Fields(Payment) %>
-      $FieldHolder
-    <% end_control %>
+    <section class="payment-details">
+	    <% control Fields(Payment) %>
+	      $FieldHolder
+	    <% end_control %>
+    </section>
 
-    <div class="clear"><!-- --></div>
+    <div class="clear" />
   </fieldset>
 
   <% if Cart.Items %>

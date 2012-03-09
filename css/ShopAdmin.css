@@ -1,140 +1,281 @@
-/* clearfix */
-.clr:after,.clearfix:after {
-content:" ";
-display:block;
-height:0;
-clear:both;
-visibility:hidden;
-font-size:0;
+/* Table of Contents
+==================================================
+  #Less Elements
+  #SwipeStripe Admin Styles
+  #Model Admin Styles
+*/
+/* #Less Elements
+================================================== */
+.clearfix {
+  *zoom: 1;
 }
-
-* html .clr,* html .clearfix {
-zoom:1;
+.clearfix:before, .clearfix:after {
+  display: table;
+  content: "";
 }
-
-/* ie6 */
-:first-child+html .clr,:first-child+html .clearfix {
-zoom:1;
+.clearfix:after {
+  clear: both;
 }
-
-/* ie7 */
-input#Form_ResultsForm_action_goForward {
-display:none;
+table {
+  max-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
-
-#ModelClassSelector select {
-font-size:14px!important;
-width:100%;
+.table {
+  width: 100%;
+  margin-bottom: 18px;
 }
-
-#ModelClassSelector select option {
-font-size:14px;
-height:1.5em;
+.table th, .table td {
+  padding: 8px;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
 }
-
-#sitetree_ul li.nositetree {
-display:none;
+.table th {
+  font-weight: bold;
 }
-
-button#list_view {
-font-size:12px;
-padding:4px 6px;
-border:1px solid #aaa;
-border-top-color:#bbb;
-border-left-color:#bbb;
-background:#ccc;
-color:#555;
-font-weight:700;
-cursor:pointer;
--webkit-border-radius:5px;
--moz-border-radius:5px;
-border-radius:5px;
+.table thead th {
+  vertical-align: bottom;
 }
-
-button#list_view:hover {
-background-color:#bbb;
+.table thead:first-child tr th, .table thead:first-child tr td {
+  border-top: 0;
 }
-
-.modelpagenav {
-padding:0 0 10px;
+.table tbody + tbody {
+  border-top: 2px solid #ddd;
 }
-
-.modelpagenav button {
-float:left;
+.table-condensed th, .table-condensed td {
+  padding: 4px 5px;
 }
-
-.publishpreviews {
-float:left;
-margin:0 0 0 20px;
-font-size:12px;
-font-weight:700;
-line-height:22px;
+.table-bordered {
+  border: 1px solid #ddd;
+  border-collapse: separate;
+  *border-collapse: collapsed;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
-
-.publishpreviews a {
-margin:0 0 0 7px;
+.table-bordered th + th,
+.table-bordered td + td,
+.table-bordered th + td,
+.table-bordered td + th {
+  border-left: 1px solid #ddd;
 }
-
-/* Swipe Stripe */
+.table-bordered thead:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child td {
+  border-top: 0;
+}
+.table-bordered thead:first-child tr:first-child th:first-child, .table-bordered tbody:first-child tr:first-child td:first-child {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+}
+.table-bordered thead:first-child tr:first-child th:last-child, .table-bordered tbody:first-child tr:first-child td:last-child {
+  -webkit-border-radius: 0 4px 0 0;
+  -moz-border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0;
+}
+.table-bordered thead:last-child tr:last-child th:first-child, .table-bordered tbody:last-child tr:last-child td:first-child {
+  -webkit-border-radius: 0 0 0 4px;
+  -moz-border-radius: 0 0 0 4px;
+  border-radius: 0 0 0 4px;
+}
+.table-bordered thead:last-child tr:last-child th:last-child, .table-bordered tbody:last-child tr:last-child td:last-child {
+  -webkit-border-radius: 0 0 4px 0;
+  -moz-border-radius: 0 0 4px 0;
+  border-radius: 0 0 4px 0;
+}
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+.table tbody tr:hover td, .table tbody tr:hover th {
+  background-color: #f5f5f5;
+}
+table .span1 {
+  float: none;
+  width: 44px;
+  margin-left: 0;
+}
+table .span2 {
+  float: none;
+  width: 124px;
+  margin-left: 0;
+}
+table .span3 {
+  float: none;
+  width: 204px;
+  margin-left: 0;
+}
+table .span4 {
+  float: none;
+  width: 284px;
+  margin-left: 0;
+}
+table .span5 {
+  float: none;
+  width: 364px;
+  margin-left: 0;
+}
+table .span6 {
+  float: none;
+  width: 444px;
+  margin-left: 0;
+}
+table .span7 {
+  float: none;
+  width: 524px;
+  margin-left: 0;
+}
+table .span8 {
+  float: none;
+  width: 604px;
+  margin-left: 0;
+}
+table .span9 {
+  float: none;
+  width: 684px;
+  margin-left: 0;
+}
+table .span10 {
+  float: none;
+  width: 764px;
+  margin-left: 0;
+}
+table .span11 {
+  float: none;
+  width: 844px;
+  margin-left: 0;
+}
+table .span12 {
+  float: none;
+  width: 924px;
+  margin-left: 0;
+}
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}
+.invisible {
+  visibility: hidden;
+}
+/* #SwipeStripe Admin Styles
+================================================== */
+.table th {
+  background: #eeeeee;
+}
+.table td {
+  background: #ffffff;
+}
+.table td .alert {
+  margin-bottom: 0px;
+}
+.table .row-header {
+  text-align: right;
+  font-weight: bold;
+}
 .right form .ComplexTableField .middleColumn {
-background:none;
+  background: none;
 }
-
 body.ModelAdmin #left {
-width: 307px !important;
-width: 307px;
+  width: 307px !important;
+  width: 307px;
 }
-
 p.ProductHelp {
-padding: 5px 0px;
-font-size: 12px;
-font-weight: bold;
+  padding: 5px 0px;
+  font-size: 12px;
+  font-weight: bold;
 }
-
 #AttributeAlert {
-display: none;	
+  display: none;
 }
-
 .ShopAdmin form .message {
-font-size: 14px;
-font-weight: normal;
+  font-size: 14px;
+  font-weight: normal;
 }
-
 .ShopAdmin #Amount .fieldgroupField {
-margin-right: 15px;
+  margin-right: 15px;
 }
-
 .ShopAdmin .option select {
-font-size: 12px;
-height: 19px;
+  font-size: 12px;
+  height: 19px;
 }
-
 .HiddenStock {
-	display:none;
+  display: none;
 }
-
-#Form_EditForm_AboutHeader {
-background: url('http://swipestripe.com/external/logo_md.png') no-repeat top left;
-text-indent: -2000px;
-height: 100px;
-}
-
-#ShopAttribution {
-margin: 1em;
-border: 1px solid #AAA;
-background: #fff;
-padding: 1em;
-text-align: center;
-}
-
-#ShopAttribution p {
-	float:left;
-	margin-top: 15px;
-	color: #666;
-	margin-left: 20px;
-}
-
 /* Fix for tabstrip in ModelAdmin */
 #SearchForm_holder ul.tabstrip li {
   margin: 0 1px 0 0;
+}
+/* #Model Admin Styles
+ * @author Aaron Carlino
+================================================== */
+.clr:after, .clearfix:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+  font-size: 0;
+}
+* html .clr, * html .clearfix {
+  zoom: 1;
+}
+/* ie6 */
+:first-child + html .clr, :first-child + html .clearfix {
+  zoom: 1;
+}
+/* ie7 */
+input#Form_ResultsForm_action_goForward {
+  display: none;
+}
+#ModelClassSelector select {
+  font-size: 14px!important;
+  width: 100%;
+}
+#ModelClassSelector select option {
+  font-size: 14px;
+  height: 1.5em;
+}
+#sitetree_ul li.nositetree {
+  display: none;
+}
+button#list_view {
+  font-size: 12px;
+  padding: 4px 6px;
+  border: 1px solid #aaa;
+  border-top-color: #bbb;
+  border-left-color: #bbb;
+  background: #ccc;
+  color: #555;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+button#list_view:hover {
+  background-color: #bbb;
+}
+.modelpagenav {
+  padding: 0 0 10px;
+}
+.modelpagenav button {
+  float: left;
+}
+.publishpreviews {
+  float: left;
+  margin: 0 0 0 20px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 22px;
+}
+.publishpreviews a {
+  margin: 0 0 0 7px;
 }

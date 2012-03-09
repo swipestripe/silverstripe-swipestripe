@@ -1,22 +1,22 @@
 
-<div id="Product">
+<div class="product">
 
-  <% control Product.FirstImage %>
-    <div id="FirstImage">
-      $Image.CroppedImage(250,250)
-    </div>
-  <% end_control %>
-
-  <h1>$Product.Title</h1>
-  
-  <p id="ProductPrice"><span id="PriceTotal">$Product.Amount.Nice</span> <span id="VariationPrice"></span></p>
-
-  <div id="ProductAdd">
-    $AddToCartForm(1)
+  <div class="product-image">
+	  <% control Product.FirstImage %>
+	    $Image.CroppedImage(250,250)
+	  <% end_control %>
   </div>
 
+  <div class="product-meta">
+	  <h1>$Product.Title</h1>
+	  <h3 class="product-price">$Product.Amount.Nice</h3>
+	
+	  <div class="add-to-cart">
+	    $AddToCartForm(1)
+	  </div>
+  </div>
 
-  <div id="ProductDescription">
+  <div class="product-description">
     $Product.Content
   </div>
 

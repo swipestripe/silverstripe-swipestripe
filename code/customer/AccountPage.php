@@ -157,13 +157,13 @@ class AccountPage_Controller extends Page_Controller {
 	function order($request) {
 
 	  Requirements::css('swipestripe/css/Shop.css');
-    
+
 		$memberID = Member::currentUserID();
 	  if (!Member::currentUserID()) {
       return Security::permissionFailure($this, 'You must be logged in to view this page.');
     }
 
-		if($orderID = $request->param('ID')) {
+		if ($orderID = $request->param('ID')) {
 		  
 		  $order = DataObject::get_one('Order', "\"Order\".\"ID\" = $orderID");
 		  $member = Customer::currentUser();

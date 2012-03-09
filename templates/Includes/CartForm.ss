@@ -8,15 +8,15 @@
     <p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
   <% end_if %>
 	
-	<table id="InformationTable" class="infotable">
+	<table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th scope="col" class="left">&nbsp;</th>
-        <th scope="col" class="left">Product</th>
-        <th scope="col" class="left">Options</th>
-        <th scope="col" class="left">Unit Price ($Cart.Total.Currency)</th>
-        <th scope="col" class="left">Quantity</th>
-        <th scope="col" class="right">Sub Total ($Cart.Total.Currency)</th>
+        <th>&nbsp;</th>
+        <th>Product</th>
+        <th>Options</th>
+        <th>Unit Price ($Cart.Total.Currency)</th>
+        <th>Quantity</th>
+        <th>Sub Total ($Cart.Total.Currency)</th>
       </tr>
     </thead>
     <tbody>
@@ -28,17 +28,20 @@
 	      <% end_control %>
 	      
 	      <% control Cart %>
-	      <tr class="gap summary total" id="SubTotal">
-		      <td class="threeColHeader total" colspan="5">Sub Total</td>
-		      <td class="right">$SubTotal.Nice ($SubTotal.Currency)</td>
+	      <tr>
+		      <td colspan="5">&nbsp;</td>
+		      <td><strong>$SubTotal.Nice ($SubTotal.Currency)</strong></td>
 		    </tr>
 		    <% end_control %>
 	    
 	    <% else %>
-	      <tr  class="itemRow">
+	      <tr>
       
 	        <td colspan="6">
-	          <span class="error">There are no items in your cart.</span>
+	          <p class="alert alert-info">
+						  <strong class="alert-heading">Note:</strong>
+						  There are no items in your cart.
+						</p>
 	        </td>
 	
 	      </tr>

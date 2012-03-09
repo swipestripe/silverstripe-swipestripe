@@ -1,4 +1,4 @@
-<table class="infotable">
+<table class="table table-bordered">
   <tr>
     <th>Notes</th>
   </tr>

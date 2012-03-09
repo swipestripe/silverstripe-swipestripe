@@ -76,6 +76,16 @@ class ProductCategory extends Page {
  * @version 1.0
  */
 class ProductCategory_Controller extends Page_Controller {
+  
+	/**
+   * Include some CSS.
+   * 
+   * @see Page_Controller::init()
+   */
+  function init() {
+    parent::init();
+    Requirements::css('swipestripe/css/Shop.css');
+  }
 
   /**
    * Get Products that have this ProductCategory set or have this ProductCategory as a parent in site tree.
@@ -94,7 +104,7 @@ class ProductCategory_Controller extends Page_Controller {
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
        "\"Created\" DESC", 
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
-       "{$SQL_start}, 9"
+       "{$SQL_start}, 12"
     ); 
 
     $this->extend('updateCategoryProducts', $products);

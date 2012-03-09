@@ -1,7 +1,5 @@
-
-<tr  class="itemRow $EvenOdd $FirstLast">
-
-  <td class="title" scope="row"> 
+<tr>
+  <td> 
     <% if Item.Object.isPublished %>
       <a href="$Item.Object.Link" target="_blank">$Item.Object.Title</a>
     <% else %>
@@ -9,9 +7,8 @@
     <% end_if %>
      
     <% if Message %>
-	    <span class="message $MessageType">$Message</span>
+	    <div class="message $MessageType">$Message</div>
 	  <% end_if %>
-    
   </td>
   
   <td>
@@ -20,16 +17,15 @@
     <% end_if %>
   </td>
   
-  <td class="total">
+  <td>
 	  $Item.UnitPrice.Nice
   </td>
 
-  <td class="title" scope="row">
+  <td>
     $Item.Quantity
   </td>
   
-  <td class="right total"> 
+  <td> 
 	  $Item.Total.Nice
   </td>
-
 </tr>

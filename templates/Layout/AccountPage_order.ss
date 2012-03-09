@@ -1,38 +1,44 @@
-<div class="Order typography">
-	
+<div class="account-page">
+  <div class="order">
+  
 	<% if Order %>
     <% control Order %>
     
-      <h3>Order #$ID - $Status</h3>
+      <table class="table table-bordered">
+			  <tr>
+			    <th>Order #$ID - $Status</th>
+			  </tr>
+			  <tr>
+			    <td>
+			      $OrderedOn.Format(j M Y - g:i a)<br />
+            ($PaymentStatus)
+			    </td>
+			  </tr>
+			</table>
       
-      <p class="OrderMeta">
-        $OrderedOn.Format(j M Y - g:i a)<br />
-        ($PaymentStatus)
-      </p>
-      
-      <div id="OrderInformation">
-
-			  <% include OrderAddresses %>
-      
-        <% include Order %>
-          
-			  <% if Payments %>
-			    <% include OrderPayments %>
-			  <% end_if %>
-			  
-			  <% if Downloads %>
-			    <% include OrderDownloads %>
-			  <% end_if %>
-			  
-			  <% if Notes %>
-			    <% include OrderNotes %>
-			  <% end_if %>
-			  
-			</div>
+		  <% include OrderAddresses %>
+     
+      <% include Order %>
+         
+		  <% if Payments %>
+		    <% include OrderPayments %>
+		  <% end_if %>
+		  
+		  <% if Downloads %>
+		    <% include OrderDownloads %>
+		  <% end_if %>
+		  
+		  <% if Notes %>
+		    <% include OrderNotes %>
+		  <% end_if %>
       
     <% end_control %>
   <% else %>
-    <div id="AccountMessage">$Message.Raw</div>
+    <p class="alert alert-error">
+		  <strong class="alert-heading">Warning!</strong>
+		  $Message.Raw
+		</p>
   <% end_if %>
-
+  
+  </div>
 </div>

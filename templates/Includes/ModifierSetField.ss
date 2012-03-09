@@ -1,10 +1,16 @@
-<tr class="gap total ModifierSetField">
+<tr class="modifier-set-field">
 
-  <td class="threeColHeader" colspan="4">
+  <td colspan="4" class="row-header">
     $Title
   </td>
 
-  <td class="threeColHeader">
-    <div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock</div>
+  <td>
+    <div id="$Name" class="field $Type $extraClass">
+      $titleBlock
+      <div class="middleColumn">
+        $Field
+      </div>
+      $rightTitleBlock
+    </div>
   </td>
 </tr>

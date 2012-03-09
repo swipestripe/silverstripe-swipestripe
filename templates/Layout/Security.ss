@@ -1,6 +1,6 @@
 <% require css(swipestripe/css/Shop.css) %>
 
-<div id="Security">
+<div class="security">
 	<h1>$Title</h1>
 	
 	$Content

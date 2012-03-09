@@ -1,11 +1,9 @@
-
-<tr  class="itemRow $EvenOdd $FirstLast">
-
+<tr>
   <td>
     $RemoveItemAction
   </td>
 
-  <td class="title" scope="row"> 
+  <td> 
     <% if Item.Object.isPublished %>
       <a href="$Item.Object.Link" target="_blank">$Item.Object.Title</a>
     <% else %>
@@ -13,9 +11,10 @@
     <% end_if %>
     
     <% if Message %>
-      <span class="message $MessageType">$Message</span>
+      <div class="message $MessageType">
+        $Message
+      </div>
     <% end_if %>
-    
   </td>
   
   <td>
@@ -24,20 +23,19 @@
     <% end_if %>
   </td>
   
-  <td class="right total">
+  <td>
 	  <% control Item %>   
 	    $UnitPrice.Nice
 	  <% end_control %>
   </td>
 
-  <td class="title" scope="row">
+  <td>
     <div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock</div>
   </td>
   
-  <td class="right total">
+  <td>
 	  <% control Item %>   
 	    $Total.Nice
 	  <% end_control %>
   </td>
-
 </tr>

@@ -245,9 +245,12 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $countryField->setCustomValidationMessage('Please enter a country.');
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
 	  
+    $sameAddressField = new CheckboxField('ShipToBillingAddress', 'to same address?');
+    $sameAddressField->addExtraClass('shipping-same-address');
+    
 	  $shippingAddressFields = new CompositeField(
 	    new HeaderField('Shipping Address', 3),
-	    new CheckboxField('ShipToBillingAddress', 'to same address?'),
+	    $sameAddressField,
 			$firstNameField,
 			$surnameField,
 			new TextField('Shipping[Company]', 'Company'),

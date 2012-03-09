@@ -1,8 +1,8 @@
-<div class="typography">
+<div class="checkout">
 
 	<h2>$Title</h2>
 	$Content
 
-	<div id="Checkout">$OrderForm</div>
+	$OrderForm
 
 </div>

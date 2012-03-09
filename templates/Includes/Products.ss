@@ -1,21 +1,39 @@
 <% if Products %>
 
 	<% include Pagination %>
-	
-	<div id="products_cont">
-	  
+
+  <div class="product-row">
 	  <% control Products %>
-	    <div class="product">
-	      <div class="product_pic"><a href="$Link"><% control FirstImage %>$Image.CroppedImage(137,145)<% end_control %></a></div>
-	      <div class="product_title"><a href="$Link">$Title.XML</a></div>
-	      <div class="product_price">$Amount.Nice</div>
-	    </div> <!-- .product -->
+	    <div class="product-brief">
+	    
+	      <div class="product-brief-image">
+	        <a href="$Link">
+	        <% control FirstImage %>
+	          $Image.CroppedImage(137,145)
+	        <% end_control %>
+	        </a>
+	      </div>
+	      
+	      <h5 class="product-brief-title">
+	        <a href="$Link">$Title.XML</a>
+	      </h5>
+	      
+	      <p class="product-brief-price">
+	        $Amount.Nice
+	      </p>
+	      
+	    </div>
 	
-	    <% if MultipleOf(5) %>
-	      <div class="clear"></div>
+	    <% if Last %>
+	    </div>
+	    <% else %>
+		    <% if MultipleOf(4) %>
+		      </div><div class="product-row">
+		    <% end_if %>
 	    <% end_if %>
+	    
 	  <% end_control %>
-	</div> <!-- #products_cont -->
+  
 	
 	<% include Pagination %>
 

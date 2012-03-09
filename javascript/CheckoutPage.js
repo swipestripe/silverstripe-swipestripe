@@ -8,7 +8,7 @@
     	var ShippingAddressVals = {};
     	$('#CheckoutForm_OrderForm_ShipToBillingAddress').live('click', function(){
     		if ($(this).is(':checked')) {
-    			$('#LeftCheckout input[type=text], #LeftCheckout select').each(function(){
+    			$('#address-billing input[type=text], #address-billing select').each(function(){
 
         			var ID = $(this).attr('id');
         			var newID = ID.replace(/Billing/i, 'Shipping');
@@ -17,7 +17,7 @@
         		});
     		}
     		else if (!$.isEmptyObject(ShippingAddressVals)) {
-    			$('#RightCheckout input[type=text], #RightCheckout select').each(function(){
+    			$('#address-shipping input[type=text], #address-shipping select').each(function(){
         			var ID = $(this).attr('id');
         			if (ShippingAddressVals[ID]) $(this).val(ShippingAddressVals[ID]);
         		});
@@ -25,8 +25,8 @@
     		$('#CheckoutForm_OrderForm_Shipping-Country').change();
     	});
     	
-    	$('#LeftCheckout input[type=text], #LeftCheckout select').live('keyup', copyBillingAddressAcross);
-    	$('#LeftCheckout input[type=text], #LeftCheckout select').live('blur', copyBillingAddressAcross);
+    	$('#address-billing input[type=text], #address-billing select').live('keyup', copyBillingAddressAcross);
+    	$('#address-billing input[type=text], #address-billing select').live('blur', copyBillingAddressAcross);
     	function copyBillingAddressAcross() {
     		if ($('#CheckoutForm_OrderForm_ShipToBillingAddress').is(':checked')) {
     			var ID = $(this).attr('id');

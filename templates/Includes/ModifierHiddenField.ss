@@ -1,10 +1,10 @@
-<tr class="gap total ModifierHiddenField">
+<tr class="modifier-hidden-field">
 
-  <td class="threeColHeader" colspan="4">
+  <td colspan="4" class="row-header">
     $Title
   </td>
 
-  <td class="threeColHeader">
+  <td>
     <div id="$Name" class="field $Type $extraClass">
       $titleBlock
       <div class="middleColumn">

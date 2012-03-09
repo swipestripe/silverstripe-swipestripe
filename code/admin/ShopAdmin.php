@@ -102,7 +102,7 @@ class ShopAdmin extends ModelAdmin {
 	    parent::init();
 	    
 	    //For managing Orders
-	    Requirements::css('swipestripe/css/Shop.css');
+	    //Requirements::css('swipestripe/css/Shop.css');
     	Requirements::css('swipestripe/css/ShopAdmin.css');
     	
     	Requirements::css('sapphire/thirdparty/jquery-ui-themes/base/jquery.ui.all.css');

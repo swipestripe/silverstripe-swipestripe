@@ -1,27 +1,30 @@
 <% if Products.MoreThanOnePage %>
-
-	<div class="pag_cont">
-	  <div class="ld">
+	<div class="pagination">
+	  <ul>
 	  
 	    <% if Products.PrevLink %>
-		    <a href="$Products.PrevLink">&lt;</a>
-		  <% end_if %>
-		  
-		  <% control Products.Pages %>
-		    <% if CurrentBool %>
-		      <a href="$Link" class="current">$PageNum</a>
-		    <% else %>
-		      <a href="$Link" title="Go to page $PageNum">$PageNum</a>
-		    <% end_if %>
-		  <% end_control %>
-		  
-		  <% if Products.NextLink %>
-		    <a href="$Products.NextLink">&gt;</a>
-		  <% end_if %>
-		  
-	  </div>
-	  
-	  <div class="clear"></div>
-	</div> <!-- .pag_cont -->
-
+	      <li>
+	        <a href="$Products.PrevLink">Prev</a>
+	      </li>
+	    <% end_if %>
+	    
+	    <% control Products.Pages %>
+	      <% if CurrentBool %>
+	      <li class="active">
+	        <a href="$Link">$PageNum</a>
+	      </li>
+	      <% else %>
+	      <li>
+	        <a href="$Link" title="Go to page $PageNum">$PageNum</a>
+	      </li>
+	      <% end_if %>
+	    <% end_control %>
+	    
+	    <% if Products.NextLink %>
+	      <li>
+	        <a href="$Products.NextLink">Next</a>
+	      </li>
+	    <% end_if %>
+	  </ul>
+	</div>
 <% end_if %>

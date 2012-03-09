@@ -1,0 +1,283 @@
+/* Table of Contents
+==================================================
+  #Less Elements
+  #Site Styles
+  #Page Styles
+*/
+
+/* #Less Elements
+================================================== */
+
+// Core variables and mixins
+@import "libs/variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "libs/mixins.less";
+
+// Base CSS
+@import "libs/forms.less";
+@import "libs/tables.less";
+
+// Components: Buttons & Alerts
+@import "libs/buttons.less";
+@import "libs/alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
+// Components: Nav
+@import "libs/pagination.less";
+
+// Components: Misc
+@import "libs/labels.less";
+
+// Utility classes
+@import "libs/utilities.less"; // Has to be last to override when necessary
+	
+	
+/* #Site Styles
+================================================== */
+.table {
+  th {
+    background: @grayLighter;
+  }
+
+  td {
+    background: @white;
+    
+    .alert {
+      margin-bottom: 0px;
+    }
+  } 
+}
+
+.quantity {
+  input {
+    width: 30px;
+  }	
+}
+
+.Actions {
+  input {
+    cursor: pointer;
+  }	
+}
+ 
+/* #Page Styles
+================================================== */
+	
+/* Account page
+-------------------------------------- */
+.account-page {
+  .order {
+  
+  }
+}
+
+/* Cart page
+-------------------------------------- */
+.cart {
+	
+  .cartquantity {
+	  input {
+	    width: 30px;
+	  }
+	}
+	
+	.remove-item-action {
+	  background: url(../images/delete-item.png) no-repeat top left;
+		border: none;
+		text-indent: -2000px;
+		margin: 5px;
+		height: 16px;
+		width: 16px;
+		cursor: pointer;
+	}
+	
+	.error {
+	  .alert();
+	  .alert-error();
+	  margin-bottom: 0;
+	}
+	
+	.Actions {
+	  text-align: right;
+	}
+}
+
+/* Checkout page
+-------------------------------------- */
+.checkout {
+	
+	section {
+	 float: left;
+	 margin: 5px 0;
+	 width: 100%;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid @grayLightest; 
+    float: left;
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  h3 {
+    height: 35px;
+  }
+  
+  .row-header {
+    text-align: right;
+    font-weight: bold;
+  }
+  
+  .addresses {
+    .address-left {
+      float: left;
+      width: 48%;
+    }
+    
+    .address-right {
+      float: left;
+      width: 48%;
+      
+      h3 {
+        float: left;
+        margin-right: 25px;
+      }
+      
+      .shipping-same-address {
+	      float: left;
+	    }
+	    
+	    .shipping-firstname {
+	      clear: left;
+	    }
+    }
+  }
+  
+  .personal-details {
+  }	
+  
+  .order-details {
+    .modifier-set-field select {
+      width: auto;
+      margin: 0;
+    }
+    
+    .modifier-set-field {
+	    .row-header {
+	      vertical-align: middle;
+	    }
+	  }
+	  
+	  .error {
+	    .alert();
+	    .alert-error();
+	    margin-bottom: 0;
+	  }
+  }
+  
+  .notes {
+    textarea {
+      width: 50%;
+    }
+  }
+  
+  .payment-details {
+    .PaymentSet {
+      list-style: none;
+      
+      li {
+        border: none;
+      }
+      
+      .paymentfields {
+        float: left;
+				margin-bottom: 15px;
+				clear: left;
+				border: 1px solid #ccc;
+      }
+    }
+    
+    #Amount {
+      display: none;
+    }
+  }
+  
+  .Actions {
+    float: right;
+  }
+}
+
+/* Product page
+-------------------------------------- */
+.product {
+	 margin-bottom: 15px;	
+	 float: left;
+	 width: 100%;
+	 
+	 .product-image {
+	   float: left; 
+	   padding: 5px;
+	   
+	   img {
+	     border: 4px solid @white;
+	     .box-shadow();
+     }
+   }
+   
+   .product-meta {
+     float: left;
+     padding: 0 5px;
+     
+     .product-price {
+       font-size: 22px;
+       font-weight: normal;
+     }
+     
+     .add-to-cart .good {
+       .alert();
+       .alert-success();
+     }
+   }
+   
+   .product-description {
+     clear: left;
+   }
+}
+
+/* Product Category page
+-------------------------------------- */
+.product-category {
+	float: left;
+	
+	.product-row {
+	  float: left;
+	  clear: left;
+	  
+	  .product-brief {
+	    float: left;
+	    padding: 10px;
+	    width: 150px;
+	    
+	    .product-brief-image {
+	      .product.product-image();
+	      padding: 0;
+	    } 
+	    
+	    .product-brief-title {
+	      font-size: 16px;
+	      font-weight: normal;
+	    }
+	    
+	    .product-brief-price {
+	      font-size: 14px;
+	    }
+	  }
+  }
+  
+  .pagination {
+    float: left;
+    width: 100%;
+  }
+}
+
+
+

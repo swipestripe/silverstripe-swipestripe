@@ -14,13 +14,13 @@
 			  type: 'POST',
 			  data: values,
 			  success: function(data){
-			    $('#InformationTable').replaceWith(data);
+			    $('#checkout-order-table').replaceWith(data);
 			  }
 			});
     	}
     	$('#CheckoutForm_OrderForm_Shipping-Country').live('change', updateOrderFormCartAJAX).change();
-    	$('.ModifierSetField select').live('change', updateOrderFormCartAJAX);
-    	//updateOrderFormCartAJAX(); //This ruins the modifier field being set to the correct value for some reason
+    	$('.modifier-set-field select').live('change', updateOrderFormCartAJAX);
+    	updateOrderFormCartAJAX(); //This ruins the modifier field being set to the correct value for some reason
 
     })
 })(jQuery);

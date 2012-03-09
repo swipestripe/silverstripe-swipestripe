@@ -90,8 +90,8 @@
 					}
 					*/
 					
-					if (dataObj.totalPrice && $('#VariationPrice').length) {
-						$('#PriceTotal').html(dataObj.totalPrice);
+					if (dataObj.totalPrice && $('.variation-prcie').length) {
+						$('.product-price').html(dataObj.totalPrice);
 					}
 				  }
 				});
