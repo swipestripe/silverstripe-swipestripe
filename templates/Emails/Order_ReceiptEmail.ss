@@ -6,47 +6,44 @@
 	</head>
 	<body>
 	
-	  <div class="Order typography">
+	  <h3>Hi $Customer.Name,</h3>
+    $Message
 	
-			<h3>Hi $Customer.Name,</h3>
-			$Message
-	
-	    <p><br /></p>
-	
-		  <% control Order %>
-	    
-	      <h3>Order #$ID - $Status <a href="$Link" id="OrderLink">View this order</a></h3>
-	      
-	      <p class="OrderMeta">
-	        $Created.Format(j M Y - g:i a)<br />
-	        ($PaymentStatus)
-	      </p>
-	      
-	      <div id="OrderInformation">
-	
-	        <% include OrderAddresses %>
-	      
-	        <% include Order %>
-	          
-	        <% if Payments %>
-	          <% include OrderPayments %>
-	        <% end_if %>
-	        
-	        <% if Notes %>
-	          <% include OrderNotes %>
-	        <% end_if %>
-	        
-	      </div>
-	      
-	      <p>
-        Please note that orders will not be shipped until payment has been successfully processed.
-        </p>
-	      
-	    <% end_control %>
-	    
-	    $Signature
+	  <% control Order %>
+      <div class="order">
+        <table class="table table-bordered">
+          <tr>
+            <th>
+              Order #$ID - $Status<br />
+              <a href="$Link" id="OrderLink">View this order</a>
+            </th>
+          </tr>
+          <tr>
+            <td>
+              $OrderedOn.Format(j M Y - g:i a)<br />
+              ($PaymentStatus)
+            </td>
+          </tr>
+        </table>
+  
+        <% include OrderAddresses %>
+     
+        <% include Order %>
+         
+        <% if Payments %>
+          <% include OrderPayments %>
+        <% end_if %>
+       
+        <% if Notes %>
+          <% include OrderNotes %>
+        <% end_if %>
+      </div>
+    <% end_control %>
     
-    </div>
-
+    <p>
+      Please note that orders will not be shipped until payment has been successfully processed.
+    </p>
+    
+    $Signature
 	</body>
 </html>

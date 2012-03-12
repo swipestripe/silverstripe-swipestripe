@@ -38,11 +38,11 @@ class ReceiptEmail extends ProcessedEmail {
 
 	  //Get css for Email by reading css file and put css inline for emogrification
 	  $this->setTemplate('Order_ReceiptEmail');
-	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/Shop.css'))) {
-	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/Shop.css'));
+	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'))) {
+	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'));
 	  }
 	  else {
-	    $css = file_get_contents(Director::getAbsFile('swipestripe/css/Shop.css'));
+	    $css = file_get_contents(Director::getAbsFile('swipestripe/css/ShopEmail.css'));
 	  }
 
     $this->populateTemplate(

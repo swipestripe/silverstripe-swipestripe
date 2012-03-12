@@ -26,6 +26,8 @@
 			    <td>
 				    <% if Variation %>
 				      $Variation.SummaryOfOptions
+				    <% else %>
+				      -
 				    <% end_if %>
 				  </td>
 				  

@@ -5,40 +5,39 @@
 		$InlineCSS
 	</head>
 	<body>
-	
-	  <div class="Order typography">
-	
-			<h3>Hi,</h3>
-			$Message
-	
-		  <% control Order %>
-	    
-	      <h3>Order #$ID - $Status <a href="$Top.AdminLink" id="OrderLink">Log in to the CMS to manage this order</a></h3>
-	      
-	      <p class="OrderMeta">
-	        $Created.Format(j M Y - g:i a)<br />
-	        ($PaymentStatus)
-	      </p>
 
-	      <div id="OrderInformation">
+		<h3>Hi,</h3>
+		$Message
 	
-	        <% include OrderAddresses %>
-	      
-	        <% include Order %>
-	          
-	        <% if Payments %>
-	          <% include OrderPayments %>
-	        <% end_if %>
-	        
-	        <% if Notes %>
-	          <% include OrderNotes %>
-	        <% end_if %>
-	        
-	      </div>
-	      
-	    <% end_control %>
-    
-    </div>
-
+	  <% control Order %>
+	    <div class="order">
+		    <table class="table table-bordered">
+	        <tr>
+	          <th>
+	            Order #$ID - $Status<br />
+	            <a href="$Top.AdminLink" id="OrderLink">Log in to the CMS to manage this order</a>
+	          </th>
+	        </tr>
+	        <tr>
+	          <td>
+	            $OrderedOn.Format(j M Y - g:i a)<br />
+	            ($PaymentStatus)
+	          </td>
+	        </tr>
+	      </table>
+	
+        <% include OrderAddresses %>
+     
+        <% include Order %>
+         
+        <% if Payments %>
+          <% include OrderPayments %>
+        <% end_if %>
+       
+        <% if Notes %>
+          <% include OrderNotes %>
+        <% end_if %>
+      </div>
+	  <% end_control %>
 	</body>
 </html>

@@ -167,11 +167,11 @@ class AccountPage_Controller extends Page_Controller {
 		  
 		  $order = DataObject::get_one('Order', "\"Order\".\"ID\" = $orderID");
 		  $member = Customer::currentUser();
-  		if (!$member->ID) {
+  		if (!$member || !$member->ID) {
         return Security::permissionFailure($this, 'You must be logged in to view this page.');
       }
       
-      if ($member != $order->Member()) {
+      if ($member && $member != $order->Member()) {
         return Security::permissionFailure($this, 'You cannot view orders that do not belong to you.');
       }
       
