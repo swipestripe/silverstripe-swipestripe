@@ -20,7 +20,7 @@
     <% else %>
       <tr>
         <td colspan="5">
-          <span class="error">There are no items in your cart.</span>
+          <div class="error">There are no items in your cart.</div>
         </td>
       </tr>
     <% end_if %>
