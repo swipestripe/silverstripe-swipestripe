@@ -279,7 +279,7 @@ class Order extends DataObject {
 		
 		$fields->addFieldToTab('Root.Actions', new HeaderField('PaymentStatus', 'Payments Status', 3));
 		$fields->addFieldToTab('Root.Actions', new LiteralField('PaymentStatusP', "<p>Payment status of this order is currently <strong>$this->PaymentStatus</strong>.</p>"));
-//		$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
+    //$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
 		
 		if ($this->Payments()) foreach ($this->Payments() as $item) {
 		  
@@ -287,7 +287,9 @@ class Order extends DataObject {
 		  $value = $item->dbObject('Amount')->Nice();
 		  $date = $item->dbObject('Created')->Format('j M y g:i a');
 		  $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
+		  
 		  $paymentMessage = $item->Message;
+		  $paymentMessage = '';
 
 		  $fields->addFieldToTab('Root.Actions', new DropdownField(
 		  	'Payments['.$item->ID.']', 
