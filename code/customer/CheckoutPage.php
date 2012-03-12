@@ -295,19 +295,24 @@ class CheckoutPage_Controller extends Page_Controller {
     
 	  if(!$member->ID || $member->Password == '') {
 	    
+	    $link = $this->Link();
+	    $lit = <<<EOS
+<p class="alert alert-info">
+	<strong class="alert-heading">NOTE:</strong>
+	Please choose a password, so you can login and check your order history in the future. <br /><br />
+	If you are already a member please <a href="Security/login?BackURL=$link">log in</a>.
+</p>
+EOS;
+	    
 	    $personalFields->push(
 	      new CompositeField(
-	      new FieldGroup(
-	        new ConfirmedPasswordField('Password', 'Password')
-	      ),
-  			new LiteralField(
-  				'AccountInfo', 
-  				'<p class="password-message">Please choose a password, so you can login and check your order history in the future</p>'
-  			),
-  			new LiteralField(
-  				'MemberInfo', 
-  				'<p class="password-message">If you are already a member please <a href="Security/login?BackURL=' . $this->Link() . '">log in</a>.</p>'
-  			)
+  	      new FieldGroup(
+  	        new ConfirmedPasswordField('Password', 'Password')
+  	      ),
+    			new LiteralField(
+    				'AccountInfo', 
+    				$lit
+    			)
 	    ));
 			$validator->addRequiredField('Password');
 		}

@@ -1215,6 +1215,10 @@ button.btn.small, input[type="submit"].btn.small {
 .checkout .addresses .address-right .shipping-firstname {
   clear: left;
 }
+.checkout .personal-details div .CompositeField {
+  width: 48%;
+  float: left;
+}
 .checkout .order-details .modifier-set-field select {
   width: auto;
   margin: 0;
