@@ -4,6 +4,7 @@ Swipe Stripe Ecommerce Module
 Maintainer Contact
 ------------------
 Frank Mullenger 
+
 * [Contact Me](http://swipestripe.com/support/contact-us)
 * [My Blog](http://deadlytechnology.com)
 * [Twitter](https://twitter.com/#!/frankmullenger)
@@ -15,8 +16,8 @@ Requirements
 
 Documentation
 -------------
-[Documentation found here](http://swipestripe.local/docs)
-[Demo found here](http://swipestripe.local/docs/demo/)
+* [Documentation found here](http://swipestripe.local/docs)
+* [Demo found here](http://swipestripe.local/docs/demo/)
 
 Installation Instructions
 -------------------------
@@ -28,7 +29,7 @@ Installation Instructions
 
 Issues
 ------
-Please log bugs [here](https://github.com/frankmullenger/silverstripe-swipestripe/issues).
+[Please log bugs here](https://github.com/frankmullenger/silverstripe-swipestripe/issues).
 
 Copyright and license
 ---------------------
@@ -37,4 +38,4 @@ Copyright and license
 This software is free to try, but before it can be deployed to a live webserver a license must be
 purchased.
 
-Licenses can be bought from [here](http://swipestripe.com/products/ecommerce-software).
+[Licenses can be bought from here](http://swipestripe.com/products/ecommerce-software).
