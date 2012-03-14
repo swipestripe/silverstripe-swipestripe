@@ -2,6 +2,11 @@
 
 global $lang;
 
+$lang['en_US']['ShopAdmin']['MENUTITLE'] = array(
+	'Shop',
+	100,
+	'Menu title'
+);
 $lang['en_US']['AccountPage']['PLURALNAME'] = array(
 	'Account Pags',
 	50,
