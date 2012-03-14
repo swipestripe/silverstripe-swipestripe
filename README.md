@@ -1,6 +1,15 @@
 Swipe Stripe Ecommerce Module
 =============================
 
+Copyright and license
+---------------------
+**Please note: This is NOT free software**
+
+This software is free to try, but before it can be deployed to a live webserver a license must be
+purchased.
+
+[Licenses can be bought from here](http://swipestripe.com/products/ecommerce-software).
+
 Maintainer Contact
 ------------------
 Frank Mullenger 
@@ -11,7 +20,7 @@ Frank Mullenger
 
 Requirements
 ------------
-* SilverStripe 2.4 or newer
+* SilverStripe 2.4.*
 * SilverStripe payment module
 
 Documentation
@@ -31,11 +40,3 @@ Issues
 ------
 [Please log bugs here](https://github.com/frankmullenger/silverstripe-swipestripe/issues).
 
-Copyright and license
----------------------
-**Please note: This is NOT free software**
-
-This software is free to try, but before it can be deployed to a live webserver a license must be
-purchased.
-
-[Licenses can be bought from here](http://swipestripe.com/products/ecommerce-software).
