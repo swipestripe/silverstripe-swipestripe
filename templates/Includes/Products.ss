@@ -39,7 +39,8 @@
 
 <% else %>
 
-	<h3>No Products</h3>
-	<p>We're out of stock! We will add new products shortly, come back soon!</p>
-	
+  <div class="alert alert-info">
+    Sorry, there are no products to display in this category. We will be adding more products shortly, come back soon!
+  </div>
+
 <% end_if %>
