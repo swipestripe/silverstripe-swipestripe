@@ -102,6 +102,16 @@ class VariationComplexTableField extends ComplexTableField {
 	
 }
 
+/**
+ * For managing {@link Variation}s on the {@link Product} page in the CMS.
+ * Created to save {@link Variation} options correctly.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage form
+ * @version 1.0
+ */
 class VariationComplexTableField_ItemRequest extends ComplexTableField_ItemRequest {
   
 	/**

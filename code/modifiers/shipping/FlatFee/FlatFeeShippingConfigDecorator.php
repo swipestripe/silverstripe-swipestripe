@@ -37,8 +37,9 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
     $fields->addFieldToTab("Root.Shop.Shipping", 
       new Tab('FlatFeeShipping')
     );
-    
-    $flatFeeManager = new ComplexTableField(
+     
+    $managerClass = (class_exists('DataObjectManager')) ? 'DataObjectManager' : 'ComplexTableField';
+    $flatFeeManager = new $managerClass(
       $this->owner,
       'FlatFeeShippingRates',
       'FlatFeeShippingRate',

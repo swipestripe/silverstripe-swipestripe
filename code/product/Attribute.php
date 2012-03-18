@@ -78,6 +78,9 @@ class Attribute extends DataObject {
     );
     $fields->addFieldToTab("Root.DefaultOptions", $manager);
     
+    //Ability to edit fields added to CMS here
+		$this->extend('updateAttributeCMSFields', $fields);
+    
     return $fields;
   }
 

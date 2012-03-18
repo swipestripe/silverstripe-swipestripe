@@ -265,7 +265,7 @@ class Product extends Page {
 	 */
 	public function getCMSFields() {
     $fields = parent::getCMSFields();
-    
+
     //Gallery
     $manager = new ComplexTableField(
       $this,

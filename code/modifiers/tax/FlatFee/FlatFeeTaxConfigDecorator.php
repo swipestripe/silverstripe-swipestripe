@@ -38,7 +38,8 @@ class FlatFeeTaxConfigDecorator extends DataObjectDecorator {
       new Tab('FlatFeeTax')
     );
     
-    $flatFeeManager = new ComplexTableField(
+    $managerClass = (class_exists('DataObjectManager')) ? 'DataObjectManager' : 'ComplexTableField';
+    $flatFeeManager = new $managerClass(
       $this->owner,
       'FlatFeeTaxRates',
       'FlatFeeTaxRate',
