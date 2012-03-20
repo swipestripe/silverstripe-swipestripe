@@ -225,6 +225,24 @@ class Product extends Page {
         $variation->write();
       }
     }
+    
+    $curr = Controller::curr();
+    $request = $curr->getRequest();
+    if ($request) {
+      $categoryOrdering = $request->requestVar('CategoryOrder');
+      if ($categoryOrdering && is_array($categoryOrdering)) foreach ($categoryOrdering as $categoryID => $categoryOrder) {
+
+        $productID = $this->ID;
+        $query = <<<EOS
+UPDATE "ProductCategory_Products" 
+SET  "ProductOrder" =  '$categoryOrder' 
+WHERE  "ProductCategory_Products"."ProductCategoryID" = $categoryID 
+AND "ProductCategory_Products"."ProductID" = $productID 
+EOS;
+        DB::query($query);
+      }
+    }
+    
   }
 	
 	/**
@@ -312,6 +330,13 @@ class Product extends Page {
     	'Select categories you would like this product to appear in',
       3
     ));
+    $categoryAlert = <<<EOS
+<p class="message good">
+Please 'Save' after you have finished changing categories if you would like to set the order of this product
+in each category.
+</p>
+EOS;
+    $fields->addFieldToTab("Root.Content.Categories", new LiteralField('CategoryAlert', $categoryAlert));
     $fields->addFieldToTab("Root.Content.Categories", $manager);
 		
 		//Attributes selection
@@ -411,6 +436,43 @@ EOS;
       );
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
+    
+    
+    //Product ordering
+    $categories = $this->ProductCategories();
+    if ($categories && $categories->exists()) foreach ($categories as $category) {
+      
+      $fields->addFieldToTab("Root.Content", new Tab('Order'));
+      $fields->addFieldToTab("Root.Content.Order", new HeaderField(
+      	'OrderHeading', 
+      	'Set the order of this product in each of it\'s categories',
+        3
+      ));
+      
+      $orderHelp = <<<EOS
+<p class="ProductHelp">
+Products with higher order numbers in each category will appear further at the front of 
+that category.
+</p>
+EOS;
+      $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
+
+      $categoryTitle = $category->Title;
+      $categoryID = $category->ID;
+      $productID = $this->ID;
+      $sql = <<<EOS
+SELECT "ProductOrder" 
+FROM  "ProductCategory_Products" 
+WHERE "ProductCategoryID" = $categoryID 
+AND "ProductID" = $productID 
+EOS;
+      $query = DB::query($sql);
+      $order = $query->value();
+      
+      $val = ($order) ? $order : 0; 
+      $fields->addFieldToTab('Root.Content.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
+    } 
+    
     
     //Ability to edit fields added to CMS here
 		$this->extend('updateProductCMSFields', $fields);

@@ -20,6 +20,12 @@ class ProductCategory extends Page {
     'Products' => 'Product'
   );
   
+  public static $many_many_extraFields = array(
+		'Products' => array(
+			'ProductOrder' => 'Int'
+    )
+  );
+  
   /**
    * Summary fields for viewing categories in the CMS
    * 
@@ -102,7 +108,7 @@ class ProductCategory_Controller extends Page_Controller {
     $products = DataObject::get( 
        'Product', 
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
-       "\"Created\" DESC", 
+       "\"ProductCategory_Products\".\"ProductOrder\" DESC", 
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
        "{$SQL_start}, 12"
     ); 
