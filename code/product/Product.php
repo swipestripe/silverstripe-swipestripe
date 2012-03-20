@@ -348,6 +348,7 @@ EOS;
         'Attribute',
         array(
         	'Title' => 'Title',
+          'Label' => 'Label',
         	'Description' => 'Description'
         ),
         'getCMSFields'

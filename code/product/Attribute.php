@@ -24,6 +24,7 @@ class Attribute extends DataObject {
    */
   public static $db = array(
     'Title' => 'Varchar(255)',
+    'Label' => 'Varchar(100)',
     'Description' => 'Text'
   );
   
@@ -53,6 +54,17 @@ class Attribute extends DataObject {
   public static $searchable_fields = array(
 	  'Title'
 	);
+	
+	/**
+   * Summary fields for Attributes
+   * 
+   * @var Array
+   */
+  public static $summary_fields = array(
+	  'Title',
+    'Label',
+    'Description'
+	);
   
 	/**
 	 * Add some fields to the CMS for managing Attributes.
@@ -64,6 +76,9 @@ class Attribute extends DataObject {
     $fields = parent::getCMSFields();
     $fields->removeByName('Products');
     $fields->removeByName('Options');
+    
+    $fields->replaceField('Title', new TextField('Title', 'Short descriptive title'));
+    $fields->replaceField('Label', new TextField('Label', 'Label for dropdown on the product page'));
     
     //Add a manager for options
     $manager = new ComplexTableField(
@@ -82,6 +97,16 @@ class Attribute extends DataObject {
 		$this->extend('updateAttributeCMSFields', $fields);
     
     return $fields;
+  }
+  
+  /**
+   * Validation of {@link Attribute}s. Title must be unique in order for tabs in CMS to work.
+   * 
+   * @see AttributeValidator
+   * @return AttributeValidator
+   */
+  public function getCMSValidator() { 
+    return new AttributeValidator('Title', 'Label'); 
   }
 
 }
