@@ -346,7 +346,14 @@ EOS;
 	private function addModifierFields(&$fields, &$validator, $order) {
 
 		foreach (Modifier::combined_form_fields($order) as $field) {
-		  $fields['Modifiers'][] = $field;
+		  
+		  if ($field->modifiesSubTotal()) {
+		    $fields['SubTotalModifiers'][] = $field;
+		  }
+		  else {
+		    $fields['Modifiers'][] = $field;
+		  }
+		  
 		}
 	}
 	
@@ -554,7 +561,11 @@ EOS;
       //TODO This should be constructed for non-dropdown fields as well
       //Update modifier form fields so that the dropdown values are correct
       $newModifierData = array();
-      foreach ($fields['Modifiers'] as $field) {
+      $subTotalModifiers = (isset($fields['SubTotalModifiers'])) ? $fields['SubTotalModifiers'] : array();
+      $totalModifiers = (isset($fields['Modifiers'])) ? $fields['Modifiers'] : array(); 
+      $modifierFields = array_merge($subTotalModifiers, $totalModifiers);
+
+      foreach ($modifierFields as $field) {
   
         if (method_exists($field, 'updateValue')) {
           $field->updateValue($order);

@@ -25,6 +25,10 @@
       </tr>
     <% end_if %>
     
+    <% control Top.Fields(SubTotalModifiers) %>
+      $FieldHolder
+    <% end_control %>
+    
     <tr>
       <td colspan="4" class="row-header">Sub Total</td>
       <td>$SubTotal.Nice ($SubTotal.Currency)</td>

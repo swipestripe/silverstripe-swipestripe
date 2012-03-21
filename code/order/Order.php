@@ -256,7 +256,8 @@ class Order extends DataObject {
 	    'Addresses',
 	    'SubTotal',
 	    'LastActive',
-	    'Notes'
+	    'Notes',
+	    'XeroInvoiceID'
 	  );
 	  foreach($toBeRemoved as $field) {
 			$fields->removeByName($field);
@@ -577,7 +578,14 @@ class Order extends DataObject {
 	  }
 
 	  if ($modifications) foreach ($modifications as $modification) {
-	    $total += $modification->Amount->getAmount();
+	    
+	    if ($modification->SubTotalModifier) {
+	      $total += $modification->Amount->getAmount();
+	      $subTotal += $modification->Amount->getAmount();
+	    }
+	    else {
+	      $total += $modification->Amount->getAmount();
+	    }
 	  }
 
     $this->SubTotal->setAmount($subTotal); 
@@ -905,6 +913,26 @@ class Order extends DataObject {
 //	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
 //	  
 	  //SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
+	}
+	
+	/**
+	 * Get modifications that apply changes to the Order sub total.
+	 * 
+	 * @return DataObjectSet Set of Modification DataObjects
+	 */
+	public function SubTotalModifications() {
+	  $orderID = $this->ID;
+	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 1");
+	}
+	
+	/**
+	 * Get modifications that apply changes to the Order total (not the order sub total).
+	 * 
+	 * @return DataObjectSet Set of Modification DataObjects
+	 */
+	public function TotalModifications() {
+	  $orderID = $this->ID;
+	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 0");
 	}
 
 }

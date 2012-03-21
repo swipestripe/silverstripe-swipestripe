@@ -435,6 +435,7 @@ EOS;
         $variationFieldList,
         'getCMSFields_forPopup'
       );
+      if (class_exists('SWS_Xero_Item_Decorator')) $manager->setPopupSize(500, 650);
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
     

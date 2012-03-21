@@ -38,7 +38,6 @@ class ModifierHiddenField extends HiddenField {
 	 * @param value The current value
 	 * @param form The parent form
 	 */
-	
 	function __construct($modifier, $title = null, $value = "", $maxLength = null, $form = null) {
 
 	  $name = "Modifiers[$modifier->ClassName]";
@@ -83,6 +82,15 @@ class ModifierHiddenField extends HiddenField {
 	 */
 	function Description() {
 	  return;
+	}
+	
+	/**
+	 * Does not modify {@link Order} sub total by default.
+	 * 
+	 * @return Boolean False
+	 */
+  function modifiesSubTotal() {
+	  return false;
 	}
 	
 }

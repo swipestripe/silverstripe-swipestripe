@@ -72,4 +72,13 @@ class ModifierSetField extends DropdownField {
 	  return $this->modifier;
 	}
 	
+	/**
+	 * Does not modify {@link Order} sub total by default.
+	 * 
+	 * @return Boolean False
+	 */
+	function modifiesSubTotal() {
+	  return false;
+	}
+	
 }
