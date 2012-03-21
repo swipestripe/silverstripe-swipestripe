@@ -441,39 +441,42 @@ EOS;
     
     //Product ordering
     $categories = $this->ProductCategories();
-    if ($categories && $categories->exists()) foreach ($categories as $category) {
-      
+    if ($categories && $categories->exists()) {
+    
       $fields->addFieldToTab("Root.Content", new Tab('Order'));
-      $fields->addFieldToTab("Root.Content.Order", new HeaderField(
-      	'OrderHeading', 
-      	'Set the order of this product in each of it\'s categories',
-        3
-      ));
       
-      $orderHelp = <<<EOS
+      foreach ($categories as $category) {
+
+        $fields->addFieldToTab("Root.Content.Order", new HeaderField(
+        	'OrderHeading', 
+        	'Set the order of this product in each of it\'s categories',
+          3
+        ));
+        
+        $orderHelp = <<<EOS
 <p class="ProductHelp">
 Products with higher order numbers in each category will appear further at the front of 
 that category.
 </p>
 EOS;
-      $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
-
-      $categoryTitle = $category->Title;
-      $categoryID = $category->ID;
-      $productID = $this->ID;
-      $sql = <<<EOS
+        $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
+  
+        $categoryTitle = $category->Title;
+        $categoryID = $category->ID;
+        $productID = $this->ID;
+        $sql = <<<EOS
 SELECT "ProductOrder" 
 FROM  "ProductCategory_Products" 
 WHERE "ProductCategoryID" = $categoryID 
 AND "ProductID" = $productID 
 EOS;
-      $query = DB::query($sql);
-      $order = $query->value();
-      
-      $val = ($order) ? $order : 0; 
-      $fields->addFieldToTab('Root.Content.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
-    } 
-    
+        $query = DB::query($sql);
+        $order = $query->value();
+        
+        $val = ($order) ? $order : 0; 
+        $fields->addFieldToTab('Root.Content.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
+      } 
+    }
     
     //Ability to edit fields added to CMS here
 		$this->extend('updateProductCMSFields', $fields);
