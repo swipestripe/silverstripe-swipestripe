@@ -445,9 +445,7 @@ EOS;
     
       $fields->addFieldToTab("Root.Content", new Tab('Order'));
       
-      foreach ($categories as $category) {
-
-        $fields->addFieldToTab("Root.Content.Order", new HeaderField(
+      $fields->addFieldToTab("Root.Content.Order", new HeaderField(
         	'OrderHeading', 
         	'Set the order of this product in each of it\'s categories',
           3
@@ -460,7 +458,9 @@ that category.
 </p>
 EOS;
         $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
-  
+      
+      foreach ($categories as $category) {
+
         $categoryTitle = $category->Title;
         $categoryID = $category->ID;
         $productID = $this->ID;
