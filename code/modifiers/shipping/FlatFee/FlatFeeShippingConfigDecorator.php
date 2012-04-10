@@ -30,10 +30,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 	 */
   function updateCMSFields(FieldSet &$fields) {
 
-    //$fields->addFieldToTab("Root", new TabSet('Shop')); 
-    $fields->addFieldToTab("Root.Shop", 
-      new TabSet('Shipping')
-    );
+    $fields->findOrMakeTabSet('Root.Shop.Shipping');
     $fields->addFieldToTab("Root.Shop.Shipping", 
       new Tab('FlatFeeShipping')
     );

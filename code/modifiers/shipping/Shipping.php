@@ -20,6 +20,9 @@ class Shipping extends DataObject {
 	protected static $supported_countries = array(
 	);
 	
+	protected static $supported_regions = array(
+	);
+	
 	/**
 	 * Set countries that are supported for shipping to.
 	 * 
@@ -50,6 +53,14 @@ class Shipping extends DataObject {
 	 */
 	public static function supported_countries() {
 	  return self::$supported_countries;
+	}
+	
+	public static function set_supported_regions(Array $regions) {
+    self::$supported_regions = $regions;	  
+	}
+	
+	public static function supported_regions() {
+	  return self::$supported_regions;
 	}
   
 }
