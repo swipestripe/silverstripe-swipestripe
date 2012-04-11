@@ -314,17 +314,6 @@ EOS;
 		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock', null, $level, $this), 'Content');
 		
 		//Product categories
-    $manager = new BelongsManyManyComplexTableField(
-      $this,
-      'ProductCategories',
-      'ProductCategory',
-      array(),
-      'getCMSFields_forPopup',
-      '',
-      '"Title" ASC'
-    );
-    $manager->setPageSize(20);
-    $manager->setPermissions(array());
     $fields->addFieldToTab("Root.Content.Categories", new HeaderField(
     	'CategoriesHeading', 
     	'Select categories you would like this product to appear in',
@@ -337,7 +326,24 @@ in each category.
 </p>
 EOS;
     $fields->addFieldToTab("Root.Content.Categories", new LiteralField('CategoryAlert', $categoryAlert));
+    
+    /*
+    $manager = new BelongsManyManyComplexTableField(
+      $this,
+      'ProductCategories',
+      'ProductCategory',
+      array(),
+      'getCMSFields_forPopup',
+      '',
+      '"Title" ASC'
+    );
+    $manager->setPageSize(20);
+    $manager->setPermissions(array());
     $fields->addFieldToTab("Root.Content.Categories", $manager);
+    */
+
+    $categoriesField = new CategoriesField('ProductCategories', false, 'ProductCategory');
+    $fields->addFieldToTab("Root.Content.Categories", $categoriesField);
 		
 		//Attributes selection
 		$anyAttribute = DataObject::get_one('Attribute');
