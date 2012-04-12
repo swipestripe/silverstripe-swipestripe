@@ -89,8 +89,8 @@
 						$('#VariationPrice').html('');
 					}
 					*/
-					
-					if (dataObj.totalPrice && $('.variation-prcie').length) {
+
+					if (dataObj.totalPrice) { //&& $('.variation-prcie').length) {
 						$('.product-price').html(dataObj.totalPrice);
 					}
 				  }
