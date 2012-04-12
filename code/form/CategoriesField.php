@@ -32,7 +32,26 @@ class CategoriesField extends TreeMultiselectField {
 	 */
   function filterMarking($node) {
 
-    if ($node->ClassName != 'ProductCategory') return false;
+    if ($node->ClassName === 'ProductCategory') return true;
+    
+    //If node has children that are categories then include it in the tree
+    if ($node->ClassName != 'ProductCategory') {
+      
+      $children = $node->AllChildren();
+      if ($children && $children->exists()) {
+        foreach ($children as $child) {
+          if ($child->ClassName === 'ProductCategory') {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+      }
+      else {
+        return false;
+      }
+    }
     
     //Ignore the callback
     //if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
