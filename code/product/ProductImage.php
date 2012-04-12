@@ -62,7 +62,7 @@ class ProductImage extends DataObject {
    */
   function fortemplate() {
     $image = $this->Image();
-    $thumb = ($image && $image->exists()) ? $image->CroppedImage(40,40) : '(No Image)';
-    return $thumb;
+    $thumb = ($image && $image->exists()) ? $image->CroppedImage(40,40) : null;
+    return ($thumb && $thumb->exists()) ? $thumb->forTemplate() : '(No Image)';
   }
 }
