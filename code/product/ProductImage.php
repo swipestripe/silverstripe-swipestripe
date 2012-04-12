@@ -61,7 +61,8 @@ class ProductImage extends DataObject {
    * @return Image|String If no image can be found returns '(No Image)'
    */
   function fortemplate() {
-    if ($Image && $Image->exists() && $Image = $this->Image()) return $Image->CroppedImage(40,40)->forTemplate();
+    $image = $this->Image();
+    if ($image && $image->exists()) return $image->CroppedImage(40,40)->forTemplate();
     else return '(No Image)';
   }
 }
