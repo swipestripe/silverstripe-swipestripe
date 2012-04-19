@@ -26,6 +26,9 @@ class Address extends DataObject {
 		'PostalCode' => 'Varchar(30)',
 		'State' => 'Varchar(100)',
 		'Country' => 'Varchar',
+	  'CountryName' => 'Varchar',
+	  'Region' => 'Varchar',
+	  'RegionName' => 'Varchar'
 	);
 
 	/**

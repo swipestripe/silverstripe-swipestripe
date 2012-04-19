@@ -244,7 +244,14 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $countryField = new DropdownField('Shipping[Country]', 'Country', Shipping::supported_countries());
 	  $countryField->setCustomValidationMessage('Please enter a country.');
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
-	  
+
+    $regions = Shipping::supported_regions();
+    $regionField = null;
+    if (!empty($regions)) {
+      $regionField = new RegionField('Shipping[Region]', 'Region');
+      $regionField->setCustomValidationMessage('Please enter a region.');
+    }
+    
     $sameAddressField = new CheckboxField('ShipToBillingAddress', 'to same address?');
     $sameAddressField->addExtraClass('shipping-same-address');
     
@@ -259,7 +266,8 @@ class CheckoutPage_Controller extends Page_Controller {
 			$cityField,
 			new TextField('Shipping[PostalCode]', 'Postal Code'),
 			new TextField('Shipping[State]', 'State'),
-			$countryField
+			$countryField,
+			$regionField
 	  );
 	  
 	  $shippingAddressFields->setID('ShippingAddress');
@@ -543,7 +551,7 @@ EOS;
 	function updateOrderFormCart(SS_HTTPRequest $data) {
 
 	  if ($data->isPOST()) {
-	  
+
   	  $fields = array();
       $validator = new OrderFormValidator();
       $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
