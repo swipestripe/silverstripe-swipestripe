@@ -83,6 +83,21 @@ class ProductCategory extends Page {
  */
 class ProductCategory_Controller extends Page_Controller {
   
+  /**
+   * Set number of products per page displayed in ProductCategory pages
+   * 
+   * @var Int
+   */
+  public static $products_per_page = 12;
+
+  /**
+   * Set how the products are ordered on ProductCategory pages
+   * 
+   * @see ProductCategory_Controller::Products()
+   * @var String Suitable for inserting in ORDER BY clause
+   */
+  public static $products_ordered_by = "\"ProductCategory_Products\".\"ProductOrder\" DESC";
+  
 	/**
    * Include some CSS.
    * 
@@ -104,18 +119,21 @@ class ProductCategory_Controller extends Page_Controller {
 
     if(!isset($_GET['start']) || !is_numeric($_GET['start']) || (int)$_GET['start'] < 1) $_GET['start'] = 0;
       
-    $SQL_start = (int)$_GET['start'];
+    $start = (int)$_GET['start'];
+    $limit = self::$products_per_page;
+    $orderBy = self::$products_ordered_by;
+    
     $products = DataObject::get( 
        'Product', 
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
-       "\"ProductCategory_Products\".\"ProductOrder\" DESC", 
+       $orderBy, 
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
-       "{$SQL_start}, 12"
+       "{$start}, $limit"
     ); 
 
     $this->extend('updateCategoryProducts', $products);
 
-    return $products ? $products : false;
+    return $products;
   }
 
 }
