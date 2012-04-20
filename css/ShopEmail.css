@@ -16,41 +16,41 @@
 .clearfix:after {
   clear: both;
 }
-table {
+.sws table {
   max-width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
 }
-.table {
+.sws .table {
   width: 100%;
   margin-bottom: 18px;
 }
-.table th,
-.table td {
+.sws .table th,
+.sws .table td {
   padding: 8px;
   line-height: 18px;
   text-align: left;
   vertical-align: top;
   border-top: 1px solid #ddd;
 }
-.table th {
+.sws .table th {
   font-weight: bold;
 }
-.table thead th {
+.sws .table thead th {
   vertical-align: bottom;
 }
-.table thead:first-child tr th,
-.table thead:first-child tr td {
+.sws .table thead:first-child tr th,
+.sws .table thead:first-child tr td {
   border-top: 0;
 }
-.table tbody + tbody {
+.sws .table tbody + tbody {
   border-top: 2px solid #ddd;
 }
-.table-condensed th,
-.table-condensed td {
+.sws .table-condensed th,
+.sws .table-condensed td {
   padding: 4px 5px;
 }
-.table-bordered {
+.sws .table-bordered {
   border: 1px solid #ddd;
   border-collapse: separate;
   *border-collapse: collapsed;
@@ -58,105 +58,105 @@ table {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-.table-bordered th + th,
-.table-bordered td + td,
-.table-bordered th + td,
-.table-bordered td + th {
+.sws .table-bordered th + th,
+.sws .table-bordered td + td,
+.sws .table-bordered th + td,
+.sws .table-bordered td + th {
   border-left: 1px solid #ddd;
 }
-.table-bordered thead:first-child tr:first-child th,
-.table-bordered tbody:first-child tr:first-child th,
-.table-bordered tbody:first-child tr:first-child td {
+.sws .table-bordered thead:first-child tr:first-child th,
+.sws .table-bordered tbody:first-child tr:first-child th,
+.sws .table-bordered tbody:first-child tr:first-child td {
   border-top: 0;
 }
-.table-bordered thead:first-child tr:first-child th:first-child,
-.table-bordered tbody:first-child tr:first-child td:first-child {
+.sws .table-bordered thead:first-child tr:first-child th:first-child,
+.sws .table-bordered tbody:first-child tr:first-child td:first-child {
   -webkit-border-radius: 4px 0 0 0;
   -moz-border-radius: 4px 0 0 0;
   border-radius: 4px 0 0 0;
 }
-.table-bordered thead:first-child tr:first-child th:last-child,
-.table-bordered tbody:first-child tr:first-child td:last-child {
+.sws .table-bordered thead:first-child tr:first-child th:last-child,
+.sws .table-bordered tbody:first-child tr:first-child td:last-child {
   -webkit-border-radius: 0 4px 0 0;
   -moz-border-radius: 0 4px 0 0;
   border-radius: 0 4px 0 0;
 }
-.table-bordered thead:last-child tr:last-child th:first-child,
-.table-bordered tbody:last-child tr:last-child td:first-child {
+.sws .table-bordered thead:last-child tr:last-child th:first-child,
+.sws .table-bordered tbody:last-child tr:last-child td:first-child {
   -webkit-border-radius: 0 0 0 4px;
   -moz-border-radius: 0 0 0 4px;
   border-radius: 0 0 0 4px;
 }
-.table-bordered thead:last-child tr:last-child th:last-child,
-.table-bordered tbody:last-child tr:last-child td:last-child {
+.sws .table-bordered thead:last-child tr:last-child th:last-child,
+.sws .table-bordered tbody:last-child tr:last-child td:last-child {
   -webkit-border-radius: 0 0 4px 0;
   -moz-border-radius: 0 0 4px 0;
   border-radius: 0 0 4px 0;
 }
-.table-striped tbody tr:nth-child(odd) td,
-.table-striped tbody tr:nth-child(odd) th {
+.sws .table-striped tbody tr:nth-child(odd) td,
+.sws .table-striped tbody tr:nth-child(odd) th {
   background-color: #f9f9f9;
 }
-.table tbody tr:hover td,
-.table tbody tr:hover th {
+.sws .table tbody tr:hover td,
+.sws .table tbody tr:hover th {
   background-color: #f5f5f5;
 }
-table .span1 {
+.sws table .span1 {
   float: none;
   width: 44px;
   margin-left: 0;
 }
-table .span2 {
+.sws table .span2 {
   float: none;
   width: 124px;
   margin-left: 0;
 }
-table .span3 {
+.sws table .span3 {
   float: none;
   width: 204px;
   margin-left: 0;
 }
-table .span4 {
+.sws table .span4 {
   float: none;
   width: 284px;
   margin-left: 0;
 }
-table .span5 {
+.sws table .span5 {
   float: none;
   width: 364px;
   margin-left: 0;
 }
-table .span6 {
+.sws table .span6 {
   float: none;
   width: 444px;
   margin-left: 0;
 }
-table .span7 {
+.sws table .span7 {
   float: none;
   width: 524px;
   margin-left: 0;
 }
-table .span8 {
+.sws table .span8 {
   float: none;
   width: 604px;
   margin-left: 0;
 }
-table .span9 {
+.sws table .span9 {
   float: none;
   width: 684px;
   margin-left: 0;
 }
-table .span10 {
+.sws table .span10 {
   float: none;
   width: 764px;
   margin-left: 0;
 }
-table .span11 {
+.sws table .span11 {
   float: none;
   width: 844px;
   margin-left: 0;
 }
-table .span12 {
+.sws table .span12 {
   float: none;
   width: 924px;
   margin-left: 0;

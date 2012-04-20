@@ -1,5 +1,4 @@
-
-<div class="product">
+<div class="product sws">
 
   <div class="product-image">
 	  <% control Product.FirstImage %>

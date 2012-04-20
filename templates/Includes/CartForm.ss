@@ -55,7 +55,7 @@
 		<div class="Actions">
 		
 		  <p class="attribution">
-        powered by <a href="http://swipestripe.com">SwipeStripe Ecommerce</a>
+        powered by <a target="_blank" href="http://swipestripe.com">SwipeStripe Ecommerce</a>
       </p>
 		
 			<% control Actions %>
