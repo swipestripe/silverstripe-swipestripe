@@ -1,4 +1,4 @@
-<div class="product-category">
+<div class="product-category sws">
 	$Content
 	<% include Products %>
 </div>

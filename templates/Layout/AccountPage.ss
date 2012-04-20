@@ -1,5 +1,4 @@
-
-<div class="account-page">
+<div class="account-page sws">
 	<h2>$Title</h2>
 	
 	<p>

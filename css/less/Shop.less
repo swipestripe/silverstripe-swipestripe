@@ -5,20 +5,17 @@
   #Page Styles
 */
 
+
 /* #Less Elements
 ================================================== */
 
 // Core variables and mixins
 @import "libs/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "libs/mixins.less";
-
+	
 // Base CSS
 @import "libs/forms.less";
 @import "libs/tables.less";
-
-// Components: Buttons & Alerts
-@import "libs/buttons.less";
-@import "libs/alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
 
 // Components: Nav
 @import "libs/pagination.less";
@@ -26,36 +23,42 @@
 // Components: Misc
 @import "libs/labels.less";
 
+// Components: Buttons & Alerts
+@import "libs/buttons.less";
+@import "libs/alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
 // Utility classes
 @import "libs/utilities.less"; // Has to be last to override when necessary
-	
+
 	
 /* #Site Styles
 ================================================== */
-.table {
-  th {
-    background: @grayLighter;
-  }
-
-  td {
-    background: @white;
-    
-    .alert {
-      margin-bottom: 0px;
-    }
-  } 
-}
-
-.quantity {
-  input {
-    width: 30px;
-  }	
-}
-
-.Actions {
-  input {
-    cursor: pointer;
-  }	
+.sws {
+	.table {
+	  th {
+	    background: @grayLighter;
+	  }
+	
+	  td {
+	    background: @white;
+	    
+	    .alert {
+	      margin-bottom: 0px;
+	    }
+	  } 
+	}
+	
+	.quantity {
+	  input {
+	    width: 30px;
+	  }	
+	}
+	
+	.Actions {
+	  input {
+	    cursor: pointer;
+	  }	
+	}
 }
  
 /* #Page Styles
@@ -79,7 +82,7 @@
 	  }
 	}
 	
-	.remove-item-action {
+	input.remove-item-action {
 	  background: url(../images/delete-item.png) no-repeat top left;
 		border: none;
 		text-indent: -2000px;
@@ -90,8 +93,8 @@
 	}
 	
 	.error {
-	  .alert();
-	  .alert-error();
+	  .sws.alert();
+	  .sws.alert-error();
 	  margin-bottom: 0;
 	}
 	
@@ -178,8 +181,8 @@
 	  }
 	  
 	  .error {
-	    .alert();
-	    .alert-error();
+	    .sws.alert();
+	    .sws.alert-error();
 	    margin-bottom: 0;
 	  }
   }
@@ -243,8 +246,8 @@
      }
      
      .add-to-cart .good {
-       .alert();
-       .alert-success();
+       .sws.alert();
+       .sws.alert-success();
      }
    }
    
@@ -288,6 +291,5 @@
     width: 100%;
   }
 }
-
 
 

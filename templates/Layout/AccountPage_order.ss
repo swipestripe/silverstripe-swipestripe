@@ -1,4 +1,4 @@
-<div class="account-page">
+<div class="account-page sws">
   <div class="order">
   
 	<% if Order %>

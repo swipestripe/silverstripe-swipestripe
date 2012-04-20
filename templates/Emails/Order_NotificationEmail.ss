@@ -10,7 +10,7 @@
 		$Message
 	
 	  <% control Order %>
-	    <div class="order">
+	    <div class="order sws">
 		    <table class="table table-bordered">
 	        <tr>
 	          <th>
