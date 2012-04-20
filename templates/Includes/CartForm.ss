@@ -53,6 +53,11 @@
   <% if Cart.Items %>
 		<% if Actions %>
 		<div class="Actions">
+		
+		  <p class="attribution">
+        powered by <a href="http://swipestripe.com">SwipeStripe Ecommerce</a>
+      </p>
+		
 			<% control Actions %>
 				$Field
 			<% end_control %>
