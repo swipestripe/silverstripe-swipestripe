@@ -244,7 +244,14 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $countryField = new DropdownField('Shipping[Country]', 'Country', Shipping::supported_countries());
 	  $countryField->setCustomValidationMessage('Please enter a country.');
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
-	  
+
+    $regions = Shipping::supported_regions();
+    $regionField = null;
+    if (!empty($regions)) {
+      $regionField = new RegionField('Shipping[Region]', 'Region');
+      $regionField->setCustomValidationMessage('Please enter a region.');
+    }
+    
     $sameAddressField = new CheckboxField('ShipToBillingAddress', 'to same address?');
     $sameAddressField->addExtraClass('shipping-same-address');
     
@@ -259,7 +266,8 @@ class CheckoutPage_Controller extends Page_Controller {
 			$cityField,
 			new TextField('Shipping[PostalCode]', 'Postal Code'),
 			new TextField('Shipping[State]', 'State'),
-			$countryField
+			$countryField,
+			$regionField
 	  );
 	  
 	  $shippingAddressFields->setID('ShippingAddress');
@@ -346,7 +354,14 @@ EOS;
 	private function addModifierFields(&$fields, &$validator, $order) {
 
 		foreach (Modifier::combined_form_fields($order) as $field) {
-		  $fields['Modifiers'][] = $field;
+		  
+		  if ($field->modifiesSubTotal()) {
+		    $fields['SubTotalModifiers'][] = $field;
+		  }
+		  else {
+		    $fields['Modifiers'][] = $field;
+		  }
+		  
 		}
 	}
 	
@@ -536,7 +551,7 @@ EOS;
 	function updateOrderFormCart(SS_HTTPRequest $data) {
 
 	  if ($data->isPOST()) {
-	  
+
   	  $fields = array();
       $validator = new OrderFormValidator();
       $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
@@ -554,7 +569,11 @@ EOS;
       //TODO This should be constructed for non-dropdown fields as well
       //Update modifier form fields so that the dropdown values are correct
       $newModifierData = array();
-      foreach ($fields['Modifiers'] as $field) {
+      $subTotalModifiers = (isset($fields['SubTotalModifiers'])) ? $fields['SubTotalModifiers'] : array();
+      $totalModifiers = (isset($fields['Modifiers'])) ? $fields['Modifiers'] : array(); 
+      $modifierFields = array_merge($subTotalModifiers, $totalModifiers);
+
+      foreach ($modifierFields as $field) {
   
         if (method_exists($field, 'updateValue')) {
           $field->updateValue($order);

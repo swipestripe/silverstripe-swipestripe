@@ -46,6 +46,8 @@ class BelongsManyManyComplexTableField extends HasManyComplexTableField {
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		
+		//Sort by heirarchy, depending on number of parents indent
+		
 		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass()));
 		foreach($classes as $class) {
 			$singleton = singleton($class);

@@ -25,7 +25,8 @@ class Modification extends DataObject {
 	  'ModifierClass' => 'Varchar',
 		'ModifierOptionID' => 'Int', 
 	  'Amount' => 'Money',
-	  'Description' => 'Text'
+	  'Description' => 'Text',
+	  'SubTotalModifier' => 'Boolean'
 	);
 
 	/**
@@ -80,5 +81,5 @@ class Modification extends DataObject {
 	function validate() {
 	  return parent::validate();
 	}
-
+	
 }

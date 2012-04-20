@@ -139,4 +139,14 @@ class FlatFeeShippingField extends ModifierSetField {
 
     return $valid;
   }
+  
+  /**
+   * Shipping field modifies {@link Order} sub total by default.
+   * 
+   * @see ModifierSetField::modifiesSubTotal()
+   * @return Boolean True
+   */
+  function modifiesSubTotal() {
+	  return true;
+	}
 }

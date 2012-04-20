@@ -314,17 +314,6 @@ EOS;
 		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock', null, $level, $this), 'Content');
 		
 		//Product categories
-    $manager = new BelongsManyManyComplexTableField(
-      $this,
-      'ProductCategories',
-      'ProductCategory',
-      array(),
-      'getCMSFields_forPopup',
-      '',
-      '"Title" ASC'
-    );
-    $manager->setPageSize(20);
-    $manager->setPermissions(array());
     $fields->addFieldToTab("Root.Content.Categories", new HeaderField(
     	'CategoriesHeading', 
     	'Select categories you would like this product to appear in',
@@ -337,7 +326,24 @@ in each category.
 </p>
 EOS;
     $fields->addFieldToTab("Root.Content.Categories", new LiteralField('CategoryAlert', $categoryAlert));
+    
+    /*
+    $manager = new BelongsManyManyComplexTableField(
+      $this,
+      'ProductCategories',
+      'ProductCategory',
+      array(),
+      'getCMSFields_forPopup',
+      '',
+      '"Title" ASC'
+    );
+    $manager->setPageSize(20);
+    $manager->setPermissions(array());
     $fields->addFieldToTab("Root.Content.Categories", $manager);
+    */
+
+    $categoriesField = new CategoriesField('ProductCategories', false, 'ProductCategory');
+    $fields->addFieldToTab("Root.Content.Categories", $categoriesField);
 		
 		//Attributes selection
 		$anyAttribute = DataObject::get_one('Attribute');
@@ -435,45 +441,49 @@ EOS;
         $variationFieldList,
         'getCMSFields_forPopup'
       );
+      if (class_exists('SWS_Xero_Item_Decorator')) $manager->setPopupSize(500, 650);
       $fields->addFieldToTab("Root.Content.Variations", $manager);
     }
     
     
     //Product ordering
     $categories = $this->ProductCategories();
-    if ($categories && $categories->exists()) foreach ($categories as $category) {
-      
+    if ($categories && $categories->exists()) {
+    
       $fields->addFieldToTab("Root.Content", new Tab('Order'));
-      $fields->addFieldToTab("Root.Content.Order", new HeaderField(
-      	'OrderHeading', 
-      	'Set the order of this product in each of it\'s categories',
-        3
-      ));
       
-      $orderHelp = <<<EOS
+      $fields->addFieldToTab("Root.Content.Order", new HeaderField(
+        	'OrderHeading', 
+        	'Set the order of this product in each of it\'s categories',
+          3
+        ));
+        
+        $orderHelp = <<<EOS
 <p class="ProductHelp">
 Products with higher order numbers in each category will appear further at the front of 
 that category.
 </p>
 EOS;
-      $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
+        $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
+      
+      foreach ($categories as $category) {
 
-      $categoryTitle = $category->Title;
-      $categoryID = $category->ID;
-      $productID = $this->ID;
-      $sql = <<<EOS
+        $categoryTitle = $category->Title;
+        $categoryID = $category->ID;
+        $productID = $this->ID;
+        $sql = <<<EOS
 SELECT "ProductOrder" 
 FROM  "ProductCategory_Products" 
 WHERE "ProductCategoryID" = $categoryID 
 AND "ProductID" = $productID 
 EOS;
-      $query = DB::query($sql);
-      $order = $query->value();
-      
-      $val = ($order) ? $order : 0; 
-      $fields->addFieldToTab('Root.Content.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
-    } 
-    
+        $query = DB::query($sql);
+        $order = $query->value();
+        
+        $val = ($order) ? $order : 0; 
+        $fields->addFieldToTab('Root.Content.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
+      } 
+    }
     
     //Ability to edit fields added to CMS here
 		$this->extend('updateProductCMSFields', $fields);

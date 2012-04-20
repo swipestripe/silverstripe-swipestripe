@@ -20,12 +20,14 @@ class AttributeValidator extends RequiredFields {
 	function php($data) {
 
 		$valid = parent::php($data);
-
+		
 		$newTitle = (isset($data['Title'])) ? $data['Title'] : null;
 		if ($newTitle) {
 		  
 		  $existingTitles = DataObject::get('Attribute');
 		  $existingTitles = $existingTitles->map('ID', 'Title');
+		  
+		  if (isset($data['ID'])) unset($existingTitles[$data['ID']]);
 		  
 		  if (in_array($newTitle, $existingTitles)) {
 		    $valid = false;

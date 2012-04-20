@@ -144,6 +144,7 @@ class FlatFeeShipping extends Modifier implements Modifier_Interface {
     $modification = new Modification();
     $modification->ModifierClass = get_class($this);
     $modification->ModifierOptionID = $value;
+    $modification->SubTotalModifier = true;
     
     $modification->Amount = $this->Amount($order, $value);
     $modification->Description = $this->Description($order, $value);

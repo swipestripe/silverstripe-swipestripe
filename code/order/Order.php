@@ -256,7 +256,8 @@ class Order extends DataObject {
 	    'Addresses',
 	    'SubTotal',
 	    'LastActive',
-	    'Notes'
+	    'Notes',
+	    'XeroInvoiceID'
 	  );
 	  foreach($toBeRemoved as $field) {
 			$fields->removeByName($field);
@@ -577,7 +578,14 @@ class Order extends DataObject {
 	  }
 
 	  if ($modifications) foreach ($modifications as $modification) {
-	    $total += $modification->Amount->getAmount();
+	    
+	    if ($modification->SubTotalModifier) {
+	      $total += $modification->Amount->getAmount();
+	      $subTotal += $modification->Amount->getAmount();
+	    }
+	    else {
+	      $total += $modification->Amount->getAmount();
+	    }
 	  }
 
     $this->SubTotal->setAmount($subTotal); 
@@ -637,7 +645,7 @@ class Order extends DataObject {
     foreach ($existingModifications as $modification) {
       $modification->delete();
     }
-    
+
     //Save new Modifications
 	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {
 	    
@@ -657,6 +665,9 @@ class Order extends DataObject {
 	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = CartControllerExtension::get_current_order();
     
+    $supportedCountries = Shipping::supported_countries();
+    $supportedRegions = Shipping::supported_regions();
+
     //If there is a current billing and shipping address, update them, otherwise create new ones
     $existingBillingAddress = $this->BillingAddress();
     $existingShippingAddress = $this->ShippingAddress();
@@ -666,6 +677,11 @@ class Order extends DataObject {
       if (isset($data['Billing']) && is_array($data['Billing'])) foreach ($data['Billing'] as $fieldName => $value) {
         $newData[$fieldName] = $value;
       }
+      
+      $newData['CountryName'] = (in_array($newData['Country'], array_keys($supportedCountries))) 
+  	    ? $supportedCountries[$newData['Country']] 
+  	    : null;
+  	    
       if ($member->ID) $newData['MemberID'] = $member->ID;
       $existingBillingAddress->update($newData);
       $existingBillingAddress->write();
@@ -683,6 +699,11 @@ class Order extends DataObject {
   	  $billingAddress->PostalCode = $data['Billing']['PostalCode'];
   	  $billingAddress->State = $data['Billing']['State'];
   	  $billingAddress->Country = $data['Billing']['Country'];
+
+  	  $billingAddress->CountryName = (in_array($data['Billing']['Country'], array_keys($supportedCountries))) 
+  	    ? $supportedCountries[$data['Billing']['Country']] 
+  	    : null;
+  	  
   	  $billingAddress->Type = 'Billing';
   	  $billingAddress->write();
     }
@@ -692,6 +713,18 @@ class Order extends DataObject {
       if (isset($data['Shipping']) && is_array($data['Shipping'])) foreach ($data['Shipping'] as $fieldName => $value) {
         $newData[$fieldName] = $value;
       }
+      
+      $newData['CountryName'] = (in_array($newData['Country'], array_keys($supportedCountries))) 
+  	    ? $supportedCountries[$newData['Country']] 
+  	    : null;
+  	    
+  	  if (isset($newData['Region']) && isset($supportedRegions[$newData['Country']])) {
+  	    if (in_array($newData['Region'], array_keys($supportedRegions[$newData['Country']]))) {
+  	      $newData['RegionName'] = $supportedRegions[$newData['Country']][$newData['Region']];
+  	    }
+  	  }
+  	  else $newData['RegionName'] = null;
+      
       if ($member->ID) $newData['MemberID'] = $member->ID;
       $existingShippingAddress->update($newData);
       $existingShippingAddress->write();
@@ -709,6 +742,16 @@ class Order extends DataObject {
   	  $shippingAddress->PostalCode = $data['Shipping']['PostalCode'];
   	  $shippingAddress->State = $data['Shipping']['State'];
   	  $shippingAddress->Country = $data['Shipping']['Country'];
+  	  $shippingAddress->Region = (isset($data['Shipping']['Region'])) ? $data['Shipping']['Region'] : null;
+  	  
+  	  $shippingAddress->CountryName = (in_array($data['Shipping']['Country'], array_keys($supportedCountries))) 
+  	    ? $supportedCountries[$data['Shipping']['Country']] 
+  	    : null;
+  	    
+  	  $shippingAddress->RegionName = (isset($data['Shipping']['Region']) && isset($supportedRegions[$data['Shipping']['Country']]) && in_array($data['Shipping']['Region'], array_keys($supportedRegions[$data['Shipping']['Country']]))) 
+  	    ? $supportedRegions[$data['Shipping']['Country']][$data['Shipping']['Region']] 
+  	    : null; 
+  	  
   	  $shippingAddress->Type = 'Shipping';
   	  $shippingAddress->write();
     }
@@ -905,6 +948,26 @@ class Order extends DataObject {
 //	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
 //	  
 	  //SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
+	}
+	
+	/**
+	 * Get modifications that apply changes to the Order sub total.
+	 * 
+	 * @return DataObjectSet Set of Modification DataObjects
+	 */
+	public function SubTotalModifications() {
+	  $orderID = $this->ID;
+	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 1");
+	}
+	
+	/**
+	 * Get modifications that apply changes to the Order total (not the order sub total).
+	 * 
+	 * @return DataObjectSet Set of Modification DataObjects
+	 */
+	public function TotalModifications() {
+	  $orderID = $this->ID;
+	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 0");
 	}
 
 }

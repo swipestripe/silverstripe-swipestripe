@@ -44,14 +44,22 @@
 		    </tr>
 	    <% end_control %>
 	    
-	    <% if Modifications %>
+	    <% if SubTotalModifications %>
+        <% control SubTotalModifications %>
+          <tr>
+            <td colspan="4" class="row-header">$Description</td>
+            <td>$Amount.Nice</td>
+          </tr>
+        <% end_control %>
+      <% end_if %>
 	    
-	      <tr>
-          <td colspan="4" class="row-header">Sub Total</td>
-          <td>$SubTotal.Nice</td>
-        </tr>
+	    <tr>
+        <td colspan="4" class="row-header">Sub Total</td>
+        <td>$SubTotal.Nice</td>
+      </tr>
 	    
-	      <% control Modifications %>
+	    <% if TotalModifications %>
+	      <% control TotalModifications %>
 	        <tr>
 		        <td colspan="4" class="row-header">$Description</td>
 		        <td>$Amount.Nice</td>
