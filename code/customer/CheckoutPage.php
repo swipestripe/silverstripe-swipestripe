@@ -266,9 +266,10 @@ class CheckoutPage_Controller extends Page_Controller {
 			$cityField,
 			new TextField('Shipping[PostalCode]', 'Postal Code'),
 			new TextField('Shipping[State]', 'State'),
-			$countryField,
-			$regionField
+			$countryField
 	  );
+	  
+	  if ($regionField) $shippingAddressFields->push($regionField);
 	  
 	  $shippingAddressFields->setID('ShippingAddress');
 	  $fields['ShippingAddress'][] = $shippingAddressFields;
