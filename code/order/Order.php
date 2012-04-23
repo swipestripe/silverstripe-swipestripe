@@ -649,8 +649,10 @@ class Order extends DataObject {
     //Save new Modifications
 	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {
 	    
-	    $modifier = new $modifierClass();
-	    $modifier->addToOrder($this, $value);
+	    if (class_exists($modifierClass)) {
+	      $modifier = new $modifierClass();
+	      $modifier->addToOrder($this, $value);
+	    }
 	  }
 	  $this->updateTotal();
 	}
