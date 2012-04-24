@@ -39,6 +39,9 @@ class CartControllerExtension extends Extension {
       case 'Checkout':
         if ($page = DataObject::get_one('CheckoutPage')) return $page->Link();
         else break;
+      case 'Login':
+        return Director::absoluteBaseURL() . 'Security/login';
+        break;
       case 'Logout':
         if ($page = DataObject::get_one('AccountPage')) return $page->Link() . 'logout';
         else break;
