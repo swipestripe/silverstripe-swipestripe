@@ -1393,7 +1393,7 @@
   float: left;
   padding: 0 5px;
 }
-.product .product-meta .product-price {
+.product .product-meta .product-price-js {
   font-size: 22px;
   font-weight: normal;
 }

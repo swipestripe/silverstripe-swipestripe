@@ -2,6 +2,27 @@
     $(document).ready(function() { 
 
     	/**
+    	 * Update the order form cart via AJAX, used by modifier fields
+    	 * 
+    	 * TODO need to namespace this properly
+    	 */
+    	window.updateOrderFormCartAJAX = function(event) {
+
+    		//AJAX call to update the cart
+    		var values = $('#CheckoutForm_OrderForm').serialize();
+    		
+    		$.ajax({
+			  url: window.location.pathname + '/updateOrderFormCart',
+			  type: 'POST',
+			  data: values,
+			  success: function(data){
+			    $('#checkout-order-table').replaceWith(data);
+			  }
+			});
+    	}
+    	updateOrderFormCartAJAX();
+
+    	/**
     	 * Shipping same address checkbox, copy across billing address and save current
     	 * shipping address to revert to
     	 */

@@ -32,7 +32,6 @@
 	    			
 	    			var attributeID = e.currentTarget.id.replace(/AddToCartForm_AddToCartForm_Options-/i, '');
 	    			var optionID = e.currentTarget.value;
-
 	    			
 	    			//If the next select exists, then call the AJAX to update it
 	    			if ($('#'+nextID).length) {
@@ -80,18 +79,9 @@
 				  success: function(data) {
 					  
 					dataObj = $.parseJSON(data);
-					
-					/*
-					if (dataObj.priceDifference && $('#VariationPrice').length) {
-						$('#VariationPrice').html(dataObj.priceDifference);
-					}
-					else if ($('#VariationPrice').length) {
-						$('#VariationPrice').html('');
-					}
-					*/
 
-					if (dataObj.totalPrice) { //&& $('.variation-prcie').length) {
-						$('.product-price').html(dataObj.totalPrice);
+					if (dataObj.totalPrice) { 
+						$('.product-price-js').html(dataObj.totalPrice);
 					}
 				  }
 				});

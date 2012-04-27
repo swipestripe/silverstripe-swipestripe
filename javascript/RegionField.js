@@ -1,4 +1,3 @@
-
 (function($) { 
 
 	//TODO need to namespace this properly
