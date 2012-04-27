@@ -50,20 +50,21 @@
     </tbody>
   </table>
 
-  <% if Cart.Items %>
-		<% if Actions %>
-		<div class="Actions">
-		
-		  <p class="attribution">
-        powered by <a target="_blank" href="http://swipestripe.com">SwipeStripe Ecommerce</a>
-      </p>
-		
-			<% control Actions %>
-				$Field
-			<% end_control %>
-		</div>
+  <div class="Actions">
+		<p class="attribution">
+		  powered by <a target="_blank" href="http://swipestripe.com">SwipeStripe Ecommerce</a>
+		</p>
+     
+	  <% if Cart.Items %>
+			<% if Actions %>
+
+				<% control Actions %>
+					$Field
+				<% end_control %>
+			
+			<% end_if %>
 		<% end_if %>
-	<% end_if %>
+	</div>
 	
 <% if IncludeFormTag %>
 </form>
