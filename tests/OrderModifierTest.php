@@ -34,7 +34,7 @@ class OrderModifierTest extends FunctionalTest {
     ));
     
     //Flat fee shipping enabled for NZ and AU
-    Shipping::set_supported_countries(array('NZ', 'AU'));
+    Address::$shipping_countries = array('NZ' => 'New Zealand', 'AU' => 'Australia');
     FlatFeeShipping::enable();
 	}
 	

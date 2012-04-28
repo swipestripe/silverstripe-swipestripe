@@ -169,6 +169,9 @@ class CheckoutPage_Controller extends Page_Controller {
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
     if ($shippingAddress) $form->loadDataFrom($shippingAddress->getCheckoutFormData('Shipping')); 
+    
+    //Hook for editing the checkout page order form
+		$this->extend('updateOrderForm', $form);
 
     return $form;
 	}
@@ -193,7 +196,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $cityField = new TextField('Billing[City]', 'City');
 	  $cityField->setCustomValidationMessage('Please enter your city.');
 	  
-	  $countryField = new DropdownField('Billing[Country]', 'Country', Geoip::getCountryDropDown());
+	  $countryField = new DropdownField('Billing[Country]', 'Country', Address::$billing_countries);
 	  $countryField->setCustomValidationMessage('Please enter your country.');
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
 	  
@@ -241,11 +244,11 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $cityField = new TextField('Shipping[City]', 'City');
 	  $cityField->setCustomValidationMessage('Please enter a city.');
 	  
-	  $countryField = new DropdownField('Shipping[Country]', 'Country', Shipping::supported_countries());
+	  $countryField = new DropdownField('Shipping[Country]', 'Country', Address::$shipping_countries);
 	  $countryField->setCustomValidationMessage('Please enter a country.');
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); //Should probably do a default country in Shipping
+    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); 
 
-    $regions = Shipping::supported_regions();
+    $regions = Address::$shipping_regions;
     $regionField = null;
     if (!empty($regions)) {
       $regionField = new RegionField('Shipping[Region]', 'Region');

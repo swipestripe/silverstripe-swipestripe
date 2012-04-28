@@ -29,7 +29,7 @@ class RegionField extends DropdownField {
 	
   function FieldHolder() {
 
-    $regions = Shipping::supported_regions();
+    $regions = Address::$shipping_regions;
     $jsonRegions = json_encode($regions);
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');

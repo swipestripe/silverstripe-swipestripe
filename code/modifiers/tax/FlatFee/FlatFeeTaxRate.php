@@ -51,7 +51,7 @@ class FlatFeeTaxRate extends DataObject {
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
     
-    $countryField = new DropdownField('CountryCode', 'Country', Shipping::supported_countries());
+    $countryField = new DropdownField('CountryCode', 'Country', Address::$shipping_countries);
     $fields->push($countryField);
     
     $rateField = new NumericField('Rate', 'Tax rate as a percentage');
@@ -94,7 +94,7 @@ class FlatFeeTaxRate extends DataObject {
    * @return String Name of country
    */
   public function SummaryOfCountryCode() {
-    $supportedCountries = Shipping::supported_countries();
+    $supportedCountries = Address::$shipping_countries;
     if (in_array($this->CountryCode, array_keys($supportedCountries))) {
       return $supportedCountries[$this->CountryCode];
     }
