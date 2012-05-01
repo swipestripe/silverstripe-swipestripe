@@ -127,12 +127,16 @@ class ShopSettings extends DataObjectDecorator {
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'), 10));
     
+    
     if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
+      
+      $warning = _t('ShopSettings.LICENCE_WARNING','
+        Warning: You have SwipeStripe installed without a license key. 
+        Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
+			');
+      
 			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
-				'<p class="message warning">
-					 Warning: You have SwipeStripe installed without a license key. 
-					 Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
-				</p>'
+				'<p class="message warning">'.$warning.'</p>'
 			), "Title");
 		}
 	}

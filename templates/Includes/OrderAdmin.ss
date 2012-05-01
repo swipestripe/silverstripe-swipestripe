@@ -2,7 +2,7 @@
 
 	<table class="table table-bordered">
 	  <tr>
-	    <th>Order #$ID - $Status</th>
+	    <th><% _t('OrderAdmin.ORDER','Order') %> #$ID - $Status</th>
 	  </tr>
 	  <tr>
 	    <td>

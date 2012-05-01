@@ -143,10 +143,10 @@ class CartPage_Controller extends Page_Controller {
 	    
 	    $validator->addRequiredField('Quantity['.$item->ID.']');
 	  }
-	  
+
     $actions = new FieldSet(
-      new FormAction('updateCart', 'Update Cart'),
-      new FormAction('goToCheckout', 'Go To Checkout')
+      new FormAction('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
+      new FormAction('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
     );
     
     $cartForm = new CartForm($this, 'CartForm', $fields, $actions, $validator, $currentOrder);

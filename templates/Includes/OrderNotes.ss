@@ -1,6 +1,6 @@
 <table class="table table-bordered">
   <tr>
-    <th>Notes</th>
+    <th><% _t('OrderNotes.NOTES','Notes') %></th>
   </tr>
   <tr>
     <td>

@@ -52,11 +52,11 @@ class StockField extends FormField {
     $quantity = $object->getUnprocessedQuantity();
     $cartQuantity = $quantity['InCarts'];
     $orderQuantity = $quantity['InOrders'];
-    $label = "Stock : $cartQuantity are currently in shopping carts, $orderQuantity in orders that have not been dispatched.";
+    $label = sprintf(_t('StockField', 'Stock : %s are currently in shopping carts, %s in orders that have not been dispatched.'), $cartQuantity, $orderQuantity);
     
     $stockChoiceField = new OptionsetField('StockChoice', $label, array(
-		  0 => 'Unlimited',
-		  1 => 'Specify Stock'
+		  0 => _t('StockField.UNLIMITED',"Unlimited"),
+		  1 => _t('StockField.SPECIFYSTOCK',"Specify Stock")
 		));
     $this->stockChoiceField = $stockChoiceField;
     

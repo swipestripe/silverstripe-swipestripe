@@ -14,8 +14,10 @@
 		    <table class="table table-bordered">
 	        <tr>
 	          <th>
-	            Order #$ID - $Status<br />
-	            <a href="$Top.AdminLink" id="OrderLink">Log in to the CMS to manage this order</a>
+	            <% _t('Order_NotificationEmail.ORDER','Order') %> #$ID - $Status<br />
+              <a href="$Top.AdminLink" id="OrderLink">
+                <% _t('Order_NotificationEmail.LOGIN','Log in to the CMS to manage this order') %>
+              </a> 
 	          </th>
 	        </tr>
 	        <tr>

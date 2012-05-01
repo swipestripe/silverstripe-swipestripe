@@ -52,7 +52,7 @@ class Customer extends Member {
       
       $orders = $member->Orders();
       if ($orders && $orders->exists()) {
-        throw new Exception("Cound not delete this customer they have orders.");
+        throw new Exception(_t('Customer.CANNOT_DELETE_CUSTOMER', "Could not delete this customer they have orders."));
       }
     }
 	}
@@ -75,12 +75,12 @@ class Customer extends Member {
 	  
 	  $fields = parent::getCMSFields();
 	  
-		$fields->addFieldToTab('Root.Address', new TextField('Address'));
+		$fields->addFieldToTab('Root.Address', new TextField('Address', _t('Customer.ADDRESS', "Address")));
 		$fields->addFieldToTab('Root.Address', new TextField('AddressLine2', ''));
-		$fields->addFieldToTab('Root.Address', new TextField('City'));
-		$fields->addFieldToTab('Root.Address', new TextField('State'));
-		$fields->addFieldToTab('Root.Address', new TextField('PostalCode'));
-		$fields->addFieldToTab('Root.Address', new DropdownField('Country', 'Country', Geoip::getCountryDropDown()));
+		$fields->addFieldToTab('Root.Address', new TextField('City', _t('Customer.CITY', "City")));
+		$fields->addFieldToTab('Root.Address', new TextField('State', _t('Customer.STATE', "State")));
+		$fields->addFieldToTab('Root.Address', new TextField('PostalCode', _t('Customer.POSTAL_CODE', "Postal Code")));
+		$fields->addFieldToTab('Root.Address', new DropdownField('Country', _t('Customer.COUNTRY', "Country"), Geoip::getCountryDropDown()));
 		
 		$fields->removeByName('Street');
 		$fields->removeByName('Suburb');

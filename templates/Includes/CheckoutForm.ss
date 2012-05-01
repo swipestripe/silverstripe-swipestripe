@@ -35,7 +35,7 @@
     <hr />
 
     <section class="order-details">
-	    <h3>Your Order</h3>
+	    <h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
 	    <% include CheckoutFormOrder %>
     </section>
     

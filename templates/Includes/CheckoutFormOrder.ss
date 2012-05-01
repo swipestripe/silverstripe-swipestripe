@@ -2,11 +2,11 @@
 <table id="checkout-order-table" class="table table-bordered">
   <thead>
     <tr>
-      <th>Product</th>
-      <th>Options</th>
-      <th>Unit Price ($Total.Currency)</th>
-      <th>Quantity</th>
-      <th>Sub Total ($Total.Currency)</th>
+      <th><% _t('CheckoutFormOrder.PRODUCT', 'Product') %></th>
+      <th><% _t('CheckoutFormOrder.OPTIONS', 'Options') %></th>
+      <th><% _t('CheckoutFormOrder.UNIT_PRICE', 'Unit Price') %> ($Total.Currency)</th>
+      <th><% _t('CheckoutFormOrder.QUANTITY', 'Quantity') %></th>
+      <th><% _t('CheckoutFormOrder.SUB_TOTAL', 'Sub Total') %> ($Total.Currency)</th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +20,7 @@
     <% else %>
       <tr>
         <td colspan="5">
-          <div class="error">There are no items in your cart.</div>
+          <div class="error"><% _t('CheckoutFormOrder.NO_ITEMS_IN_CART','There are no items in your cart.') %></div>
         </td>
       </tr>
     <% end_if %>
@@ -30,7 +30,7 @@
     <% end_control %>
     
     <tr>
-      <td colspan="4" class="row-header">Sub Total</td>
+      <td colspan="4" class="row-header"><% _t('CheckoutFormOrder.SUB_TOTAL','Sub Total') %></td>
       <td>$SubTotal.Nice ($SubTotal.Currency)</td>
     </tr>
     
@@ -39,7 +39,7 @@
     <% end_control %>
 
     <tr>
-      <td colspan="4" class="row-header">Total</td>
+      <td colspan="4" class="row-header"><% _t('CheckoutFormOrder.TOTAL','Total') %></td>
       <td>$Total.Nice ($Total.Currency)</td>
     </tr>
   </tbody>

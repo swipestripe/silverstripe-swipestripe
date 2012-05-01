@@ -1,11 +1,11 @@
 	<table class="table table-bordered">
 	  <thead>
 	    <tr>
-	      <th>Product</th>
-	      <th>Options</th>
-	      <th>Unit Price ($Total.Currency)</th>
-	      <th>Quantity</th>
-	      <th>Sub Total ($Total.Currency)</th>
+	      <th><% _t('Order.PRODUCT','Product') %></th>
+        <th><% _t('Order.OPTIONS','Options') %></th>
+        <th><% _t('Order.UNIT_PRICE','Unit Price') %> ($Total.Currency)</th>
+        <th><% _t('Order.QUANTITY','Quantity') %></th>
+        <th><% _t('Order.SUB_TOTAL','Sub Total') %> ($Total.Currency)</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -54,7 +54,7 @@
       <% end_if %>
 	    
 	    <tr>
-        <td colspan="4" class="row-header">Sub Total</td>
+        <td colspan="4" class="row-header"><% _t('Order.SUB_TOTAL','Sub Total') %></td>
         <td>$SubTotal.Nice</td>
       </tr>
 	    
@@ -68,7 +68,7 @@
 	    <% end_if %>
 	
 	    <tr>
-	      <td colspan="4" class="row-header">Total</td>
+	      <td colspan="4" class="row-header"><% _t('Order.TOTAL','Total') %></td>
 	      <td>$Total.Nice</td>
 	    </tr>
 	  </tbody>

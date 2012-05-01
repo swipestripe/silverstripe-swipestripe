@@ -238,7 +238,7 @@ class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 
 		  if ($parentTypeField && $parentTypeField->exists() && $parentTypeField instanceof OptionsetField) {
 		    $source = $parentTypeField->getSource();
-		    $source['exempt'] = 'Not part of the site tree';
+		    $source['exempt'] = _t('ShopAdmin.NOT_PART_OF_SITE_TREE',"Not part of the site tree");
 		    $parentTypeField->setSource($source);
 		    $parentTypeField->setValue($this->currentRecord->getParentType());
 		  }

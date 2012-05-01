@@ -1,7 +1,7 @@
 <table class="table table-bordered">
   <tr>
-    <th>Billing Address</th>
-    <th>Shipping Address</th>
+    <th><% _t('OrderAddresses.BILLING_ADDRESS','Billing Address') %></th>
+    <th><% _t('OrderAddresses.SHIPPING_ADDRESS','Shipping Address') %></th>
   </tr>
   <tr>
     <td>

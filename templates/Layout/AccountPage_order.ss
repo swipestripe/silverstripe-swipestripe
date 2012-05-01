@@ -35,7 +35,7 @@
     <% end_control %>
   <% else %>
     <p class="alert alert-error">
-		  <strong class="alert-heading">Warning!</strong>
+		  <strong class="alert-heading"><% _t('AccountPage_order.WARNING','Warning!') %></strong>
 		  $Message.Raw
 		</p>
   <% end_if %>

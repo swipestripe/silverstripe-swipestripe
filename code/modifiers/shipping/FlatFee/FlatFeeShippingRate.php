@@ -43,14 +43,14 @@ class FlatFeeShippingRate extends DataObject {
 
     $fields = new FieldSet();
     
-    $fields->push(new TextField('Title', 'Label'));
-    $fields->push(new TextField('Description', 'Description'));
+    $fields->push(new TextField('Title', _t('FlatFeeShippingRate.LABEL', 'Label')));
+    $fields->push(new TextField('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description')));
     
-    $amountField = new MoneyField('Amount');
+    $amountField = new MoneyField(_t('FlatFeeShippingRate.AMOUNT', 'Amount'));
 		$amountField->setAllowedCurrencies(Product::$allowed_currency);
     $fields->push($amountField);
     
-    $countryField = new DropdownField('CountryCode', 'Country', Address::$shipping_countries);
+    $countryField = new DropdownField('CountryCode', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Address::$shipping_countries);
     $fields->push($countryField);
 
     return $fields;
@@ -85,7 +85,7 @@ class FlatFeeShippingRate extends DataObject {
     if (in_array($this->CountryCode, array_keys($supportedCountries))) {
       return $supportedCountries[$this->CountryCode];
     }
-    return 'No Country Set';
+    return _t('FlatFeeShippingRate.NO_COUNTRY_SET', 'No Country Set');
   }
 	
 }

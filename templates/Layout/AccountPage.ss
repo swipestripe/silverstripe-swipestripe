@@ -12,10 +12,10 @@
 	    <thead>
 	      <tr>
 	        <th>#</th>
-	        <th>Date</th>
-	        <th>Ship to</th>
-	        <th>Total</th>
-	        <th>Status</th>
+	        <th><% _t('AccountPage.DATE','Date') %></th>
+          <th><% _t('AccountPage.SHIP_TO','Ship to') %></th>
+          <th><% _t('AccountPage.TOTAL','Total') %></th>
+          <th><% _t('AccountPage.STATUS','Status') %></th>
 	        <th>&nbsp;</th>
 	      </tr>
 	    </thead>
@@ -36,7 +36,7 @@
 	        </td>
 	        <td>$Total.Nice</td>
 	        <td>$Status ($PaymentStatus)</td>
-	        <td><a href="$Link">View this order</a></td>
+	        <td><a href="$Link"><% _t('AccountPage.VIEW_THIS_ORDER','View this order') %></a></td>
 	      </tr>
 	      <% end_control %>
 	    </tbody>
