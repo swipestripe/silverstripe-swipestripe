@@ -196,7 +196,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $cityField = new TextField('Billing[City]', _t('CheckoutPage.CITY',"City"));
 	  $cityField->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCITY',"Please enter your city"));
 	  
-	  $countryField = new DropdownField('Billing[Country]', _t('CheckoutPage.COUNTRY',"Country"), Address::$billing_countries);
+	  $countryField = new DropdownField('Billing[Country]', _t('CheckoutPage.COUNTRY',"Country"), Country::billing_countries());
 	  $countryField->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY',"Please enter your country."));
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
 	  
@@ -244,11 +244,14 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $cityField = new TextField('Shipping[City]', _t('CheckoutPage.CITY',"City"));
 	  $cityField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_CITY',"Please enter a city."));
 	  
-	  $countryField = new DropdownField('Shipping[Country]', _t('CheckoutPage.COUNTRY',"Country"), Address::$shipping_countries);
+	  $countryField = new DropdownField('Shipping[Country]', _t('CheckoutPage.COUNTRY',"Country"), Country::shipping_countries());
 	  $countryField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_COUNTRY',"Please enter a country."));
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); 
 
-    $regions = Address::$shipping_regions;
+    $regions = Region::shipping_regions();
+    
+    SS_Log::log(new Exception(print_r($regions, true)), SS_Log::NOTICE);
+    
     $regionField = null;
     if (!empty($regions)) {
       $regionField = new RegionField('Shipping[Region]', _t('CheckoutPage.REGION',"Region"));
@@ -600,7 +603,7 @@ EOS;
       $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
       $form->disableSecurityToken();
       $form->validate();
-  
+
   	  return $form->renderWith('CheckoutFormOrder');
 	  }
 	}

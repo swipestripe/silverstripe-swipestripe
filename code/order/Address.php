@@ -9,42 +9,6 @@
  * @version 1.0
  */
 class Address extends DataObject {
-  
-  /**
-	 * Countries for the billing address of the Checkout form.
-	 * 
-	 * @var Array List of countries for billing address e.g:'NZ' => 'New Zealand'
-	 */
-  public static $billing_countries = array(
-  );
-  
-  /**
-	 * Regions allowed to be shipped to, currently unused.
-	 */
-  public static $billing_regions = array(
-  );
-  
-  /**
-	 * Countries allowed to be shipped to, these will be options in the shipping address
-	 * of the Checkout form.
-	 * 
-	 * @var Array List of countries that goods can be shipped to e.g:'NZ' => 'New Zealand'
-	 */
-  public static $shipping_countries = array(
-  );
-  
-  /**
-	 * Regions allowed to be shipped to, these will be options in the shipping address
-	 * of the Checkout form.
-	 * 
-	 * @var Array List of regions that goods can be shipped to e.g:
-	 *  'NZ' => array(
-   *    'NI' => 'North Island',
-   *    'SI' => 'South Island')
-	 */
-  public static $shipping_regions = array(
-  );
-
 
   /**
    * DB fields for an address
@@ -61,9 +25,7 @@ class Address extends DataObject {
 		'City' => 'Varchar(100)',
 		'PostalCode' => 'Varchar(30)',
 		'State' => 'Varchar(100)',
-		'Country' => 'Varchar',
 	  'CountryName' => 'Varchar',
-	  'Region' => 'Varchar',
 	  'RegionName' => 'Varchar'
 	);
 
@@ -74,7 +36,9 @@ class Address extends DataObject {
 	 */
 	public static $has_one = array(
 		'Order' => 'Order',
-	  'Member' => 'Customer'
+	  'Member' => 'Customer',  
+	  'Country' => 'Country',
+	  'Region' => 'Region'
 	);
 	
 	/**
@@ -119,5 +83,5 @@ class Address extends DataObject {
 	function validate() {
 	  return parent::validate();
 	}
-
+	
 }

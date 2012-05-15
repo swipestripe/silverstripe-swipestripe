@@ -663,13 +663,13 @@ class Order extends DataObject {
 	 * @param Array $data
 	 */
 	function addAddressesAtCheckout(Array $data) {
-	  
+
 	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = CartControllerExtension::get_current_order();
     
-    $billingCountries = Address::$billing_countries;
-    $shippingCountries = Address::$shipping_countries;
-    $shippingRegions = Address::$shipping_regions;
+    $billingCountries = Country::billing_countries();
+    $shippingCountries = Country::shipping_countries();
+    $shippingRegions = Region::shipping_regions();
 
     //If there is a current billing and shipping address, update them, otherwise create new ones
     $existingBillingAddress = $this->BillingAddress();
@@ -681,8 +681,9 @@ class Order extends DataObject {
         $newData[$fieldName] = $value;
       }
       
-      $newData['CountryName'] = (in_array($newData['Country'], array_keys($billingCountries))) 
-  	    ? $billingCountries[$newData['Country']] 
+      $newData['CountryID'] = $data['Billing']['Country'];
+      $newData['CountryName'] = (in_array($newData['CountryID'], array_keys($billingCountries))) 
+  	    ? $billingCountries[$newData['CountryID']] 
   	    : null;
   	    
       if ($member->ID) $newData['MemberID'] = $member->ID;
@@ -701,7 +702,7 @@ class Order extends DataObject {
   	  $billingAddress->City = $data['Billing']['City'];
   	  $billingAddress->PostalCode = $data['Billing']['PostalCode'];
   	  $billingAddress->State = $data['Billing']['State'];
-  	  $billingAddress->Country = $data['Billing']['Country'];
+  	  $billingAddress->CountryID = $data['Billing']['Country'];
 
   	  $billingAddress->CountryName = (in_array($data['Billing']['Country'], array_keys($billingCountries))) 
   	    ? $billingCountries[$data['Billing']['Country']] 
@@ -717,16 +718,19 @@ class Order extends DataObject {
         $newData[$fieldName] = $value;
       }
       
-      $newData['CountryName'] = (in_array($newData['Country'], array_keys($shippingCountries))) 
-  	    ? $shippingCountries[$newData['Country']] 
+      $newData['CountryID'] = $data['Shipping']['Country'];
+      $newData['CountryName'] = (in_array($newData['CountryID'], array_keys($shippingCountries))) 
+  	    ? $shippingCountries[$newData['CountryID']] 
   	    : null;
   	    
+  	  
   	  if (isset($newData['Region']) && isset($shippingRegions[$newData['Country']])) {
   	    if (in_array($newData['Region'], array_keys($shippingRegions[$newData['Country']]))) {
   	      $newData['RegionName'] = $shippingRegions[$newData['Country']][$newData['Region']];
   	    }
   	  }
   	  else $newData['RegionName'] = null;
+  	  
       
       if ($member->ID) $newData['MemberID'] = $member->ID;
       $existingShippingAddress->update($newData);
@@ -744,7 +748,7 @@ class Order extends DataObject {
   	  $shippingAddress->City = $data['Shipping']['City'];
   	  $shippingAddress->PostalCode = $data['Shipping']['PostalCode'];
   	  $shippingAddress->State = $data['Shipping']['State'];
-  	  $shippingAddress->Country = $data['Shipping']['Country'];
+  	  $shippingAddress->CountryID = $data['Shipping']['Country'];
   	  $shippingAddress->Region = (isset($data['Shipping']['Region'])) ? $data['Shipping']['Region'] : null;
   	  
   	  $shippingAddress->CountryName = (in_array($data['Shipping']['Country'], array_keys($shippingCountries))) 

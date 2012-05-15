@@ -4,7 +4,6 @@
 	window.populateRegion = function() {
 
 		var regions = $.parseJSON('$regions');
-
 		var $countryField;
 		if ($('#CheckoutForm_OrderForm_Shipping-Country').length > 0) {
 			$countryField = $('#CheckoutForm_OrderForm_Shipping-Country');
