@@ -139,6 +139,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @return CheckoutForm The checkout/order form 
 	 */
 	function OrderForm() {
+
     $fields = array();
     $validator = new OrderFormValidator();
     
@@ -249,9 +250,7 @@ class CheckoutPage_Controller extends Page_Controller {
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); 
 
     $regions = Region::shipping_regions();
-    
-    SS_Log::log(new Exception(print_r($regions, true)), SS_Log::NOTICE);
-    
+
     $regionField = null;
     if (!empty($regions)) {
       $regionField = new RegionField('Shipping[Region]', _t('CheckoutPage.REGION',"Region"));

@@ -33,9 +33,9 @@ class FlatFeeShippingField extends ModifierSetField {
     
     //Update the field source based on the shipping address in the current order
     $shippingAddress = $order->ShippingAddress();
-    $shippingCountry = $shippingAddress->Country;
+    $shippingCountryID = $shippingAddress->CountryID;
     
-    $shippingOptions = DataObject::get('FlatFeeShippingRate', "CountryCode = '$shippingCountry'");
+    $shippingOptions = DataObject::get('FlatFeeShippingRate', "CountryID = '$shippingCountryID'");
     
     $optionsMap = array();
     if ($shippingOptions && $shippingOptions->exists()) {
@@ -82,11 +82,11 @@ class FlatFeeShippingField extends ModifierSetField {
       }
       	
       $validator->validationError(
-      $this->Name(),
-      $errorMessage,
+        $this->Name(),
+        $errorMessage,
 				"error"
-				);
-				$valid = false;
+			);
+			$valid = false;
     }
      
     if (!$shippingAddressCountry) {
@@ -97,11 +97,11 @@ class FlatFeeShippingField extends ModifierSetField {
       }
       	
       $validator->validationError(
-      $this->Name(),
-      $errorMessage,
+        $this->Name(),
+        $errorMessage,
 				"error"
-				);
-				$valid = false;
+			);
+			$valid = false;
     }
      
     $shippingOption = $flatFeeShippingRates->find('ID', $value);
@@ -113,15 +113,15 @@ class FlatFeeShippingField extends ModifierSetField {
       }
       	
       $validator->validationError(
-      $this->Name(),
-      $errorMessage,
+        $this->Name(),
+        $errorMessage,
 				"error"
-				);
-				$valid = false;
+			);
+			$valid = false;
     }
     else if ($shippingOption) {
 
-      if ($shippingAddressCountry != $shippingOption->CountryCode) {
+      if ($shippingAddressCountry != $shippingOption->CountryID) {
          
         $errorMessage = _t('Form.FLAT_FEE_SHIPPING_COUNTRY_NOT_MATCH', 'This shipping option is no longer available for the shipping country you have selected sorry');
         if ($msg = $this->getCustomValidationMessage()) {
@@ -129,11 +129,11 @@ class FlatFeeShippingField extends ModifierSetField {
         }
         	
         $validator->validationError(
-        $this->Name(),
-        $errorMessage,
+          $this->Name(),
+          $errorMessage,
   				"error"
-  				);
-  				$valid = false;
+  			);
+  			$valid = false;
       }
     }
 
