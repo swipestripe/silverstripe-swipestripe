@@ -114,11 +114,10 @@ class CheckoutForm extends Form {
 
 		if($this->validator){
 			$errors = $this->validator->validate();
-			
-			//TODO errors seem to be getting populated with every error after form submission with one error
-			//SS_Log::log(new Exception(print_r($errors, true)), SS_Log::NOTICE);
 
 			if ($errors){
+			  
+			  //SS_Log::log(new Exception(print_r($errors, true)), SS_Log::NOTICE);
 
 				if (Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
 				  

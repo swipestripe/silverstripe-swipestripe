@@ -707,27 +707,34 @@ Address:
     CountryID: =>Country_Shipping.newZealand
   
 # ------------------------------------------
-# Flat fee shipping countries
+# Flat fee shipping rates
 # ------------------------------------------    
 FlatFeeShippingRate:
   MainCentreNewZealand:
-    ClassName: FlatFeeShippingRate
     CountryID: =>Country_Shipping.newZealand
     AmountCurrency: NZD
     AmountAmount: 10.00
     Description: To Any Main Centre In New Zealand
   RuralNewZealand:
-    ClassName: FlatFeeShippingRate
     CountryID: =>Country_Shipping.newZealand
     AmountCurrency: NZD
     AmountAmount: 15.00
     Description: To Any Rural Address In New Zealand
   MainCentreAustralia:
-    ClassName: FlatFeeShippingRate
     CountryID: =>Country_Shipping.australia
     AmountCurrency: NZD
     AmountAmount: 25.00
     Description: To Any Main Centre in Australia
+
+# ------------------------------------------
+# Flat fee tax rate
+# ------------------------------------------    
+FlatFeeTaxRate:
+  gstNewZealand:
+    Title: GST
+    Description: GST (Goods and Services Tax) 15%
+    CountryID: =>Country_Shipping.newZealand
+    Rate: 15.00
   
 # ------------------------------------------
 # Product categories

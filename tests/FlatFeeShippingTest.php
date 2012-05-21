@@ -2,6 +2,8 @@
 /**
  * Testing {@link Order} modifiers at checkout.
  * 
+ * NOTE: be careful not to enable other modifiers in _config when running this test
+ * 
  * Summary of tests:
  * -----------------
  * checkout with flat fee shipping
@@ -17,6 +19,9 @@
 class FlatFeeShippingTest extends SwipeStripeTest {
 	
   function setUp() {
+    
+    FlatFeeShipping::enable();
+    
 		parent::setUp();
 
 		//Check that payment module is installed
@@ -28,8 +33,6 @@ class FlatFeeShippingTest extends SwipeStripeTest {
 		Payment::set_supported_methods(array(
       'ChequePayment' => 'Cheque Or Pay On Site'
     ));
-
-    FlatFeeShipping::enable();
 	}
 
 	/**

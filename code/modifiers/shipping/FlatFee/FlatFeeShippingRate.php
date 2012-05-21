@@ -74,19 +74,5 @@ class FlatFeeShippingRate extends DataObject {
   public function SummaryOfAmount() {
     return $this->Amount->Nice();
   }
-  
-  /**
-   * Country name for a given country code
-   * 
-   * @return String Name of country
-   *
-  public function SummaryOfCountryCode() {
-    $supportedCountries = Country::shipping_countries();
-    if (in_array($this->CountryCode, array_keys($supportedCountries))) {
-      return $supportedCountries[$this->CountryCode];
-    }
-    return _t('FlatFeeShippingRate.NO_COUNTRY_SET', 'No Country Set');
-  }
-  */
 	
 }

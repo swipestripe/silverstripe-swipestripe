@@ -37,14 +37,14 @@ class FlatFeeTax extends Modifier implements Modifier_Interface {
 	  $fields = new FieldSet();
 	  
     //Get tax rate based on shipping address
-	  $shippingCountry = null;
+	  $shippingCountryID = null;
 	  if ($order && $order->exists()) {
 	    $shippingAddress = $order->ShippingAddress();
-  	  if ($shippingAddress) $shippingCountry = $shippingAddress->Country;
+  	  if ($shippingAddress) $shippingCountryID = $shippingAddress->CountryID;
 	  }
 
-	  if ($shippingCountry) {
-	    $flatFeeTaxRate = DataObject::get_one('FlatFeeTaxRate', "CountryCode = '$shippingCountry'");
+	  if ($shippingCountryID) {
+	    $flatFeeTaxRate = DataObject::get_one('FlatFeeTaxRate', "CountryID = '$shippingCountryID'");
 	    
 	    if ($flatFeeTaxRate && $flatFeeTaxRate->exists()) {
 	      

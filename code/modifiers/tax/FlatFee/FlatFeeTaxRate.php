@@ -19,8 +19,8 @@ class FlatFeeTaxRate extends DataObject {
   public static $db = array(
     'Title' => 'Varchar',
     'Description' => 'Varchar',
-    'Amount' => 'Money',
-    'CountryCode' => 'Varchar(2)', //Two letter country codes for ISO 3166-1 alpha-2
+    //'Amount' => 'Money',
+    //'CountryCode' => 'Varchar(2)', //Two letter country codes for ISO 3166-1 alpha-2
   	'Rate' => 'Decimal(18,2)'
 	);
 	
@@ -32,7 +32,8 @@ class FlatFeeTaxRate extends DataObject {
 	 * @var unknown_type
 	 */
 	static $has_one = array (
-    'SiteConfig' => 'SiteConfig'
+    'SiteConfig' => 'SiteConfig',
+	  'Country' => 'Country_Shipping'
   );
 	
   /**
@@ -47,11 +48,7 @@ class FlatFeeTaxRate extends DataObject {
     $fields->push(new TextField('Title', _t('FlatFeeTaxRate.LABEL', 'Label')));
     $fields->push(new TextField('Description', _t('FlatFeeTaxRate.DESCRIPTION', 'Description')));
     
-    $amountField = new MoneyField(_t('FlatFeeTaxRate.AMOUNT', 'Amount'));
-		$amountField->setAllowedCurrencies(Product::$allowed_currency);
-    $fields->push($amountField);
-    
-    $countryField = new DropdownField('CountryCode', _t('FlatFeeTaxRate.COUNTRY', 'Country'), Country::shipping_countries());
+    $countryField = new DropdownField('CountryID', _t('FlatFeeTaxRate.COUNTRY', 'Country'), Country::shipping_countries());
     $fields->push($countryField);
     
     $rateField = new NumericField('Rate', _t('FlatFeeTaxRate.TAX_RATE', 'Tax rate as a percentage'));
@@ -71,34 +68,12 @@ class FlatFeeTaxRate extends DataObject {
   }
   
   /**
-   * Summary of the amount
-   * 
-   * @return String Amount formatted with Nice()
-   */
-  public function SummaryOfAmount() {
-    return $this->Amount->Nice();
-  }
-  
-  /**
    * Summary of the current tax rate
    * 
    * @return String
    */
   public function SummaryOfRate() {
     return $this->Rate . ' %';
-  }
-  
-  /**
-   * Country name for a given country code
-   * 
-   * @return String Name of country
-   */
-  public function SummaryOfCountryCode() {
-    $supportedCountries = Country::shipping_countries();
-    if (in_array($this->CountryCode, array_keys($supportedCountries))) {
-      return $supportedCountries[$this->CountryCode];
-    }
-    return 'No Country Set';
   }
 	
 }
