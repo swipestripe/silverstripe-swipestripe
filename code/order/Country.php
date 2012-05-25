@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage order
- * @version 1.0
  */
 class Country extends DataObject {
   
@@ -287,7 +286,7 @@ class Country extends DataObject {
   
   public static function shipping_countries() {
 
-    $countries = DataObject::get('Country_Shipping');
+    $countries = DataObject::get('Country_Shipping', '', 'Title ASC');
     if ($countries && $countries->exists()) {
       return $countries->map();
     }
@@ -296,7 +295,7 @@ class Country extends DataObject {
 	
 	public static function billing_countries() {
 	  
-	  $countries = DataObject::get('Country_Billing');
+	  $countries = DataObject::get('Country_Billing', '', 'Title ASC');
     if ($countries && $countries->exists()) {
       return $countries->map();
     }

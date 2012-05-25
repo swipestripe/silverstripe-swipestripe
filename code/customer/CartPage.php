@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class CartPage extends Page {
   
@@ -96,7 +95,6 @@ class CartPage extends Page {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class CartPage_Controller extends Page_Controller {
   

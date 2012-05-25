@@ -6,9 +6,8 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class SwipeStripeTest extends FunctionalTest {
+class SWSTest extends FunctionalTest {
   
 	static $fixture_file = 'swipestripe/tests/Shop.yml';
 	static $disable_themes = true;
@@ -85,5 +84,25 @@ class SwipeStripeTest extends FunctionalTest {
 	  else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
 	  
 	  return $data;
+	}
+	
+	/**
+	 * Search a nested array for key => value pair
+	 * 
+	 * @param Array $arr
+	 * @param String $id
+	 * @param String $val
+	 * @return Array Parent array containing key=>value pair
+	 */
+	public function searchNestedArray($arr, $id, $val) {
+	  
+	  $arrIt = new RecursiveIteratorIterator(new RecursiveArrayIterator($arr));
+    foreach ($arrIt as $sub) {
+      $subArray = $arrIt->getSubIterator();
+      if ($subArray[$id] === $val) {
+          $outputArray[] = iterator_to_array($subArray);
+      }
+    }
+	  return $outputArray;
 	}
 }

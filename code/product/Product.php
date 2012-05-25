@@ -10,7 +10,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class Product extends Page {
   
@@ -811,7 +810,6 @@ EOS;
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class Product_Controller extends Page_Controller {
   

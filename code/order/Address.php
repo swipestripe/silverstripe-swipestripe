@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage order
- * @version 1.0
  */
 class Address extends DataObject {
 
@@ -68,7 +67,7 @@ class Address extends DataObject {
 	  $formattedData[$prefix . "[City]"] = $this->City;
 	  $formattedData[$prefix . "[PostalCode]"] = $this->PostalCode;
 	  $formattedData[$prefix . "[State]"] = $this->State;
-	  $formattedData[$prefix . "[Country]"] = $this->Country;
+	  $formattedData[$prefix . "[Country]"] = $this->CountryID;
 	  
 	  return $formattedData;
 	}

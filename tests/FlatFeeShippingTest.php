@@ -14,9 +14,8 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class FlatFeeShippingTest extends SwipeStripeTest {
+class FlatFeeShippingTest extends SWSTest {
 	
   function setUp() {
     

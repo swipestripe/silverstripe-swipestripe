@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class ProductCategory extends Page {
 
@@ -79,7 +78,6 @@ class ProductCategory extends Page {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class ProductCategory_Controller extends Page_Controller {
   

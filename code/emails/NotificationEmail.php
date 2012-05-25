@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage emails
- * @version 1.0
  */
 class NotificationEmail extends ProcessedEmail {
 

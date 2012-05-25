@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopSettings extends DataObjectDecorator {
   
@@ -180,7 +179,6 @@ class ShopSettings extends DataObjectDecorator {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopSettings_Controller extends Page_Controller {
 

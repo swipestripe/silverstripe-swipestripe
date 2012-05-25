@@ -25,9 +25,8 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class StockLevelTest extends SwipeStripeTest {
+class StockLevelTest extends SWSTest {
 	
   function setUp() {
 		parent::setUp();

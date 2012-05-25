@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage order
- * @version 1.0
  */
 class PaymentDecorator extends DataObjectDecorator {
 

@@ -13,9 +13,8 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class ProductCategoryTest extends SwipeStripeTest {
+class ProductCategoryTest extends SWSTest {
 	
   function setUp() {
 		parent::setUp();

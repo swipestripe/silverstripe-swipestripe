@@ -6,7 +6,6 @@
  * @author Mark Guinn
  * @package swipestripe
  * @subpackage emails
- * @version 1.0
  */
 class ProcessedEmail extends Email {
   

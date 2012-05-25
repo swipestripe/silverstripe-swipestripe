@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class AccountPage extends Page {
 
@@ -107,7 +106,6 @@ class AccountPage extends Page {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class AccountPage_Controller extends Page_Controller {
   

@@ -12,11 +12,15 @@ purchased.
 
 Maintainer Contact
 ------------------
-Frank Mullenger 
+SwipeStripe
 
-* [Contact Me](http://swipestripe.com/support/contact-us)
-* [My Blog](http://deadlytechnology.com)
-* [Twitter](https://twitter.com/#!/frankmullenger)
+* [Contact Us](http://swipestripe.com/support/contact-us)
+* [Blog](http://swipestripe.com/blog)
+* [Twitter](https://twitter.com/#!/swipestripe)
+
+Version
+-------
+1.0.1
 
 Requirements
 ------------
@@ -44,6 +48,7 @@ Attribution
 -----------
 Big thanks to:
 
+* [SilverStripe](http://http://www.silverstripe.com/)
 * [Emogrifier](http://www.pelagodesign.com/sidecar/emogrifier/)
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap/) [Licence](http://www.apache.org/licenses/LICENSE-2.0)
 * [jQuery](http://jquery.com)

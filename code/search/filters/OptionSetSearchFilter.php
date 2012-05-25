@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage search
- * @version 1.0
  */
 class OptionSetSearchFilter extends SearchFilter {
 

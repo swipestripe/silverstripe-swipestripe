@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class CheckoutPage extends Page {
   
@@ -106,7 +105,6 @@ class CheckoutPage extends Page {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class CheckoutPage_Controller extends Page_Controller {
   
@@ -313,7 +311,11 @@ class CheckoutPage_Controller extends Page_Controller {
 	    
 	    $note = _t('CheckoutPage.NOTE','NOTE:');
 	    $passwd = _t('CheckoutPage.PLEASE_CHOOSE_PASSWORD','Please choose a password, so you can login and check your order history in the future.');
-	    $member = _t('CheckoutPage.ALREADY_MEMBER', 'If you are already a member please %s log in. %s', "<a href=\"Security/login?BackURL=$link\">", '</a>');
+	    $member = sprintf(
+	      _t('CheckoutPage.ALREADY_MEMBER', 'If you are already a member please %s log in. %s'), 
+	      "<a href=\"Security/login?BackURL=$link\">", 
+	      '</a>'
+	    );
 	    
 	    $lit = <<<EOS
 <p class="alert alert-info">

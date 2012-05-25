@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class Customer extends Member {
   

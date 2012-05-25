@@ -26,9 +26,8 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class CheckoutTest extends SwipeStripeTest {
+class CheckoutTest extends SWSTest {
 	
   function setUp() {
 		parent::setUp();
