@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopSettings extends DataObjectDecorator {
   
@@ -79,6 +78,12 @@ class ShopSettings extends DataObjectDecorator {
 				'NotificationSubject' => 'Varchar',
 		    'NotificationBody' => 'HTMLText',
 		    'NotificationTo' => 'Varchar'
+			),
+			'has_many' => array(
+			  'ShippingCountries' => 'Country_Shipping',
+		    'BillingCountries' => 'Country_Billing',
+			  'ShippingRegions' => 'Region_Shipping',
+			  'BillingRegions' => 'Region_Billing'
 			)
 		);
 	}
@@ -127,6 +132,31 @@ class ShopSettings extends DataObjectDecorator {
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'), 10));
     
+    //Shipping
+    $fields->findOrMakeTabSet('Root.Shop.Shipping');
+    $fields->addFieldToTab("Root.Shop.Shipping", 
+      new Tab('Countries')
+    );
+    $fields->addFieldToTab("Root.Shop.Shipping", 
+      new Tab('Regions')
+    );
+     
+    $managerClass = (class_exists('DataObjectManager')) ? 'DataObjectManager' : 'ComplexTableField';
+    $manager = new $managerClass(
+      $this->owner,
+      'ShippingCountries',
+      'Country_Shipping'
+    );
+    $fields->addFieldToTab("Root.Shop.Shipping.Countries", $manager);
+    
+    $managerClass = (class_exists('DataObjectManager')) ? 'DataObjectManager' : 'ComplexTableField';
+    $manager = new $managerClass(
+      $this->owner,
+      'ShippingRegions',
+      'Region_Shipping'
+    );
+    $fields->addFieldToTab("Root.Shop.Shipping.Regions", $manager);
+    
     
     if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
       
@@ -149,7 +179,6 @@ class ShopSettings extends DataObjectDecorator {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopSettings_Controller extends Page_Controller {
 

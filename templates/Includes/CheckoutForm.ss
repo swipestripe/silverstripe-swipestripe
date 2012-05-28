@@ -59,6 +59,9 @@
   <% if Cart.Items %>
 	  <% if Actions %>
 	  <div class="Actions">
+	    <div class="loading">
+	      <img src="swipestripe/images/loading.gif" />
+	    </div>
 	    <% control Actions %>
 	      $Field
 	    <% end_control %>

@@ -11,7 +11,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class Attribute extends DataObject {
 

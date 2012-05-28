@@ -10,7 +10,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class Product extends Page {
   
@@ -811,7 +810,6 @@ EOS;
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage product
- * @version 1.0
  */
 class Product_Controller extends Page_Controller {
   
@@ -1075,13 +1073,14 @@ class Product_Controller extends Page_Controller {
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
       $variationOptions = array();
-      //if ($attributeOptions && is_array($attributeOptions)) 
-      foreach ($attributeOptions as $attributeID => $optionID) {
-        
-        //Get option for attribute ID, if this variation has options for every attribute in the array then add it to filtered
-        $attributeOption = $variation->getOptionForAttribute($attributeID);
-        if ($attributeOption && $attributeOption->ID == $optionID) $variationOptions[$attributeID] = $optionID;
-      }
+      //if ($attributeOptions && is_array($attributeOptions)) {
+        foreach ($attributeOptions as $attributeID => $optionID) {
+          
+          //Get option for attribute ID, if this variation has options for every attribute in the array then add it to filtered
+          $attributeOption = $variation->getOptionForAttribute($attributeID);
+          if ($attributeOption && $attributeOption->ID == $optionID) $variationOptions[$attributeID] = $optionID;
+        }
+      //}
       
       if ($variationOptions == $attributeOptions && $variation->isEnabled()) {
         $filteredVariations->push($variation);
