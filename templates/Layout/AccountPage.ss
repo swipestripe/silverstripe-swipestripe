@@ -2,7 +2,7 @@
 	<h2>$Title</h2>
 	
 	<p>
-	Hi <strong>$Customer.FirstName</strong>, from your account dashboard you can view your recent orders.
+	Hi <strong>$Customer.FirstName</strong>
 	</p>
 	
 	$Content
@@ -41,5 +41,9 @@
 	      <% end_control %>
 	    </tbody>
 	  </table>
+	<% else %> 
+	  <div class="alert alert-info">
+      <% _t('AccountPage.NO_ORDERS','You do not currently have any orders. In future you will be able to view your recent orders from here.') %>
+    </div>
 	<% end_if %>
 </div>

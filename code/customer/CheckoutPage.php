@@ -426,7 +426,7 @@ EOS;
 	 * @param Form $form Form data was submitted from
 	 */
 	function ProcessOrder($data, $form) {
-
+	  
 	  //Check payment type
 	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;

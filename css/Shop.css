@@ -1242,8 +1242,16 @@
 .sws .quantity input {
   width: 30px;
 }
+.sws .loading {
+  display: none;
+}
 .sws .Actions input {
   cursor: pointer;
+}
+.sws .Actions .loading {
+  float: left;
+  padding: 0 5px;
+  margin-top: -4px;
 }
 /* #Page Styles
 ================================================== */
