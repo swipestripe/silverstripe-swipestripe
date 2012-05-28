@@ -646,6 +646,34 @@ Item:
     Quantity: 1
     AmountCurrency: NZD
     AmountAmount: 500
+
+# ------------------------------------------
+# Shipping Countries
+# ------------------------------------------ 
+Country_Shipping:
+  newZealand:
+    Code: NZ
+    Title: New Zealand
+  australia:
+    Code: AU
+    Title: Australia
+  unitedKingdom:
+    Code: GB
+    Title: United Kingdom
+
+# ------------------------------------------
+# Billing Countries
+# ------------------------------------------ 
+Country_Billing:
+  newZealand:
+    Code: NZ
+    Title: New Zealand
+  australia:
+    Code: AU
+    Title: Australia
+  nitedKingdom:
+    Code: GB
+    Title: United Kingdom
     
 # ------------------------------------------
 # Addresses
@@ -663,7 +691,7 @@ Address:
     City: Christchurch
     PostalCode: 8014
     State: Canterbury
-    Country: NZ
+    CountryID: =>Country_Shipping.newZealand
   orderOneShippingAddress:
     OrderID: =>Order.orderOne     
     MemberID: =>Customer.buyer
@@ -676,30 +704,37 @@ Address:
     City: Auckland
     PostalCode: 1111
     State: Auckland
-    Country: NZ
+    CountryID: =>Country_Shipping.newZealand
   
 # ------------------------------------------
-# Flat fee shipping countries
+# Flat fee shipping rates
 # ------------------------------------------    
 FlatFeeShippingRate:
   MainCentreNewZealand:
-    ClassName: FlatFeeShippingRate
-    CountryCode: NZ
+    CountryID: =>Country_Shipping.newZealand
     AmountCurrency: NZD
     AmountAmount: 10.00
     Description: To Any Main Centre In New Zealand
   RuralNewZealand:
-    ClassName: FlatFeeShippingRate
-    CountryCode: NZ
+    CountryID: =>Country_Shipping.newZealand
     AmountCurrency: NZD
     AmountAmount: 15.00
     Description: To Any Rural Address In New Zealand
   MainCentreAustralia:
-    ClassName: FlatFeeShippingRate
-    CountryCode: AU
+    CountryID: =>Country_Shipping.australia
     AmountCurrency: NZD
     AmountAmount: 25.00
     Description: To Any Main Centre in Australia
+
+# ------------------------------------------
+# Flat fee tax rate
+# ------------------------------------------    
+FlatFeeTaxRate:
+  gstNewZealand:
+    Title: GST
+    Description: GST (Goods and Services Tax) 15%
+    CountryID: =>Country_Shipping.newZealand
+    Rate: 15.00
   
 # ------------------------------------------
 # Product categories

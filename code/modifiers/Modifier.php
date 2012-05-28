@@ -12,7 +12,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage modifiers
- * @version 1.0
  */
 class Modifier extends DataObject {
 	
@@ -70,7 +69,6 @@ class Modifier extends DataObject {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage modifiers
- * @version 1.0
  */
 interface Modifier_Interface {
 

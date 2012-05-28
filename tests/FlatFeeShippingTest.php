@@ -2,6 +2,8 @@
 /**
  * Testing {@link Order} modifiers at checkout.
  * 
+ * NOTE: be careful not to enable other modifiers in _config when running this test
+ * 
  * Summary of tests:
  * -----------------
  * checkout with flat fee shipping
@@ -12,15 +14,13 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class OrderModifierTest extends FunctionalTest {
-  
-	static $fixture_file = 'swipestripe/tests/Shop.yml';
-	static $disable_themes = true;
-	static $use_draft_site = false;
+class FlatFeeShippingTest extends SWSTest {
 	
   function setUp() {
+    
+    FlatFeeShipping::enable();
+    
 		parent::setUp();
 
 		//Check that payment module is installed
@@ -32,54 +32,17 @@ class OrderModifierTest extends FunctionalTest {
 		Payment::set_supported_methods(array(
       'ChequePayment' => 'Cheque Or Pay On Site'
     ));
-    
-    //Flat fee shipping enabled for NZ and AU
-    Address::$shipping_countries = array('NZ' => 'New Zealand', 'AU' => 'Australia');
-    FlatFeeShipping::enable();
-	}
-	
-	/**
-	 * Log current member out by clearing session
-	 */
-	function logOut() {
-	  $this->session()->clear('loggedInAs');
-	}
-	
-	/**
-	 * Helper to get data from a form.
-	 * 
-	 * @param String $formID
-	 * @return Array
-	 */
-	function getFormData($formID) {
-	  $page = $this->mainSession->lastPage();
-	  $data = array();
-	  
-	  if ($page) {
-			$form = $page->getFormById($formID);
-			if (!$form) user_error("Function getFormData() failed to find the form {$formID}", E_USER_ERROR);
-
-  	  foreach ($form->_widgets as $widget) {
-  
-  	    $fieldName = $widget->getName();
-  	    $fieldValue = $widget->getValue();
-  	    
-  	    $data[$fieldName] = $fieldValue;
-  	  }
-	  }
-	  else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
-	  
-	  return $data;
 	}
 
 	/**
 	 * Try to checkout with valid flat fee shipping option
 	 */
 	function testCheckoutFlatFeeShipping() {
-	  
+
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $shippingMainCentreNZ = $this->objFromFixture('FlatFeeShippingRate', 'MainCentreNewZealand');
 	  $shippingAmount = $shippingMainCentreNZ->Amount->getAmount();
+	  $shippingNZ = $this->objFromFixture('Country_Shipping', 'newZealand');
 	  
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $accountPage = DataObject::get_one('AccountPage');
@@ -111,10 +74,10 @@ class OrderModifierTest extends FunctionalTest {
 	  
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 	  $this->submitForm('CheckoutForm_OrderForm', null, array(
-	    'Shipping[Country]' => 'NZ',
+	    'Shipping[Country]' => 1,
 	    'Modifiers[FlatFeeShipping]' => $shippingMainCentreNZ->ID
 	  ));
-	  
+
 	  $orders = $buyer->Orders();
 	  $orders->sort('ID', "ASC");
 	  $this->assertEquals(2, $orders->Count());

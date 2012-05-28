@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopAdmin extends ModelAdmin {
 
@@ -169,7 +168,6 @@ class ShopAdmin extends ModelAdmin {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
 
@@ -217,7 +215,6 @@ class ShopAdmin_CollectionController extends ModelAdmin_CollectionController {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
- * @version 1.0
  */
 class ShopAdmin_RecordController extends ModelAdmin_RecordController {
 

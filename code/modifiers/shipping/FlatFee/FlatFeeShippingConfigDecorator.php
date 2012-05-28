@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage shipping
- * @version 1.0
  */
 class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
 
@@ -43,7 +42,7 @@ class FlatFeeShippingConfigDecorator extends DataObjectDecorator {
       array(
         'Title' => 'Label',
         'Description' => 'Description',
-        'SummaryOfCountryCode' => 'Country',
+        'Country.Title' => 'Country',
         'SummaryOfAmount'=> 'Amount'
       ),
       'getCMSFields_forPopup'

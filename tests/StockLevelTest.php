@@ -25,13 +25,8 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tests
- * @version 1.0
  */
-class StockLevelTest extends FunctionalTest {
-  
-	static $fixture_file = 'swipestripe/tests/Shop.yml';
-	static $disable_themes = true;
-	static $use_draft_site = false;
+class StockLevelTest extends SWSTest {
 	
   function setUp() {
 		parent::setUp();
@@ -50,40 +45,6 @@ class StockLevelTest extends FunctionalTest {
 	  $cartPage->doPublish();
 	  $this->logOut();
 	}
-	
-	/**
-	 * Log current member out by clearing session
-	 */
-	function logOut() {
-	  $this->session()->clear('loggedInAs');
-	}
-	
-	/**
-   * Helper to get data from a form.
-   * 
-   * @param String $formID
-   * @return Array
-   */
-  function getFormData($formID) {
-    $page = $this->mainSession->lastPage();
-    $data = array();
-    
-    if ($page) {
-  		$form = $page->getFormById($formID);
-  		if (!$form) user_error("Function getFormData() failed to find the form {$formID}", E_USER_ERROR);
-  
-  	  foreach ($form->_widgets as $widget) {
-  
-  	    $fieldName = $widget->getName();
-  	    $fieldValue = $widget->getValue();
-  	    
-  	    $data[$fieldName] = $fieldValue;
-  	  }
-    }
-    else user_error("Function getFormData() called when there is no form loaded.  Visit the page with the form first", E_USER_ERROR);
-    
-    return $data;
-  }
   
   /**
    * Check that stock level correct, considering an item is added to an order in the fixture.

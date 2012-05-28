@@ -7,7 +7,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage form
- * @version 1.0
  */
 class VariationComplexTableField extends ComplexTableField {
   
@@ -110,7 +109,6 @@ class VariationComplexTableField extends ComplexTableField {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage form
- * @version 1.0
  */
 class VariationComplexTableField_ItemRequest extends ComplexTableField_ItemRequest {
   

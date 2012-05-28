@@ -13,7 +13,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage tasks
- * @version 1.0
  * @deprecated
  */
 class VirtualProductCleanupTask extends HourlyTask {

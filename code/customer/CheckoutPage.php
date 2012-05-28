@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class CheckoutPage extends Page {
   
@@ -106,7 +105,6 @@ class CheckoutPage extends Page {
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
- * @version 1.0
  */
 class CheckoutPage_Controller extends Page_Controller {
   
@@ -139,6 +137,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @return CheckoutForm The checkout/order form 
 	 */
 	function OrderForm() {
+
     $fields = array();
     $validator = new OrderFormValidator();
     
@@ -196,7 +195,7 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $cityField = new TextField('Billing[City]', _t('CheckoutPage.CITY',"City"));
 	  $cityField->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCITY',"Please enter your city"));
 	  
-	  $countryField = new DropdownField('Billing[Country]', _t('CheckoutPage.COUNTRY',"Country"), Address::$billing_countries);
+	  $countryField = new DropdownField('Billing[Country]', _t('CheckoutPage.COUNTRY',"Country"), Country::billing_countries());
 	  $countryField->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY',"Please enter your country."));
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
 	  
@@ -244,11 +243,12 @@ class CheckoutPage_Controller extends Page_Controller {
 	  $cityField = new TextField('Shipping[City]', _t('CheckoutPage.CITY',"City"));
 	  $cityField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_CITY',"Please enter a city."));
 	  
-	  $countryField = new DropdownField('Shipping[Country]', _t('CheckoutPage.COUNTRY',"Country"), Address::$shipping_countries);
+	  $countryField = new DropdownField('Shipping[Country]', _t('CheckoutPage.COUNTRY',"Country"), Country::shipping_countries());
 	  $countryField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_COUNTRY',"Please enter a country."));
     if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); 
 
-    $regions = Address::$shipping_regions;
+    $regions = Region::shipping_regions();
+
     $regionField = null;
     if (!empty($regions)) {
       $regionField = new RegionField('Shipping[Region]', _t('CheckoutPage.REGION',"Region"));
@@ -311,7 +311,11 @@ class CheckoutPage_Controller extends Page_Controller {
 	    
 	    $note = _t('CheckoutPage.NOTE','NOTE:');
 	    $passwd = _t('CheckoutPage.PLEASE_CHOOSE_PASSWORD','Please choose a password, so you can login and check your order history in the future.');
-	    $member = _t('CheckoutPage.ALREADY_MEMBER', 'If you are already a member please %s log in. %s', "<a href=\"Security/login?BackURL=$link\">", '</a>');
+	    $member = sprintf(
+	      _t('CheckoutPage.ALREADY_MEMBER', 'If you are already a member please %s log in. %s'), 
+	      "<a href=\"Security/login?BackURL=$link\">", 
+	      '</a>'
+	    );
 	    
 	    $lit = <<<EOS
 <p class="alert alert-info">
@@ -600,7 +604,7 @@ EOS;
       $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);
       $form->disableSecurityToken();
       $form->validate();
-  
+
   	  return $form->renderWith('CheckoutFormOrder');
 	  }
 	}
