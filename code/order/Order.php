@@ -942,6 +942,12 @@ class Order extends DataObject {
   function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
+    
+    $totalAmount = number_format($this->Total->getAmount(), 2);
+    $this->Total->setAmount($totalAmount);
+    
+    $subTotalAmount = number_format($this->SubTotal->getAmount(), 2);
+    $this->SubTotal->setAmount($subTotalAmount);
   }
 	
 	/**
