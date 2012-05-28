@@ -1,34 +1,71 @@
 <?php
 /**
- * Countries for shipping and billing addresses.
+ * Regions for countries
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
+ * @copyright Copyright (c) 2012, Frank Mullenger
  * @package swipestripe
  * @subpackage order
  */
 class Region extends DataObject {
+  
+  /**
+   * Singular name
+   * 
+   * @var String
+   */
+  public static $singular_name = 'Region';
+  
+  /**
+   * Plural name
+   * 
+   * @var String
+   */
+  public static $plural_name = 'Regions';
    
+  /**
+   * Fields 
+   * 
+   * @var Array
+   */
   public static $db = array(
 		'Code' => "Varchar", 
 	  'Title' => 'Varchar'
 	);
 	
+	/**
+	 * Managed via the SiteConfig, regions are related to Countries
+	 * 
+	 * @var Array
+	 */
 	public static $has_one = array (
     'SiteConfig' => 'SiteConfig',
 	  'Country' => 'Country'
   );
   
+  /**
+   * Summary fields
+   * 
+   * @var Array
+   */
   public static $summary_fields = array(
     'Title' => 'Title',
     'Code' => 'Code',
     'Country.Title' => 'Country'
   );
-  
+
+  /**
+   * Convenience function to prevent errors thrown
+   */
   public function forTemplate() {
     return;   
   }
   
+  /**
+   * Retrieve map of shipping regions including Country ID
+   * 
+   * @return Array 
+   */
   public static function shipping_regions() {
 
     $countryRegions = array();
@@ -42,6 +79,12 @@ class Region extends DataObject {
 	  return $countryRegions;
 	}
 	
+	/**
+   * Retrieve map of billing regions including Country ID
+   * Not currently used
+   * 
+   * @return Array 
+   */
 	public static function billing_regions() {
 	  
 	  $regions = DataObject::get('Region_Billing');
@@ -53,8 +96,21 @@ class Region extends DataObject {
 
 }
 
+/**
+ * Shipping regions
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2012, Frank Mullenger
+ * @package swipestripe
+ * @subpackage order
+ */
 class Region_Shipping extends Region {
 
+  /**
+   * Fields for CRUD of shipping regions
+   * 
+   * @see DataObject::getCMSFields()
+   */
   function getCMSFields() {
 
     $fields = parent::getCMSFields();
@@ -64,6 +120,14 @@ class Region_Shipping extends Region {
   }
 }
 
+/**
+ * Billing regions, not currently used
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2012, Frank Mullenger
+ * @package swipestripe
+ * @subpackage order
+ */
 class Region_Billing extends Region {
 
 }

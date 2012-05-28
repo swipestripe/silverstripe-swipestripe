@@ -3,14 +3,31 @@
  * Countries for shipping and billing addresses.
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
+ * @copyright Copyright (c) 2012, Frank Mullenger
  * @package swipestripe
  * @subpackage order
  */
 class Country extends DataObject {
   
+  /**
+   * Singular name
+   * 
+   * @var String
+   */
+  public static $singular_name = 'Country';
+  
+  /**
+   * Plural name
+   * 
+   * @var String
+   */
+  public static $plural_name = 'Countries';
+  
   /** 
-	 * ISO 3166 Country Codes
+	 * ISO 3166 Country Codes, used to generate inital billing countries
+	 * 
+	 * @see Country_Billing::requireDefaultRecords()
+	 * @var Array
 	 */
 	protected static $iso_3166_countryCodes = array(
 		'AD' => "Andorra",
@@ -256,34 +273,57 @@ class Country extends DataObject {
 		'ZR' => "Zaire",
 		'ZW' => "Zimbabwe"
 	);
-  
-  
-  public static $singular_name = 'Country';
-  
-  public static $plural_name = 'Countries';
-   
+
+	/**
+	 * Basic fields for country code and title
+	 * 
+	 * @var Array
+	 */
   public static $db = array(
 		'Code' => 'Varchar(2)', //ISO 3166 
 	  'Title' => 'Varchar'
 	);
 	
+	/**
+	 * Associated with SiteConfig to enable editing
+	 * 
+	 * @var Array
+	 */
 	public static $has_one = array (
     'SiteConfig' => 'SiteConfig'
   );
   
+  /**
+   * Countries can have many regions
+   * 
+   * @var Array
+   */
   public static $has_many = array (
     'Regions' => 'Region'
   );
   
+  /**
+   * Summary fields
+   * 
+   * @var Array
+   */
   public static $summary_fields = array(
     'Title' => 'Title',
     'Code' => 'Code'
   );
   
+  /**
+   * Dummy function to prevent errors thrown
+   */
   public function forTemplate() {
     return;   
   }
   
+  /**
+   * Get a map of shipping countries for dropdown fields etc.
+   * 
+   * @return Array Map of countries
+   */
   public static function shipping_countries() {
 
     $countries = DataObject::get('Country_Shipping', '', 'Title ASC');
@@ -293,6 +333,11 @@ class Country extends DataObject {
 	  return array();
 	}
 	
+	/**
+   * Get a map of billing countries for dropdown fields etc.
+   * 
+   * @return Array Map of countries
+   */
 	public static function billing_countries() {
 	  
 	  $countries = DataObject::get('Country_Billing', '', 'Title ASC');
@@ -304,12 +349,34 @@ class Country extends DataObject {
 
 }
 
+/**
+ * Shipping country
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2012, Frank Mullenger
+ * @package swipestripe
+ * @subpackage order
+ */
 class Country_Shipping extends Country {
 
 }
 
+/**
+ * Billing country
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2012, Frank Mullenger
+ * @package swipestripe
+ * @subpackage order
+ */
 class Country_Billing extends Country {
   
+  /**
+   * Build default list of billing countries
+   * 
+   * @see Country::$iso_3166_countryCodes
+   * @see DataObject::requireDefaultRecords()
+   */
   public function requireDefaultRecords() {
     
     parent::requireDefaultRecords();
