@@ -823,7 +823,9 @@ class Product_Controller extends Page_Controller {
     'options',
     'AddToCartForm',
     'variationprice',
-    'index'
+    'index',
+    'SearchForm',
+    'results',
   );
 
   /**
@@ -846,7 +848,9 @@ class Product_Controller extends Page_Controller {
     '$ID!/add' => 'add',
     '$ID/options' => 'options',
     '$ID/variationprice' => 'variationprice',
-  	'$ID!' => 'index',
+  	'$ID!/SearchForm' => 'SearchForm',
+    '$ID!/results' => 'results',
+    '$ID!' => 'index',
   );
   
   /**
