@@ -53,6 +53,8 @@
     			var ID = $(this).attr('id');
     			var newID = ID.replace(/Billing/i, 'Shipping');
     			$('#'+newID).val($('#'+ID).val());
+                //Force change event on shipping selects
+                if ($(this).is('select')) $('#'+newID).change();
     		}
     	}
     	

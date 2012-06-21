@@ -40,12 +40,14 @@
 						$regionField.val($("option:first", $regionField).val());
 					}
 				}
+				$('#CheckoutForm_OrderForm_Shipping-Region').change();
 			});
 			$countryField.change();
 		}
 	}
 	
-    $(document).ready(function() { 
-    	populateRegion();
-    })
+  $(document).ready(function() { 
+  	populateRegion();
+  	$('#CheckoutForm_OrderForm_Shipping-Region').live('change', updateOrderFormCartAJAX);
+  })
 })(jQuery);
