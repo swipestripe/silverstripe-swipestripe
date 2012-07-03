@@ -22,9 +22,10 @@ Object::add_extension('FieldSet', 'FieldSetExtension');
 Security::set_default_login_dest('account');
 
 //Rules for product links
+/*
 Director::addRules(50, array( 
   //'product//$ID' => 'Product_Controller',
   'product//$ID/$Action' => 'Product_Controller',
   'swipestripe.xml' => 'ShopSettings_Controller'
 ));
-
+*/

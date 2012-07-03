@@ -284,6 +284,7 @@ EOS;
     $fields = parent::getCMSFields();
 
     //Gallery
+    /*
     $manager = new ComplexTableField(
       $this,
       'Images',
@@ -295,25 +296,36 @@ EOS;
       'getCMSFields_forPopup'
     );
     $manager->setPopupSize(650, 400);
-    $fields->addFieldToTab("Root.Content.Gallery", new HeaderField(
+    $fields->addFieldToTab("Root.Gallery", new HeaderField(
     	'GalleryHeading', 
     	'Add images for this product, the first image will be used as a thumbnail',
       3
     ));
-    $fields->addFieldToTab("Root.Content.Gallery", $manager);
+    $fields->addFieldToTab("Root.Gallery", $manager);
+    */
+
+    $config = new GridFieldConfig_RelationEditor(); 
+    $field = new GridField("Images", "Images", $this->Images(), $config);
+    $fields->addFieldToTab("Root.Gallery", $field);
     
     
     //Product fields
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
-		$fields->addFieldToTab('Root.Content.Main', $amountField, 'Content');
+		$fields->addFieldToTab('Root.Main', $amountField, 'Content');
 		
 		//Stock level field
 		$level = $this->StockLevel()->Level;
-		$fields->addFieldToTab('Root.Content.Main', new StockField('Stock', null, $level, $this), 'Content');
+		$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+
+    return $fields;
+
+
+
+
 		
 		//Product categories
-    $fields->addFieldToTab("Root.Content.Categories", new HeaderField(
+    $fields->addFieldToTab("Root.Categories", new HeaderField(
     	'CategoriesHeading', 
     	'Select categories you would like this product to appear in',
       3
@@ -324,25 +336,10 @@ Please 'Save' after you have finished changing categories if you would like to s
 in each category.
 </p>
 EOS;
-    $fields->addFieldToTab("Root.Content.Categories", new LiteralField('CategoryAlert', $categoryAlert));
-    
-    /*
-    $manager = new BelongsManyManyComplexTableField(
-      $this,
-      'ProductCategories',
-      'ProductCategory',
-      array(),
-      'getCMSFields_forPopup',
-      '',
-      '"Title" ASC'
-    );
-    $manager->setPageSize(20);
-    $manager->setPermissions(array());
-    $fields->addFieldToTab("Root.Content.Categories", $manager);
-    */
+    $fields->addFieldToTab("Root.Categories", new LiteralField('CategoryAlert', $categoryAlert));
 
     $categoriesField = new CategoriesField('ProductCategories', false, 'ProductCategory');
-    $fields->addFieldToTab("Root.Content.Categories", $categoriesField);
+    $fields->addFieldToTab("Root.Categories", $categoriesField);
 		
 		//Attributes selection
 		$anyAttribute = DataObject::get_one('Attribute');
@@ -359,7 +356,7 @@ EOS;
         'getCMSFields'
       );
       $tablefield->setPermissions(array());
-      $fields->addFieldToTab("Root.Content.Attributes", new HeaderField(
+      $fields->addFieldToTab("Root.Attributes", new HeaderField(
       	'AttributeHeading', 
       	'Select attributes for this product',
         3
@@ -371,16 +368,16 @@ Always make sure there are options for each attribute and variations which are e
 an option selected for each attribute.
 </p>
 EOS;
-      $fields->addFieldToTab("Root.Content.Attributes", new LiteralField('AttributeHelp', $attributeHelp));
+      $fields->addFieldToTab("Root.Attributes", new LiteralField('AttributeHelp', $attributeHelp));
       
       $attributeAlert = <<<EOS
 <p id="AttributeAlert" class="message good">
 Please 'Save' after you have finished changing attributes and check that product variations are correct.
 </p>
 EOS;
-      $fields->addFieldToTab("Root.Content.Attributes", new LiteralField('AttributeAlert', $attributeAlert));
+      $fields->addFieldToTab("Root.Attributes", new LiteralField('AttributeAlert', $attributeAlert));
       
-      $fields->addFieldToTab("Root.Content.Attributes", $tablefield);
+      $fields->addFieldToTab("Root.Attributes", $tablefield);
 		}
 
     //Options selection
@@ -416,7 +413,7 @@ EOS;
         }
 
         $attributeTabName = str_replace(' ', '', $attribute->Title);
-        $fields->addFieldToTab("Root.Content.Options", new Tab($attributeTabName));
+        $fields->addFieldToTab("Root.Options", new Tab($attributeTabName));
         $manager = new OptionComplexTableField(
           $this,
           $attribute->Title,
@@ -428,7 +425,7 @@ EOS;
           "AttributeID = $attribute->ID"
         );
         $manager->setAttributeID($attribute->ID);
-        $fields->addFieldToTab("Root.Content.Options.".$attributeTabName, $manager);
+        $fields->addFieldToTab("Root.Options.".$attributeTabName, $manager);
       }
 
       $variationFieldList = array_merge($variationFieldList, singleton('Variation')->summaryFields());
@@ -441,17 +438,18 @@ EOS;
         'getCMSFields_forPopup'
       );
       if (class_exists('SWS_Xero_Item_Decorator')) $manager->setPopupSize(500, 650);
-      $fields->addFieldToTab("Root.Content.Variations", $manager);
+      $fields->addFieldToTab("Root.Variations", $manager);
     }
     
     
     //Product ordering
+    /*
     $categories = $this->ProductCategories();
     if ($categories && $categories->exists()) {
     
       $fields->addFieldToTab("Root.Content", new Tab('Order'));
       
-      $fields->addFieldToTab("Root.Content.Order", new HeaderField(
+      $fields->addFieldToTab("Root.Order", new HeaderField(
         	'OrderHeading', 
         	'Set the order of this product in each of it\'s categories',
           3
@@ -463,7 +461,7 @@ Products with higher order numbers in each category will appear further at the f
 that category.
 </p>
 EOS;
-        $fields->addFieldToTab("Root.Content.Order", new LiteralField('OrderHelp', $orderHelp));
+        $fields->addFieldToTab("Root.Order", new LiteralField('OrderHelp', $orderHelp));
       
       foreach ($categories as $category) {
 
@@ -480,15 +478,16 @@ EOS;
         $order = $query->value();
         
         $val = ($order) ? $order : 0; 
-        $fields->addFieldToTab('Root.Content.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
+        $fields->addFieldToTab('Root.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
       } 
     }
+    */
     
     //Ability to edit fields added to CMS here
 		$this->extend('updateProductCMSFields', $fields);
 		
 	  if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
-			$fields->addFieldToTab("Root.Content.Main", new LiteralField("SwipeStripeLicenseWarning", 
+			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
 				'<p class="message warning">
 					 Warning: You have SwipeStripe installed without a license key. 
 					 Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
@@ -579,7 +578,7 @@ EOS;
    */
   public function FirstImage() {
     $images = $this->Images();
-    $images->sort('SortOrder', 'ASC');
+    //$images->sort('SortOrder', 'ASC');
     return $images->First();
   }
 	
@@ -787,12 +786,18 @@ EOS;
 	  );
 
 	  //TODO refactor using COUNT(Item.Quantity)
+    /*
 	  $items = DataObject::get(
 	  	'Item', 
 	    "\"Item\".\"ObjectID\" = $objectID AND \"Item\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')",
 	    '',
 	    "INNER JOIN \"Order\" ON \"Order\".\"ID\" = \"Item\".\"OrderID\""
 	  );
+    */
+
+    $items = Item::get()
+      ->where("\"Item\".\"ObjectID\" = $objectID AND \"Item\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')")
+      ->innerJoin('Order', "\"Order\".\"ID\" = \"Item\".\"OrderID\"");
 	  
 	  if ($items && $items->exists()) foreach ($items as $item) {
 	    if ($item->Order()->Status == 'Cart') $totalQuantity['InCarts'] += $item->Quantity;
@@ -928,7 +933,7 @@ class Product_Controller extends Page_Controller {
     
     $product = $this->data();
 
-    $fields = new FieldSet(
+    $fields = new FieldList(
       new HiddenField('ProductClass', 'ProductClass', $product->ClassName),
       new HiddenField('ProductID', 'ProductID', $product->ID),
       //new HiddenField('ProductVariationID', 'ProductVariationID', 0),
@@ -941,7 +946,7 @@ class Product_Controller extends Page_Controller {
     
     $fields->push(new QuantityField('Quantity', 'Quantity', $quantity));
     
-    $actions = new FieldSet(
+    $actions = new FieldList(
       new FormAction('add', 'Add To Cart')
     );
     $validator = new AddToCartFormValidator(
@@ -949,7 +954,9 @@ class Product_Controller extends Page_Controller {
     	'ProductID',
       'Quantity'
     );
-    $validator->setJavascriptValidationHandler('none'); 
+
+    //TODO handle js validation
+    //$validator->setJavascriptValidationHandler('none'); 
     
     //Disable add to cart function when product out of stock
     if (!$product->InStock()) {

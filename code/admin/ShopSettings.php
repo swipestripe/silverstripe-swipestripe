@@ -8,7 +8,7 @@
  * @package swipestripe
  * @subpackage admin
  */
-class ShopSettings extends DataObjectDecorator {
+class ShopSettings extends DataExtension {
   
   /**
    * To hold the license key for SwipeStripe. Usually set in mysite/_config file.
@@ -62,11 +62,28 @@ class ShopSettings extends DataObjectDecorator {
     return self::$extension_license_keys;
   }
 
+  static $db = array(
+    'EmailSignature' => 'HTMLText',
+    'ReceiptSubject' => 'Varchar',
+    'ReceiptBody' => 'HTMLText',
+    'ReceiptFrom' => 'Varchar',
+    'NotificationSubject' => 'Varchar',
+    'NotificationBody' => 'HTMLText',
+    'NotificationTo' => 'Varchar'
+  );
+
+  static $has_many = array(
+    'ShippingCountries' => 'Country_Shipping',
+    'BillingCountries' => 'Country_Billing',
+    'ShippingRegions' => 'Region_Shipping',
+    'BillingRegions' => 'Region_Billing'
+  );
+
   /**
    * Add database fields for shop settings like emails etc.
    * 
    * @see DataObjectDecorator::extraStatics()
-   */
+   *
 	function extraStatics() {
 
 		return array(
@@ -87,6 +104,7 @@ class ShopSettings extends DataObjectDecorator {
 			)
 		);
 	}
+  */
 
 	/**
 	 * Adding fields for shop settings such as email, license key.

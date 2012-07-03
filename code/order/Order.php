@@ -918,12 +918,18 @@ class Order extends DataObject {
 	  $oneHourAgo = date('Y-m-d H:i:s', strtotime($timeout));
 
 	  //Get orders that were last active over an hour ago and have not been paid at all
+	  /*
 	  $orders = DataObject::get(
 	  	'Order',
 	    "\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL",
 	    '',
 	    "LEFT JOIN \"Payment\" ON \"Payment\".\"OrderID\" = \"Order\".\"ID\""
 	  );
+	  */
+
+	  $orders = Order::get()
+	  	->where("\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL")
+	  	->leftJoin('Payment', "\"Payment\".\"OrderID\" = \"Order\".\"ID\"");
 
 	  if ($orders && $orders->exists()) foreach ($orders as $order) {
 	    //Delete the order AND return the stock to the Product/Variation

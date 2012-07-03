@@ -8,13 +8,24 @@
  * @package swipestripe
  * @subpackage order
  */
-class PaymentDecorator extends DataObjectDecorator {
+class PaymentDecorator extends DataExtension {
+
+	static $has_one = array(
+		'Order' => 'Order' //Need to add Order here for ModelAdmin
+	);
+
+	static $summary_fields = array(
+	  'ID' => 'Payment ID',
+	  'SummaryOfAmount' => 'Amount',
+	  'SummaryOfType' => 'Type',
+	  'PaidBy.Name' => 'Customer'
+	);
 
   /**
    * Extra fields to be added to the {@link Payment} class.
    * 
    * @see DataObjectDecorator::extraStatics()
-   */
+   *
 	function extraStatics() {
 
 		return array(
@@ -29,6 +40,7 @@ class PaymentDecorator extends DataObjectDecorator {
 			)
 		);
 	}
+	*/
 
 	/**
 	 * Cannot create {@link Payment}s in the CMS.

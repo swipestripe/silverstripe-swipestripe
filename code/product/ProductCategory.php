@@ -55,11 +55,11 @@ class ProductCategory extends Page {
       'getCMSFields_forPopup'
     );
     $manager->setPermissions(array());
-    $fields->addFieldToTab("Root.Content.Products", $manager);
+    $fields->addFieldToTab("Root.Products", $manager);
 		*/
     
 	  if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
-			$fields->addFieldToTab("Root.Content.Main", new LiteralField("SwipeStripeLicenseWarning", 
+			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
 				'<p class="message warning">
 					 Warning: You have SwipeStripe installed without a license key. 
 					 Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
@@ -121,6 +121,7 @@ class ProductCategory_Controller extends Page_Controller {
     $limit = self::$products_per_page;
     $orderBy = self::$products_ordered_by;
     
+    /*
     $products = DataObject::get( 
        'Product', 
        "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$this->ID."' OR \"ParentID\" = '".$this->ID."'", 
@@ -128,6 +129,15 @@ class ProductCategory_Controller extends Page_Controller {
        "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
        "{$start}, $limit"
     ); 
+    */
+
+    //TODO need to change to PaginatedList
+
+    $products = Product::get()
+      ->where("\"ProductCategory_Products\".\"ProductCategoryID\" = '{$this->ID}' OR \"ParentID\" = '{$this->ID}'")
+      ->sort($orderBy)
+      ->leftJoin('ProductCategory_Products', "\"ProductCategory_Products\".\"ProductID\" = \"SiteTree\".\"ID\"")
+      ->limit($limit);
 
     $this->extend('updateCategoryProducts', $products);
 
