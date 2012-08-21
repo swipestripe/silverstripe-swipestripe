@@ -117,11 +117,13 @@ class Item extends DataObject {
 	  foreach ($this->ItemOptions() as $itemOption) {
 	    $amount += $itemOption->Amount->getAmount();
 	  } 
+
 	  $amount = $amount * $this->Quantity;
-	  
+
 	  $subTotal = new Money();
 	  $subTotal->setAmount($amount);
 	  $subTotal->setCurrency($this->Amount->getCurrency());
+
 	  return $subTotal;
 	}
 

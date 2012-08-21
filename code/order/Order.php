@@ -591,6 +591,7 @@ class Order extends DataObject {
 	  $this->SubTotal->setCurrency(Payment::site_currency());
 	  $this->Total->setAmount($total); 
 	  $this->Total->setCurrency(Payment::site_currency());
+
     $this->write();
 	}
 
@@ -943,10 +944,10 @@ class Order extends DataObject {
     parent::onBeforeWrite();
     if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
     
-    $totalAmount = number_format($this->Total->getAmount(), 2);
+    $totalAmount = number_format($this->Total->getAmount(), 2, ',', '');
     $this->Total->setAmount($totalAmount);
     
-    $subTotalAmount = number_format($this->SubTotal->getAmount(), 2);
+    $subTotalAmount = number_format($this->SubTotal->getAmount(), 2, ',', '');
     $this->SubTotal->setAmount($subTotalAmount);
   }
 	

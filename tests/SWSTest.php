@@ -105,4 +105,8 @@ class SWSTest extends FunctionalTest {
     }
 	  return $outputArray;
 	}
+
+  public function testDummy() {
+    $this->assertEquals(true, true);
+  }
 }
