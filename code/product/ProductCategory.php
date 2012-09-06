@@ -40,7 +40,7 @@ class ProductCategory extends Page {
 	 * TODO remove this, its not useful. And change the direction of the many_many relation so that patched version of CTF not needed
 	 * 
 	 * @see Page::getCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -111,7 +111,7 @@ class ProductCategory_Controller extends Page_Controller {
    * Supports pagination.
    * 
    * @see Page_Controller::Products()
-   * @return FieldSet
+   * @return FieldList
    */  
   public function Products() {
 

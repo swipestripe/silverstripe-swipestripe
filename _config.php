@@ -15,9 +15,6 @@ Object::add_extension('SiteConfig', 'ShopSettings');
 //Extend page controller
 Object::add_extension('Page_Controller', 'CartControllerExtension');
 
-//Extend FieldSet
-Object::add_extension('FieldSet', 'FieldSetExtension');
-
 //Redirect customers logging in to the account page
 Security::set_default_login_dest('account');
 

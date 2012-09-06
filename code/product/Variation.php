@@ -101,7 +101,7 @@ class Variation extends DataObject {
 	/**
 	 * Add fields for editing a Variation in the CMS popup.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   public function getCMSFields_forPopup() {
     

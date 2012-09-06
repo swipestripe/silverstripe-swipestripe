@@ -69,7 +69,7 @@ class Attribute extends DataObject {
 	 * Add some fields to the CMS for managing Attributes.
 	 * 
 	 * @see DataObject::getCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function getCMSFields() {
     $fields = parent::getCMSFields();

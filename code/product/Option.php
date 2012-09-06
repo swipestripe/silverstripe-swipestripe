@@ -44,10 +44,10 @@ class Option extends DataObject {
   /**
    * Set fields for editing an Option in the CMS
    * 
-   * @return FieldSet
+   * @return FieldList
    */
   public function getCMSFields_forPopup() {
-    return new FieldSet(
+    return new FieldList(
       new TextField('Title'),
       new TextareaField('Description')
     );

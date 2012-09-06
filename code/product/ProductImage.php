@@ -31,11 +31,11 @@ class ProductImage extends DataObject {
   /**
    * Create fields for editing a ProductImage in the CMS.
    * 
-   * @return FieldSet
+   * @return FieldList
    */
   public function getCMSFields_forPopup() {
     
-    $fields = new FieldSet();
+    $fields = new FieldList();
     $fields->push(new TextareaField('Caption'));
 
     $imageUploadField = (class_exists('ImageUploadField')) ? new ImageUploadField('Image') : new FileIFrameField('Image');

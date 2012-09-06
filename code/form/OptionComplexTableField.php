@@ -31,7 +31,7 @@ class OptionComplexTableField extends ComplexTableField {
 	 * {@link Attribute} ID set.
 	 * 
 	 * @see ComplexTableField::getFieldsFor()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function getFieldsFor($childData) {
 		

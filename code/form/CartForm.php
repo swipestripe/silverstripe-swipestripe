@@ -21,12 +21,12 @@ class CartForm extends Form {
    * 
    * @param Controller $controller
    * @param String $name
-   * @param FieldSet $fields
-   * @param FieldSet $actions
+   * @param FieldList $fields
+   * @param FieldList $actions
    * @param Validator $validator
    * @param Order $currentOrder
    */
-  function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null, Order $currentOrder = null) {
+  function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null, Order $currentOrder = null) {
     
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		$this->setTemplate('CartForm');

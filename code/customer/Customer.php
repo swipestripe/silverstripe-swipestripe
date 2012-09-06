@@ -68,7 +68,7 @@ class Customer extends Member {
 	/**
 	 * Add some fields for managing Members in the CMS.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getCMSFields() {
 	  

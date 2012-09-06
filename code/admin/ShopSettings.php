@@ -111,7 +111,7 @@ class ShopSettings extends DataExtension {
 	 * 
 	 * @see DataObjectDecorator::updateCMSFields()
 	 */
-  function updateCMSFields(FieldSet &$fields) {
+  function updateCMSFields(FieldList &$fields) {
 
     $fields->findOrMakeTabSet('Root.Shop');
     

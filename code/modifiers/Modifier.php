@@ -29,10 +29,10 @@ class Modifier extends DataObject {
 	 * 
 	 * @see Modifier::$supported_methods
 	 * @param Order $order
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	static function combined_form_fields($order) {
-	  $fields = new FieldSet();
+	  $fields = new FieldList();
 	  
 	  foreach (self::$supported_methods as $modifierClassName) {
 	    
@@ -53,10 +53,10 @@ class Modifier extends DataObject {
 	 * 
 	 * @see Modifier::$supported_methods
 	 * @param unknown_type $order
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   static function combined_form_requirements($order) {
-	  return new FieldSet();
+	  return new FieldList();
 	}
 	
 }
@@ -77,7 +77,7 @@ interface Modifier_Interface {
    * 
    * @see Modifier::combined_form_fields()
    * @param Order $order
-   * @return FieldSet
+   * @return FieldList
    */
   public function getFormFields($order);
   
@@ -86,7 +86,7 @@ interface Modifier_Interface {
    * 
    * @see Modifier::combined_form_fields()
    * @param Order $order
-   * @return FieldSet
+   * @return FieldList
    */
   public function getFormRequirements($order);
   

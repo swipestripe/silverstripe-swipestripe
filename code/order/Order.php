@@ -181,7 +181,7 @@ class Order extends DataObject {
 	 * Filters for order admin area search.
 	 * 
 	 * @see DataObject::scaffoldSearchFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
@@ -310,7 +310,7 @@ class Order extends DataObject {
 	 * OrderAdmin_RecordController actions of the same name
 	 * 
 	 * @see DataObject::getCMSActions()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -588,9 +588,15 @@ class Order extends DataObject {
 	  }
 
     $this->SubTotal->setAmount($subTotal); 
-	  $this->SubTotal->setCurrency(Payment::site_currency());
+
+    $this->SubTotal->setCurrency('NZD');
+	  //$this->SubTotal->setCurrency(Payment::site_currency());
+
 	  $this->Total->setAmount($total); 
-	  $this->Total->setCurrency(Payment::site_currency());
+
+	  $this->SubTotal->setCurrency('NZD');
+	  //$this->Total->setCurrency(Payment::site_currency());
+
     $this->write();
 	}
 

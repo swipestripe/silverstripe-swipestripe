@@ -136,7 +136,7 @@ class Product extends Page {
 	 * Filter for order admin area search.
 	 * 
 	 * @see DataObject::scaffoldSearchFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
@@ -264,11 +264,17 @@ EOS;
 	 * @param Array $currency
 	 */
 	public static function set_allowed_currency(Array $currency) {
-	  if (count($currency) && array_key_exists(Payment::site_currency(), $currency)) {
+	  
+    //if (count($currency) && array_key_exists(Payment::site_currency(), $currency)) {
+
+    if (count($currency) && array_key_exists('NZD', $currency)) {
 	    self::$allowed_currency = $currency;
 	  }
 	  else {
-	    user_error("Cannot set allowed currency. Currency must match: ".Payment::site_currency(), E_USER_WARNING);
+
+	    //user_error("Cannot set allowed currency. Currency must match: ".Payment::site_currency(), E_USER_WARNING);
+
+      user_error("Cannot set allowed currency. Currency must match: ".'NZD', E_USER_WARNING);
 	    //TODO return meaningful error to browser in case error not shown
 	    return;
 	  }
@@ -278,7 +284,7 @@ EOS;
 	 * Set some CMS fields for managing Product images, Variations, Options, Attributes etc.
 	 * 
 	 * @see Page::getCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -960,8 +966,8 @@ class Product_Controller extends Page_Controller {
     
     //Disable add to cart function when product out of stock
     if (!$product->InStock()) {
-      $fields = new FieldSet(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
-      $actions = new FieldSet();
+      $fields = new FieldList(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
+      $actions = new FieldList();
     }
     
     $controller = Controller::curr();

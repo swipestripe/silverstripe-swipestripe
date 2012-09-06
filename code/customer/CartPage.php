@@ -67,7 +67,7 @@ class CartPage extends Page {
 	 * 
 	 * @see SiteTree::getCMSActions()
 	 * @see CartPage::canDeleteFromLive()
-	 * @return FieldSet Actions fieldset with unpublish action removed
+	 * @return FieldList Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -79,7 +79,7 @@ class CartPage extends Page {
 	 * Remove page type dropdown to prevent users from changing page type.
 	 * 
 	 * @see Page::getCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -122,7 +122,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @return CartForm A new cart form
 	 */
 	function CartForm() {
-	  $fields = new FieldSet();
+	  $fields = new FieldList();
 	  $validator = new CartFormValidator();
 	  $currentOrder = $this->Cart();
 	  $items = $currentOrder->Items();
@@ -142,7 +142,7 @@ class CartPage_Controller extends Page_Controller {
 	    $validator->addRequiredField('Quantity['.$item->ID.']');
 	  }
 
-    $actions = new FieldSet(
+    $actions = new FieldList(
       new FormAction('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
       new FormAction('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
     );

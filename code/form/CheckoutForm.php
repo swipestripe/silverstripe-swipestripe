@@ -28,7 +28,7 @@ class CheckoutForm extends Form {
   /**
    * Set of extra fields set for this form, such as csrf token etc.
    * 
-   * @var FieldSet
+   * @var FieldList
    */
   private $extraFieldsSet;
   
@@ -40,27 +40,27 @@ class CheckoutForm extends Form {
    * @param Controller $controller
    * @param String $name
    * @param Array $groupedFields Associative array of fields grouped into sets
-   * @param FieldSet $actions
+   * @param FieldList $actions
    * @param Validator $validator
    * @param Order $currentOrder
    */
-  function __construct($controller, $name, $groupedFields, FieldSet $actions, $validator = null, Order $currentOrder = null) {
+  function __construct($controller, $name, $groupedFields, FieldList $actions, $validator = null, Order $currentOrder = null) {
     
     //Send fields in as associative array, then loop through and add to $fields array for parent constructuor
     //Overload the Fields() method to get fields for specific areas of the form
     
     $this->groupedFields = $groupedFields;
     
-    $fields = new FieldSet();
+    $fields = new FieldList();
     if (is_array($groupedFields)) foreach ($groupedFields as $setName => $setFields) {
       foreach ($setFields as $field) $fields->push($field);
     }
-    else if ($groupedFields instanceof FieldSet) $fields = $groupedFields;
+    else if ($groupedFields instanceof FieldList) $fields = $groupedFields;
     
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		$this->setTemplate('CheckoutForm');
 		$this->currentOrder = $currentOrder;
-		$this->extraFieldsSet = new FieldSet();
+		$this->extraFieldsSet = new FieldList();
   }
   
   /**
@@ -76,12 +76,12 @@ class CheckoutForm extends Form {
 	 * Return the forms fields for the template, but filter the fields for 
 	 * a particular 'set' of fields.
 	 * 
-	 * @return FieldSet The form fields
+	 * @return FieldList The form fields
 	 */
 	function Fields($set = null) {
 
 	  if ($set) {
-	    $fields = new FieldSet();
+	    $fields = new FieldList();
 		
   		//TODO fix this, have to disable security token for now @see CheckoutPage::OrderForm()
   	  foreach ($this->getExtraFields() as $field) {

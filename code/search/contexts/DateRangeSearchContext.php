@@ -17,7 +17,7 @@ class DateRangeSearchContext extends SearchContext {
    * @see Order::$searchable_fields
    * @see Order::getDefaultSearchContext()
    * @see SearchContext::getSearchFields()
-   * @return FieldSet
+   * @return FieldList
    */
 	public function getSearchFields() {
 	  

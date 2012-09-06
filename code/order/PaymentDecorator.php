@@ -85,9 +85,9 @@ class PaymentDecorator extends DataExtension {
 	 * unnecessary fields.
 	 * 
 	 * @see DataObjectDecorator::updateCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
-  function updateCMSFields(FieldSet &$fields) {
+  function updateCMSFields(FieldList &$fields) {
 
     $toBeRemoved = array(
       'IP',

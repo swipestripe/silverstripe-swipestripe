@@ -76,7 +76,7 @@ class CheckoutPage extends Page {
 	 * 
 	 * @see SiteTree::getCMSActions()
 	 * @see CheckoutPage::canDeleteFromLive()
-	 * @return FieldSet Actions fieldset with unpublish action removed
+	 * @return FieldList Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -88,7 +88,7 @@ class CheckoutPage extends Page {
 	 * Remove page type dropdown to prevent users from changing page type.
 	 * 
 	 * @see Page::getCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function getCMSFields() {
     $fields = parent::getCMSFields();
@@ -153,9 +153,10 @@ class CheckoutPage_Controller extends Page_Controller {
     $this->addItemFields($fields, $validator, $order);
     $this->addModifierFields($fields, $validator, $order);
     $this->addNotesField($fields, $validator);
-    $this->addPaymentFields($fields, $validator, $order);
 
-    $actions = new FieldSet(
+    //$this->addPaymentFields($fields, $validator, $order);
+
+    $actions = new FieldList(
       new FormAction('ProcessOrder', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
     );
 
@@ -396,6 +397,8 @@ EOS;
 	 */
 	private function addPaymentFields(&$fields, &$validator, $order) {
 	  $paymentFields = new CompositeField();
+
+	  return $paymentFields;
 	  
 		foreach (Payment::combined_form_fields($order->Total->getAmount()) as $field) {
 
@@ -598,7 +601,7 @@ EOS;
       //Add modifiers to the order again so that the new values are used
       $order->addModifiersAtCheckout($newModifierData);
   
-      $actions = new FieldSet(
+      $actions = new FieldList(
         new FormAction('ProcessOrder', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
       );
       $form = new CheckoutForm($this, 'OrderForm', $fields, $actions, $validator, $order);

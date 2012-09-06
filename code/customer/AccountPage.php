@@ -78,7 +78,7 @@ class AccountPage extends Page {
 	 * 
 	 * @see SiteTree::getCMSActions()
 	 * @see AccountPage::canDeleteFromLive()
-	 * @return FieldSet Actions fieldset with unpublish action removed
+	 * @return FieldList Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
 	  $actions = parent::getCMSActions();
@@ -90,7 +90,7 @@ class AccountPage extends Page {
 	 * Remove page type dropdown to prevent users from changing page type.
 	 * 
 	 * @see Page::getCMSFields()
-	 * @return FieldSet
+	 * @return FieldList
 	 */
   function getCMSFields() {
     $fields = parent::getCMSFields();
