@@ -566,9 +566,9 @@ EOS;
    * Duplicate product images, useful when duplicating a product. 
    * 
    * @see Product::onAfterWrite()
-   * @param DataObjectSet $images
+   * @param DataList $images
    */
-  protected function duplicateProductImages(DataObjectSet $images) {
+  protected function duplicateProductImages(DataList $images) {
     
     foreach ($images as $productImage) {
       $newImage = $productImage->duplicate(false);
@@ -636,11 +636,11 @@ EOS;
    * Get options for an Attribute of this Product.
    * 
    * @param Int $attributeID
-   * @return DataObjectSet
+   * @return DataList
    */
   public function getOptionsForAttribute($attributeID) {
 
-    $options = new DataObjectSet();
+    $options = new DataList();
     $variations = $this->Variations();
     
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
@@ -1020,7 +1020,7 @@ class Product_Controller extends Page_Controller {
    */
   private function getProductOptions() {
     
-    $productVariations = new DataObjectSet();
+    $productVariations = new DataList();
     $request = $this->getRequest();
     $options = $request->requestVar('Options');
     $product = $this->data();
@@ -1078,9 +1078,9 @@ class Product_Controller extends Page_Controller {
 
     $data = array();
     $product = $this->data();
-    $options = new DataObjectSet();
+    $options = new DataList();
     $variations = $product->Variations();
-    $filteredVariations = new DataObjectSet();
+    $filteredVariations = new DataList();
     
     $attributeOptions = $request->postVar('Options');
     $nextAttributeID = $request->postVar('NextAttributeID');

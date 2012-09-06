@@ -27,10 +27,10 @@ class AddToCartFormValidator extends RequiredFields {
 		
 		//Get product variations from options sent
     //TODO refactor this
-	  $productVariations = new DataObjectSet();
+	  $productVariations = new DataList();
     $options = $request->postVar('Options');
     $product = DataObject::get_by_id($data['ProductClass'], $data['ProductID']);
-    $variations = ($product) ? $product->Variations() : new DataObjectSet();
+    $variations = ($product) ? $product->Variations() : new DataList();
 
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
       
