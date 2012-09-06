@@ -33,7 +33,7 @@ class RemoveItemAction extends FormAction {
 	 * @see FormField::id()
 	 */
   function id() { 
-		$name = ereg_replace('(^-)|(-$)','',ereg_replace('[^A-Za-z0-9_-]+','-',$this->name)) . '_' . $this->title;
+		$name = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $this->name)) . '_' . $this->title;
 		if($this->form) return $this->form->FormName() . '_' . $name;
 		else return $name;
 	}

@@ -164,7 +164,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $form->disableSecurityToken();
     
     //Need to disable the js validation because not using custom validation messages
-    $validator->setJavascriptValidationHandler('none');
+    //$validator->setJavascriptValidationHandler('none');
 
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
@@ -385,7 +385,7 @@ EOS;
 	 * @param OrderFormValidator $validator Checkout form validator
 	 */
 	private function addNotesField(&$fields, &$validator) {
-	  $fields['Notes'][] = new TextareaField('Notes', _t('CheckoutPage.NOTES_ABOUT_ORDER',"Notes about this order"), 5, 20, '');
+	  $fields['Notes'][] = new TextareaField('Notes', _t('CheckoutPage.NOTES_ABOUT_ORDER',"Notes about this order"));
 	}
 	
 	/**
@@ -486,7 +486,7 @@ EOS;
   				_t('CheckoutPage.MEMBER_ALREADY_EXISTS', 'Sorry, a member already exists with that email address. If this is your email address, please log in first before placing your order.'),
   				'bad'
   			);
-  			Director::redirectBack();
+  			$this->redirectBack();
   			return false;
 		  }
 		}

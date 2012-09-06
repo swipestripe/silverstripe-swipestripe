@@ -139,8 +139,8 @@ class ShopSettings extends DataExtension {
     $receiptTo = $receiptTo->performReadonlyTransformation();
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', $receiptTo);
     $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'), 8));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature'), 8));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')));
+    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature')));
     
     $notificationFrom = new TextField('NotificationFrom', _t('ShopSettings.FROM', 'From'));
     $notificationFrom->setValue(_t('ShopSettings.NOTIFICATION_FROM', 'Customer email address'));
@@ -148,7 +148,7 @@ class ShopSettings extends DataExtension {
     $fields->addFieldToTab('Root.Shop.Emails.Notification', $notificationFrom);
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', _t('ShopSettings.TO', 'To')));
     $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'), 10));
+    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')));
     
     //Shipping
     $fields->findOrMakeTabSet('Root.Shop.Shipping');

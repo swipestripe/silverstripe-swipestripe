@@ -566,9 +566,9 @@ EOS;
    * Duplicate product images, useful when duplicating a product. 
    * 
    * @see Product::onAfterWrite()
-   * @param DataList $images
+   * @param ArrayList $images
    */
-  protected function duplicateProductImages(DataList $images) {
+  protected function duplicateProductImages(ArrayList $images) {
     
     foreach ($images as $productImage) {
       $newImage = $productImage->duplicate(false);
@@ -636,11 +636,11 @@ EOS;
    * Get options for an Attribute of this Product.
    * 
    * @param Int $attributeID
-   * @return DataList
+   * @return ArrayList
    */
   public function getOptionsForAttribute($attributeID) {
 
-    $options = new DataList();
+    $options = new ArrayList();
     $variations = $this->Variations();
     
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
@@ -1020,7 +1020,7 @@ class Product_Controller extends Page_Controller {
    */
   private function getProductOptions() {
     
-    $productVariations = new DataList();
+    $productVariations = new ArrayList();
     $request = $this->getRequest();
     $options = $request->requestVar('Options');
     $product = $this->data();
@@ -1057,7 +1057,7 @@ class Product_Controller extends Page_Controller {
 
     //Check if on site URL, if so redirect there, else redirect back
     if ($redirectURL && Director::is_site_url($redirectURL)) Director::redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
-    else Director::redirectBack();
+    else $this->redirectBack();
   }
   
   /**
@@ -1078,9 +1078,9 @@ class Product_Controller extends Page_Controller {
 
     $data = array();
     $product = $this->data();
-    $options = new DataList();
+    $options = new ArrayList();
     $variations = $product->Variations();
-    $filteredVariations = new DataList();
+    $filteredVariations = new ArrayList();
     
     $attributeOptions = $request->postVar('Options');
     $nextAttributeID = $request->postVar('NextAttributeID');

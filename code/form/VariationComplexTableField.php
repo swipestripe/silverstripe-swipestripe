@@ -58,7 +58,8 @@ class VariationComplexTableField extends ComplexTableField {
 			
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			$controller = Controller::curr();
+			return $controller->redirectBack();
 		}
 
 		// Save the many many relationship if it's available
@@ -96,7 +97,8 @@ class VariationComplexTableField extends ComplexTableField {
 		
 		$form->sessionMessage($message, 'good');
 
-		Director::redirectBack();
+		$controller = Controller::curr();
+		return $controller->redirectBack();
 	}
 	
 }
@@ -150,7 +152,8 @@ class VariationComplexTableField_ItemRequest extends ComplexTableField_ItemReque
 			
 		} catch (ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			$controller = Controller::curr();
+			return $controller->redirectBack();
 		}
 		
 		// Save the many many relationship if it's available
@@ -177,6 +180,7 @@ class VariationComplexTableField_ItemRequest extends ComplexTableField_ItemReque
 		
 		$form->sessionMessage($message, 'good');
 
-		Director::redirectBack();
+		$controller = Controller::curr();
+		return $controller->redirectBack();
 	}
 }

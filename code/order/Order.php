@@ -341,7 +341,7 @@ class Order extends DataObject {
 	/**
 	 * Helper to get {@link Payment}s that are made against this Order
 	 * 
-	 * @return DataList Set of Payment objects
+	 * @return ArrayList Set of Payment objects
 	 */
 	function Payments() {
 	  return DataObject::get('Payment', "PaidForID = $this->ID AND PaidForClass = '$this->class'");
@@ -473,9 +473,9 @@ class Order extends DataObject {
 	 * if an item for this product exists increase the quantity. Update the Order total afterward.
 	 * 
 	 * @param DataObject $product The product to be represented by this order item
-	 * @param DataList $productOptions The product variations to be added, usually just one
+	 * @param ArrayList $productOptions The product variations to be added, usually just one
 	 */
-	function addItem(DataObject $product, $quantity = 1, DataList $productOptions = null) {
+	function addItem(DataObject $product, $quantity = 1, ArrayList $productOptions = null) {
 
 	  //Check that product options exist if product requires them
 	  //TODO perform this validation in Item->validate(), cannot at this stage because Item is written before ItemOption, no transactions, chicken/egg problem
@@ -529,10 +529,10 @@ class Order extends DataObject {
 	 * 
 	 * @see Order::addItem()
 	 * @param DatObject $product
-	 * @param DataList $productOptions
+	 * @param ArrayList $productOptions
 	 * @return DataObject
 	 */
-	function findIdenticalItem($product, DataList $productOptions) {
+	function findIdenticalItem($product, ArrayList $productOptions) {
 	  
 	  foreach ($this->Items() as $item) {
 
@@ -603,11 +603,11 @@ class Order extends DataObject {
 	/**
 	 * Retreive products for this order from the order {@link Item}s.
 	 * 
-	 * @return DataList Set of {@link Product}s
+	 * @return ArrayList Set of {@link Product}s
 	 */
 	function Products() {
 	  $items = $this->Items();
-	  $products = new DataList();
+	  $products = new ArrayList();
 	  foreach ($items as $item) {
 	    $products->push($item->Object());
 	  }
