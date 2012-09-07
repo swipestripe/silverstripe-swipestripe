@@ -21,27 +21,6 @@ class PaymentDecorator extends DataExtension {
 	  'PaidBy.Name' => 'Customer'
 	);
 
-  /**
-   * Extra fields to be added to the {@link Payment} class.
-   * 
-   * @see DataObjectDecorator::extraStatics()
-   *
-	function extraStatics() {
-
-		return array(
-			'has_one' => array(
-				'Order' => 'Order' //Need to add Order here for ModelAdmin
-			),
-			'summary_fields' => array(
-			  'ID' => 'Payment ID',
-			  'SummaryOfAmount' => 'Amount',
-			  'SummaryOfType' => 'Type',
-			  'PaidBy.Name' => 'Customer'
-			)
-		);
-	}
-	*/
-
 	/**
 	 * Cannot create {@link Payment}s in the CMS.
 	 * 

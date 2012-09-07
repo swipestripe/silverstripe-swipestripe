@@ -57,18 +57,10 @@ class Product extends Page {
    * @var Array
    */
   public static $has_many = array(
-    'Images' => 'ProductImage',
+    'Images' => 'Product_Image',
+    'Attributes' => 'Attribute',
     'Options' => 'Option',
     'Variations' => 'Variation'
-  );
-  
-  /**
-   * Many many relations for Product
-   * 
-   * @var Array
-   */
-  public static $many_many = array(
-    'Attributes' => 'Attribute'
   );
   
   /**
@@ -89,48 +81,48 @@ class Product extends Page {
     'ParentID' => -1
   );
   
-  /**
-   * Summary fields for displaying Products in the CMS
-   * 
-   * @var Array
-   */
-  public static $summary_fields = array(
-    'FirstImage' => 'Image',
-    'SummaryOfPrice' => 'Price',
-	  'Title' => 'Name',
-    'Status' => 'Status',
-    'SummaryOfCategories' => 'Categories'
-	);
+ //  /**
+ //   * Summary fields for displaying Products in the CMS
+ //   * 
+ //   * @var Array
+ //   */
+ //  public static $summary_fields = array(
+ //    'FirstImage' => 'Image',
+ //    'SummaryOfPrice' => 'Price',
+	//   'Title' => 'Name',
+ //    'Status' => 'Status',
+ //    'SummaryOfCategories' => 'Categories'
+	// );
 	
-	/**
-   * Searchable fields for searching for Products in the CMS
-   * 
-   * @var Array
-   */
-	public static $searchable_fields = array(
-	  'Title' => array(
-			'field' => 'TextField',
-			'filter' => 'PartialMatchFilter',
-			'title' => 'Name'
-		),
-		'Status' => array(
-			'filter' => 'PublishedStatusSearchFilter',
-			'title' => 'Status'
-		),
-		'Category' => array(
-  		'filter' => 'ProductCategorySearchFilter',
-  	)
-	);
+	// /**
+ //   * Searchable fields for searching for Products in the CMS
+ //   * 
+ //   * @var Array
+ //   */
+	// public static $searchable_fields = array(
+	//   'Title' => array(
+	// 		'field' => 'TextField',
+	// 		'filter' => 'PartialMatchFilter',
+	// 		'title' => 'Name'
+	// 	),
+	// 	'Status' => array(
+	// 		'filter' => 'PublishedStatusSearchFilter',
+	// 		'title' => 'Status'
+	// 	),
+	// 	'Category' => array(
+ //  		'filter' => 'ProductCategorySearchFilter',
+ //  	)
+	// );
 	
-	/**
-   * Casting for searchable fields
-   * 
-   * @see Product::$searchable_fields
-   * @var Array
-   */
-	public static $casting = array(
-		'Category' => 'Varchar',
-	);
+	// /**
+ //   * Casting for searchable fields
+ //   * 
+ //   * @see Product::$searchable_fields
+ //   * @var Array
+ //   */
+	// public static $casting = array(
+	// 	'Category' => 'Varchar',
+	// );
 	
 	/**
 	 * Filter for order admin area search.
@@ -208,6 +200,7 @@ class Product extends Page {
       
       //TODO Make sure there is a StockLevel for this product by default
       
+      //Copy product images across when duplicating product
       $original = DataObject::get_by_id($this->class, $this->original['ID']);
       if ($original) {
         $images = $original->Images();
@@ -290,101 +283,75 @@ EOS;
     $fields = parent::getCMSFields();
 
     //Gallery
-    /*
-    $manager = new ComplexTableField(
-      $this,
-      'Images',
-      'ProductImage',
-      array(
-        'SummaryOfImage' => 'Thumbnail',
-        'Caption' => 'Caption'
-      ),
-      'getCMSFields_forPopup'
-    );
-    $manager->setPopupSize(650, 400);
-    $fields->addFieldToTab("Root.Gallery", new HeaderField(
-    	'GalleryHeading', 
-    	'Add images for this product, the first image will be used as a thumbnail',
-      3
-    ));
-    $fields->addFieldToTab("Root.Gallery", $manager);
-    */
-
-    $config = new GridFieldConfig_RelationEditor(); 
-    $field = new GridField("Images", "Images", $this->Images(), $config);
-    $fields->addFieldToTab("Root.Gallery", $field);
-    
+    $config = GridFieldConfig_RelationEditor::create(10)
+      ->addComponent(new GridFieldSortableRows('SortOrder'));
+    $fields->addFieldToTab('Root.Gallery', new GridField('Images', 'Images', $this->Images(), $config));
     
     //Product fields
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
 		$fields->addFieldToTab('Root.Main', $amountField, 'Content');
+
+    $categoriesField = new CategoriesField('ProductCategories', 'Categories', 'ProductCategory');
+    $fields->addFieldToTab('Root.Main', $categoriesField, 'Content');
 		
 		//Stock level field
-		$level = $this->StockLevel()->Level;
-		$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+		// $level = $this->StockLevel()->Level;
+		// $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+
+    //SS_Log::log(new Exception(print_r($this->Attributes(), true)), SS_Log::NOTICE);
+
+    //Product attributes
+    // $detailForm = new GridFieldDetailForm();
+    //   $detailForm->setItemRequestClass('GridFieldDetailForm_HasManyItemRequest');
+
+    //   $config = GridFieldConfig_RelationEditor::create()
+    //     ->removeComponentsByType('GridFieldDetailForm')
+    //     ->addComponents($detailForm);
+
+    $listField = new GridField(
+      'Attributes',
+      'Attributes',
+      $this->Attributes(),
+      GridFieldConfig_HasManyRelationEditor::create()
+    );
+    $fields->addFieldToTab('Root.Attributes', $listField);
+
+
+
+    //Product variations
+    $attributes = $this->Attributes();
+    if ($attributes && $attributes->exists()) {
+      
+      //Remove the stock level field if there are variations, each variation has a stock field
+      $fields->removeByName('Stock');
+      
+      $variationFieldList = array();
+      foreach ($attributes as $attribute) {
+        $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
+      }
+      $variationFieldList = array_merge($variationFieldList, singleton('Variation')->summaryFields());
+
+      $config = GridFieldConfig_HasManyRelationEditor::create();
+      $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+      $dataColumns->setDisplayFields($variationFieldList);
+
+      $listField = new GridField(
+        'Variations',
+        'Variations',
+        $this->Variations(),
+        $config
+      );
+      $fields->addFieldToTab('Root.Variations', $listField);
+    }
 
     return $fields;
 
 
 
 
-		
-		//Product categories
-    $fields->addFieldToTab("Root.Categories", new HeaderField(
-    	'CategoriesHeading', 
-    	'Select categories you would like this product to appear in',
-      3
-    ));
-    $categoryAlert = <<<EOS
-<p class="message good">
-Please 'Save' after you have finished changing categories if you would like to set the order of this product
-in each category.
-</p>
-EOS;
-    $fields->addFieldToTab("Root.Categories", new LiteralField('CategoryAlert', $categoryAlert));
 
-    $categoriesField = new CategoriesField('ProductCategories', false, 'ProductCategory');
-    $fields->addFieldToTab("Root.Categories", $categoriesField);
-		
-		//Attributes selection
-		$anyAttribute = DataObject::get_one('Attribute');
-		if ($anyAttribute && $anyAttribute->exists()) {
-  		$tablefield = new ManyManyComplexTableField(
-        $this,
-        'Attributes',
-        'Attribute',
-        array(
-        	'Title' => 'Title',
-          'Label' => 'Label',
-        	'Description' => 'Description'
-        ),
-        'getCMSFields'
-      );
-      $tablefield->setPermissions(array());
-      $fields->addFieldToTab("Root.Attributes", new HeaderField(
-      	'AttributeHeading', 
-      	'Select attributes for this product',
-        3
-      ));
-      $attributeHelp = <<<EOS
-<p class="ProductHelp">
-Once attributes are selected don't forget to save. 
-Always make sure there are options for each attribute and variations which are enabled and have 
-an option selected for each attribute.
-</p>
-EOS;
-      $fields->addFieldToTab("Root.Attributes", new LiteralField('AttributeHelp', $attributeHelp));
-      
-      $attributeAlert = <<<EOS
-<p id="AttributeAlert" class="message good">
-Please 'Save' after you have finished changing attributes and check that product variations are correct.
-</p>
-EOS;
-      $fields->addFieldToTab("Root.Attributes", new LiteralField('AttributeAlert', $attributeAlert));
-      
-      $fields->addFieldToTab("Root.Attributes", $tablefield);
-		}
+
 
     //Options selection
     $attributes = $this->Attributes();
@@ -1185,3 +1152,68 @@ class Product_Controller extends Page_Controller {
     return json_encode($data);
   }
 }
+
+/**
+ * A image for {@link Product}s.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage product
+ */
+class Product_Image extends DataObject {
+
+  public static $singular_name = 'Image';
+  public static $plural_name = 'Images';
+  
+  /**
+   * DB fields
+   * 
+   * @var Array
+   */
+  static $db = array (
+    'Caption' => 'Text',
+    'SortOrder' => 'Int'
+  );
+
+  /**
+   * Has one relations
+   * 
+   * @var Array
+   */
+  static $has_one = array (
+    'Image' => 'Image',
+    'Product' => 'Product'
+  );
+
+  static $summary_fields = array(
+    'SortOrder' => 'SortOrder',
+    'SummaryOfImage' => 'Image',
+    'Caption' => 'Caption'
+  );
+
+  public static $default_sort = 'SortOrder';
+
+  public function getCMSFields() {
+    $fields = parent::getCMSFields();
+
+    if (!$this->ID) {
+      $fields->removeByName('Image');
+    }
+    $fields->removeByName('SortOrder');
+    $fields->removeByName('ProductID');
+
+    return $fields;
+  }
+  
+  /**
+   * Helper method to return a thumbnail image for displaying in CTF fields in CMS.
+   * 
+   * @return Image|String If no image can be found returns '(No Image)'
+   */
+  function SummaryOfImage() {
+    if ($Image = $this->Image()) return $Image->CMSThumbnail();
+    else return '(No Image)';
+  }
+}
+

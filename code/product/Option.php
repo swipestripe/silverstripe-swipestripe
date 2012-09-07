@@ -12,6 +12,9 @@
  */
 class Option extends DataObject {
 
+  public static $singular_name = 'Option';
+  public static $plural_name = 'Options';
+
   /**
    * DB fields for this Option
    * 
@@ -40,17 +43,13 @@ class Option extends DataObject {
   static $belongs_many_many = array(    
     'Variations' => 'Variation'
   );
-  
-  /**
-   * Set fields for editing an Option in the CMS
-   * 
-   * @return FieldList
-   */
-  public function getCMSFields_forPopup() {
-    return new FieldList(
-      new TextField('Title'),
-      new TextareaField('Description')
-    );
+
+  public function getCMSFields() {
+    $fields = parent::getCMSFields();
+    $fields->removeByName('Variations');
+    $fields->removeByName('ProductID');
+    $fields->removeByName('AttributeID');
+    return $fields;
   }
 
 }

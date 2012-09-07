@@ -29,7 +29,7 @@ class Variation extends DataObject {
    */
   public static $has_one = array(
     'Product' => 'Product',
-    'Image' => 'ProductImage',
+    'Image' => 'Product_Image',
     'StockLevel' => 'StockLevel'
   );
   
@@ -63,6 +63,10 @@ class Variation extends DataObject {
   static $extensions = array(
 		"Versioned('Live')",
 	);
+
+  public static $defaults = array(
+    'Status' => 'Enabled'
+  );
   
 	/**
 	 * Overloaded magic method so that attribute values can be retrieved for display 
@@ -74,6 +78,7 @@ class Variation extends DataObject {
   public function __get($property) {
 
     if (strpos($property, 'AttributeValue_') === 0) {
+      SS_Log::log(new Exception(print_r($property, true)), SS_Log::NOTICE);
       return $this->SummaryOfOptionValueForAttribute(str_replace('AttributeValue_', '', $property));
     }
     else {
@@ -103,32 +108,36 @@ class Variation extends DataObject {
 	 * 
 	 * @return FieldList
 	 */
-  public function getCMSFields_forPopup() {
-    
-    $fields = $this->getCMSFields(array(
+  public function getCMSFields() {
+
+    $fields = parent::getCMSFields(array(
 			'includeRelations' => false,
     ));
-    $fields->removeByName('Image');
+    $fields->removeFieldFromTab('Root', 'Options');
+    $fields->removeByName('ImageID');
     $fields->removeByName('StockLevelID');
+    $fields->removeByName('ProductID');
     $fields->removeByName('Version');
-
-		$fields->addFieldToTab("Root", new Tab('Advanced'));
 
     $product = $this->Product();
     $attributes = $product->Attributes();
     if ($attributes && $attributes->exists()) foreach ($attributes as $attribute) {
 
-      $options = DataObject::get('Option', "ProductID = $product->ID AND AttributeID = $attribute->ID");
-      $currentOptionID = ($currentOption = $this->Options()->find('AttributeID', $attribute->ID)) ?$currentOption->ID :null;
+      $options = $attribute->Options();
+      $currentOptionID = ($currentOption = $this->Options()->find('AttributeID', $attribute->ID)) ? $currentOption->ID : null;
+
       $optionField = new OptionField($attribute->ID, $attribute->Title, $options, $currentOptionID);
       $optionField->setHasEmptyDefault(false);
       $fields->addFieldToTab('Root.Main', $optionField);
     }
-    
+
+    //TODO add stock level field back
     //Stock level field
-    $level = $this->StockLevel()->Level;
-    $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this));
-		
+    // $level = $this->StockLevel()->Level;
+    // $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this));
+
+
+		$fields->addFieldToTab("Root", new Tab('Advanced'));
     $fields->addFieldToTab('Root.Advanced', new DropdownField(
     	'Status', 
     	'Status (you can disable a variation to prevent it being sold)', 
@@ -412,10 +421,32 @@ class Variation extends DataObject {
   protected function onAfterWrite() {
 		parent::onAfterWrite();
 
+    //Save the variation options (pretty hacky TODO this with HasManyList)
+    $request = Controller::curr()->getRequest();
+    if ($request) {
+
+      $options = $request->requestVar('Options');
+      if (isset($options)) {
+
+        $existingOptions = Variation_Options::get()->where("\"VariationID\" = '{$this->ID}'");
+        foreach ($existingOptions as $existingOption) {
+          $existingOption->delete();
+        }
+        foreach ($options as $optionID) {
+          $join = new Variation_Options();
+          $join->VariationID = $this->ID;
+          $join->OptionID = $optionID;
+          $join->write();
+        }
+      }
+    }
+
+    //Unpublish product if variations do not exist
 		$product = $this->Product();
 		$variations = $product->Variations();
 
-		if (!in_array('Enabled', $variations->map('ID', 'Status'))) {
+    //TODO this might not be a good idea to unpublish the product
+		if (!in_array('Enabled', $variations->map('ID', 'Status')->toArray())) {
 		  $product->doUnpublish(); 
 		}
 	}
@@ -429,9 +460,11 @@ class Variation extends DataObject {
   function onBeforeWrite() {
     parent::onBeforeWrite();
 
+    // TODO: move this to onAfterWrite() ?
     //If a stock level is set then update StockLevel
     $request = Controller::curr()->getRequest();
     if ($request) {
+
       $newLevel = $request->requestVar('Stock');
       if (isset($newLevel)) {
         $stockLevel = $this->StockLevel();
@@ -496,4 +529,10 @@ class Variation extends DataObject {
 	}
 }
 
+class Variation_Options extends DataObject {
 
+  public static $has_one = array(
+    'Variation' => 'Variation',
+    'Option' => 'Option'
+  );
+}

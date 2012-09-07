@@ -10,6 +10,9 @@
  */
 class ProductCategory extends Page {
 
+  public static $singular_name = 'Product Category';
+  public static $plural_name = 'Product Categories';
+
   /**
    * Many many relations for a ProductCategory
    * 

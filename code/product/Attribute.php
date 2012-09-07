@@ -14,6 +14,9 @@
  */
 class Attribute extends DataObject {
 
+  public static $singular_name = 'Attribute';
+  public static $plural_name = 'Attributes';
+
   /**
    * DB fields for the Attribute, Title acts as the label for the select field on the 
    * AddToCartForm - so it does not need to be unique.
@@ -35,14 +38,9 @@ class Attribute extends DataObject {
   public static $has_many = array(
     'Options' => 'Option'
   );
-  
-  /**
-   * Belongs many many relations for the Attribute
-   * 
-   * @var Array
-   */
-  static $belongs_many_many = array(    
-    'Products' => 'Product'
+
+  static $has_one = array(    
+    'Product' => 'Product'
   );
   
   /**
@@ -60,9 +58,10 @@ class Attribute extends DataObject {
    * @var Array
    */
   public static $summary_fields = array(
-	  'Title',
-    'Label',
-    'Description'
+	  'Title' => 'Title',
+    'Label' => 'Label',
+    'Description' => 'Description',
+    'OptionSummary' => 'Options'
 	);
   
 	/**
@@ -73,31 +72,36 @@ class Attribute extends DataObject {
 	 */
   function getCMSFields() {
     $fields = parent::getCMSFields();
+
     $fields->removeByName('Products');
-    $fields->removeByName('Options');
-    
+
+    //Should rename to default options only when editing default attributes
+    // $optionsField = $fields->fieldByName('Root.Options');
+    // if ($optionsField) $optionsField->setTitle('Default Options');
+
     $fields->replaceField('Title', new TextField('Title', 'Short descriptive title'));
     $fields->replaceField('Label', new TextField('Label', 'Label for dropdown on the product page'));
-    
-    //Add a manager for options
-    $manager = new ComplexTableField(
-      $this, 
-      'Options', 
-      'Option',
-      array(
-        'Title' => 'Title'
-      ), 
-      'getCMSFields_forPopup',
-      'ProductID = 0'
-    );
-    $fields->addFieldToTab("Root.DefaultOptions", $manager);
     
     //Ability to edit fields added to CMS here
 		$this->extend('updateAttributeCMSFields', $fields);
     
     return $fields;
   }
-  
+
+  public function OptionSummary() {
+    $summary = '';
+    $options = $this->Options();
+    if ($options && $options->exists()) {
+      $summary = implode(', ', $options->map()->values());
+    }
+    return $summary;
+  }
+
+
+
+
+
+
   /**
    * Validation of {@link Attribute}s. Title must be unique in order for tabs in CMS to work.
    * 

@@ -211,13 +211,13 @@ $lang['en_US']['ProductCategory']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['ProductImage']['PLURALNAME'] = array(
-	'Product Imags',
+$lang['en_US']['Product_Image']['PLURALNAME'] = array(
+	'Images',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
-$lang['en_US']['ProductImage']['SINGULARNAME'] = array(
-	'Product Image',
+$lang['en_US']['Product_Image']['SINGULARNAME'] = array(
+	'Image',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
