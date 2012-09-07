@@ -79,33 +79,6 @@ class ShopSettings extends DataExtension {
     'BillingRegions' => 'Region_Billing'
   );
 
-  /**
-   * Add database fields for shop settings like emails etc.
-   * 
-   * @see DataObjectDecorator::extraStatics()
-   *
-	function extraStatics() {
-
-		return array(
-			'db' => array(
-		    'EmailSignature' => 'HTMLText',
-				'ReceiptSubject' => 'Varchar',
-		    'ReceiptBody' => 'HTMLText',
-		    'ReceiptFrom' => 'Varchar',
-				'NotificationSubject' => 'Varchar',
-		    'NotificationBody' => 'HTMLText',
-		    'NotificationTo' => 'Varchar'
-			),
-			'has_many' => array(
-			  'ShippingCountries' => 'Country_Shipping',
-		    'BillingCountries' => 'Country_Billing',
-			  'ShippingRegions' => 'Region_Shipping',
-			  'BillingRegions' => 'Region_Billing'
-			)
-		);
-	}
-  */
-
 	/**
 	 * Adding fields for shop settings such as email, license key.
 	 * 
@@ -113,67 +86,59 @@ class ShopSettings extends DataExtension {
 	 */
   function updateCMSFields(FieldList &$fields) {
 
-    $fields->findOrMakeTabSet('Root.Shop');
-    
-    //License key
-    $fields->addFieldToTab("Root.Shop", 
-      new Tab('LicenseKey')
-    );
-    $licenseKeyField = new TextField('LicenseKey', _t('ShopSettings.LICENSEKEY', 'License Key'), self::$license_key);
-    $fields->addFieldToTab('Root.Shop.LicenseKey', $licenseKeyField->performReadonlyTransformation());
-    
-    //TODO include the license here in a text area field and some info about setting the license key perhaps
-    
-    //Shop emails
-    $fields->addFieldToTab("Root.Shop", 
-      new TabSet('Emails')
-    );
-    $fields->addFieldToTab("Root.Shop.Emails", 
-      new Tab('Receipt'),
-      new Tab('Notification')
-    );
+    $fields->findOrMakeTab('Root.Shop');
 
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptFrom', _t('ShopSettings.FROM', 'From')));
+    $licenseKeyField = new TextField('LicenseKey', _t('ShopSettings.LICENSEKEY', 'License Key'), self::$license_key);
+    $fields->addFieldToTab('Root.Shop', $licenseKeyField->performReadonlyTransformation());
+    
+    //TODO include the license here in a text field and some info about setting the license key perhaps
+
+    $fields->addFieldToTab('Root.Shop', new HeaderField('ReceiptEmail', 'Receipt Emails'));
+
+    $fields->addFieldToTab('Root.Shop', new TextField('ReceiptFrom', _t('ShopSettings.FROM', 'From')));
     $receiptTo = new TextField('ReceiptTo', _t('ShopSettings.TO', 'To'));
     $receiptTo->setValue(_t('ShopSettings.RECEIPT_TO', 'Sent to customer'));
     $receiptTo = $receiptTo->performReadonlyTransformation();
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', $receiptTo);
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextField('ReceiptSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')));
-    $fields->addFieldToTab('Root.Shop.Emails.Receipt', new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature')));
+    $fields->addFieldToTab('Root.Shop', $receiptTo);
+    $fields->addFieldToTab('Root.Shop', new TextField('ReceiptSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
+    $fields->addFieldToTab('Root.Shop', new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')));
+    $fields->addFieldToTab('Root.Shop', new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature')));
+
+    $fields->addFieldToTab('Root.Shop', new HeaderField('NotificationEmail', 'Notification Emails'));
     
     $notificationFrom = new TextField('NotificationFrom', _t('ShopSettings.FROM', 'From'));
     $notificationFrom->setValue(_t('ShopSettings.NOTIFICATION_FROM', 'Customer email address'));
     $notificationFrom = $notificationFrom->performReadonlyTransformation();
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', $notificationFrom);
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationTo', _t('ShopSettings.TO', 'To')));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
-    $fields->addFieldToTab('Root.Shop.Emails.Notification', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')));
+    $fields->addFieldToTab('Root.Shop', $notificationFrom);
+    $fields->addFieldToTab('Root.Shop', new TextField('NotificationTo', _t('ShopSettings.TO', 'To')));
+    $fields->addFieldToTab('Root.Shop', new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')));
+    $fields->addFieldToTab('Root.Shop', new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')));
     
-    //Shipping
-    $fields->findOrMakeTabSet('Root.Shop.Shipping');
-    $fields->addFieldToTab("Root.Shop.Shipping", 
-      new Tab('Countries')
-    );
-    $fields->addFieldToTab("Root.Shop.Shipping", 
-      new Tab('Regions')
-    );
-     
-    $managerClass = (class_exists('DataObjectManager')) ? 'DataObjectManager' : 'ComplexTableField';
-    $manager = new $managerClass(
-      $this->owner,
+    //Shipping countries and regions
+    $listField = new GridField(
       'ShippingCountries',
-      'Country_Shipping'
+      'Shipping Countries',
+      $this->owner->ShippingCountries(),
+      new GridFieldConfig_RelationEditor()
     );
-    $fields->addFieldToTab("Root.Shop.Shipping.Countries", $manager);
-    
-    $managerClass = (class_exists('DataObjectManager')) ? 'DataObjectManager' : 'ComplexTableField';
-    $manager = new $managerClass(
-      $this->owner,
-      'ShippingRegions',
-      'Region_Shipping'
-    );
-    $fields->addFieldToTab("Root.Shop.Shipping.Regions", $manager);
+    $fields->addFieldToTab('Root.Shop', $listField);
+
+    // Testing toggle field
+    // $workingField = ToggleCompositeField::create('Working', 'Working',
+    //   array(
+    //     new TextField('WorkingTest', 'Working Test'),
+    //     new TextField('WorkingAnother', 'Working Another'),
+    //   )
+    // )->setHeadingLevel(4);
+    // $fields->addFieldToTab('Root.Main', $workingField);
+
+    // $workingField = ToggleCompositeField::create('NotWorking', 'Not Working',
+    //   array(
+    //     new TextField('NotWorkingTest', 'Not Working Test'),
+    //     new TextField('NotWorkingAnother', 'Not Working Another'),
+    //   )
+    // )->setHeadingLevel(4);
+    // $fields->addFieldToTab('Root.Access', $workingField);
     
     
     if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
