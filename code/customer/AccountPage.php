@@ -209,7 +209,7 @@ class AccountPage_Controller extends Page_Controller {
   	$orderID = $request->param('ID');
   	$order = DataObject::get_by_id('Order', $orderID);
 
-  	if ($order && $order->exists()) {
+  	if ($order && $order->exists() && $member::currentUserID == $order->memberID) {
   		Session::set('Cart.OrderID', $orderID);
   		$this->redirect($this->CartLink('Checkout'));
   	}
