@@ -29,7 +29,6 @@
 </table>
 
 <% if AllPaymentsFailed %>
-<% else %>
 <div class="alert alert-error">
   <strong>Alert</strong> Payments have failed, please <a href="{$BaseHref}/account/reorder/{$ID}">process payment again for this order</a>.
 </div>

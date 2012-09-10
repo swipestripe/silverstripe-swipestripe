@@ -997,7 +997,7 @@ class Order extends DataObject {
 			unset($statuses['Failure']);
 			$statusMap = $payments->Map('ID', 'Status');
 
-			if (count(array_intersect($statuses, $statusMap)) > 0) {
+			if (count(array_intersect($statuses, $statusMap)) == 0) {
 				$allFailed = true;
 			}
 		}
