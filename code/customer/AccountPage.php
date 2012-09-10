@@ -209,12 +209,12 @@ class AccountPage_Controller extends Page_Controller {
   	$orderID = $request->param('ID');
   	$order = DataObject::get_by_id('Order', $orderID);
 
-  	if ($order && $order->exists() && Member::currentUserID == $order->MemberID) {
+  	if ($order && $order->exists() && Member::currentUserID() == $order->MemberID) {
   		Session::set('Cart.OrderID', $orderID);
   		$this->redirect($this->CartLink('Checkout'));
   	}
   	else {
-  		trigger_error('Order ID incorrect.', E_USER_NOTICE);
+  		return $this->httpError(403, 'You do not have permission to view this page.');
   	}
   }
 	
