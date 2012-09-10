@@ -983,4 +983,25 @@ class Order extends DataObject {
 	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 0");
 	}
 
+	/**
+	 * Checks if all payments for the order have failed.
+	 * 
+	 * @return Boolean 
+	 */
+	public function AllPaymentsFailed() {
+		$payments = $this->Payments();
+		$allFailed = false;
+
+		if ($payments && $payments->exists()) {
+			$statuses = singleton('Payment')->dbObject('Status')->enumValues();
+			unset($statuses['Failure']);
+			$statusMap = $payments->Map('ID', 'Status');
+
+			if (count(array_intersect($statuses, $statusMap)) > 0) {
+				$allFailed = true;
+			}
+		}
+		return $allFailed;
+	}
+
 }

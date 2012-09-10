@@ -118,7 +118,8 @@ class AccountPage_Controller extends Page_Controller {
     'index',
     'order',
   	'downloadproduct',
-    'logout'
+    'logout',
+    'reorder'
   );
   
   /**
@@ -198,6 +199,23 @@ class AccountPage_Controller extends Page_Controller {
   public function logout() {
     Security::logout(false);
     Director::redirect("home/");
+  }
+
+  /**
+   * Set order back into session and redirect visitor to checkout to process payment again.
+   */
+  public function reorder($request) {
+
+  	$orderID = $request->param('ID');
+  	$order = DataObject::get_by_id('Order', $orderID);
+
+  	if ($order && $order->exists()) {
+  		Session::set('Cart.OrderID', $orderID);
+  		$this->redirect($this->CartLink('Checkout'));
+  	}
+  	else {
+  		trigger_error('Order ID incorrect.', E_USER_NOTICE);
+  	}
   }
 	
 }
