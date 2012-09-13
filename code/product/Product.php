@@ -282,11 +282,6 @@ EOS;
 	public function getCMSFields() {
     $fields = parent::getCMSFields();
 
-    //Gallery
-    $config = GridFieldConfig_RelationEditor::create(10)
-      ->addComponent(new GridFieldSortableRows('SortOrder'));
-    $fields->addFieldToTab('Root.Gallery', new GridField('Images', 'Images', $this->Images(), $config));
-    
     //Product fields
     $amountField = new MoneyField('Amount', 'Amount');
 		$amountField->setAllowedCurrencies(self::$allowed_currency);	
@@ -296,19 +291,22 @@ EOS;
     $fields->addFieldToTab('Root.Main', $categoriesField, 'Content');
 		
 		//Stock level field
-		// $level = $this->StockLevel()->Level;
-		// $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+		$level = $this->StockLevel()->Level;
+		$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
 
-    //SS_Log::log(new Exception(print_r($this->Attributes(), true)), SS_Log::NOTICE);
+    //Replace URL Segment field
+    $urlsegment = new SiteTreeURLSegmentField("URLSegment", 'URLSegment');
+    $baseLink = Controller::join_links(Director::absoluteBaseURL(), 'product/');
+    $url = (strlen($baseLink) > 36) ? "..." .substr($baseLink, -32) : $baseLink;
+    $urlsegment->setURLPrefix($url);
+    $fields->replaceField('URLSegment', $urlsegment);
+
+    //Gallery
+    $config = GridFieldConfig_RelationEditor::create(10)
+      ->addComponent(new GridFieldSortableRows('SortOrder'));
+    $fields->addFieldToTab('Root.Gallery', new GridField('Images', 'Images', $this->Images(), $config));
 
     //Product attributes
-    // $detailForm = new GridFieldDetailForm();
-    //   $detailForm->setItemRequestClass('GridFieldDetailForm_HasManyItemRequest');
-
-    //   $config = GridFieldConfig_RelationEditor::create()
-    //     ->removeComponentsByType('GridFieldDetailForm')
-    //     ->addComponents($detailForm);
-
     $listField = new GridField(
       'Attributes',
       'Attributes',
@@ -316,8 +314,6 @@ EOS;
       GridFieldConfig_HasManyRelationEditor::create()
     );
     $fields->addFieldToTab('Root.Attributes', $listField);
-
-
 
     //Product variations
     $attributes = $this->Attributes();
@@ -345,75 +341,19 @@ EOS;
       $fields->addFieldToTab('Root.Variations', $listField);
     }
 
-    return $fields;
-
-
-
-
-
-
-
-    //Options selection
-    $attributes = $this->Attributes();
-    if ($attributes && $attributes->exists()) {
-      
-      //Remove the stock level field if there are variations, each variation has a stock field
-      $fields->removeByName('Stock');
-      
-      $variationFieldList = array();
-      
-      $fields->addFieldToTab("Root.Content", new TabSet('Options'));
-      $fields->addFieldToTab("Root.Content", new Tab('Variations'));
-      
-      foreach ($attributes as $attribute) {
-
-        $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
-
-        //TODO refactor, this is a really dumb place to be writing default options probably
-        
-        //If there aren't any existing options for this attribute on this product,
-        //populate with the default options
-        $defaultOptions = DataObject::get('Option', "ProductID = 0 AND AttributeID = $attribute->ID");
-        $existingOptions = DataObject::get('Option', "ProductID = $this->ID AND AttributeID = $attribute->ID");
-        if (!$existingOptions || !$existingOptions->exists()) {
-          if ($defaultOptions && $defaultOptions->exists()) {
-            foreach ($defaultOptions as $option) {
-              $newOption = $option->duplicate(false);
-              $newOption->ProductID = $this->ID;
-              $newOption->write();
-            }
-          }
-        }
-
-        $attributeTabName = str_replace(' ', '', $attribute->Title);
-        $fields->addFieldToTab("Root.Options", new Tab($attributeTabName));
-        $manager = new OptionComplexTableField(
-          $this,
-          $attribute->Title,
-          'Option',
-          array(
-            'Title' => 'Title',
-          ),
-          'getCMSFields_forPopup',
-          "AttributeID = $attribute->ID"
-        );
-        $manager->setAttributeID($attribute->ID);
-        $fields->addFieldToTab("Root.Options.".$attributeTabName, $manager);
-      }
-
-      $variationFieldList = array_merge($variationFieldList, singleton('Variation')->summaryFields());
-
-      $manager = new VariationComplexTableField(
-        $this,
-        'Variations',
-        'Variation',
-        $variationFieldList,
-        'getCMSFields_forPopup'
-      );
-      if (class_exists('SWS_Xero_Item_Decorator')) $manager->setPopupSize(500, 650);
-      $fields->addFieldToTab("Root.Variations", $manager);
-    }
+    //Ability to edit fields added to CMS here
+    $this->extend('updateProductCMSFields', $fields);
     
+    if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
+      $fields->addFieldToTab('Root.Main', new LiteralField("SwipeStripeLicenseWarning", 
+        '<p class="message warning">
+           Warning: You have SwipeStripe installed without a license key. 
+           Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
+        </p>'
+      ), 'Title');
+    }
+
+    return $fields;
     
     //Product ordering
     /*
@@ -454,21 +394,9 @@ EOS;
         $fields->addFieldToTab('Root.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
       } 
     }
-    */
-    
-    //Ability to edit fields added to CMS here
-		$this->extend('updateProductCMSFields', $fields);
-		
-	  if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
-			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
-				'<p class="message warning">
-					 Warning: You have SwipeStripe installed without a license key. 
-					 Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
-				</p>'
-			), "Title");
-		}
     
     return $fields;
+    */
 	}
 
   /**

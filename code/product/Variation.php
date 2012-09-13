@@ -78,7 +78,6 @@ class Variation extends DataObject {
   public function __get($property) {
 
     if (strpos($property, 'AttributeValue_') === 0) {
-      SS_Log::log(new Exception(print_r($property, true)), SS_Log::NOTICE);
       return $this->SummaryOfOptionValueForAttribute(str_replace('AttributeValue_', '', $property));
     }
     else {

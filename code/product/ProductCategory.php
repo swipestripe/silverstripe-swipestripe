@@ -142,6 +142,8 @@ class ProductCategory_Controller extends Page_Controller {
       ->leftJoin('ProductCategory_Products', "\"ProductCategory_Products\".\"ProductID\" = \"SiteTree\".\"ID\"")
       ->limit($limit);
 
+    SS_Log::log(new Exception(print_r($products->sql(), true)), SS_Log::NOTICE);
+
     $this->extend('updateCategoryProducts', $products);
 
     return $products;
