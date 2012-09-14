@@ -23,8 +23,8 @@ class ReceiptEmail extends ProcessedEmail {
 	 * @param String $bcc
 	 */
 	public function __construct(Member $customer, Order $order, $from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
-	  
-	  $siteConfig = SiteConfig::current_site_config();
+
+	  $siteConfig = ShopConfig::get()->first();
 	  if ($customer->Email) $this->to = $customer->Email; 
 	  if ($siteConfig->ReceiptSubject) $this->subject = $siteConfig->ReceiptSubject . ' - Order #'.$order->ID;
 	  if ($siteConfig->ReceiptBody) $this->body = $siteConfig->ReceiptBody;

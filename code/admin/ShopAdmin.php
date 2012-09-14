@@ -9,12 +9,19 @@ class ShopAdmin extends ModelAdmin {
 	public $showImportForm = false;
 
 	// static $required_permission_codes = 'CMS_ACCESS_CMSMain';
-
 	// static $session_namespace = 'CMSMain';
 
 	public static $managed_models = array(
+		'ShopConfig',
 		'Product'
 	);
+
+	public static $url_handlers = array(
+		'$ModelClass/$Action' => 'handleAction',
+		'$ModelClass/$Action/$ID' => 'handleAction',
+	);
+
+	protected $shopConfigSection;
 
 	public function init() {
 
@@ -24,6 +31,11 @@ class ShopAdmin extends ModelAdmin {
 		// }
 		
 		parent::init();
+
+		if ($this->modelClass == 'ShopConfig') {
+			$request = $this->getRequest();
+			$this->shopConfigSection = $request->param('Action');
+		}
 		
 		Requirements::css(CMS_DIR . '/css/screen.css');
 		Requirements::css('swipestripe/css/ShopAdmin.css');
@@ -45,8 +57,120 @@ class ShopAdmin extends ModelAdmin {
 		);
 	}
 
-	function getEditForm($id = null, $fields = null) {
+	/**
+	 * @return ArrayList
+	 */
+	public function Breadcrumbs($unlinked = false) {
 
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
+
+		//Tweak the breadcrumbs for the shop config sections
+		if ($this->shopConfigSection) {
+
+			if ($items->count() > 1) $items->remove($items->pop());
+
+			if ($this->shopConfigSection == 'EmailSettings' || $this->shopConfigSection == 'EmailSettingsForm') {
+				$items->push(new ArrayData(array(
+					'Title' => 'Email Settings',
+					'Link' => false
+				)));
+			}
+
+			if ($this->shopConfigSection == 'Countries' || $this->shopConfigSection == 'CountriesForm') {
+				$items->push(new ArrayData(array(
+					'Title' => 'Countries',
+					'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'Countries'))
+				)));
+			}
+		}
+
+		return $items;
+	}
+
+	public function getManagedModels() {
+		$models = $this->stat('managed_models');
+		if(is_string($models)) {
+			$models = array($models);
+		}
+		if(!count($models)) {
+			user_error(
+				'ModelAdmin::getManagedModels(): 
+				You need to specify at least one DataObject subclass in public static $managed_models.
+				Make sure that this property is defined, and that its visibility is set to "public"', 
+				E_USER_ERROR
+			);
+		}
+
+		// Normalize models to have their model class in array key
+		foreach($models as $k => $v) {
+			if(is_numeric($k)) {
+				$models[$v] = array('title' => singleton($v)->i18n_plural_name());
+				unset($models[$k]);
+			}
+		}
+		return $models;
+	}
+
+	/**
+	 * Returns managed models' create, search, and import forms
+	 * @uses SearchContext
+	 * @uses SearchFilter
+	 * @return SS_List of forms 
+	 */
+	protected function getManagedModelTabs() {
+
+		$forms  = new ArrayList();
+
+		$models = $this->getManagedModels();
+		foreach($models as $class => $options) { 
+			$forms->push(new ArrayData(array (
+				'Title'     => $options['title'],
+				'ClassName' => $class,
+				'Link' => $this->Link($this->sanitiseClassName($class)),
+				'LinkOrCurrent' => ($class == $this->modelClass) ? 'current' : 'link'
+			)));
+		}
+		
+		return $forms;
+	}
+
+	public function Tools() {
+		if ($this->modelClass == 'ShopConfig') return false;
+		else return parent::Tools();
+	}
+
+
+	public function Content() {
+		return $this->renderWith($this->getTemplatesWithSuffix('_Content'));
+	}
+
+	public function EditForm($request = null) {
+		return $this->getEditForm();
+	}
+
+	public function getEditForm($id = null, $fields = null) {
+
+		//If editing the shop settings get the first back and edit that basically...
+		if ($this->modelClass == 'ShopConfig') {
+
+			//TODO Licence warning on the settings home page
+			//    if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
+			    
+			//      $warning = _t('ShopSettings.LICENCE_WARNING','
+			//        Warning: You have SwipeStripe installed without a license key. 
+			//        Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
+			// 		');
+			    
+			// 		$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
+			// 			'<p class="message warning">'.$warning.'</p>'
+			// 		), "Title");
+			// 	}
+			// }
+
+			return $this->renderWith('ShopAdmin_ConfigEditForm');
+		}
+		
 		$list = $this->getList();
 
 		$exportButton = new GridFieldExportButton('before');
@@ -92,6 +216,227 @@ class ShopAdmin extends ModelAdmin {
 		$this->extend('updateEditForm', $form);
 		
 		return $form;
+	}
+	
+
+	public function SettingsContent() {
+		return $this->renderWith('ShopAdminSettings_Content');
+	}
+
+	public function SettingsForm($request = null) {
+
+		//Get the correct Settings form for each request
+		if ($request) {
+			$section = $request->requestVar('ShopConfigSection');
+			if ($section) $this->shopConfigSection = $section;
+		}
+
+		if ($this->shopConfigSection == 'EmailSettings') {
+			return $this->EmailSettingsForm();
+		}
+
+		if ($this->shopConfigSection == 'Countries') {
+			return $this->CountriesForm();
+		}
+	}
+
+	public function EmailSettings($request) {
+		return $this->renderWith('ShopAdminSettings');
+	}
+
+	public function EmailSettingsForm() {
+
+		$shopConfig = ShopConfig::get()->First();
+
+		$fields = new FieldList(
+			$rootTab = new TabSet("Root",
+				$tabMain = new Tab('Receipt',
+					new HiddenField('ShopConfigSection', null, 'EmailSettings'),
+					new TextField('ReceiptFrom', _t('ShopSettings.FROM', 'From')),
+					TextField::create('ReceiptTo', _t('ShopSettings.TO', 'To'))
+						->setValue(_t('ShopSettings.RECEIPT_TO', 'Sent to customer'))
+						->performReadonlyTransformation(),
+					new TextField('ReceiptSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')),
+					new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')),
+					new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature'))
+				),
+				new Tab('Notification',
+					TextField::create('NotificationFrom', _t('ShopSettings.FROM', 'From'))
+						->setValue(_t('ShopSettings.NOTIFICATION_FROM', 'Customer email address'))
+						->performReadonlyTransformation(),
+					new TextField('NotificationTo', _t('ShopSettings.TO', 'To')),
+					new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')),
+					new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'))
+				)
+			)
+		);
+
+		$actions = new FieldList();
+		$actions->push(FormAction::create('saveEmailSettings', _t('GridFieldDetailForm.Save', 'Save'))
+			->setUseButtonTag(true)
+			->addExtraClass('ss-ui-action-constructive')
+			->setAttribute('data-icon', 'add'));
+
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
+		);
+
+		$form->setTemplate('ShopAdminSettings_EditForm');
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EmailSettingsForm'));
+
+		$form->loadDataFrom($shopConfig);
+
+		return $form;
+	}
+
+	public function saveEmailSettings($data, $form) {
+
+		//Hack for LeftAndMain::getRecord()
+		self::$tree_class = 'ShopConfig';
+
+		$config = ShopConfig::get()->First();
+		$form->saveInto($config);
+		$config->write();
+		$form->sessionMessage('Saved Email Settings', 'good');
+
+		$controller = $this;
+		$responseNegotiator = new PjaxResponseNegotiator(
+			array(
+				'CurrentForm' => function() use(&$controller) {
+					//return $controller->renderWith('ShopAdminSettings_Content');
+					return $controller->EmailSettingsForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					//return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			),
+			$this->response
+		); 
+		return $responseNegotiator->respond($this->getRequest());
+	}
+
+	public function Countries($request) {
+
+		if ($request->isAjax()) {
+			$controller = $this;
+			$responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->CountriesForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith('ShopAdminSettings_Content');
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			); 
+			return $responseNegotiator->respond($this->getRequest());
+		}
+
+		return $this->renderWith('ShopAdminSettings');
+	}
+
+	public function CountriesForm() {
+
+		$shopConfig = ShopConfig::get()->First();
+
+		$fields = new FieldList(
+			$rootTab = new TabSet("Root",
+				$tabMain = new Tab('Shipping',
+					new HiddenField('ShopConfigSection', null, 'Countries'),
+					new GridField(
+			      'ShippingCountries',
+			      'Shipping Countries',
+			      $shopConfig->ShippingCountries(),
+			      GridFieldConfig_RelationEditor::create()
+							->removeComponentsByType('GridFieldFilterHeader')
+							->removeComponentsByType('GridFieldAddExistingAutocompleter')
+			    )
+				),
+				new Tab('Billing',
+					new GridField(
+			      'BillingCountries',
+			      'Billing Countries',
+			      $shopConfig->BillingCountries(),
+			      GridFieldConfig_RelationEditor::create()
+							->removeComponentsByType('GridFieldFilterHeader')
+							->removeComponentsByType('GridFieldAddExistingAutocompleter')
+			    )
+				)
+			)
+		);
+
+		$actions = new FieldList();
+		$actions->push(FormAction::create('saveCountries', _t('GridFieldDetailForm.Save', 'Save'))
+			->setUseButtonTag(true)
+			->addExtraClass('ss-ui-action-constructive')
+			->setAttribute('data-icon', 'add'));
+
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
+		);
+
+		$form->setTemplate('ShopAdminSettings_EditForm');
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'CountriesForm'));
+
+		$form->loadDataFrom($shopConfig);
+
+		return $form;
+	}
+
+	public function saveCountries($data, $form) {
+
+		//Hack for LeftAndMain::getRecord()
+		self::$tree_class = 'ShopConfig';
+
+		$config = ShopConfig::get()->First();
+		$form->saveInto($config);
+		$config->write();
+		$form->sessionMessage('Saved Countries', 'good');
+
+		$controller = $this;
+		$responseNegotiator = new PjaxResponseNegotiator(
+			array(
+				'CurrentForm' => function() use(&$controller) {
+					return $controller->CountriesForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					return $controller->renderWith('ShopAdminSettings_Content');
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			),
+			$this->response
+		); 
+		return $responseNegotiator->respond($this->getRequest());
 	}
 
 }

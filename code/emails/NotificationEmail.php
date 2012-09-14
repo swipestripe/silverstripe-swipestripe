@@ -25,7 +25,7 @@ class NotificationEmail extends ProcessedEmail {
 	 */
 	public function __construct(Member $customer, Order $order, $from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
 	  
-	  $siteConfig = SiteConfig::current_site_config();
+	  $siteConfig = ShopConfig::get()->first();
 	  if ($siteConfig->NotificationTo) $this->to = $siteConfig->NotificationTo; 
 	  if ($siteConfig->NotificationSubject) $this->subject = $siteConfig->NotificationSubject . ' - Order #'.$order->ID;
 	  if ($siteConfig->NotificationBody) $this->body = $siteConfig->NotificationBody;

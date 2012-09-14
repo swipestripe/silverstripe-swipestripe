@@ -290,7 +290,7 @@ class Country extends DataObject {
 	 * @var Array
 	 */
 	public static $has_one = array (
-    'SiteConfig' => 'SiteConfig'
+    'ShopConfig' => 'ShopConfig'
   );
   
   /**
