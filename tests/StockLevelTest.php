@@ -507,8 +507,8 @@ class SWS_StockLevelTest extends SWS_Test {
 	  
 	  $this->get(Director::makeRelative($product->Link())); 
 
-	  $firstAttributeID = array_shift(array_keys($product->Attributes()->map()));
-	  $firstAttributeOptions = $product->getOptionsForAttribute($firstAttributeID)->map();
+	  $firstAttributeID = array_shift(array_keys($product->Attributes()->map()->toArray()));
+	  $firstAttributeOptions = $product->getOptionsForAttribute($firstAttributeID)->map()->toArray();
 
 	  //Check that first option select has valid options in it
 	  $productPage = new DOMDocument();

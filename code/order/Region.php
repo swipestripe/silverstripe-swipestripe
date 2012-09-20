@@ -89,7 +89,7 @@ class Region extends DataObject {
 	  
 	  $regions = DataObject::get('Region_Billing');
     if ($regions && $regions->exists()) {
-      return $regions->map();
+      return $regions->map()->toArray();
     }
 	  return array();
 	}

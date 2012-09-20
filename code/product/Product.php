@@ -123,37 +123,37 @@ class Product extends Page {
  //   * @var Array
  //   */
 	// public static $casting = array(
-	// 	'Category' => 'Varchar',
+ //    'Category' => 'Varchar',
 	// );
 	
-	/**
-	 * Filter for order admin area search.
-	 * 
-	 * @see DataObject::scaffoldSearchFields()
-	 * @return FieldList
-	 */
-  function scaffoldSearchFields(){
-		$fieldSet = parent::scaffoldSearchFields();
+	// /**
+	//  * Filter for order admin area search.
+	//  * 
+	//  * @see DataObject::scaffoldSearchFields()
+	//  * @return FieldList
+	//  */
+ //  function scaffoldSearchFields(){
+	// 	$fieldSet = parent::scaffoldSearchFields();
 
-		$statusField = new DropdownField('Status', 'Status', array(
-		  1 => "published", 
-		  2 => "not published"
-		));
-		$statusField->setHasEmptyDefault(true);
-		$fieldSet->push($statusField);
+	// 	$statusField = new DropdownField('Status', 'Status', array(
+	// 	  1 => "published", 
+	// 	  2 => "not published"
+	// 	));
+	// 	$statusField->setHasEmptyDefault(true);
+	// 	$fieldSet->push($statusField);
 		
-		if($categories = DataObject::get('ProductCategory')) {
-		  $categories->sort('MenuTitle');
-		  $categoryOptions = $categories->map("ID", "MenuTitle");
-		  //$fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
+	// 	if($categories = DataObject::get('ProductCategory')) {
+	// 	  $categories->sort('MenuTitle');
+	// 	  $categoryOptions = $categories->map("ID", "MenuTitle")->toArray();
+	// 	  //$fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
 		  
-		  $dropDown = new DropdownField('Category', 'Category', $categoryOptions);
-		  $dropDown->setHasEmptyDefault(true);
-		  $fieldSet->push($dropDown);
-		}
+	// 	  $dropDown = new DropdownField('Category', 'Category', $categoryOptions);
+	// 	  $dropDown->setHasEmptyDefault(true);
+	// 	  $fieldSet->push($dropDown);
+	// 	}
 
-		return $fieldSet;
-	}
+	// 	return $fieldSet;
+	// }
 	
 	/**
 	 * Set firstWrite flag if this is the first time this Product is written.
@@ -183,7 +183,7 @@ class Product extends Page {
     $parent = $this->getParent();
     if ($parent && $parent instanceof ProductCategory) {
       $productCategories = $this->ProductCategories();
-      if (!in_array($parent->ID, array_keys($productCategories->map()))) {
+      if (!in_array($parent->ID, array_keys($productCategories->map()->toArray()))) {
         $productCategories->add($parent);
       }
     }
@@ -210,15 +210,16 @@ class Product extends Page {
       }
     }
 
+    // TODO: Check the variations are valid again
     //If the variation does not have a complete set of valid options, then disable it
-    $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
+    // $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
 
-    if ($variations) foreach ($variations as $variation) {
-      if (!$variation->hasValidOptions()) {
-        $variation->Status = 'Disabled';
-        $variation->write();
-      }
-    }
+    // if ($variations) foreach ($variations as $variation) {
+    //   if (!$variation->hasValidOptions()) {
+    //     $variation->Status = 'Disabled';
+    //     $variation->write();
+    //   }
+    // }
     
     $curr = Controller::curr();
     $request = $curr->getRequest();
@@ -294,7 +295,8 @@ EOS;
 		
 		//Stock level field
 		$level = $this->StockLevel()->Level;
-		$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+		//$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+    $fields->addFieldToTab('Root.Main', new Textfield('Stock', null, $level), 'Content');
 
     //Replace URL Segment field
     $urlsegment = new SiteTreeURLSegmentField("URLSegment", 'URLSegment');
@@ -346,7 +348,7 @@ EOS;
     //Ability to edit fields added to CMS here
     $this->extend('updateProductCMSFields', $fields);
     
-    if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
+    if (file_exists(BASE_PATH . '/swipestripe') && ShopConfig::get_license_key() == null) {
       $fields->addFieldToTab('Root.Main', new LiteralField("SwipeStripeLicenseWarning", 
         '<p class="message warning">
            Warning: You have SwipeStripe installed without a license key. 
@@ -539,7 +541,7 @@ EOS;
 
     $options = new ArrayList();
     $variations = $this->Variations();
-    
+
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
       if ($variation->isEnabled() && $variation->InStock()) {
@@ -568,7 +570,7 @@ EOS;
       
       $variations = $this->Variations();
       
-      if (!in_array('Enabled', $variations->map('ID', 'Status'))) {
+      if (!in_array('Enabled', $variations->map('ID', 'Status')->toArray())) {
   		  $result->error(
   	      'Cannot publish product when no variations are enabled. Please enable some product variations and try again.',
   	      'VariationsDisabledError'
@@ -839,19 +841,15 @@ class Product_Controller extends Page_Controller {
     $fields = new FieldList(
       new HiddenField('ProductClass', 'ProductClass', $product->ClassName),
       new HiddenField('ProductID', 'ProductID', $product->ID),
-      //new HiddenField('ProductVariationID', 'ProductVariationID', 0),
-      new HiddenField('Redirect', 'Redirect', $redirectURL)
+      new HiddenField('Redirect', 'Redirect', $redirectURL),
+      new OptionGroupField('OptionGroup', $product),
+      new QuantityField('Quantity', 'Quantity', $quantity)
     );
-
-    //Get the options for this product
-    $optionGroupField = new OptionGroupField('OptionGroup', $product);
-    $fields->push($optionGroupField);
-    
-    $fields->push(new QuantityField('Quantity', 'Quantity', $quantity));
     
     $actions = new FieldList(
       new FormAction('add', 'Add To Cart')
     );
+
     $validator = new AddToCartFormValidator(
     	'ProductClass', 
     	'ProductID',
@@ -861,11 +859,12 @@ class Product_Controller extends Page_Controller {
     //TODO handle js validation
     //$validator->setJavascriptValidationHandler('none'); 
     
+    // TODO: Put stock checking back in
     //Disable add to cart function when product out of stock
-    if (!$product->InStock()) {
-      $fields = new FieldList(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
-      $actions = new FieldList();
-    }
+    // if (!$product->InStock()) {
+    //   $fields = new FieldList(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
+    //   $actions = new FieldList();
+    // }
     
     $controller = Controller::curr();
     $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);
@@ -914,7 +913,7 @@ class Product_Controller extends Page_Controller {
    * correspond to a variation
    * 
    * @see SS_HTTPRequest
-   * @return DataObject 
+   * @return ArrayList 
    */
   private function getProductOptions() {
     
@@ -925,8 +924,8 @@ class Product_Controller extends Page_Controller {
     $variations = $product->Variations();
 
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
-      
-      $variationOptions = $variation->Options()->map('AttributeID', 'ID');
+
+      $variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
       if ($options == $variationOptions && $variation->isEnabled()) {
         $productVariations->push($variation);
       }

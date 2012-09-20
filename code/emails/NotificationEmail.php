@@ -1,6 +1,6 @@
 <?php
 /**
- * A notification email that is sent to an email address specified in {@link ShopSettings}, usually
+ * A notification email that is sent to an email address specified in {@link ShopConfig}, usually
  * a site administrator or owner. 
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>

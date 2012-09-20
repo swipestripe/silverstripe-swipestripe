@@ -44,8 +44,8 @@ Product:
     Date: 2011-01-31 20:48:00
     StockLevelID: =>StockLevel.levelProductB
   teeshirtA:
-    Title: Stripey Tee
-    URLSegment: stripey-tee
+    Title: Striped Tee
+    URLSegment: striped-tee
     AmountAmount: 14.99
     AmountCurrency: NZD 
     Date: 2011-01-31 20:49:00
@@ -85,10 +85,33 @@ Attribute:
     Title: Material
     Description: Basic materials
     Product: =>Product.teeshirtA
-  attrCut:
-    Title: Cut
-    Description: Basic cuts
-    Product: =>Product.teeshirtA
+
+  attrSizeShorts:
+    Title: Size
+    Description: Basic sizes
+    Product: =>Product.shortsA
+  attrColorShorts:
+    Title: Color
+    Description: Basic colors
+    Product: =>Product.shortsA
+  attrMaterialShorts:
+    Title: Material
+    Description: Basic materials
+    Product: =>Product.shortsA
+
+  attrSizeJeans:
+    Title: Size
+    Description: Basic sizes
+    Product: =>Product.jeans
+
+  attrSizeBroken:
+    Title: Size
+    Description: Basic sizes
+    Product: =>Product.brokenProduct
+  attrColorBroken:
+    Title: Color
+    Description: Basic colors
+    Product: =>Product.brokenProduct
 
 # ------------------------------------------
 # Options
@@ -149,37 +172,37 @@ Option:
   optSmallShorts:
     Title: Small
     Description: Small
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeShorts
     ProductID: =>Product.shortsA
   optMediumShorts:
     Title: Medium
     Description: Medium
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeShorts
     ProductID: =>Product.shortsA
   optLargeShorts:
     Title: Large
     Description: Large
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeShorts
     ProductID: =>Product.shortsA
   optRedShorts:
     Title: Red
     Description: Red
-    AttributeID: =>Attribute.attrColor
+    AttributeID: =>Attribute.attrColorShorts
     ProductID: =>Product.shortsA
   optGreenShorts:
     Title: Green
     Description: Green
-    AttributeID: =>Attribute.attrColor
+    AttributeID: =>Attribute.attrColorShorts
     ProductID: =>Product.shortsA
   optCottonShorts:
     Title: Cotton
     Description: Cotton
-    AttributeID: =>Attribute.attrMaterial
+    AttributeID: =>Attribute.attrMaterialShorts
     ProductID: =>Product.shortsA
   optPolyesterShorts:
     Title: Polyester
     Description: Polyester
-    AttributeID: =>Attribute.attrMaterial
+    AttributeID: =>Attribute.attrMaterialShorts
     ProductID: =>Product.shortsA
 
 # Jeans Options
@@ -188,12 +211,12 @@ Option:
   optSmallJeans:
     Title: Small
     Description: Small
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeJeans
     ProductID: =>Product.jeans
   optMediumJeans:
     Title: Medium
     Description: Medium
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeJeans
     ProductID: =>Product.jeans
 
 # Broken Product Options
@@ -203,22 +226,22 @@ Option:
   optSmallBroken:
     Title: Small
     Description: Small
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeBroken
     ProductID: =>Product.brokenProduct
   optMediumBroken:
     Title: Medium
     Description: Medium
-    AttributeID: =>Attribute.attrSize
+    AttributeID: =>Attribute.attrSizeBroken
     ProductID: =>Product.brokenProduct 
   optRedBroken:
     Title: Red
     Description: Red
-    AttributeID: =>Attribute.attrColor
+    AttributeID: =>Attribute.attrColorBroken
     ProductID: =>Product.brokenProduct
   optGreenBroken:
     Title: Green
     Description: Green
-    AttributeID: =>Attribute.attrColor
+    AttributeID: =>Attribute.attrColorBroken
     ProductID: =>Product.brokenProduct
 
 # ------------------------------------------

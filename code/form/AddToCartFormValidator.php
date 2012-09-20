@@ -24,7 +24,7 @@ class AddToCartFormValidator extends RequiredFields {
 		//Check that variation exists if necessary
 		$form = $this->form;
 		$request = $this->form->getRequest();
-		
+
 		//Get product variations from options sent
     //TODO refactor this
     
@@ -36,7 +36,7 @@ class AddToCartFormValidator extends RequiredFields {
 
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
       
-      $variationOptions = $variation->Options()->map('AttributeID', 'ID');
+      $variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
       if ($options == $variationOptions && $variation->isEnabled()) {
         $productVariations->push($variation);
       }

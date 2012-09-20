@@ -184,7 +184,7 @@ class SWS_ProductTest extends SWS_Test {
 	//     //$this->assertPartialMatchBySelector('#Options['.$attribute->ID.']', '1');
 	    
 	//     $options = $teeshirtA->getOptionsForAttribute($attribute->ID);
-	//     $attributeOptionsMap[$attribute->ID] = $options->map();
+	//     $attributeOptionsMap[$attribute->ID] = $options->map()->toArray();
 	//   }
     
 	  

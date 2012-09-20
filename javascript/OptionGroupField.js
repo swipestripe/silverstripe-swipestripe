@@ -73,18 +73,18 @@
     			var values = $('#AddToCartForm_AddToCartForm').serialize();
     			
     			$.ajax({
-				  url: window.location.pathname + 'variationprice/',
-				  type: 'POST',
-  				  data: values,
-				  success: function(data) {
-					  
-					dataObj = $.parseJSON(data);
+					  url: window.location.pathname + 'variationprice/',
+					  type: 'POST',
+	  				  data: values,
+					  success: function(data) {
+						  
+						dataObj = $.parseJSON(data);
 
-					if (dataObj.totalPrice) { 
-						$('.product-price-js').html(dataObj.totalPrice);
-					}
-				  }
-				});
+						if (dataObj.totalPrice) { 
+							$('.product-price-js').html(dataObj.totalPrice);
+						}
+					  }
+					});
     		});
     	});
     	

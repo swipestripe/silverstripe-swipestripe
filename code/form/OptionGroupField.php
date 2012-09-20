@@ -31,11 +31,11 @@ class OptionGroupField extends CompositeField {
 		
 		//Set an ID
 		$this->setID('ProductOptions_'.$product->ID);
-		
+
 		//Use the product to get the attributes and options and set them to the class
 		$items = new FieldList();
-	  $attributes = $this->product->Attributes()->map('ID', 'Label');
-	  
+	  $attributes = $this->product->Attributes()->map('ID', 'Label')->toArray();
+
     if ($attributes) foreach ($attributes as $id => $title) {
       
       $options = $this->product->getOptionsForAttribute($id);

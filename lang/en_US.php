@@ -235,14 +235,14 @@ $lang['en_US']['ShopAdmin']['BACKTOLIST'] = 'Back to list view';
 $lang['en_US']['ShopAdmin']['VIEW'] = 'View Page';
 $lang['en_US']['ShopAdmin']['VIEWDRAFT'] = 'Draft Site';
 $lang['en_US']['ShopAdmin']['VIEWLIVE'] = 'Live Site';
-$lang['en_US']['ShopSettings']['FROM'] = 'From';
-$lang['en_US']['ShopSettings']['LICENSEKEY'] = 'License Key';
-$lang['en_US']['ShopSettings']['MESSAGE'] = 'Message (order details are included in the email)';
-$lang['en_US']['ShopSettings']['NOTIFICATION_FROM'] = 'Customer email address';
-$lang['en_US']['ShopSettings']['RECEIPT_TO'] = 'Sent to customer';
-$lang['en_US']['ShopSettings']['SIGNATURE'] = 'Signature';
-$lang['en_US']['ShopSettings']['SUBJECT_LINE'] = 'Subject line';
-$lang['en_US']['ShopSettings']['TO'] = 'To';
+$lang['en_US']['ShopConfig']['FROM'] = 'From';
+$lang['en_US']['ShopConfig']['LICENSEKEY'] = 'License Key';
+$lang['en_US']['ShopConfig']['MESSAGE'] = 'Message (order details are included in the email)';
+$lang['en_US']['ShopConfig']['NOTIFICATION_FROM'] = 'Customer email address';
+$lang['en_US']['ShopConfig']['RECEIPT_TO'] = 'Sent to customer';
+$lang['en_US']['ShopConfig']['SIGNATURE'] = 'Signature';
+$lang['en_US']['ShopConfig']['SUBJECT_LINE'] = 'Subject line';
+$lang['en_US']['ShopConfig']['TO'] = 'To';
 $lang['en_US']['StockLevel']['PLURALNAME'] = array(
 	'Stock Levels',
 	50,

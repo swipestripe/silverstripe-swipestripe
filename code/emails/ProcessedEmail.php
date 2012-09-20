@@ -13,7 +13,7 @@ class ProcessedEmail extends Email {
    * Email signature
    * 
    * @var String HTML content from central config for signature
-   * @see ShopSettings
+   * @see ShopConfig
    */
   public $signature;
 

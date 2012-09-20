@@ -130,10 +130,14 @@ class Variation extends DataObject {
       $fields->addFieldToTab('Root.Main', $optionField);
     }
 
-    //TODO add stock level field back
+    // TODO: add stock level field back
     //Stock level field
     // $level = $this->StockLevel()->Level;
     // $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this));
+
+    //Stock level field
+    $level = $this->StockLevel()->Level;
+    $fields->addFieldToTab('Root.Main', new Textfield('Stock', null, $level));
 
 
 		$fields->addFieldToTab("Root", new Tab('Advanced'));
@@ -235,12 +239,12 @@ class Variation extends DataObject {
     
     $result = new ValidationResult(); 
 	  
-	  if (!$this->hasValidOptions()) {
-	    $result->error(
-	      'This product does not have valid options set',
-	      'VariationValidOptionsError'
-	    );
-	  }
+	  // if (!$this->hasValidOptions()) {
+	  //   $result->error(
+	  //     'This product does not have valid options set',
+	  //     'VariationValidOptionsError'
+	  //   );
+	  // }
 	  
     if (!$this->isEnabled()) {
 	    $result->error(
@@ -264,52 +268,52 @@ class Variation extends DataObject {
    * 
    * @return Boolean
    */
-  public function hasValidOptions() {
-    //Get the options for the product
-    //Get the attributes for the product
-    //Each variation should have a valid option for each attribute
-    //Each variation should have only attributes that match the product
+  // public function hasValidOptions() {
+  //   //Get the options for the product
+  //   //Get the attributes for the product
+  //   //Each variation should have a valid option for each attribute
+  //   //Each variation should have only attributes that match the product
     
-    $productAttributeOptions = array();
-    $productOptions = $this->Product()->Options();
-    $productAttributesMap = $this->Product()->Attributes()->map();
+  //   $productAttributeOptions = array();
+  //   $productOptions = $this->Product()->Options();
+  //   $productAttributesMap = $this->Product()->Attributes()->map()->toArray();
 
-    //Only add attributes that have options for this product
-    if ($productOptions) foreach ($productOptions as $option) {
+  //   //Only add attributes that have options for this product
+  //   if ($productOptions) foreach ($productOptions as $option) {
       
-      $attribute = $option->Attribute();
+  //     $attribute = $option->Attribute();
       
-      if (!array_key_exists($option->AttributeID, $productAttributesMap)) {
-        continue;
-      }
+  //     if (!array_key_exists($option->AttributeID, $productAttributesMap)) {
+  //       continue;
+  //     }
       
-      if ($attribute) {
-        $productAttributeOptions[$option->AttributeID][] = $option->ID;
-      }
-    }
+  //     if ($attribute) {
+  //       $productAttributeOptions[$option->AttributeID][] = $option->ID;
+  //     }
+  //   }
 
-    $variationAttributeOptions = array();
-    $variationOptions = $this->Options();
+  //   $variationAttributeOptions = array();
+  //   $variationOptions = $this->Options();
     
-    if (!$variationOptions || !$variationOptions->exists()) return false;
-    foreach ($variationOptions as $option) {
-      $variationAttributeOptions[$option->AttributeID] = $option->ID;
-    }
+  //   if (!$variationOptions || !$variationOptions->exists()) return false;
+  //   foreach ($variationOptions as $option) {
+  //     $variationAttributeOptions[$option->AttributeID] = $option->ID;
+  //   }
     
-    //If attributes are not equal between product and variation, variation is invalid
-    if (array_diff_key($productAttributeOptions, $variationAttributeOptions)
-     || array_diff_key($variationAttributeOptions, $productAttributeOptions)) {
-      return false;
-    }
+  //   //If attributes are not equal between product and variation, variation is invalid
+  //   if (array_diff_key($productAttributeOptions, $variationAttributeOptions)
+  //    || array_diff_key($variationAttributeOptions, $productAttributeOptions)) {
+  //     return false;
+  //   }
     
-    foreach ($productAttributeOptions as $attributeID => $validOptionIDs) {
-      if (!in_array($variationAttributeOptions[$attributeID], $validOptionIDs)) {
-        return false;
-      }
-    }
+  //   foreach ($productAttributeOptions as $attributeID => $validOptionIDs) {
+  //     if (!in_array($variationAttributeOptions[$attributeID], $validOptionIDs)) {
+  //       return false;
+  //     }
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
   
   /**
    * Convenience method to check that this Variation is not a duplicate.
@@ -321,7 +325,7 @@ class Variation extends DataObject {
 
     //Hacky way to get new option IDs from $this->record because $this->Options() returns existing options
     //not the new ones passed in POST data    
-    $attributeIDs = $this->Product()->Attributes()->map();
+    $attributeIDs = $this->Product()->Attributes()->map()->toArray();
     $variationAttributeOptions = array();
     if ($attributeIDs) foreach ($attributeIDs as $attributeID => $title) {
       

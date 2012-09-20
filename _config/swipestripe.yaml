@@ -4,4 +4,4 @@ name: SwipeStripe
 Director:
   rules:
     'product//$ID/$Action': 'Product_Controller'
-    'swipestripe.xml': 'ShopSettings_Controller'
+    'swipestripe.xml': 'ShopConfig_Controller'

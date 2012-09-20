@@ -328,7 +328,7 @@ class Country extends DataObject {
 
     $countries = DataObject::get('Country_Shipping', '', 'Title ASC');
     if ($countries && $countries->exists()) {
-      return $countries->map();
+      return $countries->map()->toArray();
     }
 	  return array();
 	}
@@ -342,7 +342,7 @@ class Country extends DataObject {
 	  
 	  $countries = DataObject::get('Country_Billing', '', 'Title ASC');
     if ($countries && $countries->exists()) {
-      return $countries->map();
+      return $countries->map()->toArray();
     }
 	  return array();
 	}

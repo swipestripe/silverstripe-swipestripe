@@ -23,8 +23,9 @@ class AttributeValidator extends RequiredFields {
 		$newTitle = (isset($data['Title'])) ? $data['Title'] : null;
 		if ($newTitle) {
 		  
-		  $existingTitles = DataObject::get('Attribute');
-		  $existingTitles = $existingTitles->map('ID', 'Title');
+		  //$existingTitles = DataObject::get('Attribute');
+		  $existingTitles = Attribute::get();
+		  $existingTitles = $existingTitles->map('ID', 'Title')->toArray();
 		  
 		  if (isset($data['ID'])) unset($existingTitles[$data['ID']]);
 		  

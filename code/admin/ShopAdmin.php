@@ -155,9 +155,9 @@ class ShopAdmin extends ModelAdmin {
 		if ($this->modelClass == 'ShopConfig') {
 
 			//TODO Licence warning on the settings home page
-			//    if (file_exists(BASE_PATH . '/swipestripe') && ShopSettings::get_license_key() == null) {
+			//    if (file_exists(BASE_PATH . '/swipestripe') && ShopConfig::get_license_key() == null) {
 			    
-			//      $warning = _t('ShopSettings.LICENCE_WARNING','
+			//      $warning = _t('ShopConfig.LICENCE_WARNING','
 			//        Warning: You have SwipeStripe installed without a license key. 
 			//        Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
 			// 		');
@@ -252,21 +252,21 @@ class ShopAdmin extends ModelAdmin {
 			$rootTab = new TabSet("Root",
 				$tabMain = new Tab('Receipt',
 					new HiddenField('ShopConfigSection', null, 'EmailSettings'),
-					new TextField('ReceiptFrom', _t('ShopSettings.FROM', 'From')),
-					TextField::create('ReceiptTo', _t('ShopSettings.TO', 'To'))
-						->setValue(_t('ShopSettings.RECEIPT_TO', 'Sent to customer'))
+					new TextField('ReceiptFrom', _t('ShopConfig.FROM', 'From')),
+					TextField::create('ReceiptTo', _t('ShopConfig.TO', 'To'))
+						->setValue(_t('ShopConfig.RECEIPT_TO', 'Sent to customer'))
 						->performReadonlyTransformation(),
-					new TextField('ReceiptSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')),
-					new TextareaField('ReceiptBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)')),
-					new TextareaField('EmailSignature', _t('ShopSettings.SIGNATURE', 'Signature'))
+					new TextField('ReceiptSubject', _t('ShopConfig.SUBJECT_LINE', 'Subject line')),
+					new TextareaField('ReceiptBody', _t('ShopConfig.MESSAGE', 'Message (order details are included in the email)')),
+					new TextareaField('EmailSignature', _t('ShopConfig.SIGNATURE', 'Signature'))
 				),
 				new Tab('Notification',
-					TextField::create('NotificationFrom', _t('ShopSettings.FROM', 'From'))
-						->setValue(_t('ShopSettings.NOTIFICATION_FROM', 'Customer email address'))
+					TextField::create('NotificationFrom', _t('ShopConfig.FROM', 'From'))
+						->setValue(_t('ShopConfig.NOTIFICATION_FROM', 'Customer email address'))
 						->performReadonlyTransformation(),
-					new TextField('NotificationTo', _t('ShopSettings.TO', 'To')),
-					new TextField('NotificationSubject', _t('ShopSettings.SUBJECT_LINE', 'Subject line')),
-					new TextareaField('NotificationBody', _t('ShopSettings.MESSAGE', 'Message (order details are included in the email)'))
+					new TextField('NotificationTo', _t('ShopConfig.TO', 'To')),
+					new TextField('NotificationSubject', _t('ShopConfig.SUBJECT_LINE', 'Subject line')),
+					new TextareaField('NotificationBody', _t('ShopConfig.MESSAGE', 'Message (order details are included in the email)'))
 				)
 			)
 		);
