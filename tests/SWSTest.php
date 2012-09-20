@@ -7,9 +7,9 @@
  * @package swipestripe
  * @subpackage tests
  */
-class SWSTest extends FunctionalTest {
+class SWS_Test extends FunctionalTest {
   
-	static $fixture_file = 'swipestripe/tests/Shop.yml';
+	static $fixture_file = 'swipestripe/tests/SWS.yml';
 	static $disable_themes = true;
 	static $use_draft_site = false;
 
@@ -25,7 +25,7 @@ class SWSTest extends FunctionalTest {
 	/**
 	 * Log current member out by clearing session
 	 */
-	function logOut() {
+	public function logOut() {
 	  $this->session()->clear('loggedInAs');
 	}
 	
@@ -35,7 +35,7 @@ class SWSTest extends FunctionalTest {
    * @param String $formID
    * @return Array
    */
-  function getFormData($formID) {
+  public function getFormData($formID) {
     $page = $this->mainSession->lastPage();
     $data = array();
     
@@ -62,7 +62,7 @@ class SWSTest extends FunctionalTest {
 	 * @param String $formID
 	 * @return Array
 	 */
-	function getFormDataNested($formID) {
+	public function getFormDataNested($formID) {
 	  $page = $this->mainSession->lastPage();
 	  $data = array();
 	  
@@ -104,5 +104,9 @@ class SWSTest extends FunctionalTest {
       }
     }
 	  return $outputArray;
+	}
+
+	public function testSWS() {
+		
 	}
 }

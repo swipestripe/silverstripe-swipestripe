@@ -26,7 +26,7 @@
  * @package swipestripe
  * @subpackage tests
  */
-class StockLevelTest extends SWSTest {
+class SWS_StockLevelTest extends SWS_Test {
 	
   function setUp() {
 		parent::setUp();

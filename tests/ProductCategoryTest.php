@@ -14,16 +14,16 @@
  * @package swipestripe
  * @subpackage tests
  */
-class ProductCategoryTest extends SWSTest {
+class SWS_ProductCategoryTest extends SWS_Test {
 	
-  function setUp() {
+  public function setUp() {
 		parent::setUp();
 		
 		$category = $this->objFromFixture('ProductCategory', 'general');
 		$this->assertTrue(is_numeric($category->ID));
 	}
 
-	function testProductCategoryProducts() {
+	public function testProductCategoryProducts() {
 	  $category = $this->objFromFixture('ProductCategory', 'general');
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $productB = $this->objFromFixture('Product', 'productB');
@@ -35,15 +35,12 @@ class ProductCategoryTest extends SWSTest {
 	  $this->logOut();
 
     $this->assertEquals(2, $category->Products()->count());
-    
-    $doSet = DataObject::get( 
-       'Product', 
-       "\"ProductCategory_Products\".\"ProductCategoryID\" = '".$category->ID."' OR \"ParentID\" = '".$category->ID."'", 
-       "Created DESC", 
-       "LEFT JOIN \"ProductCategory_Products\" ON \"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"",
-       "0, 3"
-    );
-    $this->assertEquals(2, $doSet->count());
+
+    $list = Product::get()
+    	->innerJoin('ProductCategory_Products', "\"ProductCategory_Products\".\"ProductID\" = \"Product\".\"ID\"")
+    	->where("\"ProductCategory_Products\".\"ProductCategoryID\" = '".$category->ID."' OR \"ParentID\" = '".$category->ID."'");
+
+    $this->assertEquals(2, $list->count());
 	}
 	
 }

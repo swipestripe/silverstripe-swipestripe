@@ -1,0 +1,642 @@
+# ------------------------------------------
+# Stock Levels
+# ------------------------------------------  
+StockLevel:
+  levelProductA:
+    Level: 5
+  levelProductB:
+    Level: -1
+  levelTeeshirtExtraLargePurpleCotton:
+    Level: 5
+  levelTeeshirtSmallPurpleCotton:
+    Level: -1
+  levelTeeshirtSmallRedCotton:
+    Level: -1
+  levelTeeshirtSmallRedPolyester:
+    Level: -1
+  levelJeans: #Should be superceded by levelJeansSmall and levelJeansMedium
+    Level: -1
+  levelJeansSmall:
+    Level: 0
+  levelJeansMedium:
+    Level: 1
+  levelShortsSmallRedCotton:
+    Level: -1
+  levelShortsA:
+    Level: -1
+
+# ------------------------------------------
+# Products
+# ------------------------------------------
+Product:
+  productA:
+    Title: Product A
+    URLSegment: product-a
+    AmountAmount: 500
+    AmountCurrency: NZD
+    Date: 2011-02-17 18:45:00
+    StockLevelID: =>StockLevel.levelProductA
+  productB:
+    Title: Product B
+    URLSegment: product-b
+    AmountAmount: 19.95
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:48:00
+    StockLevelID: =>StockLevel.levelProductB
+  teeshirtA:
+    Title: Stripey Tee
+    URLSegment: stripey-tee
+    AmountAmount: 14.99
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:49:00
+  shortsA:
+    Title: Checked Shorts
+    URLSegment: checked-shorts
+    AmountAmount: 24.95
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:49:00
+    StockLevelID: =>StockLevel.levelShortsA
+  jeans:
+    Title: Jeans
+    URLSegment: jeans
+    AmountAmount: 34.99
+    AmountCurrency: NZD 
+    StockLevelID: =>StockLevel.levelJeans #This level should be superceded by variation stock level
+  brokenProduct:
+    Title: Broken Product
+    URLSegment: broken-product
+    AmountAmount: 22.09
+    AmountCurrency: NZD 
+    Date: 2011-01-31 20:49:00
+
+# ------------------------------------------
+# Attributes
+# ------------------------------------------
+Attribute:
+  attrSize:
+    Title: Size
+    Description: Basic sizes
+    Product: =>Product.teeshirtA
+  attrColor:
+    Title: Color
+    Description: Basic colors
+    Product: =>Product.teeshirtA
+  attrMaterial:
+    Title: Material
+    Description: Basic materials
+    Product: =>Product.teeshirtA
+  attrCut:
+    Title: Cut
+    Description: Basic cuts
+    Product: =>Product.teeshirtA
+
+# ------------------------------------------
+# Options
+# ------------------------------------------ 
+Option:
+
+# TeeshirtA Options
+# Sizes: Small, Medium, Extra Large
+# Colors: Red, Purple
+# Materials: Cotton, Polyester, Silk
+# ------------------
+  optSmallTeeshirt:
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.teeshirtA
+  optMediumTeeshirt:
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.teeshirtA
+  optExtraLargeTeeshirt:
+    Title: Extra Large
+    Description: Extra Large
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.teeshirtA
+  optRedTeeshirt:
+    Title: Red
+    Description: Red
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.teeshirtA
+  optPurpleTeeshirt:
+    Title: Purple
+    Description: Purple
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.teeshirtA
+  optCottonTeeshirt:
+    Title: Cotton
+    Description: Cotton
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.teeshirtA
+  optPolyesterTeeshirt:
+    Title: Polyester
+    Description: Polyester
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.teeshirtA
+  optSilkTeeshirt:
+    Title: Silk
+    Description: Silk
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.teeshirtA
+
+# ShortsA Options
+# Sizes: Small, Medium, Large
+# Colors: Red, Green
+# Materials: Cotton, Polyester
+# ------------------
+  optSmallShorts:
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.shortsA
+  optMediumShorts:
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.shortsA
+  optLargeShorts:
+    Title: Large
+    Description: Large
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.shortsA
+  optRedShorts:
+    Title: Red
+    Description: Red
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.shortsA
+  optGreenShorts:
+    Title: Green
+    Description: Green
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.shortsA
+  optCottonShorts:
+    Title: Cotton
+    Description: Cotton
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.shortsA
+  optPolyesterShorts:
+    Title: Polyester
+    Description: Polyester
+    AttributeID: =>Attribute.attrMaterial
+    ProductID: =>Product.shortsA
+
+# Jeans Options
+# Sizes: Small, Medium
+# ------------------
+  optSmallJeans:
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.jeans
+  optMediumJeans:
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.jeans
+
+# Broken Product Options
+# Sizes: Small, Medium
+# Colors: Red, Green
+# ------------------ 
+  optSmallBroken:
+    Title: Small
+    Description: Small
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.brokenProduct
+  optMediumBroken:
+    Title: Medium
+    Description: Medium
+    AttributeID: =>Attribute.attrSize
+    ProductID: =>Product.brokenProduct 
+  optRedBroken:
+    Title: Red
+    Description: Red
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.brokenProduct
+  optGreenBroken:
+    Title: Green
+    Description: Green
+    AttributeID: =>Attribute.attrColor
+    ProductID: =>Product.brokenProduct
+
+# ------------------------------------------
+# Product Variations
+# ------------------------------------------ 
+Variation:
+
+# Teeshirt Variations
+# Small, Red, Cotton
+# Small, Red, Polyester
+# Small, Purple, Cotton
+# Small, Purple, Polyester
+#
+# Medium, Purple, Cotton
+# Medium, Purple, Silk
+#
+# Extra Large, Red, Cotton
+# Extra Large, Red, Polyester
+# Extra Large, Purple, Cotton
+# ------------------
+  teeshirtSmallRedCotton:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    StockLevelID: =>StockLevel.levelTeeshirtSmallRedCotton
+  teeshirtSmallRedPolyester:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 1.05 
+    StockLevelID: =>StockLevel.levelTeeshirtSmallRedPolyester
+  teeshirtSmallPurpleCotton:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+    StockLevelID: =>StockLevel.levelTeeshirtSmallPurpleCotton
+  teeshirtSmallPurplePolyester:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtMediumPurpleCotton:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtMediumPurpleSilk:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtExtraLargeRedCotton:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtExtraLargeRedPolyester:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+  teeshirtExtraLargePurpleCotton:
+    ProductID: =>Product.teeshirtA
+    AmountCurrency: NZD
+    AmountAmount: 0.00 
+    StockLevelID: =>StockLevel.levelTeeshirtExtraLargePurpleCotton
+
+# Shorts Variations
+# Small, Red, Cotton
+# Small, Red, Polyester (todo)
+#
+# Medium, Red, Cotton (todo)
+# Medium, Green, Silk (todo)
+#
+# Large, Red, Cotton (todo)
+# ------------------
+  shortsSmallRedCotton:
+    ProductID: =>Product.shortsA
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    Status: Enabled
+    StockLevelID: =>StockLevel.levelShortsSmallRedCotton
+
+# Jeans Variations
+# Small
+# Medium
+# ------------------
+  jeansSmall:
+    ProductID: =>Product.jeans
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    Status: Enabled
+    StockLevelID: =>StockLevel.levelJeansSmall
+  jeansMedium:
+    ProductID: =>Product.jeans
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+    Status: Enabled
+    StockLevelID: =>StockLevel.levelJeansMedium
+
+# Broken product Variations
+# Small, Red
+# Small, Red (Duplicates)
+#
+# Medium, (Missing an option for an attribute)
+# ------------------
+  brokenSmallRed:
+    ProductID: =>Product.brokenProduct
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+  brokenSmallRedDuplicate:
+    ProductID: =>Product.brokenProduct
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+  brokenMedium:
+    ProductID: =>Product.brokenProduct
+    AmountCurrency: NZD
+    AmountAmount: 0.00
+
+# ------------------------------------------
+# Variation options
+# ------------------------------------------ 
+Variation_Options:
+
+# Teeshirt Options
+# Sizes: Small 9, Medium 10, Extra Large 11
+# Colors: Red 12, Purple 13
+# Materials: Cotton 14, Polyester 15, Silk 16
+# ------------------------------------------ 
+  variationOneOptionRed:
+    VariationID: =>Variation.teeshirtSmallRedCotton
+    OptionID: =>Option.optRedTeeshirt
+  variationOneOptionSmall:
+    VariationID: =>Variation.teeshirtSmallRedCotton
+    OptionID: =>Option.optSmallTeeshirt
+  variationOneOptionCotton:
+    VariationID: =>Variation.teeshirtSmallRedCotton
+    OptionID: =>Option.optCottonTeeshirt
+  variationTwoOptionRed:
+    VariationID: =>Variation.teeshirtSmallRedPolyester
+    OptionID: =>Option.optRedTeeshirt
+  variationTwoOptionSmall:
+    VariationID: =>Variation.teeshirtSmallRedPolyester
+    OptionID: =>Option.optSmallTeeshirt
+  variationTwoOptionPolyester:
+    VariationID: =>Variation.teeshirtSmallRedPolyester
+    OptionID: =>Option.optPolyesterTeeshirt
+  variationThreeOptionSmall:
+    VariationID: =>Variation.teeshirtSmallPurpleCotton
+    OptionID: =>Option.optSmallTeeshirt
+  variationThreeOptionPurple:
+    VariationID: =>Variation.teeshirtSmallPurpleCotton
+    OptionID: =>Option.optPurpleTeeshirt
+  variationThreeOptionCotton:
+    VariationID: =>Variation.teeshirtSmallPurpleCotton
+    OptionID: =>Option.optCottonTeeshirt
+  variationFourOptionSmall:
+    VariationID: =>Variation.teeshirtSmallPurplePolyester
+    OptionID: =>Option.optSmallTeeshirt
+  variationFourOptionPurple:
+    VariationID: =>Variation.teeshirtSmallPurplePolyester
+    OptionID: =>Option.optPurpleTeeshirt
+  variationFourOptionPolyester:
+    VariationID: =>Variation.teeshirtSmallPurplePolyester
+    OptionID: =>Option.optPolyesterTeeshirt
+  variationFiveOptionMedium:
+    VariationID: =>Variation.teeshirtMediumPurpleCotton
+    OptionID: =>Option.optMediumTeeshirt
+  variationFiveOptionPurple:
+    VariationID: =>Variation.teeshirtMediumPurpleCotton
+    OptionID: =>Option.optPurpleTeeshirt
+  variationFiveOptionCotton:
+    VariationID: =>Variation.teeshirtMediumPurpleCotton
+    OptionID: =>Option.optCottonTeeshirt
+  variationSixOptionMedium:
+    VariationID: =>Variation.teeshirtMediumPurpleSilk
+    OptionID: =>Option.optMediumTeeshirt
+  variationSixOptionPurple:
+    VariationID: =>Variation.teeshirtMediumPurpleSilk
+    OptionID: =>Option.optPurpleTeeshirt
+  variationSixOptionSilk:
+    VariationID: =>Variation.teeshirtMediumPurpleSilk
+    OptionID: =>Option.optSilkTeeshirt
+  variationSevenOptionExtraLarge:
+    VariationID: =>Variation.teeshirtExtraLargeRedCotton
+    OptionID: =>Option.optExtraLargeTeeshirt
+  variationSevenOptionRed:
+    VariationID: =>Variation.teeshirtExtraLargeRedCotton
+    OptionID: =>Option.optRedTeeshirt
+  variationSevenOptionCotton:
+    VariationID: =>Variation.teeshirtExtraLargeRedCotton
+    OptionID: =>Option.optCottonTeeshirt
+  variationEightOptionExtraLarge:
+    VariationID: =>Variation.teeshirtExtraLargeRedPolyester
+    OptionID: =>Option.optExtraLargeTeeshirt
+  variationEightOptionRed:
+    VariationID: =>Variation.teeshirtExtraLargeRedPolyester
+    OptionID: =>Option.optRedTeeshirt
+  variationEightOptionPolyester:
+    VariationID: =>Variation.teeshirtExtraLargeRedPolyester
+    OptionID: =>Option.optPolyesterTeeshirt
+  variationNineOptionExtraLarge:
+    VariationID: =>Variation.teeshirtExtraLargePurpleCotton
+    OptionID: =>Option.optExtraLargeTeeshirt
+  variationNineOptionPurple:
+    VariationID: =>Variation.teeshirtExtraLargePurpleCotton
+    OptionID: =>Option.optPurpleTeeshirt
+  variationNineOptionCotton:
+    VariationID: =>Variation.teeshirtExtraLargePurpleCotton
+    OptionID: =>Option.optCottonTeeshirt
+
+# Shorts Options
+# Sizes: Small, Medium, Large
+# Colors: Red, Green
+# Materials: Cotton, Polyester
+# ------------------------------------------ 
+  variation_shortsSmallRedCotton_Small:
+    VariationID: =>Variation.shortsSmallRedCotton
+    OptionID: =>Option.optSmallShorts
+  variation_shortsSmallRedCotton_Red:
+    VariationID: =>Variation.shortsSmallRedCotton
+    OptionID: =>Option.optRedShorts
+  variation_shortsSmallRedCotton_Cotton:
+    VariationID: =>Variation.shortsSmallRedCotton
+    OptionID: =>Option.optCottonShorts
+
+# Jeans Options
+# Sizes: Small, Medium
+# ------------------------------------------ 
+  variation_jeansSmall_Small:
+    VariationID: =>Variation.jeansSmall
+    OptionID: =>Option.optSmallJeans
+  variation_jeansMedium_Medium:
+    VariationID: =>Variation.jeansMedium
+    OptionID: =>Option.optMediumJeans
+
+# Broken product Options
+# Sizes: Small, Medium
+# Colors: Red, Green
+# ------------------------------------------ 
+  variation_brokenSmallRed_Small:
+    VariationID: =>Variation.brokenSmallRed
+    OptionID: =>Option.optSmallBroken
+  variation_brokenSmallRed_Red:
+    VariationID: =>Variation.brokenSmallRed
+    OptionID: =>Option.optRedBroken
+
+  variation_brokenSmallRedDuplicate_Small:
+    VariationID: =>Variation.brokenSmallRedDuplicate
+    OptionID: =>Option.optSmallBroken
+  variation_brokenSmallRedDuplicate_Red:
+    VariationID: =>Variation.brokenSmallRedDuplicate
+    OptionID: =>Option.optRedBroken 
+
+  variation_brokenMedium_Red:
+    VariationID: =>Variation.brokenMedium
+    OptionID: =>Option.optRedBroken 
+
+# ------------------------------------------
+# Cart pages
+# ------------------------------------------  
+CheckoutPage:
+  checkout:
+    Title: Checkout
+    URLSegment: checkout
+
+AccountPage:
+  account:
+    Title: Account Page
+    URLSegment: account
+
+CartPage:
+  cart:
+    Title: Cart
+    URLSegment: cart
+
+# ------------------------------------------
+# Groups
+# ------------------------------------------
+Group:
+  admin:
+    Title: Administrators
+  customers:
+    Title: Customers
+    Code: customers
+
+# ------------------------------------------
+# Members
+# ------------------------------------------     
+Member:
+  admin:
+    FirstName: Admin
+    Surname: Admin
+    Email: admin@test.com
+    Password: password
+    Groups: =>Group.admin
+
+# ------------------------------------------
+# Customers
+# ------------------------------------------ 
+Customer:
+  buyer:
+    FirstName: Test
+    Surname: Buyer
+    Email: test_buyer@example.com
+    Password: password
+    HomePhone: 64 3 3546 216
+    Address: 4 Leafy Lane
+    AddressLine2: Sydenham
+    City: Christchurch
+    PostalCode: 8014
+    Country: NZ
+    Groups: =>Group.customers
+
+# ------------------------------------------
+# Permissions
+# ------------------------------------------      
+Permission:
+   admin:
+      Code: ADMIN
+      GroupID: =>Group.admin
+
+# ------------------------------------------
+# Orders
+# ------------------------------------------ 
+Order:
+  orderOne:
+    Status: Pending
+    PaymentStatus: Unpaid
+    ReceiptSent: 1
+    TotalCurrency: NZD
+    TotalAmount: 500
+    SubTotalCurrency: NZD
+    SubTotalAmount: 500
+    MemberID: =>Customer.buyer
+    Notes: Some notes about order one.
+
+# ------------------------------------------
+# Order items
+# ------------------------------------------
+Item:
+  orderOneItemOne:
+    OrderID: =>Order.orderOne
+    ObjectID: =>Product.productA
+    ObjectClass: Product
+    ObjectVersion: 2
+    Quantity: 1
+    AmountCurrency: NZD
+    AmountAmount: 500
+
+# ------------------------------------------
+# Shipping Countries
+# ------------------------------------------ 
+Country_Shipping:
+  newZealand:
+    Code: NZ
+    Title: New Zealand
+  australia:
+    Code: AU
+    Title: Australia
+  unitedKingdom:
+    Code: GB
+    Title: United Kingdom
+
+# ------------------------------------------
+# Billing Countries
+# ------------------------------------------ 
+Country_Billing:
+  newZealand:
+    Code: NZ
+    Title: New Zealand
+  australia:
+    Code: AU
+    Title: Australia
+  unitedKingdom:
+    Code: GB
+    Title: United Kingdom
+
+# ------------------------------------------
+# Addresses
+# ------------------------------------------   
+Address:
+  orderOneBillingAddress:
+    OrderID: =>Order.orderOne     
+    MemberID: =>Customer.buyer
+    Type: Billing
+    FirstName: Test
+    Surname: Buyer
+    Company: Silver Stripes
+    Address: 4 Leafy Lane
+    AddressLine2: Sydenham
+    City: Christchurch
+    PostalCode: 8014
+    State: Canterbury
+    CountryID: =>Country_Shipping.newZealand
+  orderOneShippingAddress:
+    OrderID: =>Order.orderOne     
+    MemberID: =>Customer.buyer
+    Type: Shipping
+    FirstName: Jane
+    Surname: Doe
+    Company: 
+    Address: 91 Shortland St
+    AddressLine2: North Shore
+    City: Auckland
+    PostalCode: 1111
+    State: Auckland
+    CountryID: =>Country_Shipping.newZealand
+
+# ------------------------------------------
+# Product categories
+# ------------------------------------------ 
+ProductCategory:
+  general:
+    Title: General Category
+    URLSegment: general
+
+# ------------------------------------------
+# Product category products
+# ------------------------------------------ 
+ProductCategory_Products:
+  generalProductA:
+    ProductCategoryID: =>ProductCategory.general
+    ProductID: =>Product.productA
+  generalProductB:
+    ProductCategoryID: =>ProductCategory.general
+    ProductID: =>Product.productB

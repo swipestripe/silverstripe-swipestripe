@@ -40,6 +40,8 @@ class Product extends Page {
    */
   public static $db = array(
     'Amount' => 'Money'
+    //'Amount' => 'Decimal(19,4)',
+    //'Currency' => 'Varchar(3)'
   );
   
   /**
@@ -879,6 +881,7 @@ class Product_Controller extends Page_Controller {
 	 * @param Form $form
 	 */
   function add(Array $data, Form $form) {
+
     CartControllerExtension::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     
     //Show feedback if redirecting back to the Product page

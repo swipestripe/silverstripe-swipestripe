@@ -27,7 +27,7 @@ class QuantityField extends TextField {
 			}
 			
 			$validator->validationError(
-				$this->Name(),
+				$this->getName(),
 				$errorMessage,
 				"error"
 			);
