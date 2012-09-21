@@ -8,7 +8,7 @@
  * @package swipestripe
  * @subpackage customer
  */
-class CartControllerExtension extends Extension {
+class Cart extends Extension {
 
   /**
    * Retrieve the current cart for display in the template.
@@ -42,8 +42,8 @@ class CartControllerExtension extends Extension {
         return Director::absoluteBaseURL() . 'Security/login';
         break;
       case 'Logout':
-        if ($page = DataObject::get_one('AccountPage')) return $page->Link() . 'logout';
-        else break;
+        return Director::absoluteBaseURL() . 'Security/logout';
+        break;
       case 'Cart':
       default:
         if ($page = DataObject::get_one('CartPage')) return $page->Link();
@@ -56,7 +56,7 @@ class CartControllerExtension extends Extension {
    * 
    * @return Order The current order (cart)
    */
-  static function get_current_order() {
+  static function get_current_order($persist = false) {
 
     $orderID = Session::get('Cart.OrderID');
     $order = null;
@@ -67,13 +67,15 @@ class CartControllerExtension extends Extension {
     
     if (!$orderID || !$order || !$order->exists()) {
       $order = new Order();
-      $order->write();
-      Session::set('Cart', array(
-        'OrderID' => $order->ID
-      ));
-      Session::save();
+
+      if ($persist) {
+        $order->write();
+        Session::set('Cart', array(
+          'OrderID' => $order->ID
+        ));
+        Session::save();
+      }
     }
-    
     return $order;
   }
 

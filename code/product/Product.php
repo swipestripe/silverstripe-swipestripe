@@ -881,7 +881,7 @@ class Product_Controller extends Page_Controller {
 	 */
   function add(Array $data, Form $form) {
 
-    CartControllerExtension::get_current_order()->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
+    Cart::get_current_order(true)->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     
     //Show feedback if redirecting back to the Product page
     if (!$this->getRequest()->requestVar('Redirect')) {

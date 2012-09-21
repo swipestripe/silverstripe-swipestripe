@@ -670,7 +670,7 @@ class Order extends DataObject {
 	function addAddressesAtCheckout(Array $data) {
 
 	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
-    $order = CartControllerExtension::get_current_order();
+    $order = Cart::get_current_order();
     
     $billingCountries = Country::billing_countries();
     $shippingCountries = Country::shipping_countries();

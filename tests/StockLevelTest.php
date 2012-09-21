@@ -130,7 +130,7 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $cartPage = $this->objFromFixture('CartPage', 'cart');
 	  $this->get(Director::makeRelative($cartPage->Link()));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $item = $order->Items()->First();
 	  
 	  $this->submitForm('CartForm_CartForm', null, array(
@@ -214,7 +214,7 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $cartPage = $this->objFromFixture('CartPage', 'cart');
 	  $this->get(Director::makeRelative($cartPage->Link()));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $item = $order->Items()->First();
 	  
 	  $this->submitForm('CartForm_CartForm', null, array(
@@ -358,14 +358,14 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $cartPage = $this->objFromFixture('CartPage', 'cart');
 	  $this->get(Director::makeRelative($cartPage->Link()));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $item = $order->Items()->First();
 	  
 	  $this->submitForm('CartForm_CartForm', null, array(
 	    "Quantity[{$item->ID}]" => 0
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $this->assertEquals(false, $order->Items()->exists());
 
 	  $productB = $this->objFromFixture('Product', 'productB');
@@ -403,7 +403,7 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $cartPage = $this->objFromFixture('CartPage', 'cart');
 	  $this->get(Director::makeRelative($cartPage->Link()));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $item = $order->Items()->First();
 	  
 	  $this->submitForm('CartForm_CartForm', null, array(
@@ -603,7 +603,7 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
 	  $this->assertEquals(4, $teeshirtAVariation->StockLevel()->Level);
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  
 	  $this->logInAs('admin');
 	  $order->LastActive = '2011-12-22 17:02:49';

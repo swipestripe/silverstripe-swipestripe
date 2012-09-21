@@ -12,7 +12,7 @@
 Object::add_extension('Payment', 'PaymentDecorator');
 
 //Extend page controller
-Object::add_extension('Page_Controller', 'CartControllerExtension');
+Object::add_extension('Page_Controller', 'Cart');
 
 //Redirect customers logging in to the account page
 Security::set_default_login_dest('account');

@@ -77,7 +77,7 @@ class CartQuantityField extends TextField {
 
 	  $valid = true;
 	  $item = $this->Item();
-    $currentOrder = CartControllerExtension::get_current_order();
+    $currentOrder = Cart::get_current_order();
 		$items = $currentOrder->Items();
 		$quantity = $this->Value();
 

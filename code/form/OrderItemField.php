@@ -75,7 +75,7 @@ class OrderItemField extends FormField {
 
 	  $valid = true;
 	  $item = $this->Item();
-	  $currentOrder = CartControllerExtension::get_current_order();
+	  $currentOrder = Cart::get_current_order();
 		$items = $currentOrder->Items();
 		
 	  //Check that item exists and is in the current order

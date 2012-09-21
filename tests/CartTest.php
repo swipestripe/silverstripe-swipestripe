@@ -73,7 +73,7 @@ class SWS_CartTest extends SWS_Test {
       'Quantity' => 1
     ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  
 	  $firstItem = $items->First();
@@ -105,7 +105,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -115,7 +115,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 2
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(3, $items->First()->Quantity);
@@ -138,7 +138,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -149,7 +149,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => -1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -172,7 +172,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -182,7 +182,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 0
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $items->First()->Quantity);
@@ -208,7 +208,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  
@@ -230,7 +230,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $this->assertEquals(2, $items->Count());
 	  
@@ -258,7 +258,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $this->assertEquals(1, $order->Items()->Count());
 	}
 	
@@ -287,7 +287,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $this->assertEquals(1, $order->Items()->Count());
 	}
 	
@@ -308,7 +308,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $firstProduct = clone $productA;
@@ -332,7 +332,7 @@ class SWS_CartTest extends SWS_Test {
 	    'Quantity' => 1
 	  ));
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 
 	  $firstItem = $items->First();
@@ -382,7 +382,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $itemOptions = $firstItem->ItemOptions();
@@ -439,7 +439,7 @@ class SWS_CartTest extends SWS_Test {
       $data
     );
 	  
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 
 	  $this->assertEquals(0, $items->Count());
@@ -494,7 +494,7 @@ class SWS_CartTest extends SWS_Test {
       $data
     );
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 
 	  $this->assertEquals(0, $items->Count());
@@ -534,7 +534,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 
@@ -550,7 +550,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 
@@ -589,7 +589,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 
@@ -613,7 +613,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtAPolyesterOpt->ID, //Polyester
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 
 	  $this->assertEquals(2, $items->Count());
@@ -659,7 +659,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
 	  $itemOptions = $firstItem->ItemOptions();
@@ -688,7 +688,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $lastItemOption = $items->Last()->ItemOptions()->Last();
 
@@ -730,7 +730,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtAPolyesterOpt->ID, //Polyester
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
 	}
@@ -849,7 +849,7 @@ class SWS_CartTest extends SWS_Test {
 	    "Options[{$materialAttr->ID}]" => $teeshirtAPolyesterOpt->ID, //Polyester
 	  ));
 
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 
 	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
 	  $this->assertEquals($expectedAmount, $order->SubTotal->getAmount());
@@ -911,11 +911,57 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $this->assertStringEndsWith('Object not written.', $message);
     
-	  $order = CartControllerExtension::get_current_order();
+	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(0, $items->Count());
 	}
 	
-	
+	/**
+	 * Persist an order to the DB only when explicitly asked to
+	 */
+	public function testPersistOrder() {
+
+		$this->assertEquals(1, Order::get()->count());
+
+		$order = Cart::get_current_order();
+		$this->assertEquals(1, Order::get()->count());
+
+		$order = Cart::get_current_order(true);
+		$origID = $order->ID;
+		$this->assertEquals(2, Order::get()->count());
+
+		//Should get the same Order as above and not persist another to the DB
+		$order = Cart::get_current_order(true);
+		$this->assertEquals($origID, $order->ID);
+		$this->assertEquals(2, Order::get()->count());
+	}
+
+	/**
+	 * Order is persisted to DB when trying to add a product to the cart
+	 */
+	public function testPersistOrderOnAddToCart() {
+
+    $productA = $this->objFromFixture('Product', 'productA');
+
+	  $this->loginAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+
+	  $order = Cart::get_current_order();
+	  $origID = $order->ID;
+		$this->assertEquals(1, Order::get()->count());
+
+    $productALink = $productA->Link();
+    $this->get(Director::makeRelative($productALink));
+
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1
+    ));
+
+	  $order = Cart::get_current_order();
+	  $this->assertFalse($origID == $order->ID);
+	  $this->assertEquals(2, Order::get()->count());
+	}
 }
+

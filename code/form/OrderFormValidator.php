@@ -23,7 +23,7 @@ class OrderFormValidator extends RequiredFields {
 		$fields = $this->form->Fields();
 		
 		//Check the order is valid
-		$currentOrder = CartControllerExtension::get_current_order();
+		$currentOrder = Cart::get_current_order();
 		if (!$currentOrder) {
 		  $this->form->sessionMessage(
   		  _t('Form.ORDER_IS_NOT_VALID', 'Your cart seems to be empty, please add an item from the shop'),
