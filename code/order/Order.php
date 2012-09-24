@@ -963,18 +963,6 @@ class Order extends DataObject {
   }
 	
 	/**
-	 * Testing to add auto increment to table
-	 * 
-	 * @deprecated
-	 */
-	public function augmentDatabase() {
-//	  $tableName = $this->class;
-//	  DB::query("ALTER TABLE $tableName AUTO_INCREMENT = 12547");
-//	  
-	  //SS_Log::log(new Exception(print_r("ALTER TABLE $tableName AUTO_INCREMENT = 12547", true)), SS_Log::NOTICE);
-	}
-	
-	/**
 	 * Get modifications that apply changes to the Order sub total.
 	 * 
 	 * @return DataList Set of Modification DataObjects

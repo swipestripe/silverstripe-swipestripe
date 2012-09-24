@@ -81,7 +81,6 @@ class Cart extends Extension {
 
 	/**
 	 * Updates timestamp LastActive on the order, called on every page request. 
-	 * This is for a stock level solution which is not currently implemented.
 	 */
   function onBeforeInit() {
 

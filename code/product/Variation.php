@@ -268,52 +268,43 @@ class Variation extends DataObject {
    * 
    * @return Boolean
    */
-  // public function hasValidOptions() {
-  //   //Get the options for the product
-  //   //Get the attributes for the product
-  //   //Each variation should have a valid option for each attribute
-  //   //Each variation should have only attributes that match the product
-    
-  //   $productAttributeOptions = array();
-  //   $productOptions = $this->Product()->Options();
-  //   $productAttributesMap = $this->Product()->Attributes()->map()->toArray();
+  public function hasValidOptions() {
 
-  //   //Only add attributes that have options for this product
-  //   if ($productOptions) foreach ($productOptions as $option) {
-      
-  //     $attribute = $option->Attribute();
-      
-  //     if (!array_key_exists($option->AttributeID, $productAttributesMap)) {
-  //       continue;
-  //     }
-      
-  //     if ($attribute) {
-  //       $productAttributeOptions[$option->AttributeID][] = $option->ID;
-  //     }
-  //   }
+    //Get the options for the product
+    //Get the attributes for the product
+    //Each variation should have a valid option for each attribute
+    //Each variation should have only attributes that match the product
 
-  //   $variationAttributeOptions = array();
-  //   $variationOptions = $this->Options();
-    
-  //   if (!$variationOptions || !$variationOptions->exists()) return false;
-  //   foreach ($variationOptions as $option) {
-  //     $variationAttributeOptions[$option->AttributeID] = $option->ID;
-  //   }
-    
-  //   //If attributes are not equal between product and variation, variation is invalid
-  //   if (array_diff_key($productAttributeOptions, $variationAttributeOptions)
-  //    || array_diff_key($variationAttributeOptions, $productAttributeOptions)) {
-  //     return false;
-  //   }
-    
-  //   foreach ($productAttributeOptions as $attributeID => $validOptionIDs) {
-  //     if (!in_array($variationAttributeOptions[$attributeID], $validOptionIDs)) {
-  //       return false;
-  //     }
-  //   }
+    $productAttributeOptions = array();
+    $attributes = $this->Product()->Attributes();
 
-  //   return true;
-  // }
+    if ($attributes && $attributes->exists()) foreach ($attributes as $attribute) {
+      $options = $attribute->Options();
+      $productAttributeOptions[$attribute->ID] = $options->map()->toArray();
+    }
+
+    $variationAttributeOptions = array();
+    $variationOptions = $this->Options();
+    
+    if (!$variationOptions || !$variationOptions->exists()) return false;
+    foreach ($variationOptions as $option) {
+      $variationAttributeOptions[$option->AttributeID] = $option->ID;
+    }
+    
+    //If attributes are not equal between product and variation, variation is invalid
+    if (array_diff_key($productAttributeOptions, $variationAttributeOptions)
+     || array_diff_key($variationAttributeOptions, $productAttributeOptions)) {
+      return false;
+    }
+    
+    foreach ($productAttributeOptions as $attributeID => $validOptionIDs) {
+      if (!in_array($variationAttributeOptions[$attributeID], $validOptionIDs)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
   
   /**
    * Convenience method to check that this Variation is not a duplicate.

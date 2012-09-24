@@ -97,7 +97,20 @@ class Attribute extends DataObject {
     return $summary;
   }
 
+  public function onAfterWrite() {
+    parent::onAfterWrite();
 
+    //If product variation does not have a complete set of valid options, then disable it
+    $product = $this->Product();
+    $variations = $product->Variations();
+
+    if ($variations) foreach ($variations as $variation) {
+      if (!$variation->hasValidOptions()) {
+        $variation->Status = 'Disabled';
+        $variation->write();
+      }
+    }
+  }
 
 
 

@@ -209,18 +209,8 @@ class Product extends Page {
         $this->duplicateProductImages($images);
       }
     }
-
-    // TODO: Check the variations are valid again
-    //If the variation does not have a complete set of valid options, then disable it
-    // $variations = DataObject::get('Variation', "Variation.ProductID = " . $this->ID . " AND Variation.Status = 'Enabled'");
-
-    // if ($variations) foreach ($variations as $variation) {
-    //   if (!$variation->hasValidOptions()) {
-    //     $variation->Status = 'Disabled';
-    //     $variation->write();
-    //   }
-    // }
     
+    //TODO: Roll category ordering into seperate module
     $curr = Controller::curr();
     $request = $curr->getRequest();
     if ($request) {
