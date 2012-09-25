@@ -104,7 +104,7 @@ class PaymentDecorator extends DataExtension {
 	 */
 	function onAfterWrite() {
 
-	  $order = $this->owner->PaidObject();
+	  $order = $this->owner->Order();
 
 		if ($order && $order instanceof Order) {
 		  $order->onAfterPayment();
@@ -117,7 +117,7 @@ class PaymentDecorator extends DataExtension {
 	 * @see PaystationHostedPayment_Handler::complete()
 	 */
 	function redirectToOrder() {
-	  $order = $this->owner->PaidObject();
+	  $order = $this->owner->Order();
 
 		if ($order && $order instanceof Order) {
 		  Director::redirect($order->Link());

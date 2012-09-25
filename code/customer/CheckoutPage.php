@@ -154,7 +154,7 @@ class CheckoutPage_Controller extends Page_Controller {
     $this->addModifierFields($fields, $validator, $order);
     $this->addNotesField($fields, $validator);
 
-    //$this->addPaymentFields($fields, $validator, $order);
+    $this->addPaymentFields($fields, $validator, $order);
 
     $actions = new FieldList(
       new FormAction('ProcessOrder', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
@@ -198,7 +198,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	  
 	  $countryField = new DropdownField('Billing[Country]', _t('CheckoutPage.COUNTRY',"Country"), Country::billing_countries());
 	  $countryField->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY',"Please enter your country."));
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code);
 	  
 	  $billingAddressFields = new CompositeField(
 	    new HeaderField(_t('CheckoutPage.BILLINGADDRESS',"Billing Address"), 3),
@@ -246,7 +245,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	  
 	  $countryField = new DropdownField('Shipping[Country]', _t('CheckoutPage.COUNTRY',"Country"), Country::shipping_countries());
 	  $countryField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_COUNTRY',"Please enter a country."));
-    if (!Member::currentUserID() && Geoip::$default_country_code) $countryField->setValue(Geoip::$default_country_code); 
 
     $regions = Region::shipping_regions();
 
@@ -317,14 +315,15 @@ class CheckoutPage_Controller extends Page_Controller {
 	      "<a href=\"Security/login?BackURL=$link\">", 
 	      '</a>'
 	    );
-	    
-	    $lit = <<<EOS
-<p class="alert alert-info">
-	<strong class="alert-heading">$note</strong>
-	$passwd <br /><br />
-	$member
-</p>
-EOS;
+
+	    $lit = "
+	    <p class=\"alert alert-info\">
+	    	<strong class=\"alert-heading\">$note</strong>
+				$passwd <br /><br />
+				$member
+			</p>
+	    ";
+
 	    $personalFields->push(
 	      new CompositeField(
   	      new FieldGroup(
@@ -396,6 +395,25 @@ EOS;
 	 * @param Order $order The current order
 	 */
 	private function addPaymentFields(&$fields, &$validator, $order) {
+
+    // Create a dropdown select field for choosing gateway
+    $supported_methods = PaymentProcessor::get_supported_methods();
+
+    $source = array();
+    foreach ($supported_methods as $methodName) {
+      $methodConfig = PaymentFactory::get_factory_config($methodName);
+      $source[$methodName] = $methodConfig['title'];
+    }
+
+    $fields['Payment'][] = new DropDownField(
+      'PaymentMethod',
+      'Select Payment Method',
+      $source
+    );
+
+    return;
+
+
 	  $paymentFields = new CompositeField();
 
 	  return $paymentFields;
@@ -429,19 +447,22 @@ EOS;
 	 * @param Form $form Form data was submitted from
 	 */
 	function ProcessOrder($data, $form) {
+
+		SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
 	  
 	  //Check payment type
-	  $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
-		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
-
-		if(!($payment && $payment instanceof Payment)) {
-		  Debug::friendlyError(
+		try {
+			$paymentMethod = $data['PaymentMethod'];
+      $paymentProcessor = PaymentFactory::factory($paymentMethod);
+    }
+    catch (Exception $e) {
+      Debug::friendlyError(
 		    403,
 		    _t('CheckoutPage.NOT_VALID_METHOD',"Sorry, that is not a valid payment method."),
 		    _t('CheckoutPage.TRY_AGAIN',"Please go back and try again.")
 		  );
 			return;
-		}
+    }
 
 		//Save or create a new customer/member
 		//Need to save billing address info to Member for Payment class to work
@@ -516,43 +537,72 @@ EOS;
 		Session::clear('Cart.OrderID');
 
 		//Save payment data from form and process payment
-		$form->saveInto($payment);
-		$payment->OrderID = $order->ID;
-		$payment->PaidByID = $member->ID;
-		$payment->PaidForID = $order->ID;
-		$payment->PaidForClass = $order->class;
-		$payment->OrderID = $order->ID;
-		$payment->Amount->setAmount($order->Total->getAmount());
-		$payment->Amount->setCurrency($order->Total->getCurrency());
-		$payment->write();
-		
-		//Process payment, get the result back
-		$result = $payment->processPayment($data, $form);
+		// $form->saveInto($payment);
+		// $payment->OrderID = $order->ID;
+		// $payment->PaidByID = $member->ID;
+		// $payment->PaidForID = $order->ID;
+		// $payment->PaidForClass = $order->class;
+		// $payment->OrderID = $order->ID;
+		// $payment->Amount->setAmount($order->Total->getAmount());
+		// $payment->Amount->setCurrency($order->Total->getCurrency());
+		// $payment->write();
 
-    //If instant payment success
-		if ($result->isSuccess()) {
-      $order->sendReceipt();
-      $order->sendNotification();
-		}
 		
-	  //If payment is being processed
-	  //e.g long payment process redirected to another website (PayPal, DPS)
-		if ($result->isProcessing()) {
-		  
-		  //Defer sending receipt until payment process has completed
-		  //@see AccountPage_Controller::order()
-		  
-			return $result->getValue();
-		}
+
+    try {
+
+      $paymentData = array(
+				'Amount' => 120.00,
+				'Currency' => 'NZD'
+			);
+			$paymentProcessor->payment->OrderID = $order->ID;
+			$paymentProcessor->payment->PaidByID = $member->ID;
+			$paymentProcessor->setRedirectURL($order->Link());
+	    $paymentProcessor->capture($paymentData);
+    }
+    catch (Exception $e) {
+
+      //This is where we catch gateway validation or gateway unreachable errors
+      $result = $paymentProcessor->gateway->getValidationResult();
+      $payment = $paymentProcessor->payment;
+
+      return array(
+        'Content' => $this->customise(array(
+          'ExceptionMessage' => $e->getMessage(),
+          'ValidationMessage' => $result->message(),
+          'OrderForm' => $this->OrderForm(),
+          'Payment' => $payment
+        ))->renderWith('PaymentTestPage')
+      );
+    }
 		
-		//If payment failed
-		if (!$result->isSuccess() && !$result->isProcessing()) {
-      $order->sendReceipt();
-      $order->sendNotification();
-		}
+			// //Process payment, get the result back
+			// $result = $payment->processPayment($data, $form);
+
+	  //   //If instant payment success
+			// if ($result->isSuccess()) {
+	  //     $order->sendReceipt();
+	  //     $order->sendNotification();
+			// }
+			
+		 //  //If payment is being processed
+		 //  //e.g long payment process redirected to another website (PayPal, DPS)
+			// if ($result->isProcessing()) {
+			  
+			//   //Defer sending receipt until payment process has completed
+			//   //@see AccountPage_Controller::order()
+			  
+			// 	return $result->getValue();
+			// }
+			
+			// //If payment failed
+			// if (!$result->isSuccess() && !$result->isProcessing()) {
+	  //     $order->sendReceipt();
+	  //     $order->sendNotification();
+			// }
 
 		//Fallback
-		Director::redirect($order->Link());
+		//$this->redirect($order->Link());
 		return true;
 	}
 	

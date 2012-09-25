@@ -344,7 +344,8 @@ class Order extends DataObject {
 	 * @return ArrayList Set of Payment objects
 	 */
 	function Payments() {
-	  return DataObject::get('Payment', "PaidForID = $this->ID AND PaidForClass = '$this->class'");
+		return Payment::get()
+			->where("\"OrderID\" = {$this->ID}");
 	}
 	
 	/**
