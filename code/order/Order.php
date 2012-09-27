@@ -51,14 +51,32 @@ class Order extends DataObject {
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
-	  'Total' => 'Money',
-	  'SubTotal' => 'Money',
+
+	  'TotalPrice' => 'Decimal(19,4)',
+    'TotalCurrency' => 'Varchar(3)',
+    'SubTotalPrice' => 'Decimal(19,4)',
+    'SubTotalCurrency' => 'Varchar(3)',
+
 		'ReceiptSent' => 'Boolean',
 	  'NotificationSent' => 'Boolean',
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
 	  'Notes' => 'Text'
 	);
+
+	public function Total() {
+    $amount = new Money();
+		$amount->setCurrency($this->TotalCurrency);
+    $amount->setAmount($this->TotalPrice);
+    return $amount;
+  }
+
+  public function SubTotal() {
+    $amount = new Money();
+		$amount->setCurrency($this->SubTotalCurrency);
+    $amount->setAmount($this->SubTotalPrice);
+    return $amount;
+  }
 	
 	/**
 	 * Default values for Order
@@ -355,7 +373,7 @@ class Order extends DataObject {
 	 * @return Money With value and currency of total outstanding
 	 */
 	function TotalOutstanding() {
-	  $total = $this->Total->getAmount();
+	  $total = $this->Total()->getAmount();
 
 	  foreach ($this->Payments() as $payment) {
 	    if ($payment->Status != 'Failure') {
@@ -368,7 +386,7 @@ class Order extends DataObject {
 	  
 	  $outstanding = new Money();
 	  $outstanding->setAmount($total);
-	  $outstanding->setCurrency($this->Total->getCurrency());
+	  $outstanding->setCurrency($this->Total()->getCurrency());
 	  
 	  return $outstanding;
 	}
@@ -390,7 +408,7 @@ class Order extends DataObject {
 	  
 	  $totalPaid = new Money();
 	  $totalPaid->setAmount($paid);
-	  $totalPaid->setCurrency($this->Total->getCurrency());
+	  $totalPaid->setCurrency($this->Total()->getCurrency());
 	  
 	  return $totalPaid;
 	}
@@ -466,7 +484,7 @@ class Order extends DataObject {
 	 * @return Boolean
 	 */
 	public function getPaid() {
-	  return $this->TotalPaid()->getAmount() == $this->Total->getAmount();
+	  return $this->TotalPaid()->getAmount() == $this->Total()->getAmount();
 	}
 	
 	/**
@@ -500,8 +518,10 @@ class Order extends DataObject {
       $item->ObjectID = $product->ID;
       $item->ObjectClass = $product->class;
       $item->ObjectVersion = $product->Version;
-      $item->Amount->setAmount($product->Amount->getAmount());
-      $item->Amount->setCurrency($product->Amount->getCurrency());
+
+      $item->Price = $product->Amount()->getAmount();
+      $item->Currency = $product->Amount()->getCurrency();
+
       $item->Quantity = $quantity;
       $item->OrderID = $this->ID;
       $item->write();
@@ -513,8 +533,10 @@ class Order extends DataObject {
         $itemOption->ObjectID = $productOption->ID;
         $itemOption->ObjectClass = $productOption->class;
         $itemOption->ObjectVersion = $productOption->Version;
-        $itemOption->Amount->setAmount($productOption->Amount->getAmount());
-        $itemOption->Amount->setCurrency($productOption->Amount->getCurrency());
+
+        $itemOption->Price = $productOption->Amount()->getAmount();
+        $itemOption->Currency = $productOption->Amount()->getCurrency();
+
         $itemOption->ItemID = $item->ID;
         $itemOption->write();
       }
@@ -580,23 +602,19 @@ class Order extends DataObject {
 	  if ($modifications) foreach ($modifications as $modification) {
 	    
 	    if ($modification->SubTotalModifier) {
-	      $total += $modification->Amount->getAmount();
-	      $subTotal += $modification->Amount->getAmount();
+	      $total += $modification->Amount()->getAmount();
+	      $subTotal += $modification->Amount()->getAmount();
 	    }
 	    else {
-	      $total += $modification->Amount->getAmount();
+	      $total += $modification->Amount()->getAmount();
 	    }
 	  }
 
-    $this->SubTotal->setAmount($subTotal); 
+    $this->SubTotalPrice = $subTotal; 
+    $this->SubTotalCurrency = 'NZD';
 
-    $this->SubTotal->setCurrency('NZD');
-	  //$this->SubTotal->setCurrency(Payment::site_currency());
-
-	  $this->Total->setAmount($total); 
-
-	  $this->SubTotal->setCurrency('NZD');
-	  //$this->Total->setCurrency(Payment::site_currency());
+	  $this->TotalPrice = $total; 
+	  $this->SubTotalCurrency = 'NZD';
 
     $this->write();
 	}
@@ -955,12 +973,6 @@ class Order extends DataObject {
   function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
-    
-    $totalAmount = number_format($this->Total->getAmount(), 2);
-    $this->Total->setAmount($totalAmount);
-    
-    $subTotalAmount = number_format($this->SubTotal->getAmount(), 2);
-    $this->SubTotal->setAmount($subTotalAmount);
   }
 	
 	/**

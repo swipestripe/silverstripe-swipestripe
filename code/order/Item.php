@@ -20,11 +20,19 @@ class Item extends DataObject {
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
 		'ObjectVersion' => 'Int',
-	  'Amount' => 'Money',
+	  'Price' => 'Decimal(19,4)',
+    'Currency' => 'Varchar(3)',
 	  'PreviousQuantity' => 'Int',
 	  'Quantity' => 'Int',
 	  'DownloadCount' => 'Int' //If item represents a downloadable product,
 	);
+
+	public function Amount() {
+    $amount = new Money();
+		$amount->setCurrency($this->Currency);
+    $amount->setAmount($this->Price);
+    return $amount;
+  }
 
 	/**
 	 * Relations for this class
@@ -95,14 +103,14 @@ class Item extends DataObject {
 	 */
 	public function UnitPrice() {
 
-	  $amount = $this->Amount->getAmount();
+	  $amount = $this->Amount()->getAmount();
 	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amount += $itemOption->Amount->getAmount();
+	    $amount += $itemOption->Amount()->getAmount();
 	  } 
 	  
 	  $unitPrice = new Money();
 	  $unitPrice->setAmount($amount);
-	  $unitPrice->setCurrency($this->Amount->getCurrency());
+	  $unitPrice->setCurrency($this->Amount()->getCurrency());
 	  return $unitPrice;
 	}
 	
@@ -113,15 +121,15 @@ class Item extends DataObject {
 	 */
 	public function Total() {
 
-	  $amount = $this->Amount->getAmount();
+	  $amount = $this->Amount()->getAmount();
 	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amount += $itemOption->Amount->getAmount();
+	    $amount += $itemOption->Amount()->getAmount();
 	  } 
 	  $amount = $amount * $this->Quantity;
 	  
 	  $subTotal = new Money();
 	  $subTotal->setAmount($amount);
-	  $subTotal->setCurrency($this->Amount->getCurrency());
+	  $subTotal->setCurrency($this->Amount()->getCurrency());
 	  return $subTotal;
 	}
 

@@ -23,10 +23,18 @@ class Modification extends DataObject {
 	public static $db = array(
 	  'ModifierClass' => 'Varchar',
 		'ModifierOptionID' => 'Int', 
-	  'Amount' => 'Money',
+	  'Price' => 'Decimal(19,4)',
+    'Currency' => 'Varchar(3)',
 	  'Description' => 'Text',
 	  'SubTotalModifier' => 'Boolean'
 	);
+
+	public function Amount() {
+		$amount = new Money();
+		$amount->setCurrency($this->Currency);
+    $amount->setAmount($this->Price);
+    return $amount;
+  }
 
 	/**
 	 * Relations for this class

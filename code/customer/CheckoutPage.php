@@ -137,7 +137,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @return CheckoutForm The checkout/order form 
 	 */
 	function OrderForm() {
-
     $fields = array();
     $validator = new OrderFormValidator();
     
@@ -418,7 +417,7 @@ class CheckoutPage_Controller extends Page_Controller {
 
 	  return $paymentFields;
 	  
-		foreach (Payment::combined_form_fields($order->Total->getAmount()) as $field) {
+		foreach (Payment::combined_form_fields($order->Total()->getAmount()) as $field) {
 
 		  //Bit of a nasty hack to customize validation error message
 		  if ($field->Name() == 'PaymentMethod') {
@@ -448,8 +447,6 @@ class CheckoutPage_Controller extends Page_Controller {
 	 */
 	function ProcessOrder($data, $form) {
 
-		SS_Log::log(new Exception(print_r($data, true)), SS_Log::NOTICE);
-	  
 	  //Check payment type
 		try {
 			$paymentMethod = $data['PaymentMethod'];
@@ -546,8 +543,6 @@ class CheckoutPage_Controller extends Page_Controller {
 		// $payment->Amount->setAmount($order->Total->getAmount());
 		// $payment->Amount->setCurrency($order->Total->getCurrency());
 		// $payment->write();
-
-		
 
     try {
 

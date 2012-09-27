@@ -39,10 +39,16 @@ class Product extends Page {
    * @var Array
    */
   public static $db = array(
-    'Amount' => 'Money'
-    //'Amount' => 'Decimal(19,4)',
-    //'Currency' => 'Varchar(3)'
+    'Price' => 'Decimal(19,4)',
+    'Currency' => 'Varchar(3)'
   );
+
+  public function Amount() {
+    $amount = new Money();
+    $amount->setCurrency($this->Currency);
+    $amount->setAmount($this->Price);
+    return $amount;
+  }
   
   /**
    * Has one relations for Product
@@ -276,9 +282,11 @@ EOS;
     $fields = parent::getCMSFields();
 
     //Product fields
-    $amountField = new MoneyField('Amount', 'Amount');
-		$amountField->setAllowedCurrencies(self::$allowed_currency);	
-		$fields->addFieldToTab('Root.Main', $amountField, 'Content');
+    $priceField = new PriceField('Price');
+    $fields->addFieldToTab('Root.Main', $priceField, 'Content');
+
+    $currencyField = new TextField('Currency', 'Currency', 'NZD');
+    $fields->addFieldToTab('Root.Main', $currencyField, 'Content');
 
     $categoriesField = new CategoriesField('ProductCategories', 'Categories', 'ProductCategory');
     $fields->addFieldToTab('Root.Main', $categoriesField, 'Content');
@@ -348,49 +356,6 @@ EOS;
     }
 
     return $fields;
-    
-    //Product ordering
-    /*
-    $categories = $this->ProductCategories();
-    if ($categories && $categories->exists()) {
-    
-      $fields->addFieldToTab("Root.Content", new Tab('Order'));
-      
-      $fields->addFieldToTab("Root.Order", new HeaderField(
-        	'OrderHeading', 
-        	'Set the order of this product in each of it\'s categories',
-          3
-        ));
-        
-        $orderHelp = <<<EOS
-<p class="ProductHelp">
-Products with higher order numbers in each category will appear further at the front of 
-that category.
-</p>
-EOS;
-        $fields->addFieldToTab("Root.Order", new LiteralField('OrderHelp', $orderHelp));
-      
-      foreach ($categories as $category) {
-
-        $categoryTitle = $category->Title;
-        $categoryID = $category->ID;
-        $productID = $this->ID;
-        $sql = <<<EOS
-SELECT "ProductOrder" 
-FROM  "ProductCategory_Products" 
-WHERE "ProductCategoryID" = $categoryID 
-AND "ProductID" = $productID 
-EOS;
-        $query = DB::query($sql);
-        $order = $query->value();
-        
-        $val = ($order) ? $order : 0; 
-        $fields->addFieldToTab('Root.Order', new TextField("CategoryOrder[$categoryID]", "Order in $categoryTitle Category", $val));
-      } 
-    }
-    
-    return $fields;
-    */
 	}
 
   /**
@@ -587,7 +552,7 @@ EOS;
 	 * @return String Amount formatted with Nice()
 	 */
 	function SummaryOfPrice() {
-	  return $this->Amount->Nice();
+	  return $this->Amount()->Nice();
 	}
 
 	/**
@@ -1050,22 +1015,22 @@ class Product_Controller extends Page_Controller {
       }
     }
     
-    $data['totalPrice'] = $product->Amount->Nice();
+    $data['totalPrice'] = $product->Amount()->Nice();
     
     if ($variation) {
 
-      if ($variation->Amount->getAmount() == 0) {
+      if ($variation->Amount()->getAmount() == 0) {
         $data['priceDifference'] = 0;
       }
-      else if ($variation->Amount->getAmount() > 0) {
-        $data['priceDifference'] = '(+' . $variation->Amount->Nice() . ')';
+      else if ($variation->Amount()->getAmount() > 0) {
+        $data['priceDifference'] = '(+' . $variation->Amount()->Nice() . ')';
         $newTotal = new Money();
-        $newTotal->setCurrency($product->Amount->getCurrency());
-        $newTotal->setAmount($product->Amount->getAmount() + $variation->Amount->getAmount());
+        $newTotal->setCurrency($product->Amount()->getCurrency());
+        $newTotal->setAmount($product->Amount()->getAmount() + $variation->Amount()->getAmount());
         $data['totalPrice'] = $newTotal->Nice();
       }
       else { //Variations have been changed so only positive values, so this is unnecessary
-        //$data['priceDifference'] = '(' . $variation->Amount->Nice() . ')';
+        //$data['priceDifference'] = '(' . $variation->Amount()->Nice() . ')';
       }
     }
 

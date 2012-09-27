@@ -18,8 +18,16 @@ class ItemOption extends DataObject {
 	  'ObjectID' => 'Int',
 	  'ObjectClass' => 'Varchar',
 	  'ObjectVersion' => 'Int',
-	  'Amount' => 'Money'
+	  'Price' => 'Decimal(19,4)',
+    'Currency' => 'Varchar(3)',
 	);
+
+	public function Amount() {
+    $amount = new Money();
+		$amount->setCurrency($this->Currency);
+    $amount->setAmount($this->Price);
+    return $amount;
+  }
 
 	/**
 	 * Relations for this class

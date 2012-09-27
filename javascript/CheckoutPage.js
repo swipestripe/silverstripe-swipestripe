@@ -61,7 +61,7 @@
     	//Processing order indicator
     	$('#CheckoutForm_OrderForm_action_ProcessOrder').live('click', function() {
     		$('#CheckoutForm_OrderForm_action_ProcessOrder')
-    			.attr('disabled', 'disabled')
+    			//.attr('disabled', 'disabled')
     			.attr('Value', 'Processing...');
     		$('.Actions .loading').show();
     	});

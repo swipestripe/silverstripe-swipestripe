@@ -18,9 +18,17 @@ class Variation extends DataObject {
    * @var Array
    */
   public static $db = array(
-    'Amount' => 'Money',
+    'Price' => 'Decimal(19,4)',
+    'Currency' => 'Varchar(3)',
   	'Status' => "Enum('Enabled,Disabled','Enabled')",
   );
+
+  public function Amount() {
+    $amount = new Money();
+    $amount->setCurrency($this->Currency);
+    $amount->setAmount($this->Price);
+    return $amount;
+  }
 
   /**
    * Has one relation for a Variation
@@ -146,10 +154,12 @@ class Variation extends DataObject {
     	'Status (you can disable a variation to prevent it being sold)', 
       $this->dbObject('Status')->enumValues()
     ));
-    
-    $amountField = new VariationMoneyField('Amount', 'Amount that this variation will increase the base product price by');
-		$amountField->setAllowedCurrencies(Product::$allowed_currency);
-    $fields->addFieldToTab('Root.Advanced',$amountField);
+
+    $priceField = new PriceField('Price', 'Amount that this variation will increase the base product price by');
+    $fields->addFieldToTab('Root.Main', $priceField);
+
+    $currencyField = new TextField('Currency', 'Currency', 'NZD');
+    $fields->addFieldToTab('Root.Main', $currencyField);
 
     return $fields;
   }
@@ -211,7 +221,7 @@ class Variation extends DataObject {
    * @return String
    */
   public function SummaryOfPrice() {
-    return $this->Amount->Nice();
+    return $this->Amount()->Nice();
   }
   
   /**
@@ -376,7 +386,7 @@ class Variation extends DataObject {
    * @return Boolean
    */
   public function isNegativeAmount() {
-    return $this->Amount->getAmount() < 0;
+    return $this->Amount()->getAmount() < 0;
   }
 
   /**

@@ -32,41 +32,41 @@ Product:
   productA:
     Title: Product A
     URLSegment: product-a
-    AmountAmount: 500
-    AmountCurrency: NZD
+    Price: 500
+    Currency: NZD
     Date: 2011-02-17 18:45:00
     StockLevelID: =>StockLevel.levelProductA
   productB:
     Title: Product B
     URLSegment: product-b
-    AmountAmount: 19.95
-    AmountCurrency: NZD 
+    Price: 19.95
+    Currency: NZD 
     Date: 2011-01-31 20:48:00
     StockLevelID: =>StockLevel.levelProductB
   teeshirtA:
     Title: Striped Tee
     URLSegment: striped-tee
-    AmountAmount: 14.99
-    AmountCurrency: NZD 
+    Price: 14.99
+    Currency: NZD 
     Date: 2011-01-31 20:49:00
   shortsA:
     Title: Checked Shorts
     URLSegment: checked-shorts
-    AmountAmount: 24.95
-    AmountCurrency: NZD 
+    Price: 24.95
+    Currency: NZD 
     Date: 2011-01-31 20:49:00
     StockLevelID: =>StockLevel.levelShortsA
   jeans:
     Title: Jeans
     URLSegment: jeans
-    AmountAmount: 34.99
-    AmountCurrency: NZD 
+    Price: 34.99
+    Currency: NZD 
     StockLevelID: =>StockLevel.levelJeans #This level should be superceded by variation stock level
   brokenProduct:
     Title: Broken Product
     URLSegment: broken-product
-    AmountAmount: 22.09
-    AmountCurrency: NZD 
+    Price: 22.09
+    Currency: NZD 
     Date: 2011-01-31 20:49:00
 
 # ------------------------------------------
@@ -264,43 +264,43 @@ Variation:
 # ------------------
   teeshirtSmallRedCotton:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
     StockLevelID: =>StockLevel.levelTeeshirtSmallRedCotton
   teeshirtSmallRedPolyester:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 1.05 
+    Currency: NZD
+    Price: 1.05 
     StockLevelID: =>StockLevel.levelTeeshirtSmallRedPolyester
   teeshirtSmallPurpleCotton:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
     StockLevelID: =>StockLevel.levelTeeshirtSmallPurpleCotton
   teeshirtSmallPurplePolyester:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
   teeshirtMediumPurpleCotton:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
   teeshirtMediumPurpleSilk:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
   teeshirtExtraLargeRedCotton:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
   teeshirtExtraLargeRedPolyester:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
   teeshirtExtraLargePurpleCotton:
     ProductID: =>Product.teeshirtA
-    AmountCurrency: NZD
-    AmountAmount: 0.00 
+    Currency: NZD
+    Price: 0.00 
     StockLevelID: =>StockLevel.levelTeeshirtExtraLargePurpleCotton
 
 # Shorts Variations
@@ -314,8 +314,8 @@ Variation:
 # ------------------
   shortsSmallRedCotton:
     ProductID: =>Product.shortsA
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
     Status: Enabled
     StockLevelID: =>StockLevel.levelShortsSmallRedCotton
 
@@ -325,14 +325,14 @@ Variation:
 # ------------------
   jeansSmall:
     ProductID: =>Product.jeans
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
     Status: Enabled
     StockLevelID: =>StockLevel.levelJeansSmall
   jeansMedium:
     ProductID: =>Product.jeans
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
     Status: Enabled
     StockLevelID: =>StockLevel.levelJeansMedium
 
@@ -344,16 +344,16 @@ Variation:
 # ------------------
   brokenSmallRed:
     ProductID: =>Product.brokenProduct
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
   brokenSmallRedDuplicate:
     ProductID: =>Product.brokenProduct
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
   brokenMedium:
     ProductID: =>Product.brokenProduct
-    AmountCurrency: NZD
-    AmountAmount: 0.00
+    Currency: NZD
+    Price: 0.00
 
 # ------------------------------------------
 # Variation options
@@ -567,9 +567,9 @@ Order:
     PaymentStatus: Unpaid
     ReceiptSent: 1
     TotalCurrency: NZD
-    TotalAmount: 500
+    TotalPrice: 500
     SubTotalCurrency: NZD
-    SubTotalAmount: 500
+    SubTotalPrice: 500
     MemberID: =>Customer.buyer
     Notes: Some notes about order one.
 
@@ -583,8 +583,8 @@ Item:
     ObjectClass: Product
     ObjectVersion: 2
     Quantity: 1
-    AmountCurrency: NZD
-    AmountAmount: 500
+    Currency: NZD
+    Price: 500
 
 # ------------------------------------------
 # Shipping Countries

@@ -85,16 +85,11 @@ class SWS_ProductTest extends SWS_Test {
 	  $versionsAfterPublished = array();
 	  foreach ($versions as $versionRow) $versionsAfterPublished[] = $versionRow;
 
-	  $originalAmount = $productA->Amount;
-	  
-	  $newAmount = new Money();
-	  $newAmount->setAmount($originalAmount->getAmount() + 50);
-	  $newAmount->setCurrency($originalAmount->getCurrency());
-	  
-	  $this->assertTrue($newAmount->Amount != $originalAmount->Amount);
-	  
+	  $originalAmount = $productA->Price;
+	  $newAmount = $originalAmount + 50;
+
     //Update price and publish
-	  $productA->Amount = $newAmount;
+	  $productA->Price = $newAmount;
 	  $productA->doPublish();
 
 	  $versions = DB::query('SELECT * FROM "Product_versions" WHERE "RecordID" = ' . $productID);
@@ -102,7 +97,7 @@ class SWS_ProductTest extends SWS_Test {
 	  foreach ($versions as $versionRow) $versionsAfterPriceChange[] = $versionRow;
 
 	  $this->assertTrue(count($versionsAfterPublished) + 1 == count($versionsAfterPriceChange));
-	  $this->assertEquals($versionsAfterPriceChange[2]['AmountAmount'], $newAmount->getAmount());
+	  $this->assertEquals($versionsAfterPriceChange[2]['Price'], $newAmount);
 	}
 
 	/**
@@ -342,15 +337,10 @@ class SWS_ProductTest extends SWS_Test {
 	  $this->loginAs('admin');
 	  $smallRedShortsVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  
-	  $originalAmount = $smallRedShortsVariation->Amount;
-	  
-	  $this->assertTrue($originalAmount->getAmount() >= 0);
-	  
-	  $newAmount = new Money();
-	  $newAmount->setAmount(-1);
-	  $newAmount->setCurrency($originalAmount->getCurrency());
-	  
-	  $smallRedShortsVariation->Amount = $newAmount;
+	  $originalAmount = $smallRedShortsVariation->Price;
+	  $this->assertTrue($originalAmount >= 0);
+
+	  $smallRedShortsVariation->Price = -1;
 	  $errorMessage = null;
 	  try {
 	    $smallRedShortsVariation->write();

@@ -50,8 +50,8 @@ class SWS_CartTest extends SWS_Test {
   public function testProduct() {
     
 		$productA = $this->objFromFixture('Product', 'productA');
-		$this->assertEquals($productA->dbObject('Amount')->getAmount(), 500.00, 'The price of Product A should be 500.');
-		$this->assertEquals($productA->dbObject('Amount')->getCurrency(), 'NZD', 'The currency of Product A should be NZD.');
+		$this->assertEquals($productA->Price, 500.00, 'The price of Product A should be 500.');
+		$this->assertEquals($productA->Currency, 'NZD', 'The currency of Product A should be NZD.');
 	}
 	
 	/**
@@ -85,7 +85,7 @@ class SWS_CartTest extends SWS_Test {
 	  $firstProduct = $firstItem->Object();
 	  $this->assertInstanceOf('Product', $firstProduct);
 	  $this->assertEquals($productA->Title, $firstProduct->Title);
-	  $this->assertEquals($productA->dbObject('Amount')->getAmount(), $firstProduct->dbObject('Amount')->getAmount());
+	  $this->assertEquals($productA->Price, $firstProduct->Price);
 	}
 	
 	/**
@@ -314,15 +314,15 @@ class SWS_CartTest extends SWS_Test {
 	  $firstProduct = clone $productA;
 	  
 	  $this->assertEquals(1, $order->Items()->Count());
-	  $this->assertEquals($productA->Amount->getAmount(), $firstItem->Amount->getAmount());
-	  $this->assertEquals($productA->Amount->getCurrency(), $firstItem->Amount->getCurrency());
+	  $this->assertEquals($productA->Price, $firstItem->Price);
+	  $this->assertEquals($productA->Currency, $firstItem->Currency);
 	  
 	  $newAmount = new Money();
 	  $newAmount->setAmount(72.34);
 	  $newAmount->setCurrency('NZD');
 	  
 	  $this->logInAs('admin');
-	  $productA->Amount->setValue($newAmount); 
+	  $productA->Price = $newAmount->getAmount(); 
 	  $productA->doPublish();
 	  $this->logOut();
 	  
@@ -340,11 +340,11 @@ class SWS_CartTest extends SWS_Test {
 
 	  $this->assertEquals(2, $order->Items()->Count());
 	  
-	  $this->assertEquals($firstProduct->Amount->getAmount(), $firstItem->Amount->getAmount());
-	  $this->assertEquals($firstProduct->Amount->getCurrency(), $firstItem->Amount->getCurrency());
+	  $this->assertEquals($firstProduct->Price, $firstItem->Price);
+	  $this->assertEquals($firstProduct->Currency, $firstItem->Currency);
 	  
-	  $this->assertEquals($newAmount->getAmount(), $secondItem->Amount->getAmount());
-	  $this->assertEquals($newAmount->getCurrency(), $secondItem->Amount->getCurrency());
+	  $this->assertEquals($newAmount->getAmount(), $secondItem->Price);
+	  $this->assertEquals($newAmount->getCurrency(), $secondItem->Currency);
 	}
 
 	/**
@@ -631,7 +631,7 @@ class SWS_CartTest extends SWS_Test {
 
     $this->logInAs('admin');
 	  $teeshirtA->doPublish();
-	  $teeshirtAVariation->Amount->setAmount(1.00);
+	  $teeshirtAVariation->Price = 1.00;
 	  $teeshirtAVariation->write();
 	  $this->logOut();
 
@@ -672,7 +672,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $this->logInAs('admin');
 	  $teeshirtA->doPublish();
-	  $teeshirtAVariation->Amount->setAmount(0.00);
+	  $teeshirtAVariation->Price = 0.00;
 	  $teeshirtAVariation->write();
 	  $this->logOut();
 	  
@@ -709,7 +709,7 @@ class SWS_CartTest extends SWS_Test {
 	  $teeshirtA->doPublish();
 	  $this->logOut();
 
-	  $expectedAmount = $teeshirtA->Amount->getAmount() + $teeshirtAVariation->Amount->getAmount();
+	  $expectedAmount = $teeshirtA->Price + $teeshirtAVariation->Price;
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
@@ -732,7 +732,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $order = Cart::get_current_order();
 
-	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
+	  $this->assertEquals($expectedAmount, $order->Total()->getAmount());
 	}
 	
 	/**
@@ -828,7 +828,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->logOut();
 
 	  $quantity = 2;
-	  $expectedAmount = ($teeshirtA->Amount->getAmount() + $teeshirtAVariation->Amount->getAmount()) * $quantity;
+	  $expectedAmount = ($teeshirtA->Price + $teeshirtAVariation->Price) * $quantity;
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
@@ -851,8 +851,8 @@ class SWS_CartTest extends SWS_Test {
 
 	  $order = Cart::get_current_order();
 
-	  $this->assertEquals($expectedAmount, $order->Total->getAmount());
-	  $this->assertEquals($expectedAmount, $order->SubTotal->getAmount());
+	  $this->assertEquals($expectedAmount, $order->Total()->getAmount());
+	  $this->assertEquals($expectedAmount, $order->SubTotal()->getAmount());
 	}
 	
 	// /**
