@@ -41,15 +41,6 @@ class Address extends DataObject {
 	);
 	
 	/**
-	 * Table type needs to be InnoDB for transaction support (not currently implemented).
-	 * 
-	 * @var Array
-	 */
-	static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
-	);
-	
-	/**
 	 * Return data in an Array with keys formatted to match the field names
 	 * on the checkout form so that it can be loaded into an order form.
 	 * 
@@ -59,28 +50,17 @@ class Address extends DataObject {
 	function getCheckoutFormData($prefix = 'Billing') {
 	  $formattedData = array();
 	  
-	  $formattedData[$prefix . "[FirstName]"] = $this->FirstName;
-	  $formattedData[$prefix . "[Surname]"] = $this->Surname;
-	  $formattedData[$prefix . "[Company]"] = $this->Company;
-	  $formattedData[$prefix . "[Address]"] = $this->Address;
-	  $formattedData[$prefix . "[AddressLine2]"] = $this->AddressLine2;
-	  $formattedData[$prefix . "[City]"] = $this->City;
-	  $formattedData[$prefix . "[PostalCode]"] = $this->PostalCode;
-	  $formattedData[$prefix . "[State]"] = $this->State;
-	  $formattedData[$prefix . "[Country]"] = $this->CountryID;
+	  $formattedData[$prefix . '[FirstName]'] = $this->FirstName;
+	  $formattedData[$prefix . '[Surname]'] = $this->Surname;
+	  $formattedData[$prefix . '[Company]'] = $this->Company;
+	  $formattedData[$prefix . '[Address]'] = $this->Address;
+	  $formattedData[$prefix . '[AddressLine2]'] = $this->AddressLine2;
+	  $formattedData[$prefix . '[City]'] = $this->City;
+	  $formattedData[$prefix . '[PostalCode]'] = $this->PostalCode;
+	  $formattedData[$prefix . '[State]'] = $this->State;
+	  $formattedData[$prefix . '[Country]'] = $this->CountryID;
 	  
 	  return $formattedData;
-	}
-	
-	/**
-	 * By default an order is always valid. Empty orders are often created and saved
-	 * in the DB to represent a cart, so cannot validate that Items and Addresses 
-	 * exist for the order until the checkout process.
-	 * 
-	 * @see DataObject::validate()
-	 */
-	function validate() {
-	  return parent::validate();
 	}
 	
 }

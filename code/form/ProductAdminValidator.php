@@ -21,9 +21,9 @@ class ProductAdminValidator extends RequiredFields {
 	function php($data) {
 
 		$valid = parent::php($data);
-		
-		//$this->validationError("", "This is a test error message for the Title.", 'bad'); 
-    //$valid = false; 
+
+		// $this->validationError("", "This is a test error message for the Title.", 'bad'); 
+  	// $valid = false; 
 		
 		return $valid;
 	}

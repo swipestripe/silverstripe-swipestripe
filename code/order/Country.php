@@ -313,13 +313,6 @@ class Country extends DataObject {
   );
   
   /**
-   * Dummy function to prevent errors thrown
-   */
-  public function forTemplate() {
-    return;   
-  }
-  
-  /**
    * Get a map of shipping countries for dropdown fields etc.
    * 
    * @return Array Map of countries
@@ -345,6 +338,11 @@ class Country extends DataObject {
       return $countries->map()->toArray();
     }
 	  return array();
+	}
+
+	public static function get_codes() {
+		
+		return self::$iso_3166_countryCodes;
 	}
 
 }

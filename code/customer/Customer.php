@@ -22,8 +22,7 @@ class Customer extends Member {
 		'PostalCode' => 'Varchar(30)',
 		'State' => 'Varchar(100)',
 		'Country' => 'Varchar',
-		'HomePhone' => 'Varchar(100)',
-		'Notes' => 'HTMLText' //TODO remove? Is this necessary for Payment class or something?
+		'HomePhone' => 'Varchar(100)'
 	);
 	
 	/**
@@ -42,7 +41,7 @@ class Customer extends Member {
 	 * 
 	 * @see DataObject::onBeforeDelete()
 	 */
-  function onBeforeDelete() {
+	public function onBeforeDelete() {
     
     parent::onBeforeDelete();
 
@@ -71,28 +70,42 @@ class Customer extends Member {
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
-	  
-	  $fields = parent::getCMSFields();
-	  
-		$fields->addFieldToTab('Root.Address', new TextField('Address', _t('Customer.ADDRESS', "Address")));
-		$fields->addFieldToTab('Root.Address', new TextField('AddressLine2', ''));
-		$fields->addFieldToTab('Root.Address', new TextField('City', _t('Customer.CITY', "City")));
-		$fields->addFieldToTab('Root.Address', new TextField('State', _t('Customer.STATE', "State")));
-		$fields->addFieldToTab('Root.Address', new TextField('PostalCode', _t('Customer.POSTAL_CODE', "Postal Code")));
-		$fields->addFieldToTab('Root.Address', new DropdownField('Country', _t('Customer.COUNTRY', "Country"), Geoip::getCountryDropDown()));
-		
-		$fields->removeByName('Street');
-		$fields->removeByName('Suburb');
-		$fields->removeByName('CityTown');
-		$fields->removeByName('DateFormat');
-		$fields->removeByName('TimeFormat');
-		$fields->removeByName('Notes');
-		$fields->removeByName('Orders');
-		$fields->removeByName('Addresses');
-		$fields->removeByName('Groups');
-		$fields->removeByName('Permissions');
-		
-		return $fields;
+
+		$fields = new FieldList();
+
+    $fields->push(new TabSet('Root', 
+      Tab::create('Customer'),
+      Tab::create('Address')
+    ));
+
+    $password = new ConfirmedPasswordField(
+			'Password', 
+			null, 
+			null, 
+			null, 
+			true // showOnClick
+		);
+		$password->setCanBeEmpty(true);
+		if(!$this->ID) $password->showOnClick = false;
+
+    $fields->addFieldsToTab('Root.Customer', array(
+    	new TextField('FirstName'),
+    	new TextField('Surname'),
+    	new EmailField('Email'),
+    	new ConfirmedPasswordField('Password'),
+    	$password
+    ));
+
+    $fields->addFieldsToTab('Root.Address', array(
+    	new TextField('Address', _t('Customer.ADDRESS', "Address")),
+    	new TextField('AddressLine2', ' '),
+    	new TextField('City', _t('Customer.CITY', 'City')),
+    	new TextField('State', _t('Customer.STATE', 'State')),
+    	new TextField('PostalCode', _t('Customer.POSTAL_CODE', 'Postal Code')),
+    	new DropdownField('Country', _t('Customer.COUNTRY', 'Country'), Country::get_codes())
+    ));
+
+    return $fields;
 	}
 	
 	/**
@@ -101,7 +114,7 @@ class Customer extends Member {
 	 * 
 	 * @return Address The last billing address
 	 */
-  function BillingAddress() {
+	public function BillingAddress() {
 	  $address = null;
 
 	  $addresses = $this->Addresses();
@@ -119,7 +132,7 @@ class Customer extends Member {
 	 * 
 	 * @return Address The last shipping address
 	 */
-  function ShippingAddress() {
+	public function ShippingAddress() {
 	  $address = null;
 
 	  $addresses = $this->Addresses();
@@ -135,7 +148,7 @@ class Customer extends Member {
 	 * 
 	 * @return ArrayList Set of previous orders for this member
 	 */
-	function Orders() {
+	public function Orders() {
 	  $orders = DataObject::get('Order', "\"MemberID\" = " . $this->ID . " AND \"Order\".\"Status\" != 'Cart'", "\"Created\" DESC");
 	  if (!$orders) $orders = new ArrayList(); //No idea why this is necessary, StockLevelTest was failing suddenly though
 	  return $orders;

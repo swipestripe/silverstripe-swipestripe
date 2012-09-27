@@ -76,7 +76,7 @@ class Product extends Page {
    * 
    * @var Array
    */
-  static $belongs_many_many = array(    
+  public static $belongs_many_many = array(    
     'ProductCategories' => 'ProductCategory'
   );
   
@@ -89,77 +89,17 @@ class Product extends Page {
     'ParentID' => -1
   );
   
- //  /**
- //   * Summary fields for displaying Products in the CMS
- //   * 
- //   * @var Array
- //   */
- //  public static $summary_fields = array(
- //    'FirstImage' => 'Image',
- //    'SummaryOfPrice' => 'Price',
-	//   'Title' => 'Name',
- //    'Status' => 'Status',
- //    'SummaryOfCategories' => 'Categories'
-	// );
-	
-	// /**
- //   * Searchable fields for searching for Products in the CMS
- //   * 
- //   * @var Array
- //   */
-	// public static $searchable_fields = array(
-	//   'Title' => array(
-	// 		'field' => 'TextField',
-	// 		'filter' => 'PartialMatchFilter',
-	// 		'title' => 'Name'
-	// 	),
-	// 	'Status' => array(
-	// 		'filter' => 'PublishedStatusSearchFilter',
-	// 		'title' => 'Status'
-	// 	),
-	// 	'Category' => array(
- //  		'filter' => 'ProductCategorySearchFilter',
- //  	)
-	// );
-	
-	// /**
- //   * Casting for searchable fields
- //   * 
- //   * @see Product::$searchable_fields
- //   * @var Array
- //   */
-	// public static $casting = array(
- //    'Category' => 'Varchar',
-	// );
-	
-	// /**
-	//  * Filter for order admin area search.
-	//  * 
-	//  * @see DataObject::scaffoldSearchFields()
-	//  * @return FieldList
-	//  */
- //  function scaffoldSearchFields(){
-	// 	$fieldSet = parent::scaffoldSearchFields();
-
-	// 	$statusField = new DropdownField('Status', 'Status', array(
-	// 	  1 => "published", 
-	// 	  2 => "not published"
-	// 	));
-	// 	$statusField->setHasEmptyDefault(true);
-	// 	$fieldSet->push($statusField);
-		
-	// 	if($categories = DataObject::get('ProductCategory')) {
-	// 	  $categories->sort('MenuTitle');
-	// 	  $categoryOptions = $categories->map("ID", "MenuTitle")->toArray();
-	// 	  //$fieldSet->push(new CheckboxSetField('Category', 'Category', $categoryOptions));
-		  
-	// 	  $dropDown = new DropdownField('Category', 'Category', $categoryOptions);
-	// 	  $dropDown->setHasEmptyDefault(true);
-	// 	  $fieldSet->push($dropDown);
-	// 	}
-
-	// 	return $fieldSet;
-	// }
+  /**
+   * Summary fields for displaying Products in the CMS
+   * 
+   * @var Array
+   */
+  public static $summary_fields = array(
+    'SummaryOfImage' => 'Image',
+    'SummaryOfPrice' => 'Price',
+	  'Title' => 'Title',
+    'SummaryOfCategories' => 'Categories'
+	);
 	
 	/**
 	 * Set firstWrite flag if this is the first time this Product is written.
@@ -169,7 +109,7 @@ class Product extends Page {
 	 * @see SiteTree::onBeforeWrite()
 	 * @see Product::onAfterWrite()
 	 */
-  function onBeforeWrite() {
+  public function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->firstWrite = true;
     
@@ -201,7 +141,7 @@ class Product extends Page {
    * 
    * @see SiteTree::onAfterWrite()
    */
-  function onAfterWrite() {
+  public function onAfterWrite() {
     parent::onAfterWrite();
 
     if ($this->firstWrite) {
@@ -211,29 +151,13 @@ class Product extends Page {
       //Copy product images across when duplicating product
       $original = DataObject::get_by_id($this->class, $this->original['ID']);
       if ($original) {
-        $images = $original->Images();
-        $this->duplicateProductImages($images);
+        foreach ($original->Images() as $productImage) {
+          $newImage = $productImage->duplicate(false);
+          $newImage->ProductID = $this->ID;
+          $newImage->write();
+        }
       }
     }
-    
-    //TODO: Roll category ordering into seperate module
-    $curr = Controller::curr();
-    $request = $curr->getRequest();
-    if ($request) {
-      $categoryOrdering = $request->requestVar('CategoryOrder');
-      if ($categoryOrdering && is_array($categoryOrdering)) foreach ($categoryOrdering as $categoryID => $categoryOrder) {
-
-        $productID = $this->ID;
-        $query = <<<EOS
-UPDATE "ProductCategory_Products" 
-SET  "ProductOrder" =  '$categoryOrder' 
-WHERE  "ProductCategory_Products"."ProductCategoryID" = $categoryID 
-AND "ProductCategory_Products"."ProductID" = $productID 
-EOS;
-        DB::query($query);
-      }
-    }
-    
   }
 	
 	/**
@@ -241,7 +165,7 @@ EOS;
 	 * 
 	 * @see SiteTree::onAfterDelete()
 	 */
-  function onAfterDelete() {
+  public function onAfterDelete() {
     parent::onAfterDelete();
   
     if ($this->isPublished()) {
@@ -304,9 +228,13 @@ EOS;
     $fields->replaceField('URLSegment', $urlsegment);
 
     //Gallery
-    $config = GridFieldConfig_RelationEditor::create(10)
-      ->addComponent(new GridFieldSortableRows('SortOrder'));
-    $fields->addFieldToTab('Root.Gallery', new GridField('Images', 'Images', $this->Images(), $config));
+    $fields->addFieldToTab('Root.Gallery', new GridField(
+      'Images', 
+      'Images', 
+      $this->Images(), 
+      GridFieldConfig_RelationEditor::create(10)
+        ->addComponent(new GridFieldSortableRows('SortOrder'))
+    ));
 
     //Product attributes
     $listField = new GridField(
@@ -359,76 +287,14 @@ EOS;
 	}
 
   /**
-   * Hack to set Amount field in the array of database fields for this Product.
-   * Helps to ensure a new version is created when Amount (type of {@link Money}) is changed
-   * on a Product.
+   * Set custom validator for validating EditForm in {@link ShopAdmin}. Not currently used.
    * 
-   * @see DataObject::inheritedDatabaseFields()
-   * @return Array
-   */
-  public function inheritedDatabaseFields() {
-
-		$fields     = array();
-		$currentObj = $this->class;
-		
-		while($currentObj != 'DataObject') {
-			$fields     = array_merge($fields, self::custom_database_fields($currentObj));
-			$currentObj = get_parent_class($currentObj);
-		}
-
-		//Add field names in for Money fields
-		$fields['Amount'] = 0;
-
-		return (array) $fields;
-	}
-	
-	/**
-	 * Removing generic entries for "AmountAmount", "AmountCurrency" because they are ambiguous when two dataobjects have those columns
-	 * @see Money::addToQuery()
-	 * 
-	 * Build a {@link SQLQuery} object to perform the given query.
-	 *
-	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
-	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
-	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
-	 * @param boolean $restictClasses Restrict results to only objects of either this class of a subclass of this class
-	 * @param string $having A filter to be inserted into the HAVING clause.
-	 *
-	 * @return SQLQuery Query built.
-	 */
-	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
-	  
-	  $query = parent::buildSQL($filter, $sort, $limit, $join, $restrictClasses, $having);
-
-	  if (isset($query->select[0]) 
-	      && isset($query->select[1])
-	      && isset($query->select[2])
-	      && isset($query->select[3])) {
-	    unset($query->select[0]);
-  	  unset($query->select[1]);
-  	  $query->select[0] = $query->select[2];
-  	  $query->select[1] = $query->select[3];
-  	  unset($query->select[2]);
-  	  unset($query->select[3]);
-	  }
-
-	  return $query;
-	}
-  
-  /**
-   * Duplicate product images, useful when duplicating a product. 
+   * TODO could use this custom validator to check variations perhaps
    * 
-   * @see Product::onAfterWrite()
-   * @param ArrayList $images
+   * @return ProductAdminValidator
    */
-  protected function duplicateProductImages(ArrayList $images) {
-    
-    foreach ($images as $productImage) {
-      $newImage = $productImage->duplicate(false);
-      $newImage->ProductID = $this->ID;
-      $newImage->write();
-    }
+  public function getCMSValidator() {
+    return new ProductAdminValidator();
   }
   
   /**
@@ -437,9 +303,11 @@ EOS;
    * @return Image
    */
   public function FirstImage() {
-    $images = $this->Images();
-    //$images->sort('SortOrder', 'ASC');
-    return $images->First();
+    return $this->Images()->First();
+  }
+
+  public function SummaryOfImage() {
+    return $this->Images()->First()->SummaryOfImage();
   }
 	
 	/**
@@ -447,7 +315,7 @@ EOS;
 	 * 
 	 * @return String
 	 */
-	function SummaryOfCategories() {
+  public function SummaryOfCategories() {
 	  $summary = array();
 	  $categories = $this->ProductCategories();
 	  
@@ -466,7 +334,7 @@ EOS;
 	 * @see Product_Controller::show()
 	 * @return String
 	 */
-	function Link($action = null) {
+  public function Link($action = null) {
 	  
 	  if ($this->ParentID > -1) {
 	    //return Controller::join_links(Director::baseURL() . 'product/', $this->URLSegment .'/');
@@ -536,43 +404,14 @@ EOS;
 	}
 	
 	/**
-	 * Set custom validator for validating EditForm in {@link ShopAdmin}. Not currently used.
-	 * 
-	 * TODO could use this custom validator to check variations perhaps
-	 * 
-	 * @return ProductAdminValidator
-	 */
-	function getCMSValidator() {
-	  return new ProductAdminValidator();
-	}
-	
-	/**
 	 * Summary of price for convenience
 	 * 
 	 * @return String Amount formatted with Nice()
 	 */
-	function SummaryOfPrice() {
+  public function SummaryOfPrice() {
 	  return $this->Amount()->Nice();
 	}
 
-	/**
-	 * Update the stock level for this {@link Product}. A negative quantity is passed 
-	 * when product is added to a cart, a positive quantity when product is removed from a 
-	 * cart.
-	 * 
-	 * @param Int $quantity
-	 * @return Void
-	 */
-	public function updateStockBy($quantity) {
-	  $stockLevel = $this->StockLevel();
-    //Do not change stock level if it is already set to unlimited (-1)
-	  if ($stockLevel->Level != -1) {
-      $stockLevel->Level += $quantity;
-  	  if ($stockLevel->Level < 0) $stockLevel->Level = 0;
-  	  $stockLevel->write();
-    }
-	}
-  
 	/**
 	 * Get parent type for Product, extra parent type of exempt where the product is not
 	 * part of the site tree (instead associated to product categories).
@@ -580,7 +419,7 @@ EOS;
 	 * @see SiteTree::getParentType()
 	 * @return String Returns root, exempt or subpage
 	 */
-  function getParentType() {
+  public function getParentType() {
     $parentType = null;
     if ($this->ParentID == 0) {
       $parentType = 'root';
@@ -593,6 +432,24 @@ EOS;
     }
     return $parentType;
 	}
+
+  /**
+   * Update the stock level for this {@link Product}. A negative quantity is passed 
+   * when product is added to a cart, a positive quantity when product is removed from a 
+   * cart.
+   * 
+   * @param Int $quantity
+   * @return Void
+   */
+  public function updateStockBy($quantity) {
+    $stockLevel = $this->StockLevel();
+    //Do not change stock level if it is already set to unlimited (-1)
+    if ($stockLevel->Level != -1) {
+      $stockLevel->Level += $quantity;
+      if ($stockLevel->Level < 0) $stockLevel->Level = 0;
+      $stockLevel->write();
+    }
+  }
 	
 	/**
 	 * Product is in stock if stock level for product is != 0 or if ANY of its product
@@ -634,7 +491,7 @@ EOS;
 	 * 
 	 * @return Array Number in carts and number in orders
 	 */
-	function getUnprocessedQuantity() {
+  public function getUnprocessedQuantity() {
 	  
 	  //Get items with this objectID/objectClass (nevermind the version)
 	  //where the order status is either cart, pending or processing
@@ -723,7 +580,7 @@ class Product_Controller extends Page_Controller {
    * 
    * @see Page_Controller::init()
    */
-  function init() {
+  public function init() {
     parent::init();
     
     Requirements::css('swipestripe/css/Shop.css');
@@ -757,7 +614,7 @@ class Product_Controller extends Page_Controller {
    * 
    * @param SS_HTTPRequest $request
    */
-  function index(SS_HTTPRequest $request) {
+  public function index(SS_HTTPRequest $request) {
     
     //Update stock levels before displaying product
     Order::delete_abandoned();
@@ -789,7 +646,7 @@ class Product_Controller extends Page_Controller {
    * @param Int $quantity
    * @param String $redirectURL A URL to redirect to after the product is added, useful to redirect to cart page
    */
-  function AddToCartForm($quantity = null, $redirectURL = null) {
+  public function AddToCartForm($quantity = null, $redirectURL = null) {
     
     $product = $this->data();
 
@@ -834,7 +691,7 @@ class Product_Controller extends Page_Controller {
 	 * @param Array $data
 	 * @param Form $form
 	 */
-  function add(Array $data, Form $form) {
+  public function add(Array $data, Form $form) {
 
     Cart::get_current_order(true)->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
     
@@ -988,7 +845,7 @@ class Product_Controller extends Page_Controller {
    * @param SS_HTTPRequest $request
    * @return String JSON encoded string of price difference
    */
-  function variationprice(SS_HTTPRequest $request) {
+  public function variationprice(SS_HTTPRequest $request) {
     
     $data = array();
     $product = $this->data();
@@ -1096,7 +953,7 @@ class Product_Image extends DataObject {
    * 
    * @return Image|String If no image can be found returns '(No Image)'
    */
-  function SummaryOfImage() {
+  public function SummaryOfImage() {
     if ($Image = $this->Image()) return $Image->CMSThumbnail();
     else return '(No Image)';
   }

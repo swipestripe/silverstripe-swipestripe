@@ -171,7 +171,7 @@ class Variation extends DataObject {
 	 * 
 	 * @return String
 	 */
-	function SummaryOfOptions() {
+  public function SummaryOfOptions() {
 	  $options = $this->Options();
 	  $options->sort('AttributeID');
 	  
@@ -245,7 +245,7 @@ class Variation extends DataObject {
    * 
    * @return ValidationResult
    */
-  function validateForCart() {
+  public function validateForCart() {
     
     $result = new ValidationResult(); 
 	  
@@ -461,7 +461,7 @@ class Variation extends DataObject {
 	 * (non-PHPdoc)
 	 * @see DataObject::onBeforeWrite()
 	 */
-  function onBeforeWrite() {
+  public function onBeforeWrite() {
     parent::onBeforeWrite();
 
     // TODO: move this to onAfterWrite() ?
@@ -504,7 +504,7 @@ class Variation extends DataObject {
 	 * 
 	 * @return Int
 	 */
-  function getUnprocessedQuantity() {
+  public function getUnprocessedQuantity() {
 	  
 	  //Get items with this objectID/objectClass (nevermind the version)
 	  //where the order status is either cart, pending or processing

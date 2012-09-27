@@ -110,20 +110,6 @@ class Order extends DataObject {
 	);
 	
 	/**
-	 * Overview fields for displaying Orders in the admin area
-	 * 
-	 * @var Array
-	 */
-	public static $table_overview_fields = array(
-		'ID' => 'Order No',
-		'Created' => 'Created',
-		'Member.FirstName' => 'First Name',
-		'Member.Surname' => 'Surname',
-		'Total' => 'Total',
-		'Status' => 'Status'
-	);
-	
-	/**
 	 * Summary fields for displaying Orders in the admin area
 	 * 
 	 * @var Array
@@ -131,7 +117,6 @@ class Order extends DataObject {
 	public static $summary_fields = array(
 	  'ID' => 'Order No',
 		'OrderedOn' => 'Ordered On',
-	  //'LastActive' => 'Last Active',
 		'Member.Name' => 'Customer',
 		'SummaryOfTotal' => 'Total',
 		'Status' => 'Status'
@@ -143,47 +128,7 @@ class Order extends DataObject {
 	 * @var Array
 	 */
 	public static $searchable_fields = array(
-	  'ID' => array(
-			'field' => 'TextField',
-			'filter' => 'PartialMatchFilter',
-			'title' => 'Order Number'
-		),
-		'Member.Surname' => array(
-			'title' => 'Customer Surname',
-			'filter' => 'PartialMatchFilter'
-		),
-		'Member.Email' => array(
-			'title' => 'Customer Email',
-			'filter' => 'PartialMatchFilter'
-		),
-		'HasPayment' => array(
-			'filter' => 'PaymentSearchFilter',
-		),
-		'OrderedOn' => array (
-  		'filter' => 'DateRangeSearchFilter'
-  	),
-  	'Status' => array(
-  	  'title' => 'Status',
-  		'filter' => 'OptionSetSearchFilter',
-  	)
-	);
-	
-	/**
-	 * Castings for the searchable fields
-	 * 
-	 * @var Array
-	 */
-	public static $casting = array(
-		'HasPayment' => 'Money'
-	);
-	
-	/**
-	 * Table type for Orders should be InnoDB to support transactions - which are not implemented yet.
-	 * 
-	 * @var Array
-	 */
-	static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
+	  'ID'
 	);
 	
 	/**
@@ -194,39 +139,6 @@ class Order extends DataObject {
 	 * @var String
 	 */
 	public static $default_sort = 'ID DESC';
-	
-	/**
-	 * Filters for order admin area search.
-	 * 
-	 * @see DataObject::scaffoldSearchFields()
-	 * @return FieldList
-	 */
-  function scaffoldSearchFields(){
-		$fieldSet = parent::scaffoldSearchFields();
-
-		$fieldSet->push(new DropdownField("HasPayment", "Has Payment", array(1 => "yes", 0 => "no")));
-		$fieldSet->push(new CheckboxSetField("Status", "Status", array(
-		  'Pending' => 'Pending',
-		  'Processing' => 'Processing',
-		  'Dispatched' => 'Dispatched'
-		)));
-		return $fieldSet;
-	}
-	
-	/**
-	 * Get a new date range search context for filtering
-	 * the search results in OrderAdmin
-	 * 
-	 * @see DataObject::getDefaultSearchContext()
-	 * @return DateRangeSearchContext
-	 */
-  public function getDefaultSearchContext() {
-  	return new DateRangeSearchContext(
-  		$this->class,
-  		$this->scaffoldSearchFields(),
-  		$this->defaultSearchFilters()
-  	);
-  }
 	
 	/**
 	 * Prevent orders from being created in the CMS
@@ -255,41 +167,25 @@ class Order extends DataObject {
 	 * @see DataObject::getCMSFields()
 	 */
 	public function getCMSFields() {
-	  $fields = parent::getCMSFields();
-	  
-	  $fields->insertBefore(new LiteralField('Title',"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"),'Root');
-	  
-    //Main fields
-	  $toBeRemoved = array(
-	    'MemberID',
-	    'Total',
-	    'Items',
-	    'Status',
-	    'ReceiptSent',
-	    'NotificationSent',
-	    'OrderedOn',
-	    'PaymentStatus',
-	    'Modifications',
-	    'Addresses',
-	    'SubTotal',
-	    'LastActive',
-	    'Notes',
-	    'XeroInvoiceID'
-	  );
-	  foreach($toBeRemoved as $field) {
-			$fields->removeByName($field);
-		}
 
-		$htmlSummary = $this->customise(array(
+		$fields = new FieldList();
+
+    $fields->push(new TabSet('Root', 
+      Tab::create('Order'),
+      Tab::create('Actions')
+    ));
+
+    $fields->addFieldToTab('Root.Order', new LiteralField(
+    	'Title', 
+    	"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"
+    ));
+
+    $htmlSummary = $this->customise(array(
 			'MemberEmail' => $this->Member()->Email
 		))->renderWith("OrderAdmin");
-		$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
-		
-		$fields->removeFieldFromTab("Root", "Payments");
-		
+		$fields->addFieldToTab('Root.Order', new LiteralField('MainDetails', $htmlSummary));
+
 		//Action fields
-		$fields->addFieldToTab("Root", new Tab('Actions'));
-		
 		$fields->addFieldToTab('Root.Actions', new HeaderField('OrderStatus', 'Order Status', 3));
 		$statuses = $this->dbObject('Status')->enumValues();
 		//unset($statuses['Cart']);
@@ -319,8 +215,8 @@ class Order extends DataObject {
 		
 		//Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);
-		
-	  return $fields;
+
+    return $fields;
 	}
 	
 	/**
@@ -340,8 +236,8 @@ class Order extends DataObject {
 	 * 
 	 * @return String Order total formatted with Nice()
 	 */
-	function SummaryOfTotal() {
-	  return $this->dbObject('Total')->Nice();
+	public function SummaryOfTotal() {
+	  return $this->Total()->Nice();
 	}
 	
 	/**
@@ -350,7 +246,7 @@ class Order extends DataObject {
 	 * @see PaypalExpressCheckoutaPayment_Handler::doRedirect()
 	 * @return String URL for viewing this order
 	 */
-	function Link() {
+	public function Link() {
 	  //get the account page and go to it
 	  $account = DataObject::get_one('AccountPage');
 		return $account->Link()."order/$this->ID";
@@ -361,7 +257,7 @@ class Order extends DataObject {
 	 * 
 	 * @return ArrayList Set of Payment objects
 	 */
-	function Payments() {
+	public function Payments() {
 		return Payment::get()
 			->where("\"OrderID\" = {$this->ID}");
 	}
@@ -372,7 +268,7 @@ class Order extends DataObject {
 	 * 
 	 * @return Money With value and currency of total outstanding
 	 */
-	function TotalOutstanding() {
+	public function TotalOutstanding() {
 	  $total = $this->Total()->getAmount();
 
 	  foreach ($this->Payments() as $payment) {
@@ -397,7 +293,7 @@ class Order extends DataObject {
 	 * 
 	 * @return Money With value and currency of total paid
 	 */
-	function TotalPaid() {
+	public function TotalPaid() {
 	   $paid = 0;
 	   
 	  if ($this->Payments()) foreach ($this->Payments() as $payment) {
@@ -419,7 +315,7 @@ class Order extends DataObject {
 	 * 
 	 * @see PaymentDecorator::onAfterWrite()
 	 */
-	function onAfterPayment() {
+	public function onAfterPayment() {
 	  
 	  $this->updatePaymentStatus();
 	  
@@ -494,7 +390,7 @@ class Order extends DataObject {
 	 * @param DataObject $product The product to be represented by this order item
 	 * @param ArrayList $productOptions The product variations to be added, usually just one
 	 */
-	function addItem(DataObject $product, $quantity = 1, ArrayList $productOptions = null) {
+	public function addItem(DataObject $product, $quantity = 1, ArrayList $productOptions = null) {
 
 	  //Check that product options exist if product requires them
 	  //TODO perform this validation in Item->validate(), cannot at this stage because Item is written before ItemOption, no transactions, chicken/egg problem
@@ -555,7 +451,7 @@ class Order extends DataObject {
 	 * @param ArrayList $productOptions
 	 * @return DataObject
 	 */
-	function findIdenticalItem($product, ArrayList $productOptions) {
+	public function findIdenticalItem($product, ArrayList $productOptions) {
 	  
 	  foreach ($this->Items() as $item) {
 
@@ -624,7 +520,7 @@ class Order extends DataObject {
 	 * 
 	 * @return ArrayList Set of {@link Product}s
 	 */
-	function Products() {
+	public function Products() {
 	  $items = $this->Items();
 	  $products = new ArrayList();
 	  foreach ($items as $item) {
@@ -638,7 +534,7 @@ class Order extends DataObject {
 	 * 
 	 * @return String List of payments and their status
 	 */
-	function SummaryOfPaymentStatus() {
+	public function SummaryOfPaymentStatus() {
 	  $payments = $this->Payments();
 	  $status = null;
 
@@ -662,7 +558,7 @@ class Order extends DataObject {
 	 * 
 	 * @param Array $data
 	 */
-	function addModifiersAtCheckout(Array $data) {
+	public function addModifiersAtCheckout(Array $data) {
 
 	  //Remove existing Modifications
     $existingModifications = $this->Modifications();
@@ -686,7 +582,7 @@ class Order extends DataObject {
 	 * 
 	 * @param Array $data
 	 */
-	function addAddressesAtCheckout(Array $data) {
+	public function addAddressesAtCheckout(Array $data) {
 
 	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = Cart::get_current_order();
@@ -793,7 +689,7 @@ class Order extends DataObject {
 	 * 
 	 * @return Address
 	 */
-	function BillingAddress() {
+	public function BillingAddress() {
 	  $address = null;
 	  
 	  $addresses = $this->Addresses();
@@ -809,7 +705,7 @@ class Order extends DataObject {
 	 * 
 	 * @return Address
 	 */
-  function ShippingAddress() {
+	public function ShippingAddress() {
 	  $address = null;
 	  
 	  $addresses = $this->Addresses();
@@ -826,7 +722,7 @@ class Order extends DataObject {
 	 * 
 	 * @return ValidationResult
 	 */
-	function validateForCart() {
+	public function validateForCart() {
 	  
 	  $result = new ValidationResult(); 
 	  $items = $this->Items();
@@ -858,7 +754,7 @@ class Order extends DataObject {
 	 * 
 	 * @see DataObject::validate()
 	 */
-	function validate() {
+	public function validate() {
 	  return parent::validate();
 	}
 	
@@ -970,7 +866,7 @@ class Order extends DataObject {
 	 * (non-PHPdoc)
 	 * @see DataObject::onBeforeWrite()
 	 */
-  function onBeforeWrite() {
+	public function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
   }

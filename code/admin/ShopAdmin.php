@@ -13,7 +13,9 @@ class ShopAdmin extends ModelAdmin {
 
 	public static $managed_models = array(
 		'ShopConfig',
-		'Product'
+		'Product',
+		'Order',
+		'Customer'
 	);
 
 	public static $url_handlers = array(
@@ -176,18 +178,20 @@ class ShopAdmin extends ModelAdmin {
 		$exportButton = new GridFieldExportButton('before');
 		$exportButton->setExportColumns($this->getExportFields());
 
-		$detailForm = new GridFieldDetailForm();
-		$detailForm->setItemRequestClass('ShopAdmin_ItemRequest');
-
 		$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
 				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
 				->removeComponentsByType('GridFieldToolbarHeader')
-				->removeComponentsByType('GridFieldExportButton')
+				->removeComponentsByType('GridFieldExportButton');
+
+		if ($this->modelClass == 'Product') {
+			$detailForm = new GridFieldDetailForm();
+			$detailForm->setItemRequestClass('ShopAdmin_ItemRequest');
+
+			$fieldConfig
 				->removeComponentsByType('GridFieldDetailForm')
 				->addComponents($detailForm);
-
-		// SS_Log::log(new Exception(print_r($fieldConfig->getComponents(), true)), SS_Log::NOTICE);
+		}
 
 		$listField = new GridField(
 			$this->sanitiseClassName($this->modelClass),
