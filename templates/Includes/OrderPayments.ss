@@ -10,7 +10,7 @@
   <tbody>
     <% control Payments %>  
       <tr>
-        <td>$PaymentMethod</td>
+        <td>$Method</td>
         <td>$LastEdited.Nice24</td>
         <td>$Amount.Nice $Currency</td>
         <td>$Status</td>

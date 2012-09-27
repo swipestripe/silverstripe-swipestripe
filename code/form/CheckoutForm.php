@@ -85,7 +85,7 @@ class CheckoutForm extends Form {
 		
   		//TODO fix this, have to disable security token for now @see CheckoutPage::OrderForm()
   	  foreach ($this->getExtraFields() as $field) {
-  			if (!$this->extraFieldsSet->fieldByName($field->Name())) {
+  			if (!$this->extraFieldsSet->fieldByName($field->getName())) {
   			  $this->extraFieldsSet->push($field);
   			  $fields->push($field);
   			}
@@ -115,10 +115,8 @@ class CheckoutForm extends Form {
 			$errors = $this->validator->validate();
 
 			if ($errors){
-			  
-			  //SS_Log::log(new Exception(print_r($errors, true)), SS_Log::NOTICE);
 
-				if (Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
+				if (Director::is_ajax()) { // && $this->validator->getJavascriptValidationHandler() == 'prototype') {
 				  
 				  //Set error messages to form fields for display after form is rendered
 				  $fields = $this->Fields();

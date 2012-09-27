@@ -29,7 +29,7 @@ class VariationMoneyField extends MoneyField {
   		}
       
       $validator->validationError(
-  			$this->Name(),
+  			$this->getName(),
   			$errorMessage,
   			"error"
   		);
@@ -43,7 +43,7 @@ class VariationMoneyField extends MoneyField {
   		}
       
       $validator->validationError(
-  			$this->Name(),
+  			$this->getName(),
   			$errorMessage,
   			"error"
   		);

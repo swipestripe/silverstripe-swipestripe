@@ -168,7 +168,7 @@ class CheckoutPage_Controller extends Page_Controller {
     if ($member->ID) $form->loadDataFrom($member);
     if ($billingAddress) $form->loadDataFrom($billingAddress->getCheckoutFormData('Billing')); 
     if ($shippingAddress) $form->loadDataFrom($shippingAddress->getCheckoutFormData('Shipping')); 
-    
+
     //Hook for editing the checkout page order form
 		$this->extend('updateOrderForm', $form);
 
@@ -291,9 +291,10 @@ class CheckoutPage_Controller extends Page_Controller {
 	 */
 	private function addPersonalDetailsFields(&$fields, &$validator, $member) {
 	  
-	  $emailField = new EmailField('Email', 'Email');
-	  $emailField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS',"Please enter your email address."));
-	  $validator->addRequiredField(_t('CheckoutPage.EMAIL',"Email"));
+	  //TODO: Change back to EmailField and debug FunctionalTest->submitForm()
+	  $emailField = new EmailField('Email', _t('CheckoutPage.EMAIL', 'Email'));
+	  $emailField->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', "Please enter your email address."));
+	  $validator->addRequiredField('Email');
 	  
 	  $personalFields = new CompositeField(
 	    new HeaderField(_t('CheckoutPage.PERSONAL_DETAILS',"Personal Details"), 3),
@@ -404,36 +405,15 @@ class CheckoutPage_Controller extends Page_Controller {
       $source[$methodName] = $methodConfig['title'];
     }
 
-    $fields['Payment'][] = new DropDownField(
+    $gatewayField = new DropDownField(
       'PaymentMethod',
       'Select Payment Method',
       $source
     );
+    $gatewayField->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD',"Please select a payment method."));
+    $fields['Payment'][] = $gatewayField;
 
-    return;
-
-
-	  $paymentFields = new CompositeField();
-
-	  return $paymentFields;
-	  
-		foreach (Payment::combined_form_fields($order->Total()->getAmount()) as $field) {
-
-		  //Bit of a nasty hack to customize validation error message
-		  if ($field->Name() == 'PaymentMethod') {
-		    $field->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD',"Please select a payment method."));
-		  }
-
-		  $paymentFields->push($field);
-		}
-		
-		$paymentFields->setID('PaymentFields');
-	  $fields['Payment'][] = $paymentFields;
-	  
-	  //TODO need to check required payment fields
-	  //$requiredPaymentFields = Payment::combined_form_requirements();
-	  
-	  $validator->addRequiredField('PaymentMethod');
+    $validator->addRequiredField('PaymentMethod');
 	}
 	
 	/**
@@ -533,25 +513,15 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		Session::clear('Cart.OrderID');
 
-		//Save payment data from form and process payment
-		// $form->saveInto($payment);
-		// $payment->OrderID = $order->ID;
-		// $payment->PaidByID = $member->ID;
-		// $payment->PaidForID = $order->ID;
-		// $payment->PaidForClass = $order->class;
-		// $payment->OrderID = $order->ID;
-		// $payment->Amount->setAmount($order->Total->getAmount());
-		// $payment->Amount->setCurrency($order->Total->getCurrency());
-		// $payment->write();
-
     try {
 
       $paymentData = array(
-				'Amount' => 120.00,
-				'Currency' => 'NZD'
+				'Amount' => $order->Total()->getAmount(),
+				'Currency' => $order->Total()->getCurrency()
 			);
 			$paymentProcessor->payment->OrderID = $order->ID;
 			$paymentProcessor->payment->PaidByID = $member->ID;
+
 			$paymentProcessor->setRedirectURL($order->Link());
 	    $paymentProcessor->capture($paymentData);
     }
@@ -561,44 +531,12 @@ class CheckoutPage_Controller extends Page_Controller {
       $result = $paymentProcessor->gateway->getValidationResult();
       $payment = $paymentProcessor->payment;
 
-      return array(
-        'Content' => $this->customise(array(
-          'ExceptionMessage' => $e->getMessage(),
-          'ValidationMessage' => $result->message(),
-          'OrderForm' => $this->OrderForm(),
-          'Payment' => $payment
-        ))->renderWith('PaymentTestPage')
-      );
+      //TODO: Need to get errors and save for display on order page
+      SS_Log::log(new Exception(print_r($result->message(), true)), SS_Log::NOTICE);
+      SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+
+      $this->redirect($order->Link());
     }
-		
-			// //Process payment, get the result back
-			// $result = $payment->processPayment($data, $form);
-
-	  //   //If instant payment success
-			// if ($result->isSuccess()) {
-	  //     $order->sendReceipt();
-	  //     $order->sendNotification();
-			// }
-			
-		 //  //If payment is being processed
-		 //  //e.g long payment process redirected to another website (PayPal, DPS)
-			// if ($result->isProcessing()) {
-			  
-			//   //Defer sending receipt until payment process has completed
-			//   //@see AccountPage_Controller::order()
-			  
-			// 	return $result->getValue();
-			// }
-			
-			// //If payment failed
-			// if (!$result->isSuccess() && !$result->isProcessing()) {
-	  //     $order->sendReceipt();
-	  //     $order->sendNotification();
-			// }
-
-		//Fallback
-		//$this->redirect($order->Link());
-		return true;
 	}
 	
 	/**

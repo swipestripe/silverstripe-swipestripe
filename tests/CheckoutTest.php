@@ -34,7 +34,7 @@ class SWS_CheckoutTest extends SWS_Test {
 
 		//Check that payment module is installed
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
-		$this->assertTrue(class_exists('ChequePayment'), 'Cheque Payment is installed.');
+		//$this->assertTrue(class_exists('ChequePayment'), 'Cheque Payment is installed.');
 		
 		//Need to publish a few pages because not using the draft site
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout');  
@@ -46,11 +46,11 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $accountPage->doPublish();
 	  $cartPage->doPublish();
 	  $this->logOut();
-		
-		//Force payment method to be basic cheque payment
-		Payment::set_supported_methods(array(
-      'ChequePayment' => 'Cheque Or Pay On Site'
-    ));
+
+    Config::inst()->remove('PaymentProcessor', 'supported_methods');
+    Config::inst()->update('PaymentProcessor', 'supported_methods', array('test' => array('Cheque')));
+    Config::inst()->remove('PaymentGateway', 'environment');
+    Config::inst()->update('PaymentGateway', 'environment', 'test');
 	}
 
 	/**
@@ -67,8 +67,8 @@ class SWS_CheckoutTest extends SWS_Test {
 	  
 	  $this->assertTrue($productA->isPublished());
 	  
-	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 	  $buyer = $this->objFromFixture('Customer', 'buyer');
+	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -85,6 +85,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->assertEquals(1, $orders->Count());
 	  
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
+
 	  $this->submitForm('CheckoutForm_OrderForm', null, array(
 	    'Notes' => 'New order for test buyer.'
 	  ));
@@ -110,7 +111,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -162,7 +163,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $buyer = $this->objFromFixture('Customer', 'buyer');
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	  
-	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
@@ -185,7 +186,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->assertEquals(false, $order->validateForCart()->valid());
 	  
 	  //Log in as buyer again and try to checkout
-	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
+	  $this->loginAs($buyer);
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
@@ -451,8 +452,6 @@ class SWS_CheckoutTest extends SWS_Test {
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
-	  
-	  
 	}
 	
 	/**

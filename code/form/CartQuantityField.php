@@ -95,7 +95,7 @@ class CartQuantityField extends TextField {
 			}
 	    
 	    $validator->validationError(
-				$this->Name(),
+				$this->getName(),
 				$errorMessage,
 				"error"
 			);
@@ -111,7 +111,7 @@ class CartQuantityField extends TextField {
   			}
   			
   			$validator->validationError(
-  				$this->Name(),
+  				$this->getName(),
   				$errorMessage,
   				"error"
   			);
@@ -127,7 +127,7 @@ class CartQuantityField extends TextField {
   			}
   			
   			$validator->validationError(
-  				$this->Name(),
+  				$this->getName(),
   				$errorMessage,
   				"error"
   			);
@@ -156,7 +156,7 @@ class CartQuantityField extends TextField {
   			}
   			
 	      $validator->validationError(
-  				$this->Name(),
+  				$this->getName(),
   				$errorMessage,
   				"error"
   			);

@@ -21,7 +21,8 @@ class AddToCartForm extends Form {
 			$errors = $this->validator->validate();
 
 			if($errors){
-				if(Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
+				if(Director::is_ajax()) { // && $this->validator->getJavascriptValidationHandler() == 'prototype') {
+
 					FormResponse::status_message(_t('Form.VALIDATIONFAILED', 'Validation failed'), 'bad');
 					foreach($errors as $error) {
 						FormResponse::add(sprintf(

@@ -87,7 +87,7 @@ class OrderItemField extends FormField {
 			}
 	    
 	    $validator->validationError(
-				$this->Name(),
+				$this->getName(),
 				$errorMessage,
 				"error"
 			);
@@ -105,7 +105,7 @@ class OrderItemField extends FormField {
   			}
   			
   			$validator->validationError(
-  				$this->Name(),
+  				$this->getName(),
   				$errorMessage,
   				"error"
   			);

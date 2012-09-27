@@ -156,7 +156,7 @@ class StockField extends FormField {
   		}
       
       $validator->validationError(
-  			$this->Name(),
+  			$this->getName(),
   			$errorMessage,
   			"error"
   		);
@@ -171,7 +171,7 @@ class StockField extends FormField {
   		}
       
       $validator->validationError(
-  			$this->Name(),
+  			$this->getName(),
   			$errorMessage,
   			"error"
   		);
