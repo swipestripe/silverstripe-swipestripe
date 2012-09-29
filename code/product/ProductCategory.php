@@ -47,28 +47,12 @@ class ProductCategory extends Page {
 	 */
 	function getCMSFields() {
     $fields = parent::getCMSFields();
-    
-    /*
-    //Product categories
-    $manager = new ManyManyComplexTableField(
-      $this,
-      'Products',
-      'Product',
-      array(),
-      'getCMSFields_forPopup'
-    );
-    $manager->setPermissions(array());
-    $fields->addFieldToTab("Root.Products", $manager);
-		*/
-    
-	  if (file_exists(BASE_PATH . '/swipestripe') && ShopConfig::get_license_key() == null) {
-			$fields->addFieldToTab("Root.Main", new LiteralField("SwipeStripeLicenseWarning", 
-				'<p class="message warning">
-					 Warning: You have SwipeStripe installed without a license key. 
-					 Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
-				</p>'
-			), "Title");
-		}
+
+    if ($warning = ShopConfig::licence_key_warning()) {
+      $fields->addFieldToTab('Root.Main', new LiteralField('SwipeStripeLicenseWarning', 
+        '<p class="message warning">'.$warning.'</p>'
+      ), 'Title');
+    }
     
     return $fields;
 	}

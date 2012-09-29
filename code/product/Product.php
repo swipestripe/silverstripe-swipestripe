@@ -273,13 +273,10 @@ class Product extends Page {
 
     //Ability to edit fields added to CMS here
     $this->extend('updateProductCMSFields', $fields);
-    
-    if (file_exists(BASE_PATH . '/swipestripe') && ShopConfig::get_license_key() == null) {
-      $fields->addFieldToTab('Root.Main', new LiteralField("SwipeStripeLicenseWarning", 
-        '<p class="message warning">
-           Warning: You have SwipeStripe installed without a license key. 
-           Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
-        </p>'
+
+    if ($warning = ShopConfig::licence_key_warning()) {
+      $fields->addFieldToTab('Root.Main', new LiteralField('SwipeStripeLicenseWarning', 
+        '<p class="message warning">'.$warning.'</p>'
       ), 'Title');
     }
 

@@ -3,60 +3,9 @@ class ShopConfig extends DataObject {
 
   public static $singular_name = 'Settings';
   public static $plural_name = 'Settings';
-  
-  /**
-   * To hold the license key for SwipeStripe. Usually set in mysite/_config file.
-   * 
-   * @see ShopConfig::set_license_key()
-   * @var String License key 
-   */
-  private static $license_key;
-  
-  /**
-   * To hold the license keys for SwipeStripe extensions. Usually set in mysite/_config file.
-   * 
-   * @see ShopConfig::set_extension_license_keys()
-   * @var String License key 
-   */
-  private static $extension_license_keys;
-  
-  /**
-   * Set the license key, usually called in mysite/_config.
-   * 
-   * @param String $key License key
-   */
-  public static function set_license_key($key) {
-    self::$license_key = $key;
-  }
-  
-	/**
-   * Get the license key
-   * 
-   * @return String License key
-   */
-  public static function get_license_key() {
-    return self::$license_key;
-  }
-  
-  /**
-   * Set extension license keys, usually called in mysite/_config.
-   * 
-   * @param Array $key 
-   */
-  public static function set_extension_license_keys(Array $keys) {
-    self::$extension_license_keys = $keys;
-  } 
 
-  /**
-   * Get extension license keys
-   * 
-   * @return Array Extension license keys
-   */
-  public static function get_extension_license_keys() {
-    return self::$extension_license_keys;
-  }
-
-  static $db = array(
+  public static $db = array(
+    'LicenceKey' => 'Varchar',
     'EmailSignature' => 'HTMLText',
     'ReceiptSubject' => 'Varchar',
     'ReceiptBody' => 'HTMLText',
@@ -66,12 +15,29 @@ class ShopConfig extends DataObject {
     'NotificationTo' => 'Varchar'
   );
 
-  static $has_many = array(
+  public static $has_many = array(
     'ShippingCountries' => 'Country_Shipping',
     'BillingCountries' => 'Country_Billing',
     'ShippingRegions' => 'Region_Shipping',
     'BillingRegions' => 'Region_Billing'
   );
+
+  public static function current_shop_config() {
+    return ShopConfig::get()->First();
+  }
+
+  public static function licence_key_warning() {
+    $config = self::current_shop_config();
+    $warning = null;
+
+    if (!$config->LicenceKey) {
+     $warning = _t('ShopConfig.LICENCE_WARNING','
+         Warning: You have SwipeStripe installed without a license key. 
+         Please <a href="http://swipestripe.com" target="_blank">purchase a license key here</a> before this site goes live.
+     ');
+    }
+    return $warning;
+  }
 }
 
 /**
@@ -92,25 +58,8 @@ class ShopConfig_Controller extends Page_Controller {
   public function init() {
 
     $data = array();
-    $data['Key'] = ShopConfig::get_license_key();
-    
-    //Find folders that start with swipestripe_, get their license keys
-    $base = Director::baseFolder() . '/swipestripe_';
-    $dirs = glob($base . '*', GLOB_ONLYDIR);
-    $extensionLicenseKeys = ShopConfig::get_extension_license_keys();
-    
-    if ($dirs && is_array($dirs)) {
-      $data['Extensions'] = array();
-      foreach ($dirs as $dir) {
-        $extensionName = str_replace($base, '', $dir);
-        if ($extensionName){
-          $data['Extensions'][]['Extension'] = array(
-            'Name' => $extensionName,
-            'Key' => $extensionLicenseKeys[$extensionName]
-          );
-        } 
-      }
-    }
+    $config = ShopConfig::current_shop_config();
+    $data['Key'] = $config->LicenceKey;
 
     $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><SwipeStripe></SwipeStripe>");
     $this->array_to_xml($data, $xml);
