@@ -4,6 +4,8 @@ class ShopAdmin extends ModelAdmin {
 
 	static $url_segment = 'shop';
 
+	static $url_priority = 50;
+
 	static $menu_title = 'Shop';
 
 	public $showImportForm = false;
@@ -34,10 +36,10 @@ class ShopAdmin extends ModelAdmin {
 		
 		parent::init();
 
-		if ($this->modelClass == 'ShopConfig') {
-			$request = $this->getRequest();
-			$this->shopConfigSection = $request->param('Action');
-		}
+		// if ($this->modelClass == 'ShopConfig') {
+		// 	$request = $this->getRequest();
+		// 	$this->shopConfigSection = $request->param('Action');
+		// }
 		
 		Requirements::css(CMS_DIR . '/css/screen.css');
 		Requirements::css('swipestripe/css/ShopAdmin.css');
@@ -66,27 +68,6 @@ class ShopAdmin extends ModelAdmin {
 
 		$request = $this->getRequest();
 		$items = parent::Breadcrumbs($unlinked);
-
-		//Tweak the breadcrumbs for the shop config sections
-		if ($this->shopConfigSection) {
-
-			if ($items->count() > 1) $items->remove($items->pop());
-
-			if ($this->shopConfigSection == 'EmailSettings' || $this->shopConfigSection == 'EmailSettingsForm') {
-				$items->push(new ArrayData(array(
-					'Title' => 'Email Settings',
-					'Link' => false
-				)));
-			}
-
-			if ($this->shopConfigSection == 'Countries' || $this->shopConfigSection == 'CountriesForm') {
-				$items->push(new ArrayData(array(
-					'Title' => 'Countries',
-					'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'Countries'))
-				)));
-			}
-		}
-
 		return $items;
 	}
 
@@ -141,7 +122,6 @@ class ShopAdmin extends ModelAdmin {
 		if ($this->modelClass == 'ShopConfig') return false;
 		else return parent::Tools();
 	}
-
 
 	public function Content() {
 		return $this->renderWith($this->getTemplatesWithSuffix('_Content'));
@@ -221,27 +201,73 @@ class ShopAdmin extends ModelAdmin {
 		
 		return $form;
 	}
-	
 
 	public function SettingsContent() {
 		return $this->renderWith('ShopAdminSettings_Content');
 	}
 
 	public function SettingsForm($request = null) {
+		return;
+	}
 
-		//Get the correct Settings form for each request
-		if ($request) {
-			$section = $request->requestVar('ShopConfigSection');
-			if ($section) $this->shopConfigSection = $section;
-		}
+	public function Snippets() {
 
-		if ($this->shopConfigSection == 'EmailSettings') {
-			return $this->EmailSettingsForm();
-		}
+		$snippets = new ArrayList();
+		$subClasses = ClassInfo::subclassesFor('ShopAdmin');
 
-		if ($this->shopConfigSection == 'Countries') {
-			return $this->CountriesForm();
+		foreach ($subClasses as $className) {
+			$obj = new $className();
+			$snippet = $obj->getSnippet();
+
+			if ($snippet) {
+				$snippets->push(new ArrayData(array(
+					'Content' => $snippet
+				)));
+			}
 		}
+		return $snippets;
+	}
+
+	public function getSnippet() {
+		return false;
+	}
+
+}
+
+class ShopAdmin_EmailAdmin extends ShopAdmin {
+
+	static $url_rule = 'ShopConfig/EmailSettings';
+	static $url_priority = 55;
+
+	public static $url_handlers = array(
+		'ShopConfig/EmailSettings/EmailSettingsForm' => 'EmailSettingsForm',
+		'ShopConfig/EmailSettings' => 'EmailSettings'
+	);
+
+	public function init() {
+		$this->shopConfigSection = 'EmailSettings';
+		parent::init();
+	}
+
+	public function Breadcrumbs($unlinked = false) {
+
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
+
+		if ($items->count() > 1) $items->remove($items->pop());
+
+		$items->push(new ArrayData(array(
+			'Title' => 'Email Settings',
+			'Link' => false
+		)));
+
+		return $items;
+	}
+
+	public function SettingsForm($request = null) {
+
+		$this->shopConfigSection = 'EmailSettings';
+		return $this->EmailSettingsForm();
 	}
 
 	public function EmailSettings($request) {
@@ -292,7 +318,7 @@ class ShopAdmin extends ModelAdmin {
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EmailSettingsForm'));
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EmailSettings/EmailSettingsForm'));
 
 		$form->loadDataFrom($shopConfig);
 
@@ -329,6 +355,53 @@ class ShopAdmin extends ModelAdmin {
 			$this->response
 		); 
 		return $responseNegotiator->respond($this->getRequest());
+	}
+
+	public function getSnippet() {
+		return $this->customise(array(
+			'Title' => 'Email Settings',
+			'Help' => 'Order notification and receipt details and recipeients.',
+			'Link' => Controller::join_links($this->Link('ShopConfig'), 'EmailSettings'),
+			'LinkTitle' => 'Edit Email Settings'
+		))->renderWith('ShopAdmin_Snippet');
+	}
+
+}
+
+class ShopAdmin_CountriesAdmin extends ShopAdmin {
+
+	static $url_rule = 'ShopConfig/Countries';
+	static $url_priority = 55;
+
+	public static $url_handlers = array(
+		'ShopConfig/Countries/CountriesForm' => 'CountriesForm',
+		'ShopConfig/Countries' => 'Countries'
+	);
+
+	public function init() {
+		$this->shopConfigSection = 'Countries';
+		parent::init();
+	}
+
+	public function Breadcrumbs($unlinked = false) {
+
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
+
+		if ($items->count() > 1) $items->remove($items->pop());
+
+		$items->push(new ArrayData(array(
+			'Title' => 'Countries',
+			'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'Countries'))
+		)));
+
+		return $items;
+	}
+
+	public function SettingsForm($request = null) {
+
+		$this->shopConfigSection = 'Countries';
+		return $this->CountriesForm();
 	}
 
 	public function Countries($request) {
@@ -405,7 +478,7 @@ class ShopAdmin extends ModelAdmin {
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'CountriesForm'));
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'Countries/CountriesForm'));
 
 		$form->loadDataFrom($shopConfig);
 
@@ -443,6 +516,28 @@ class ShopAdmin extends ModelAdmin {
 		return $responseNegotiator->respond($this->getRequest());
 	}
 
+	public function getSnippet() {
+		return $this->customise(array(
+			'Title' => 'Countries and Regions',
+			'Help' => 'Shipping and billing countries and regions.',
+			'Link' => Controller::join_links($this->Link('ShopConfig'), 'Countries'),
+			'LinkTitle' => 'Edit Countries and Regions'
+		))->renderWith('ShopAdmin_Snippet');
+	}
+
+}
+
+class ShopAdmin_LeftAndMainExtension extends Extension {
+
+	public function alternateMenuDisplayCheck($className) {
+		if (class_exists($className)) {
+			$obj = new $className();
+			if (is_subclass_of($obj, 'ShopAdmin')) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {

@@ -8,10 +8,9 @@
  * @subpackage admin
  */
 
-//Decorators
+//Extensions
 Object::add_extension('Payment', 'PaymentDecorator');
-
-//Extend page controller
+Object::add_extension('LeftAndMain', 'ShopAdmin_LeftAndMainExtension');
 Object::add_extension('Page_Controller', 'Cart');
 
 //Redirect customers logging in to the account page
