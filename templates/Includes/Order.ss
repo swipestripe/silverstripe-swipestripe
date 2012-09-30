@@ -3,9 +3,9 @@
 	    <tr>
 	      <th><% _t('Order.PRODUCT','Product') %></th>
         <th><% _t('Order.OPTIONS','Options') %></th>
-        <th><% _t('Order.UNIT_PRICE','Unit Price') %> ($Total.Currency)</th>
+        <th><% _t('Order.UNIT_PRICE','Unit Price') %> ($SubTotal.Currency)</th>
         <th><% _t('Order.QUANTITY','Quantity') %></th>
-        <th><% _t('Order.SUB_TOTAL','Sub Total') %> ($Total.Currency)</th>
+        <th><% _t('Order.SUB_TOTAL','Sub Total') %> ($SubTotal.Currency)</th>
 	    </tr>
 	  </thead>
 	  <tbody>

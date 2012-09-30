@@ -44,7 +44,8 @@ class CartQuantityField extends TextField {
 	 * 
 	 * @see FormField::FieldHolder()
 	 */
-  function FieldHolder() {
+  function FieldHolder($properties = array()) {
+  	$obj = ($properties) ? $this->customise($properties) : $this;
 		return $this->renderWith($this->template);
 	}
 	
@@ -173,7 +174,8 @@ class CartQuantityField extends TextField {
 	 * @return RemoveItemAction Type of FormAction
 	 */
 	function RemoveItemAction() {
-	  return new RemoveItemAction('removeItem', $this->Item()->ID, null, null, 'remove-item-action');
+	  return RemoveItemAction::create('removeItem', $this->Item()->ID)
+	  	->addExtraClass('remove-item-action');
 	}
 	
 }

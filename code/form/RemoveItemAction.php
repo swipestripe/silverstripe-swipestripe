@@ -20,10 +20,10 @@ class RemoveItemAction extends FormAction {
    * @param String $extraData
    * @param String $extraClass
    */
-  function __construct($action, $title = "", $form = null, $extraData = null, $extraClass = '') {
+  function __construct($action, $title = "", $form = null) {
 
     $this->description = "Remove item #$title";
-		parent::__construct($action, $title, $form, $extraData, $extraClass);
+		parent::__construct($action, $title, $form);
 	}
 	
 	/**
