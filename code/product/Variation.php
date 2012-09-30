@@ -24,9 +24,13 @@ class Variation extends DataObject {
   );
 
   public function Amount() {
-    $amount = new Money();
+
+    // TODO: Multi currency
+
+    $amount = new Price();
     $amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
 
@@ -125,6 +129,7 @@ class Variation extends DataObject {
     $fields->removeByName('StockLevelID');
     $fields->removeByName('ProductID');
     $fields->removeByName('Version');
+    $fields->removeByName('Currency');
 
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -157,9 +162,6 @@ class Variation extends DataObject {
 
     $priceField = new PriceField('Price', 'Amount that this variation will increase the base product price by');
     $fields->addFieldToTab('Root.Main', $priceField);
-
-    $currencyField = new TextField('Currency', 'Currency', 'NZD');
-    $fields->addFieldToTab('Root.Main', $currencyField);
 
     return $fields;
   }
@@ -463,6 +465,10 @@ class Variation extends DataObject {
 	 */
   public function onBeforeWrite() {
     parent::onBeforeWrite();
+
+    //Save in base currency
+    $shopConfig = ShopConfig::current_shop_config();
+    $this->Currency = $shopConfig->BaseCurrency;
 
     // TODO: move this to onAfterWrite() ?
     //If a stock level is set then update StockLevel

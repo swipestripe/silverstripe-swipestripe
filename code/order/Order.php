@@ -65,16 +65,24 @@ class Order extends DataObject {
 	);
 
 	public function Total() {
-    $amount = new Money();
+
+		// TODO: Multi currency
+
+    $amount = new Price();
 		$amount->setCurrency($this->TotalCurrency);
     $amount->setAmount($this->TotalPrice);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
 
   public function SubTotal() {
-    $amount = new Money();
+
+  	// TODO: Multi currency
+
+    $amount = new Price();
 		$amount->setCurrency($this->SubTotalCurrency);
     $amount->setAmount($this->SubTotalPrice);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
 	
@@ -279,10 +287,13 @@ class Order extends DataObject {
 	  
 	  //Total outstanding cannot be negative 
 	  if ($total < 0) $total = 0;
+
+	  // TODO: Multi currency
 	  
-	  $outstanding = new Money();
+	  $outstanding = new Price();
 	  $outstanding->setAmount($total);
 	  $outstanding->setCurrency($this->Total()->getCurrency());
+	  $outstanding->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
 	  
 	  return $outstanding;
 	}
@@ -291,7 +302,7 @@ class Order extends DataObject {
 	 * Calculate the total paid for this order, only 'Success' payments
 	 * are considered.
 	 * 
-	 * @return Money With value and currency of total paid
+	 * @return Price With value and currency of total paid
 	 */
 	public function TotalPaid() {
 	   $paid = 0;
@@ -302,7 +313,7 @@ class Order extends DataObject {
 	    }
 	  }
 	  
-	  $totalPaid = new Money();
+	  $totalPaid = new Price();
 	  $totalPaid->setAmount($paid);
 	  $totalPaid->setCurrency($this->Total()->getCurrency());
 	  
@@ -489,6 +500,7 @@ class Order extends DataObject {
 	  $subTotal = 0;
 	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
 	  $modifications = DataObject::get('Modification', 'OrderID = '.$this->ID);
+	  $shopConfig = ShopConfig::current_shop_config();
 	  
 	  if ($items) foreach ($items as $item) {
 	    $total += $item->Total()->Amount;
@@ -507,10 +519,10 @@ class Order extends DataObject {
 	  }
 
     $this->SubTotalPrice = $subTotal; 
-    $this->SubTotalCurrency = 'NZD';
+    $this->SubTotalCurrency = $shopConfig->BaseCurrency;
 
 	  $this->TotalPrice = $total; 
-	  $this->SubTotalCurrency = 'NZD';
+	  $this->SubTotalCurrency = $shopConfig->BaseCurrency;
 
     $this->write();
 	}

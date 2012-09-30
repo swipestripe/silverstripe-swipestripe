@@ -6,6 +6,8 @@ class ShopConfig extends DataObject {
 
   public static $db = array(
     'LicenceKey' => 'Varchar',
+    'BaseCurrency' => 'Varchar(3)',
+    'BaseCurrencySymbol' => 'Varchar(10)',
     'EmailSignature' => 'HTMLText',
     'ReceiptSubject' => 'Varchar',
     'ReceiptBody' => 'HTMLText',

@@ -23,9 +23,13 @@ class ItemOption extends DataObject {
 	);
 
 	public function Amount() {
-    $amount = new Money();
+
+		// TODO: Multi currency
+
+    $amount = new Price();
 		$amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
 

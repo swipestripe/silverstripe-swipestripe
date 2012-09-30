@@ -4,9 +4,9 @@
     <tr>
       <th><% _t('CheckoutFormOrder.PRODUCT', 'Product') %></th>
       <th><% _t('CheckoutFormOrder.OPTIONS', 'Options') %></th>
-      <th><% _t('CheckoutFormOrder.UNIT_PRICE', 'Unit Price') %> ($Total.Currency)</th>
+      <th><% _t('CheckoutFormOrder.UNIT_PRICE', 'Unit Price') %> ($SubTotal.Currency)</th>
       <th><% _t('CheckoutFormOrder.QUANTITY', 'Quantity') %></th>
-      <th><% _t('CheckoutFormOrder.SUB_TOTAL', 'Sub Total') %> ($Total.Currency)</th>
+      <th><% _t('CheckoutFormOrder.SUB_TOTAL', 'Sub Total') %> ($SubTotal.Currency)</th>
     </tr>
   </thead>
   <tbody>
@@ -31,7 +31,7 @@
     
     <tr>
       <td colspan="4" class="row-header"><% _t('CheckoutFormOrder.SUB_TOTAL','Sub Total') %></td>
-      <td>$SubTotal.Nice ($SubTotal.Currency)</td>
+      <td>$SubTotal.Nice</td>
     </tr>
     
     <% control Top.Fields(Modifiers) %>
@@ -40,7 +40,7 @@
 
     <tr>
       <td colspan="4" class="row-header"><% _t('CheckoutFormOrder.TOTAL','Total') %></td>
-      <td>$Total.Nice ($Total.Currency)</td>
+      <td>$Total.Nice</td>
     </tr>
   </tbody>
 </table>

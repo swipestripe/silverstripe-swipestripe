@@ -28,9 +28,13 @@ class Item extends DataObject {
 	);
 
 	public function Amount() {
-    $amount = new Money();
+
+		// TODO: Multi currency
+
+    $amount = new Price();
 		$amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
 
@@ -107,10 +111,13 @@ class Item extends DataObject {
 	  foreach ($this->ItemOptions() as $itemOption) {
 	    $amount += $itemOption->Amount()->getAmount();
 	  } 
+
+	  // TODO: Multi currency
 	  
-	  $unitPrice = new Money();
+	  $unitPrice = new Price();
 	  $unitPrice->setAmount($amount);
 	  $unitPrice->setCurrency($this->Amount()->getCurrency());
+	  $unitPrice->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
 	  return $unitPrice;
 	}
 	
@@ -126,10 +133,13 @@ class Item extends DataObject {
 	    $amount += $itemOption->Amount()->getAmount();
 	  } 
 	  $amount = $amount * $this->Quantity;
+
+	  // TODO: Multi currency
 	  
-	  $subTotal = new Money();
+	  $subTotal = new Price();
 	  $subTotal->setAmount($amount);
 	  $subTotal->setCurrency($this->Amount()->getCurrency());
+	  $subTotal->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
 	  return $subTotal;
 	}
 

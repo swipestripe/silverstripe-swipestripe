@@ -30,9 +30,13 @@ class Modification extends DataObject {
 	);
 
 	public function Amount() {
-		$amount = new Money();
+
+		// TODO: Multi currency
+
+		$amount = new Price();
 		$amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
 
@@ -44,49 +48,5 @@ class Modification extends DataObject {
 	public static $has_one = array(
 	  'Order' => 'Order'
 	);
-	
-	/**
-	 * Modifier currency
-	 * TODO move currency to one central location
-	 * 
-	 * @var String 3 letter ISO 4217 currency code e.g. "NZD"
-	 */
-	protected static $currency = 'NZD';
-	
-	/**
-	 * Set table to InnoDB in preparation for transaction support.
-	 * 
-	 * @var Array
-	 */
-	static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
-	);
-	
-	/**
-	 * Set the currency code that this site uses for Order Modifications
-	 * 
-	 * @param string $currency 3 letter ISO 4217 currency code e.g. "NZD"
-	 */
-	public static function set_currency($currency) {
-		self::$currency = $currency;
-	}
-	
-	/**
-	 * Return the currency set for Order Modifications
-	 * 
-	 * @return string 3 letter ISO 4217 currency code e.g. "NZD"
-	 */
-	public static function currency() {
-		return self::$currency;
-	}
-	
-	/**
-	 * By default Modifications are valid
-	 * 
-	 * @see DataObject::validate()
-	 */
-	function validate() {
-	  return parent::validate();
-	}
 	
 }

@@ -19,19 +19,6 @@ class Product extends Page {
    * @var Boolean
    */
   protected $firstWrite = false;
-  
-  /**
-   * Currency allowed to be used for products
-   * Code match Payment::$site_currency
-   * Only one currency site wide allowed
-   * 
-   * TODO Set currency in a central location
-   * 
-   * @var Array Currency code indexes currency name
-   */
-  public static $allowed_currency = array(
-    'NZD' => 'New Zealand Dollar'
-  );
 
   /**
    * DB fields for Product.
@@ -44,9 +31,13 @@ class Product extends Page {
   );
 
   public function Amount() {
-    $amount = new Money();
+
+    // TODO: Multi currency
+
+    $amount = new Price();
     $amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
+    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
   
@@ -112,6 +103,10 @@ class Product extends Page {
   public function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->firstWrite = true;
+
+    //Save in base currency
+    $shopConfig = ShopConfig::current_shop_config();
+    $this->Currency = $shopConfig->BaseCurrency;
     
     //If a stock level is set then update StockLevel
     $request = Controller::curr()->getRequest();
@@ -172,29 +167,6 @@ class Product extends Page {
       $this->doUnpublish();
     }
   }
-  
-	/**
-	 * Set the currency for all products. Must match site curency.
-	 * TODO set currency for entire site in central location
-	 * 
-	 * @param Array $currency
-	 */
-	public static function set_allowed_currency(Array $currency) {
-	  
-    //if (count($currency) && array_key_exists(Payment::site_currency(), $currency)) {
-
-    if (count($currency) && array_key_exists('NZD', $currency)) {
-	    self::$allowed_currency = $currency;
-	  }
-	  else {
-
-	    //user_error("Cannot set allowed currency. Currency must match: ".Payment::site_currency(), E_USER_WARNING);
-
-      user_error("Cannot set allowed currency. Currency must match: ".'NZD', E_USER_WARNING);
-	    //TODO return meaningful error to browser in case error not shown
-	    return;
-	  }
-	}
     
 	/**
 	 * Set some CMS fields for managing Product images, Variations, Options, Attributes etc.
@@ -208,9 +180,6 @@ class Product extends Page {
     //Product fields
     $priceField = new PriceField('Price');
     $fields->addFieldToTab('Root.Main', $priceField, 'Content');
-
-    $currencyField = new TextField('Currency', 'Currency', 'NZD');
-    $fields->addFieldToTab('Root.Main', $currencyField, 'Content');
 
     $categoriesField = new CategoriesField('ProductCategories', 'Categories', 'ProductCategory');
     $fields->addFieldToTab('Root.Main', $categoriesField, 'Content');
@@ -878,9 +847,13 @@ class Product_Controller extends Page_Controller {
       }
       else if ($variation->Amount()->getAmount() > 0) {
         $data['priceDifference'] = '(+' . $variation->Amount()->Nice() . ')';
-        $newTotal = new Money();
+
+        // TODO: Multi currency
+
+        $newTotal = new Price();
         $newTotal->setCurrency($product->Amount()->getCurrency());
         $newTotal->setAmount($product->Amount()->getAmount() + $variation->Amount()->getAmount());
+        $newTotal->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
         $data['totalPrice'] = $newTotal->Nice();
       }
       else { //Variations have been changed so only positive values, so this is unnecessary

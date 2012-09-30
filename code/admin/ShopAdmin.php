@@ -25,8 +25,6 @@ class ShopAdmin extends ModelAdmin {
 		'$ModelClass/$Action/$ID' => 'handleAction',
 	);
 
-	protected $shopConfigSection;
-
 	public function init() {
 
 		// set reading lang
@@ -36,11 +34,6 @@ class ShopAdmin extends ModelAdmin {
 		
 		parent::init();
 
-		// if ($this->modelClass == 'ShopConfig') {
-		// 	$request = $this->getRequest();
-		// 	$this->shopConfigSection = $request->param('Action');
-		// }
-		
 		Requirements::css(CMS_DIR . '/css/screen.css');
 		Requirements::css('swipestripe/css/ShopAdmin.css');
 		
@@ -229,11 +222,6 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 		'ShopConfig/Licence' => 'LicenceSettings'
 	);
 
-	public function init() {
-		$this->shopConfigSection = 'Licence';
-		parent::init();
-	}
-
 	public function Breadcrumbs($unlinked = false) {
 
 		$request = $this->getRequest();
@@ -250,8 +238,6 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 	}
 
 	public function SettingsForm($request = null) {
-
-		$this->shopConfigSection = 'Licence';
 		return $this->LicenceSettingsForm();
 	}
 
@@ -371,11 +357,6 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 		'ShopConfig/EmailSettings' => 'EmailSettings'
 	);
 
-	public function init() {
-		$this->shopConfigSection = 'EmailSettings';
-		parent::init();
-	}
-
 	public function Breadcrumbs($unlinked = false) {
 
 		$request = $this->getRequest();
@@ -392,8 +373,6 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 	}
 
 	public function SettingsForm($request = null) {
-
-		$this->shopConfigSection = 'EmailSettings';
 		return $this->EmailSettingsForm();
 	}
 
@@ -528,11 +507,6 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 		'ShopConfig/Countries' => 'Countries'
 	);
 
-	public function init() {
-		$this->shopConfigSection = 'Countries';
-		parent::init();
-	}
-
 	public function Breadcrumbs($unlinked = false) {
 
 		$request = $this->getRequest();
@@ -549,8 +523,6 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 	}
 
 	public function SettingsForm($request = null) {
-
-		$this->shopConfigSection = 'Countries';
 		return $this->CountriesForm();
 	}
 
@@ -672,6 +644,148 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 			'Help' => 'Shipping and billing countries and regions.',
 			'Link' => Controller::join_links($this->Link('ShopConfig'), 'Countries'),
 			'LinkTitle' => 'Edit Countries and Regions'
+		))->renderWith('ShopAdmin_Snippet');
+	}
+
+}
+
+class ShopAdmin_BaseCurrency extends ShopAdmin {
+
+	static $url_rule = 'ShopConfig/BaseCurrency';
+	static $url_priority = 55;
+
+	public static $url_handlers = array(
+		'ShopConfig/BaseCurrency/BaseCurrencySettingsForm' => 'BaseCurrencySettingsForm',
+		'ShopConfig/BaseCurrency' => 'BaseCurrencySettings'
+	);
+
+	public function Breadcrumbs($unlinked = false) {
+
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
+
+		if ($items->count() > 1) $items->remove($items->pop());
+
+		$items->push(new ArrayData(array(
+			'Title' => 'Base Currency',
+			'Link' => false
+		)));
+
+		return $items;
+	}
+
+	public function SettingsForm($request = null) {
+		return $this->BaseCurrencySettingsForm();
+	}
+
+	public function BaseCurrencySettings($request) {
+
+		if ($request->isAjax()) {
+			$controller = $this;
+			$responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->BaseCurrencySettingsForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith('ShopAdminSettings_Content');
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			); 
+			return $responseNegotiator->respond($this->getRequest());
+		}
+
+		return $this->renderWith('ShopAdminSettings');
+	}
+
+	public function BaseCurrencySettingsForm() {
+
+		$shopConfig = ShopConfig::get()->First();
+
+		$fields = new FieldList(
+			$rootTab = new TabSet("Root",
+				$tabMain = new Tab('BaseCurrency',
+					new TextField('BaseCurrency', _t('ShopConfig.BASE_CURRENCY', 'Base Currency')),
+					new TextField('BaseCurrencySymbol', _t('ShopConfig.BASE_CURRENCY_SYMBOL', 'Base Currency Symbol'))
+				)
+			)
+		);
+
+		if ($shopConfig->BaseCurrency) {
+			$fields->addFieldToTab('Root.BaseCurrency', new LiteralField('BaseCurrencyNotice', '
+				<p class="message warning">Base currency has already been set, do not change unless you know what you are doing.</p>
+			'), 'BaseCurrency');
+		}
+
+		$actions = new FieldList();
+		$actions->push(FormAction::create('saveBaseCurrencySettings', _t('GridFieldDetailForm.Save', 'Save'))
+			->setUseButtonTag(true)
+			->addExtraClass('ss-ui-action-constructive')
+			->setAttribute('data-icon', 'add'));
+
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
+		);
+
+		$form->setTemplate('ShopAdminSettings_EditForm');
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'BaseCurrency/BaseCurrencySettingsForm'));
+
+		$form->loadDataFrom($shopConfig);
+
+		return $form;
+	}
+
+	public function saveBaseCurrencySettings($data, $form) {
+
+		//Hack for LeftAndMain::getRecord()
+		self::$tree_class = 'ShopConfig';
+
+		$config = ShopConfig::get()->First();
+		$form->saveInto($config);
+		$config->write();
+		$form->sessionMessage('Saved BaseCurrency Key', 'good');
+
+		$controller = $this;
+		$responseNegotiator = new PjaxResponseNegotiator(
+			array(
+				'CurrentForm' => function() use(&$controller) {
+					//return $controller->renderWith('ShopAdminSettings_Content');
+					return $controller->BaseCurrencySettingsForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					//return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			),
+			$this->response
+		); 
+		return $responseNegotiator->respond($this->getRequest());
+	}
+
+	public function getSnippet() {
+		return $this->customise(array(
+			'Title' => 'Base Currency',
+			'Help' => 'Set base currency.',
+			'Link' => Controller::join_links($this->Link('ShopConfig'), 'BaseCurrency'),
+			'LinkTitle' => 'Edit base currency'
 		))->renderWith('ShopAdmin_Snippet');
 	}
 

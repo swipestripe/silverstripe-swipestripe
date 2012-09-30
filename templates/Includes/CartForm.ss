@@ -14,25 +14,25 @@
         <th>&nbsp;</th>
         <th><% _t('CartForm.PRODUCT', 'Product') %></th>
         <th><% _t('CartForm.OPTIONS', 'Options') %></th>
-        <th><% _t('CartForm.UNIT_PRICE', 'Unit Price') %> ($Cart.Total.Currency)</th>
+        <th><% _t('CartForm.UNIT_PRICE', 'Unit Price') %> ($Cart.SubTotal.Currency)</th>
         <th><% _t('CartForm.QUANTITY', 'Quantity') %></th>
-        <th><% _t('CartForm.SUB_TOTAL', 'Sub Total') %> ($Cart.Total.Currency)</th>
+        <th><% _t('CartForm.SUB_TOTAL', 'Sub Total') %> ($Cart.SubTotal.Currency)</th>
       </tr>
     </thead>
     <tbody>
       
 	    <% if Cart.Items %>
 	    
-	      <% control Fields %>
+	      <% loop Fields %>
 	        $FieldHolder
-	      <% end_control %>
+	      <% end_loop %>
 	      
-	      <% control Cart %>
+	      <% with Cart %>
 	      <tr>
 		      <td colspan="5">&nbsp;</td>
-		      <td><strong>$SubTotal.Nice ($SubTotal.Currency)</strong></td>
+		      <td><strong>$SubTotal.Nice</strong></td>
 		    </tr>
-		    <% end_control %>
+		    <% end_with %>
 	    
 	    <% else %>
 	      <tr>
