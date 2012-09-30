@@ -91,6 +91,23 @@ class Product extends Page {
 	  'Title' => 'Title',
     'SummaryOfCategories' => 'Categories'
 	);
+
+  public static $searchable_fields = array(
+    'Title' => array(
+      'field' => 'TextField',
+      'filter' => 'PartialMatchFilter',
+      'title' => 'Name'
+    ),
+    'Category' => array(
+      'field' => 'TextField',
+      'filter' => 'ProductCategorySearchFilter',
+      'title' => 'Category'
+    )
+  );
+
+  public static $casting = array(
+    'Category' => 'Varchar',
+  );
 	
 	/**
 	 * Set firstWrite flag if this is the first time this Product is written.

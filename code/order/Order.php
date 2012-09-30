@@ -136,7 +136,64 @@ class Order extends DataObject {
 	 * @var Array
 	 */
 	public static $searchable_fields = array(
-	  'ID'
+	  'ID' => array(
+			'field' => 'TextField',
+			'filter' => 'PartialMatchFilter',
+			'title' => 'Order Number'
+		),
+		'Member.Surname' => array(
+			'title' => 'Customer Surname',
+			'filter' => 'PartialMatchFilter'
+		),
+		'Member.Email' => array(
+			'title' => 'Customer Email',
+			'filter' => 'PartialMatchFilter'
+		),
+		'HasPayment' => array(
+			'filter' => 'PaymentSearchFilter',
+		),
+  	'Status' => array(
+  	  'title' => 'Status',
+  		'filter' => 'OptionSetSearchFilter',
+  	)
+	);
+
+	/**
+	 * Filters for order admin area search.
+	 * 
+	 * @see DataObject::scaffoldSearchFields()
+	 * @return FieldSet
+	 */
+  function scaffoldSearchFields(){
+
+  	Requirements::customCSS('
+			.west .optionset li {
+				width: 100%;
+			}
+		');
+
+		$fieldSet = parent::scaffoldSearchFields();
+
+		$fieldSet->push(CheckboxSetField::create('HasPayment', 'Has Payment', array(
+		  1 => 'Yes',
+		  2 => 'No'
+		)));
+
+		$fieldSet->push(new CheckboxSetField('Status', 'Status', array(
+		  'Pending' => 'Pending',
+		  'Processing' => 'Processing',
+		  'Dispatched' => 'Dispatched'
+		)));
+		return $fieldSet;
+	}
+
+	/**
+	 * Castings for the searchable fields
+	 * 
+	 * @var Array
+	 */
+	public static $casting = array(
+		'HasPayment' => 'Varchar'
 	);
 	
 	/**

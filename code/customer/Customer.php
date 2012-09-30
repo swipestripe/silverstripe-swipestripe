@@ -34,6 +34,11 @@ class Customer extends Member {
 	  'Addresses' => 'Address',
 	  'Orders' => 'Order'
 	);
+
+	public static $searchable_fields = array(
+		'Surname',
+		'Email'
+	);
 	
 	/**
 	 * If this Member has Orders, then prevent member from being deleted.
