@@ -44,7 +44,7 @@ class ShopConfig extends DataObject {
   /**
    * Setup a default ShopConfig record if none exists
    */
-  function requireDefaultRecords() {
+  public function requireDefaultRecords() {
 
     parent::requireDefaultRecords();
 

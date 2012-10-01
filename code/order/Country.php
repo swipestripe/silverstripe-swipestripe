@@ -380,10 +380,14 @@ class Country_Billing extends Country {
     parent::requireDefaultRecords();
 
 		if (!DataObject::get_one('Country_Billing')) {
+
+			$shopConfig = ShopConfig::current_shop_config();
+
 		  foreach (self::$iso_3166_countryCodes as $code => $title) {
 		    $country = new Country_Billing();
 		    $country->Code = $code;
 		    $country->Title = $title;
+		    $country->ShopConfigID = $shopConfig->ID;
 		    $country->write();
 		  }
 			DB::alteration_message('Billing countries created', 'created');
