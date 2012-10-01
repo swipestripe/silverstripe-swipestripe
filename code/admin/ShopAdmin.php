@@ -806,7 +806,7 @@ class ShopAdmin_LeftAndMainExtension extends Extension {
 
 class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 
-	function ItemEditForm() {
+	public function ItemEditForm() {
 
 		if (empty($this->record)) {
 			$controller = Controller::curr();
@@ -898,7 +898,7 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 		return $form;
 	}
 
-	function doSave($data, $form) {
+	public function doSave($data, $form) {
 
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();
@@ -948,7 +948,7 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 		}
 	}
 
-	function doPublish($data, $form) {
+	public function doPublish($data, $form) {
 
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();
@@ -999,7 +999,7 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 		}
 	}
 
-	function doUnpublish($data, $form) {
+	public function doUnpublish($data, $form) {
 
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();
@@ -1050,7 +1050,7 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 		}
 	}
 
-	function doDelete($data, $form) {
+	public function doDelete($data, $form) {
 
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();

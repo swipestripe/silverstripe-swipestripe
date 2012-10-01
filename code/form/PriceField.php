@@ -3,19 +3,6 @@
 class PriceField extends CurrencyField {
 
 	public function FieldHolder($properties = array()) {
-		
-		Requirements::customCSS('
-			.price label.left {
-				width: 136px;
-			}
-			.price .currency-code {
-				float: left; 
-				margin-bottom: 0px; 
-				padding: 7px;
-				font-weight: bold;
-				text-shadow: 1px 1px 0 white;
-			}
-		');
 
 		$shopConfig = ShopConfig::current_shop_config();
 		$properties = array_merge($properties, array(

@@ -121,15 +121,11 @@ class Variation extends DataObject {
 	 */
   public function getCMSFields() {
 
-    $fields = parent::getCMSFields(array(
-			'includeRelations' => false,
-    ));
-    $fields->removeFieldFromTab('Root', 'Options');
-    $fields->removeByName('ImageID');
-    $fields->removeByName('StockLevelID');
-    $fields->removeByName('ProductID');
-    $fields->removeByName('Version');
-    $fields->removeByName('Currency');
+    $fields = new FieldList(
+      $rootTab = new TabSet('Root',
+        $tabMain = new Tab('Variation')
+      )
+    );
 
     $product = $this->Product();
     $attributes = $product->Attributes();
@@ -140,28 +136,27 @@ class Variation extends DataObject {
 
       $optionField = new OptionField($attribute->ID, $attribute->Title, $options, $currentOptionID);
       $optionField->setHasEmptyDefault(false);
-      $fields->addFieldToTab('Root.Main', $optionField);
+      $fields->addFieldToTab('Root.Variation', $optionField);
     }
 
     // TODO: add stock level field back
-    //Stock level field
+    // Stock level field
     // $level = $this->StockLevel()->Level;
-    // $fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this));
+    // $fields->addFieldToTab('Root.Variation', new StockField('Stock', null, $level, $this));
 
     //Stock level field
     $level = $this->StockLevel()->Level;
-    $fields->addFieldToTab('Root.Main', new Textfield('Stock', null, $level));
+    $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, $level));
 
+    $fields->addFieldToTab('Root.Variation', PriceField::create('Price', 'Price')
+      ->setRightTitle('Amount that this variation will increase the base product price by')
+    );
 
-		$fields->addFieldToTab("Root", new Tab('Advanced'));
-    $fields->addFieldToTab('Root.Advanced', new DropdownField(
+    $fields->addFieldToTab('Root.Variation', DropdownField::create(
     	'Status', 
-    	'Status (you can disable a variation to prevent it being sold)', 
+    	'Status', 
       $this->dbObject('Status')->enumValues()
-    ));
-
-    $priceField = new PriceField('Price', 'Amount that this variation will increase the base product price by');
-    $fields->addFieldToTab('Root.Main', $priceField);
+    )->setRightTitle('You can disable a variation to prevent it being sold'));
 
     return $fields;
   }

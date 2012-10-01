@@ -1,8 +1,7 @@
 <div id="$Name" class="field price<% if extraClass %> $extraClass<% end_if %>">
 	<% if Title %>
-		<label class="left" for="$ID">$Title</label>
+		<label class="left" for="$ID">$Title <span style="float:right;">$BaseCurrency</span></label>
 	<% end_if %>
-	<p class="currency-code">$BaseCurrency</p>
 	<div class="middleColumn">
 		$Field
 	</div>

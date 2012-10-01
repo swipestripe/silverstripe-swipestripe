@@ -204,7 +204,7 @@ class Product extends Page {
 		//Stock level field
 		$level = $this->StockLevel()->Level;
 		//$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
-    $fields->addFieldToTab('Root.Main', new Textfield('Stock', null, $level), 'Content');
+    $fields->addFieldToTab('Root.Main', new Hiddenfield('Stock', null, $level), 'Content');
 
     //Replace URL Segment field
     $urlsegment = new SiteTreeURLSegmentField("URLSegment", 'URLSegment');
@@ -916,7 +916,7 @@ class Product_Image extends DataObject {
   );
 
   static $summary_fields = array(
-    'SortOrder' => 'SortOrder',
+    // 'SortOrder' => 'SortOrder',
     'SummaryOfImage' => 'Image',
     'Caption' => 'Caption'
   );
@@ -924,13 +924,24 @@ class Product_Image extends DataObject {
   public static $default_sort = 'SortOrder';
 
   public function getCMSFields() {
-    $fields = parent::getCMSFields();
 
-    if (!$this->ID) {
-      $fields->removeByName('Image');
+    $uploadField = new UploadField('Image', 'Image');
+    $uploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
+    $uploadField->setConfig('allowedMaxFileNumber', 1);
+
+    $fields = new FieldList(
+      $rootTab = new TabSet('Root',
+        $tabMain = new Tab('Variation',
+          TextareaField::create('Caption')
+          //TextField::create('ImageID'),
+          //$uploadField
+        )
+      )
+    );
+
+    if ($this->ID) {
+      $fields->addFieldToTab('Root.Variation', $uploadField);
     }
-    $fields->removeByName('SortOrder');
-    $fields->removeByName('ProductID');
 
     return $fields;
   }
