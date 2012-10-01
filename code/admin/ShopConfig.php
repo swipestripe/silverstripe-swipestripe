@@ -40,6 +40,20 @@ class ShopConfig extends DataObject {
     }
     return $warning;
   }
+
+  /**
+   * Setup a default ShopConfig record if none exists
+   */
+  function requireDefaultRecords() {
+
+    parent::requireDefaultRecords();
+
+    if(!self::current_shop_config()) {
+      $shopConfig = new ShopConfig();
+      $shopConfig->write();
+      DB::alteration_message('Added default shop config', 'created');
+    }
+  }
 }
 
 /**
