@@ -67,10 +67,6 @@ class Item extends DataObject {
 	  'DownloadCount' => 0
 	);
 	
-	static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
-	);
-	
 	/**
 	 * Retrieve the object this item represents (e.g. {@link Product}). Uses versioning
 	 * so that the product that was bought can be retrieved with all the correct details.
@@ -274,13 +270,17 @@ class Item extends DataObject {
 	 */
 	public function updateStockLevels() {
 
-	  $quantityChange = $this->PreviousQuantity - $this->Quantity;
+		$shopConfig = ShopConfig::current_shop_config();
 
-	  if ($variation = $this->Variation()) {
-	    $variation->updateStockBy($quantityChange);
-	  }
-	  else if ($product = $this->Product()) {
-	    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
-	  }
+		if ($shopConfig->StockManagement == 'strict') {
+			$quantityChange = $this->PreviousQuantity - $this->Quantity;
+
+		  if ($variation = $this->Variation()) {
+		    $variation->updateStockBy($quantityChange);
+		  }
+		  else if ($product = $this->Product()) {
+		    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
+		  }
+		}
 	}
 }

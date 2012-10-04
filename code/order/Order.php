@@ -31,17 +31,6 @@ class Order extends DataObject {
    * @var String
    */
   const STATUS_DISPATCHED = 'Dispatched';
-  
-  /**
-   * Life of shopping cart, how long the cart will remain after abandoned.
-   * e.g: A cart is considered abandoned 1 hour after the last page request and will be deleted
-   * thereby releasing the stock in the cart back to the system. 
-   * 
-   * @see http://www.php.net/manual/en/datetime.formats.relative.php
-   * @see Order::delete_abandoned()
-   * @var String Relative format for strtotime()
-   */
-  protected static $timeout = '-1 hour';
 
   /**
    * DB fields for Order, such as Stauts, Payment Status etc.
@@ -51,12 +40,10 @@ class Order extends DataObject {
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
-
 	  'TotalPrice' => 'Decimal(19,4)',
     'TotalCurrency' => 'Varchar(3)',
     'SubTotalPrice' => 'Decimal(19,4)',
     'SubTotalCurrency' => 'Varchar(3)',
-
 		'ReceiptSent' => 'Boolean',
 	  'NotificationSent' => 'Boolean',
 	  'OrderedOn' => 'SS_Datetime',
@@ -159,35 +146,6 @@ class Order extends DataObject {
 	);
 
 	/**
-	 * Filters for order admin area search.
-	 * 
-	 * @see DataObject::scaffoldSearchFields()
-	 * @return FieldSet
-	 */
-  function scaffoldSearchFields(){
-
-  	Requirements::customCSS('
-			.west .optionset li {
-				width: 100%;
-			}
-		');
-
-		$fieldSet = parent::scaffoldSearchFields();
-
-		$fieldSet->push(CheckboxSetField::create('HasPayment', 'Has Payment', array(
-		  1 => 'Yes',
-		  2 => 'No'
-		)));
-
-		$fieldSet->push(new CheckboxSetField('Status', 'Status', array(
-		  'Pending' => 'Pending',
-		  'Processing' => 'Processing',
-		  'Dispatched' => 'Dispatched'
-		)));
-		return $fieldSet;
-	}
-
-	/**
 	 * Castings for the searchable fields
 	 * 
 	 * @var Array
@@ -224,6 +182,46 @@ class Order extends DataObject {
   public function canDelete($member = null) {
     return false;
 	}
+
+	/**
+	 * Filters for order admin area search.
+	 * 
+	 * @see DataObject::scaffoldSearchFields()
+	 * @return FieldSet
+	 */
+  public function scaffoldSearchFields(){
+
+  	Requirements::customCSS('
+			.west .optionset li {
+				width: 100%;
+			}
+		');
+
+		$fieldSet = parent::scaffoldSearchFields();
+
+		$fieldSet->push(CheckboxSetField::create('HasPayment', 'Has Payment', array(
+		  1 => 'Yes',
+		  2 => 'No'
+		)));
+
+		$fieldSet->push(new CheckboxSetField('Status', 'Status', array(
+		  'Pending' => 'Pending',
+		  'Processing' => 'Processing',
+		  'Dispatched' => 'Dispatched'
+		)));
+		return $fieldSet;
+	}
+
+	/**
+	 * Set the LastActive time when {@link Order} first created.
+	 * 
+	 * (non-PHPdoc)
+	 * @see DataObject::onBeforeWrite()
+	 */
+	public function onBeforeWrite() {
+    parent::onBeforeWrite();
+    if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
+  }
 	
 	/**
 	 * Set CMS fields for viewing this Order in the CMS
@@ -387,10 +385,15 @@ class Order extends DataObject {
 	  
 	  $this->updatePaymentStatus();
 	  
+	  //Only sends emails if haven't already been sent
 	  if ($this->PaymentStatus == 'Paid') {
 	    $this->sendReceipt();
 	    $this->sendNotification();
 	  }
+
+	  $this->updateStatus();
+
+	  //TODO: update stock levels if relaxed is set
 	  
 	  $this->extend('onAfterPayment');
 	}
@@ -430,16 +433,30 @@ class Order extends DataObject {
 	 */
 	public function updatePaymentStatus() {
 
+		//TODO: This shouldn't update the order status really
+
 	  if ($this->getPaid()) {
 	    $this->PaymentStatus = 'Paid';
-	    $this->Status = self::STATUS_PROCESSING;
 	    $this->write();
 	  }
 	  else {
 	    $this->PaymentStatus = 'Unpaid';
-	    $this->Status = self::STATUS_PENDING;
 	    $this->write();
 	  }
+	}
+
+	public function updateStatus() {
+
+		if ($this->Status == 'Cart') {
+			if ($this->getPaid()) {
+		    $this->Status = self::STATUS_PROCESSING;
+		    $this->write();
+		  }
+		  else {
+		    $this->Status = self::STATUS_PENDING;
+		    $this->write();
+		  }
+		}
 	}
 	
 	/**
@@ -828,26 +845,15 @@ class Order extends DataObject {
 	}
 	
 	/**
-	 * Delete this data object.
-	 * $this->onBeforeDelete() gets called.
-	 * Note that in Versioned objects, both Stage and Live will be deleted.
-	 *  @uses DataObjectDecorator->augmentSQL()
+	 * Clean up Order Items (ItemOptions by extension), Addresses and Modifications.
+	 * All wrapped in a transaction.
 	 */
 	public function delete() {
-	  
-	  //Check that order is:
-	  //last active over an hour ago
-	  //Order is status Cart
-	  //Order does not have any payments against it
-	  //SS_Log::log(new Exception(print_r("about to REALLY delete $this->ID", true)), SS_Log::NOTICE);
-	  //return;
-	  
-	  //Clean up 
-	  //Items -> ItemOption
-	  //Addresses
-	  //Modifications
-	  
+
 	  try {
+
+	  	DB::getConn()->transactionStart();
+
 	    $items = $this->Items();
 	    if ($items && $items->exists()) foreach ($items as $item) {
         $item->delete();
@@ -867,32 +873,14 @@ class Order extends DataObject {
 	    }
 	    
 	    parent::delete();
+	    DB::getConn()->transactionEnd();
+
 	  }
 	  catch (Exception $e) {
-	    //Rollback
+	    DB::getConn()->transactionRollback();
+	    SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+	    //TODO: Show an error to the customer here?
 	  }
-	}
-	
-	/**
-	 * Set order timeout, how long the cart will remain after abandoned.
-   * e.g: A cart is considered abandoned 1 hour after the last page request and will be deleted
-   * thereby releasing the stock in the cart back to the system. 
-	 * 
-	 * @see http://www.php.net/manual/en/datetime.formats.relative.php
-   * @see Order::delete_abandoned()
-	 * @param String $interval Relative time format for strtotime()
-	 */
-  public static function set_timeout($interval) {
-		self::$timeout = $interval;
-	}
-	
-	/**
-	 * Get the order timeout, for managing stock levels. 
-	 * 
-	 * @return String Relative time format for strtotime()
-	 */
-	public static function get_timeout() {
-		return self::$timeout;
 	}
 	
 	/**
@@ -904,41 +892,22 @@ class Order extends DataObject {
 	 */
 	public static function delete_abandoned() {
 
-	  $timeout = self::get_timeout();
-	  $oneHourAgo = date('Y-m-d H:i:s', strtotime($timeout));
+		$shopConfig = ShopConfig::current_shop_config();
 
-	  //Get orders that were last active over an hour ago and have not been paid at all
-	  /*
-	  $orders = DataObject::get(
-	  	'Order',
-	    "\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL",
-	    '',
-	    "LEFT JOIN \"Payment\" ON \"Payment\".\"OrderID\" = \"Order\".\"ID\""
-	  );
-	  */
+		$timeout = DateInterval::createFromDateString($shopConfig->CartTimeout . ' ' . $shopConfig->CartTimeoutUnit);
+		$ago = new DateTime();
+		$ago->sub($timeout);
 
+	  //Get orders that were last active over x ago according to shop config cart lifetime
 	  $orders = Order::get()
-	  	->where("\"Order\".\"LastActive\" < '$oneHourAgo' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL")
+	  	->where("\"Order\".\"LastActive\" < '" . $ago->format('Y-m-d H:i:s') . "' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL")
 	  	->leftJoin('Payment', "\"Payment\".\"OrderID\" = \"Order\".\"ID\"");
 
 	  if ($orders && $orders->exists()) foreach ($orders as $order) {
-	    //Delete the order AND return the stock to the Product/Variation
-	    //Should be done in a transaction really
       $order->delete();
       $order->destroy();      
 	  }
 	}
-	
-	/**
-	 * Set the LastActive time when {@link Order} first created.
-	 * 
-	 * (non-PHPdoc)
-	 * @see DataObject::onBeforeWrite()
-	 */
-	public function onBeforeWrite() {
-    parent::onBeforeWrite();
-    if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
-  }
 	
 	/**
 	 * Get modifications that apply changes to the Order sub total.

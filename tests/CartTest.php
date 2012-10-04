@@ -475,14 +475,6 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
 	  //Submit with incorrect variation values, for Medium, Red, Cotton
-	  /*
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-	    'Quantity' => 1,
-	    "Options[{$sizeAttr->ID}]" => $teeshirtAMediumOpt->ID,  //Medium
-	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
-	    "Options[{$materialAttr->ID}]" => $teeshirtACottonOpt->ID, //Cotton
-	  ));
-	  */
 	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
     $data['Quantity'] = 1;
     $data["Options[{$sizeAttr->ID}]"] = $teeshirtAMediumOpt->ID; //Medium
@@ -736,29 +728,6 @@ class SWS_CartTest extends SWS_Test {
 	}
 	
 	/**
-	 * TODO: Do we really need to test this now?
-	 * 
-	 * Get product attribute and test options associated with it
-	 */
-	// public function testProductAttributeOptions() {
-	  
-	//   $attributeSize = $this->objFromFixture('Attribute', 'attrSize');
-	//   $options = $attributeSize->Options();
-	  
-	//   //Remove all the attribute options that have ProductID > 0, these are not default options
-	//   foreach ($options as $option) {
-	//     if ($option->ProductID != 0) {
-	//       $options->remove($option);
-	//     }
-	//   }
-	  
-	//   $this->assertEquals(3, $options->Count());
-	  
-	//   $optionSmall = $options->find('Title', 'Small');
-	//   $this->assertInstanceOf('Option', $optionSmall);
-	// }
-	
-	/**
 	 * Get variation options and test that they are correct
 	 */
 	public function testProductVariationOptions() {
@@ -854,69 +823,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($expectedAmount, $order->Total()->getAmount());
 	  $this->assertEquals($expectedAmount, $order->SubTotal()->getAmount());
 	}
-	
-	// /**
-	//  * Test saving variation without all options set
-	//  * Disabled validation for product variations because preventing disabling a variation
-	//  * 
-	//  * @deprecated
-	//  */
-	// public function testSaveInvalidProductVariation() {
 
-	//   return;
-	  
-	//   //This variation only has 1 option instead of 2
-	//   $brokenProductVariation = $this->objFromFixture('Variation', 'brokenMedium');
-	//   $options = $brokenProductVariation->Options();
-	//   $this->assertEquals(1, $options->Count());
-	  
-	//   $e = null;
-	//   try {
-	//     $brokenProductVariation->write();
-	//   }
-	//   catch (ValidationException $e) {
-	//     $message = $e->getMessage();
-	//   }
-	//   $this->assertInstanceOf('ValidationException', $e);
-	// }
-
-  /**
-   * Have to use draft site for following test testAddNonPublishedProductToCart
-   */
-  public function testSetDraftTrue() {
-	  self::$use_draft_site = true;
-	}
-	
-	/**
-	 * Adding non published product to a cart should fail
-	 */
-	public function testAddNonPublishedProductToCart() {
-	  
-    $productA = $this->objFromFixture('Product', 'productA');
-    
-    $this->assertEquals(false, $productA->isPublished());
-    
-    $productALink = $productA->Link();
-	  $this->get(Director::makeRelative($productALink)); 
-
-	  $message = null;
-	  try {
-  	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-  	    'Quantity' => 1
-  	  ));
-	  }
-	  catch (Exception $e) {
-	    $message = $e->getMessage();
-	  }
-	  
-	  $this->assertStringEndsWith('Object not written.', $message);
-    
-	  $order = Cart::get_current_order();
-	  $items = $order->Items();
-	  
-	  $this->assertEquals(0, $items->Count());
-	}
-	
 	/**
 	 * Persist an order to the DB only when explicitly asked to
 	 */
@@ -963,5 +870,118 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertFalse($origID == $order->ID);
 	  $this->assertEquals(2, Order::get()->count());
 	}
+
+	/**
+	 * Carts abandoned longer than set lifetime are deleted
+	 */
+	public function testDeleteAbandonedCarts() {
+
+    $productA = $this->objFromFixture('Product', 'productA');
+    $shopConfig = $this->objFromFixture('ShopConfig', 'config');
+
+    $this->assertEquals(1, $shopConfig->CartTimeout);
+    $this->assertEquals('hour', $shopConfig->CartTimeoutUnit);
+
+	  $this->loginAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+
+    $productALink = $productA->Link();
+    $this->get(Director::makeRelative($productALink));
+
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1
+    ));
+
+	  $order = Cart::get_current_order();
+	  $this->assertTrue($order->exists());
+
+	  Order::delete_abandoned();
+	  DataObject::flush_and_destroy_cache();
+
+	  $order = Cart::get_current_order();
+	  $this->assertTrue($order->exists());
+
+	  //Log in as admin, change the shop config and the cart last active and try to delete it
+	  $this->loginAs('admin');
+	  $shopConfig->CartTimeout = 15;
+	  $shopConfig->CartTimeoutUnit = 'minute';
+	  $shopConfig->write();
+
+	  $date = new DateTime();
+	  $date->sub(new DateInterval('PT20M'));
+	  $order->LastActive = $date->format('Y-m-d H:i:s');
+	  $order->write();
+	  $this->logOut();
+
+	  Order::delete_abandoned();
+	  DataObject::flush_and_destroy_cache();
+
+	  $order = Cart::get_current_order();
+	  $this->assertTrue(!$order->exists());
+	}
+	
+	/**
+	 * Test saving variation without all options set
+	 * Disabled validation for product variations because preventing disabling a variation
+	 * 
+	 * @deprecated
+	 */
+	public function testSaveInvalidProductVariation() {
+
+	  return;
+	  
+	  //This variation only has 1 option instead of 2
+	  $brokenProductVariation = $this->objFromFixture('Variation', 'brokenMedium');
+	  $options = $brokenProductVariation->Options();
+	  $this->assertEquals(1, $options->Count());
+	  
+	  $e = null;
+	  try {
+	    $brokenProductVariation->write();
+	  }
+	  catch (ValidationException $e) {
+	    $message = $e->getMessage();
+	  }
+	  $this->assertInstanceOf('ValidationException', $e);
+	}
+
+  /**
+   * Have to use draft site for following test testAddNonPublishedProductToCart
+   */
+  public function testSetDraftTrue() {
+	  self::$use_draft_site = true;
+	}
+	
+	/**
+	 * Adding non published product to a cart should fail
+	 */
+	public function testAddNonPublishedProductToCart() {
+	  
+    $productA = $this->objFromFixture('Product', 'productA');
+    
+    $this->assertEquals(false, $productA->isPublished());
+    
+    $productALink = $productA->Link();
+	  $this->get(Director::makeRelative($productALink)); 
+
+	  $message = null;
+	  try {
+  	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+  	    'Quantity' => 1
+  	  ));
+	  }
+	  catch (Exception $e) {
+	    $message = $e->getMessage();
+	  }
+	  
+	  $this->assertStringEndsWith('Object not written.', $message);
+    
+	  $order = Cart::get_current_order();
+	  $items = $order->Items();
+	  
+	  $this->assertEquals(0, $items->Count());
+	}
+	
 }
 

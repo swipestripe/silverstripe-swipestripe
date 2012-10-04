@@ -38,12 +38,15 @@ class SWS_StockLevelTest extends SWS_Test {
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout');  
 		$accountPage = $this->objFromFixture('AccountPage', 'account');
 		$cartPage = $this->objFromFixture('CartPage', 'cart');
+		$shopConfig = ShopConfig::current_shop_config();
 		
 		$this->loginAs('admin');
 	  $checkoutPage->doPublish();
 	  $accountPage->doPublish();
 	  $cartPage->doPublish();
 	  $this->logOut();
+	  
+	  $this->assertEquals($shopConfig->StockManagement, 'strict');
 	}
   
   /**
@@ -58,6 +61,10 @@ class SWS_StockLevelTest extends SWS_Test {
     $this->assertEquals('Enabled', $teeshirtExtraLargePurpleCotton->Status);
     $this->assertEquals(5, $teeshirtExtraLargePurpleCotton->StockLevel()->Level);
   }
+
+  /**
+   * Strict stock level testing
+   */
 
 	/**
 	 * Add a product to the cart and reduce stock level of product without affecting versions of product
@@ -84,8 +91,9 @@ class SWS_StockLevelTest extends SWS_Test {
 	  ));
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $this->assertEquals(3, $productA->StockLevel()->Level);
-	  
-	  
+
+	  DataObject::flush_and_destroy_cache();
+
 	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 2
@@ -136,6 +144,8 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $this->submitForm('CartForm_CartForm', null, array(
 	    "Quantity[{$item->ID}]" => 0
 	  ));
+
+	  DataObject::flush_and_destroy_cache();
 	  
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $this->assertEquals(4, $productA->StockLevel()->Level);
@@ -226,6 +236,53 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtExtraLargePurpleCotton');
 	  $this->assertEquals(5, $teeshirtAVariation->StockLevel()->Level);
 	}
+
+	function testProcessOrderStockUnchanged() {
+
+	}
+
+	/**
+	 * Relaxed stock level testing
+	 */
+
+	function testAddProductToCartStockUnchanged() {
+
+		$shopConfig = ShopConfig::current_shop_config();
+		$productA = $this->objFromFixture('Product', 'productA');
+
+		$this->loginAs('admin');
+		$productA->doPublish();
+	  $shopConfig->StockManagement = 'relaxed';
+	  $shopConfig->write();
+	  $this->logOut();
+
+	  $this->assertEquals($shopConfig->StockManagement, 'strict');
+	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  
+	}
+
+	function testRemoveProductFromCartStockUnchanged() {
+
+	}
+
+	function testAddProductVariationFromCartStockUnchanged() {
+
+	}
+
+	function testRemoveProductVariationFromCartStockUnchanged() {
+
+	}
+
+	function testProcessOrderReduceStock() {
+
+	}
+
+
+
+	/**
+	 * Stock level bounds checking
+	 */
 	
 	/**
 	 * Stock levels cannot be reduced < 0, need to check bounds of stock level being set
@@ -415,6 +472,10 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallPurpleCotton');
 	  $this->assertEquals(-1, $teeshirtAVariation->StockLevel()->Level);
 	}
+
+	/**
+	 * UI tests
+	 */
 	
 	/**
 	 * Check that out of stock products do not display a functioning add to cart form
@@ -437,15 +498,16 @@ class SWS_StockLevelTest extends SWS_Test {
 	  
 	  //Flush the cache
 	  DataObject::flush_and_destroy_cache();
+
 	  $productA = $this->objFromFixture('Product', 'productA');
 	  $this->assertEquals(0, $productA->StockLevel()->Level);
 	  
-	  $this->get(Director::makeRelative($productA->Link())); 
+	  $this->get(Director::makeRelative($productA->Link()));
 
 	  $page = $this->mainSession->lastPage();
 	  //$form = $page->getFormById('AddToCartForm_AddToCartForm');
 	  //$this->assertEquals(false, $form);
-	  
+
 	  $formAction = $page->getField(new SimpleById('AddToCartForm_AddToCartForm_action_add'));
 	  $this->assertEquals(null, $formAction);
 	}
@@ -472,6 +534,8 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $stockLevel->write();
 	  $product->doPublish();
 	  $this->logOut();
+
+	  DataObject::flush_and_destroy_cache();
 	  
 	  $variation = $this->objFromFixture('Variation', 'jeansMedium');
 	  $this->assertEquals(0, $variation->StockLevel()->Level);
@@ -508,7 +572,7 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $this->get(Director::makeRelative($product->Link())); 
 
 	  $firstAttributeID = array_shift(array_keys($product->Attributes()->map()->toArray()));
-	  $firstAttributeOptions = $product->getOptionsForAttribute($firstAttributeID)->map()->toArray();
+	  $firstAttributeOptions = $product->getOptionsForAttribute($firstAttributeID)->map();
 
 	  //Check that first option select has valid options in it
 	  $productPage = new DOMDocument();
@@ -533,8 +597,11 @@ class SWS_StockLevelTest extends SWS_Test {
   	    $this->assertEquals(1, $options->length);
   	  }
 	  }
-	  
 	}
+
+	/**
+	 * Cleanup task tests
+	 */
 	
 	/**
 	 * Clean up abandoned carts, restock products in the orders that are deleted
@@ -558,12 +625,6 @@ class SWS_StockLevelTest extends SWS_Test {
 	  $order->write();
 	  $this->logOut();
 
-	  //ini_set('display_errors', 1);
-	  //error_reporting(E_ALL);
-	  //error_reporting(E_ERROR | E_PARSE);
-	  //error_reporting(E_USER_ERROR);
-	  //trigger_error("Cannot divide by infinity and beyond", E_ERROR);
-	  
 	  Order::delete_abandoned();
 	  
 	  DataObject::flush_and_destroy_cache();

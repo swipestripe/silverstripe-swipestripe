@@ -192,6 +192,8 @@ class Product extends Page {
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
+    
+    $shopConfig = ShopConfig::current_shop_config();
     $fields = parent::getCMSFields();
 
     //Product fields
@@ -202,9 +204,14 @@ class Product extends Page {
     $fields->addFieldToTab('Root.Main', $categoriesField, 'Content');
 		
 		//Stock level field
-		$level = $this->StockLevel()->Level;
-		//$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
-    $fields->addFieldToTab('Root.Main', new Hiddenfield('Stock', null, $level), 'Content');
+    if ($shopConfig->StockCheck) {
+      $level = $this->StockLevel()->Level;
+      //$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
+      $fields->addFieldToTab('Root.Main', new Hiddenfield('Stock', null, -1), 'Content');
+    }
+		else {
+      $fields->addFieldToTab('Root.Main', new Hiddenfield('Stock', null, -1), 'Content');
+    }
 
     //Replace URL Segment field
     $urlsegment = new SiteTreeURLSegmentField("URLSegment", 'URLSegment');
@@ -651,15 +658,11 @@ class Product_Controller extends Page_Controller {
       'Quantity'
     );
 
-    //TODO handle js validation
-    //$validator->setJavascriptValidationHandler('none'); 
-    
-    // TODO: Put stock checking back in
     //Disable add to cart function when product out of stock
-    // if (!$product->InStock()) {
-    //   $fields = new FieldList(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
-    //   $actions = new FieldList();
-    // }
+    if (!$product->InStock()) {
+      $fields = new FieldList(new LiteralField('ProductNotInStock', '<p class="message">Sorry this product is currently out of stock. Please check back soon.</p>'));
+      $actions = new FieldList();
+    }
     
     $controller = Controller::curr();
     $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);

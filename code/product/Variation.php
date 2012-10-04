@@ -139,14 +139,15 @@ class Variation extends DataObject {
       $fields->addFieldToTab('Root.Variation', $optionField);
     }
 
-    // TODO: add stock level field back
-    // Stock level field
-    // $level = $this->StockLevel()->Level;
-    // $fields->addFieldToTab('Root.Variation', new StockField('Stock', null, $level, $this));
-
     //Stock level field
-    $level = $this->StockLevel()->Level;
-    $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, $level));
+    if ($shopConfig->StockCheck) {
+      $level = $this->StockLevel()->Level;
+      //$fields->addFieldToTab('Root.Variation', new StockField('Stock', null, $level, $this));
+      $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, -1));
+    }
+    else {
+      $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, -1));
+    }
 
     $fields->addFieldToTab('Root.Variation', PriceField::create('Price', 'Price')
       ->setRightTitle('Amount that this variation will increase the base product price by')

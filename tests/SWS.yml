@@ -1,4 +1,17 @@
 # ------------------------------------------
+# Shop config
+# ------------------------------------------
+ShopConfig:
+  config:
+    LicenceKey: key
+    BaseCurrency: NZD
+    BaseCurrencySymbol: $
+    CartTimeout: 1
+    CartTimeoutUnit: hour
+    StockCheck: true
+    StockManagement: strict
+
+# ------------------------------------------
 # Stock Levels
 # ------------------------------------------  
 StockLevel:

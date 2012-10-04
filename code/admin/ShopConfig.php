@@ -6,8 +6,15 @@ class ShopConfig extends DataObject {
 
   public static $db = array(
     'LicenceKey' => 'Varchar',
+
     'BaseCurrency' => 'Varchar(3)',
     'BaseCurrencySymbol' => 'Varchar(10)',
+
+    'CartTimeout' => 'Int',
+    'CartTimeoutUnit' => "Enum('minute, hour, day', 'hour')",
+    'StockCheck' => 'Boolean',
+    'StockManagement' => "Enum('strict, relaxed', 'strict')",
+
     'EmailSignature' => 'HTMLText',
     'ReceiptSubject' => 'Varchar',
     'ReceiptBody' => 'HTMLText',
@@ -22,6 +29,13 @@ class ShopConfig extends DataObject {
     'BillingCountries' => 'Country_Billing',
     'ShippingRegions' => 'Region_Shipping',
     'BillingRegions' => 'Region_Billing'
+  );
+
+  public static $defaults = array(
+    'CartTimeout' => 1,
+    'CartTimeoutUnit' => 'hour',
+    'StockCheck' => false,
+    'StockManagement' => 'strict'
   );
 
   public static function current_shop_config() {

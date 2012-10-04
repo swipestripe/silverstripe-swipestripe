@@ -791,6 +791,148 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 
 }
 
+class ShopAdmin_Stock extends ShopAdmin {
+
+	static $url_rule = 'ShopConfig/Stock';
+	static $url_priority = 55;
+
+	public static $url_handlers = array(
+		'ShopConfig/Stock/StockSettingsForm' => 'StockSettingsForm',
+		'ShopConfig/Stock' => 'StockSettings'
+	);
+
+	public function Breadcrumbs($unlinked = false) {
+
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
+
+		if ($items->count() > 1) $items->remove($items->pop());
+
+		$items->push(new ArrayData(array(
+			'Title' => 'Stock Settings',
+			'Link' => false
+		)));
+
+		return $items;
+	}
+
+	public function SettingsForm($request = null) {
+		return $this->StockSettingsForm();
+	}
+
+	public function StockSettings($request) {
+
+		if ($request->isAjax()) {
+			$controller = $this;
+			$responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->StockSettingsForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith('ShopAdminSettings_Content');
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			); 
+			return $responseNegotiator->respond($this->getRequest());
+		}
+
+		return $this->renderWith('ShopAdminSettings');
+	}
+
+	public function StockSettingsForm() {
+
+		$shopConfig = ShopConfig::get()->First();
+
+		$fields = new FieldList(
+			$rootTab = new TabSet('Root',
+				$tabMain = new Tab('Stock',
+					new TextField('CartTimeout', _t('ShopConfig.CART_TIMEOUT', 'Cart timeout')),
+					new DropdownField('CartTimeoutUnit', 'Unit', singleton('ShopConfig')->dbObject('CartTimeoutUnit')->enumValues()),
+					new CheckboxField('StockCheck', 'Enable stock checking'),
+					new DropdownField('StockManagement', 'Stock management', singleton('ShopConfig')->dbObject('StockManagement')->enumValues())
+				)
+			)
+		);
+
+		$actions = new FieldList();
+		$actions->push(FormAction::create('saveStockSettings', _t('GridFieldDetailForm.Save', 'Save'))
+			->setUseButtonTag(true)
+			->addExtraClass('ss-ui-action-constructive')
+			->setAttribute('data-icon', 'add'));
+
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
+		);
+
+		$form->setTemplate('ShopAdminSettings_EditForm');
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'Stock/StockSettingsForm'));
+
+		$form->loadDataFrom($shopConfig);
+
+		return $form;
+	}
+
+	public function saveStockSettings($data, $form) {
+
+		//Hack for LeftAndMain::getRecord()
+		self::$tree_class = 'ShopConfig';
+
+		$config = ShopConfig::get()->First();
+		$form->saveInto($config);
+		$config->write();
+		$form->sessionMessage('Saved Stock Settings', 'good');
+
+		$controller = $this;
+		$responseNegotiator = new PjaxResponseNegotiator(
+			array(
+				'CurrentForm' => function() use(&$controller) {
+					//return $controller->renderWith('ShopAdminSettings_Content');
+					return $controller->StockSettingsForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					//return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			),
+			$this->response
+		); 
+		return $responseNegotiator->respond($this->getRequest());
+	}
+
+	public function getSnippet() {
+
+		//TODO: Enable stock level management again
+		return '';
+
+		return $this->customise(array(
+			'Title' => 'Stock Management',
+			'Help' => 'Set cart timeout and stock settings.',
+			'Link' => Controller::join_links($this->Link('ShopConfig'), 'Stock'),
+			'LinkTitle' => 'Edit stock settings'
+		))->renderWith('ShopAdmin_Snippet');
+	}
+
+}
+
 class ShopAdmin_LeftAndMainExtension extends Extension {
 
 	public function alternateMenuDisplayCheck($className) {

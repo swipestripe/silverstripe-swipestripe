@@ -154,9 +154,9 @@ class Customer extends Member {
 	 * @return ArrayList Set of previous orders for this member
 	 */
 	public function Orders() {
-	  $orders = DataObject::get('Order', "\"MemberID\" = " . $this->ID . " AND \"Order\".\"Status\" != 'Cart'", "\"Created\" DESC");
-	  if (!$orders) $orders = new ArrayList(); //No idea why this is necessary, StockLevelTest was failing suddenly though
-	  return $orders;
+		return Order::get()
+	  	->where("\"MemberID\" = " . $this->ID . " AND \"Order\".\"Status\" != 'Cart'")
+	  	->sort("\"Created\" DESC");
 	}
 	
 	/**
