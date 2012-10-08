@@ -174,12 +174,6 @@ class AccountPage_Controller extends Page_Controller {
       }
       
       if ($order && $order->exists()) {
-        
-        //Because this is the page that long payment processes direct back to, want to send
-        //a receipt and order notification if they have not already been sent
-        $order->sendReceipt();
-        $order->sendNotification();
-        
         return array(
 					'Order' => $order
 				);

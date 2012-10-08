@@ -10,6 +10,10 @@ ShopConfig:
     CartTimeoutUnit: hour
     StockCheck: true
     StockManagement: strict
+    ReceiptFrom: info@example.com
+    ReceiptSubject: Receipt for order
+    NotificationTo: info@example.com
+    NotificationSubject: Notification for order
 
 # ------------------------------------------
 # Stock Levels
@@ -598,6 +602,18 @@ Item:
     Quantity: 1
     Currency: NZD
     Price: 500
+
+# ------------------------------------------
+# Payment
+# ------------------------------------------
+Payment:
+  orderOnePayment:
+    Status: Success
+    Method: Cheque
+    AmountCurrency: NZD
+    AmountAmount: 500
+    PaidBy: =>Customer.buyer
+    Order: =>Order.orderOne
 
 # ------------------------------------------
 # Shipping Countries

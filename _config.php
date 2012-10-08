@@ -9,7 +9,8 @@
  */
 
 //Extensions
-Object::add_extension('Payment', 'PaymentDecorator');
+Object::add_extension('Payment', 'Payment_Extension');
+Object::add_extension('PaymentProcessor', 'Payment_ProcessorExtension');
 Object::add_extension('LeftAndMain', 'ShopAdmin_LeftAndMainExtension');
 Object::add_extension('Page_Controller', 'Cart');
 

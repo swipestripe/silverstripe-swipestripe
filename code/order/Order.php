@@ -44,8 +44,6 @@ class Order extends DataObject {
     'TotalCurrency' => 'Varchar(3)',
     'SubTotalPrice' => 'Decimal(19,4)',
     'SubTotalCurrency' => 'Varchar(3)',
-		'ReceiptSent' => 'Boolean',
-	  'NotificationSent' => 'Boolean',
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
 	  'Notes' => 'Text'
@@ -377,86 +375,24 @@ class Order extends DataObject {
 	
 	/**
 	 * Processed if payment is successfully written, send a receipt to the customer
-	 * TODO move sending receipts to CheckoutPage::ProcessOrder()
+	 * and notification to the admin
 	 * 
-	 * @see PaymentDecorator::onAfterWrite()
+	 * @see Payment_Extension::onAfterWrite()
 	 */
 	public function onAfterPayment() {
-	  
-	  $this->updatePaymentStatus();
-	  
-	  //Only sends emails if haven't already been sent
-	  if ($this->PaymentStatus == 'Paid') {
-	    $this->sendReceipt();
-	    $this->sendNotification();
-	  }
 
-	  $this->updateStatus();
+		$this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING :  self::STATUS_PENDING;
+	  $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
+		$this->write();
+
+		ReceiptEmail::create($this->Member(), $this)
+			->send();
+		NotificationEmail::create($this->Member(), $this)
+			->send();
 
 	  //TODO: update stock levels if relaxed is set
 	  
 	  $this->extend('onAfterPayment');
-	}
-	
-	/**
-	 * Send a receipt if one has not already been sent.
-	 */
-	public function sendReceipt() {
-	  
-	  if (!$this->ReceiptSent) {
-  	  $receipt = new ReceiptEmail($this->Member(), $this);
-  		if ($receipt->send()) {
-  	    $this->ReceiptSent = true;
-  	    $this->write();
-  	  }
-	  }
-	}
-	
-	/**
-	 * Send an order notification to admin if one has not already been sent.
-	 */
-	public function sendNotification() {
-	  
-	  if (!$this->NotificationSent) {
-  	  $notification = new NotificationEmail($this->Member(), $this);
-  	  if ($notification->send()) {
-  	    $this->NotificationSent = true;
-  	    $this->write();
-  	  }
-	  }
-	}
-	
-	/**
-	 * Update the order payment status after Payment is made.
-	 * 
-	 * @see Order::onAfterPayment()
-	 */
-	public function updatePaymentStatus() {
-
-		//TODO: This shouldn't update the order status really
-
-	  if ($this->getPaid()) {
-	    $this->PaymentStatus = 'Paid';
-	    $this->write();
-	  }
-	  else {
-	    $this->PaymentStatus = 'Unpaid';
-	    $this->write();
-	  }
-	}
-
-	public function updateStatus() {
-
-		if ($this->Status == 'Cart') {
-			if ($this->getPaid()) {
-		    $this->Status = self::STATUS_PROCESSING;
-		    $this->write();
-		  }
-		  else {
-		    $this->Status = self::STATUS_PENDING;
-		    $this->write();
-		  }
-		}
 	}
 	
 	/**

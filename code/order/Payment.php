@@ -8,7 +8,7 @@
  * @package swipestripe
  * @subpackage order
  */
-class PaymentDecorator extends DataExtension {
+class Payment_Extension extends DataExtension {
 
 	static $has_one = array(
 		'Order' => 'Order' //Need to add Order here for ModelAdmin
@@ -106,21 +106,20 @@ class PaymentDecorator extends DataExtension {
 
 	  $order = $this->owner->Order();
 
-		if ($order && $order instanceof Order) {
-		  $order->onAfterPayment();
+		if ($order && $order->exists()) {
+			$order->PaymentStatus = ($order->getPaid()) ? 'Paid' : 'Unpaid';
+			$order->write();
 		}
 	}
-	
-	/**
-	 * For the purpose of certain payment gateways.
-	 * 
-	 * @see PaystationHostedPayment_Handler::complete()
-	 */
-	function redirectToOrder() {
-	  $order = $this->owner->Order();
+}
 
-		if ($order && $order instanceof Order) {
-		  Director::redirect($order->Link());
+class Payment_ProcessorExtension extends Extension {
+
+	public function onBeforeRedirect() {
+
+		$order = $this->owner->payment->Order();
+		if ($order && $order->exists()) {
+			$order->onAfterPayment();
 		}
 	}
 }

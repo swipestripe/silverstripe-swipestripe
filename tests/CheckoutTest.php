@@ -494,4 +494,5 @@ class SWS_CheckoutTest extends SWS_Test {
 
 	  $this->assertEquals(1, $buyer->Orders()->Count());
 	}
+
 }
