@@ -75,11 +75,13 @@ class ItemOption extends DataObject {
     
     //Update stock levels if a variation is being saved here
     parent::onAfterWrite();
-    $item = $this->Item();
-    $variation = $this->Object();
-	  if ($variation && $variation->exists() && $variation instanceof Variation) {
-	    $item->updateStockLevels();
-	  }
-	}
 
+    if (ShopConfig::current_shop_config()->StockManagement == 'strict') {
+    	$item = $this->Item();
+	    $variation = $this->Object();
+		  if ($variation && $variation->exists() && $variation instanceof Variation) {
+		    $item->updateStockLevels();
+		  }
+    }
+	}
 }

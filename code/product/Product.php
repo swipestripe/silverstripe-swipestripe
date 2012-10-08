@@ -433,6 +433,7 @@ class Product extends Page {
    */
   public function updateStockBy($quantity) {
     $stockLevel = $this->StockLevel();
+
     //Do not change stock level if it is already set to unlimited (-1)
     if ($stockLevel->Level != -1) {
       $stockLevel->Level += $quantity;

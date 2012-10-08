@@ -9,6 +9,8 @@
  */
 class Item extends DataObject {
 
+	private $previousQuantity = 0;
+
   /**
    * DB fields for an Item, the object this Item represents (e.g. {@link Product}
    * has a version ID saved as well, so if price is changed or something then 
@@ -22,7 +24,6 @@ class Item extends DataObject {
 		'ObjectVersion' => 'Int',
 	  'Price' => 'Decimal(19,4)',
     'Currency' => 'Varchar(3)',
-	  'PreviousQuantity' => 'Int',
 	  'Quantity' => 'Int',
 	  'DownloadCount' => 'Int' //If item represents a downloadable product,
 	);
@@ -62,7 +63,6 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	public static $defaults = array(
-	  'PreviousQuantity' => 0,
 	  'Quantity' => 1,
 	  'DownloadCount' => 0
 	);
@@ -85,9 +85,11 @@ class Item extends DataObject {
 	public function onBeforeDelete() {
 	  parent::onBeforeDelete();
 
-	  $this->PreviousQuantity = $this->Quantity;
-	  $this->Quantity = 0;
-	  $this->updateStockLevels();
+	  if (ShopConfig::current_shop_config()->StockManagement == 'strict') {
+	  	$this->previousQuantity = $this->Quantity;
+		  $this->Quantity = 0;
+		  $this->updateStockLevels();
+	  }
 	  
 	  $itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
 	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
@@ -236,17 +238,17 @@ class Item extends DataObject {
 	
 	/**
 	 * Update the quantity of the item. 
-	 * PreviousQuantity starts at 0.
+	 * previousQuantity starts at 0.
 	 * 
 	 * @see DataObject::onBeforeWrite()
 	 */
   function onBeforeWrite() {
     parent::onBeforeWrite();
 
-    //PreviousQuantity starts at 0
+    //previousQuantity starts at 0
     if ($this->isChanged('Quantity')) {
   		if(isset($this->original['Quantity'])) {
-  			$this->PreviousQuantity = $this->original['Quantity'];
+  			$this->previousQuantity = $this->original['Quantity'];
   		}
     }
   }
@@ -258,7 +260,7 @@ class Item extends DataObject {
    */
 	public function onAfterWrite() {
 	  parent::onAfterWrite();
-	  $this->updateStockLevels();
+	  if (ShopConfig::current_shop_config()->StockManagement == 'strict') $this->updateStockLevels();
 	}
 	
 	/**
@@ -270,17 +272,13 @@ class Item extends DataObject {
 	 */
 	public function updateStockLevels() {
 
-		$shopConfig = ShopConfig::current_shop_config();
+		$quantityChange = $this->previousQuantity - $this->Quantity;
 
-		if ($shopConfig->StockManagement == 'strict') {
-			$quantityChange = $this->PreviousQuantity - $this->Quantity;
-
-		  if ($variation = $this->Variation()) {
-		    $variation->updateStockBy($quantityChange);
-		  }
-		  else if ($product = $this->Product()) {
-		    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
-		  }
-		}
+	  if ($variation = $this->Variation()) {
+	    $variation->updateStockBy($quantityChange);
+	  }
+	  else if ($product = $this->Product()) {
+	    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
+	  }
 	}
 }

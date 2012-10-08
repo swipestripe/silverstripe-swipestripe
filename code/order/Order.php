@@ -220,6 +220,36 @@ class Order extends DataObject {
     parent::onBeforeWrite();
     if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
   }
+
+  public function onAfterWrite() {
+  	parent::onAfterWrite();
+
+  	//If status has changed from Cart reduce the stock
+  	//If status has changed to Cancelled increase the stock
+  	if (ShopConfig::current_shop_config()->StockManagement == 'relaxed') {
+  		SS_Log::log(new Exception(print_r($this->getChangedFields(), true)), SS_Log::NOTICE);
+  	}
+  }
+
+  /**
+	 * Processed if payment is successfully written, send a receipt to the customer
+	 * and notification to the admin
+	 * 
+	 * @see Payment_Extension::onAfterWrite()
+	 */
+	public function onAfterPayment() {
+
+		$this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING :  self::STATUS_PENDING;
+	  $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
+		$this->write();
+
+		ReceiptEmail::create($this->Member(), $this)
+			->send();
+		NotificationEmail::create($this->Member(), $this)
+			->send();
+
+	  $this->extend('onAfterPayment');
+	}
 	
 	/**
 	 * Set CMS fields for viewing this Order in the CMS
@@ -371,28 +401,6 @@ class Order extends DataObject {
 	  $totalPaid->setCurrency($this->Total()->getCurrency());
 	  
 	  return $totalPaid;
-	}
-	
-	/**
-	 * Processed if payment is successfully written, send a receipt to the customer
-	 * and notification to the admin
-	 * 
-	 * @see Payment_Extension::onAfterWrite()
-	 */
-	public function onAfterPayment() {
-
-		$this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING :  self::STATUS_PENDING;
-	  $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
-		$this->write();
-
-		ReceiptEmail::create($this->Member(), $this)
-			->send();
-		NotificationEmail::create($this->Member(), $this)
-			->send();
-
-	  //TODO: update stock levels if relaxed is set
-	  
-	  $this->extend('onAfterPayment');
 	}
 	
 	/**
