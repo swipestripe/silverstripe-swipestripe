@@ -226,9 +226,6 @@ class Order extends DataObject {
 
   	//If status has changed from Cart reduce the stock
   	//If status has changed to Cancelled increase the stock
-  	if (ShopConfig::current_shop_config()->StockManagement == 'relaxed') {
-  		SS_Log::log(new Exception(print_r($this->getChangedFields(), true)), SS_Log::NOTICE);
-  	}
   }
 
   /**
