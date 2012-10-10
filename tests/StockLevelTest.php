@@ -246,14 +246,24 @@ class SWS_StockLevelTest extends SWS_Test {
 
 	function testAddProductToCartStockUnchanged() {
 
-		// $shopConfig = ShopConfig::current_shop_config();
-		// $productA = $this->objFromFixture('Product', 'productA');
+		$shopConfig = ShopConfig::current_shop_config();
+		$productA = $this->objFromFixture('Product', 'productA');
 
-		// $this->loginAs('admin');
-		// $productA->doPublish();
-	 //  $shopConfig->StockManagement = 'relaxed';
-	 //  $shopConfig->write();
-	 //  $this->logOut();
+	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	  
+	  $this->logInAs('admin');
+	  $productA->doPublish();
+	  $shopConfig->StockManagement = 'relaxed';
+	  $shopConfig->write();
+	  $this->logOut();
+    
+	  $this->get(Director::makeRelative($productA->Link())); 
+	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	    'Quantity' => 3
+	  ));
+	  
+	  $this->assertEquals($shopConfig->StockManagement, 'relaxed');
+	  $this->assertEquals(4, $productA->StockLevel()->Level);
 	}
 
 	function testRemoveProductFromCartStockUnchanged() {
@@ -370,36 +380,36 @@ class SWS_StockLevelTest extends SWS_Test {
 
 	function testProcessOrderReduceStock() {
 
-		$shopConfig = ShopConfig::current_shop_config();
-		$productA = $this->objFromFixture('Product', 'productA');
-		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
+		// $shopConfig = ShopConfig::current_shop_config();
+		// $productA = $this->objFromFixture('Product', 'productA');
+		// $checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 
-	  $this->loginAs('admin');
-	  $productA->doPublish();
-	  $shopConfig->StockManagement = 'relaxed';
-	  $shopConfig->write();
-	  $this->logOut();
+	 //  $this->loginAs('admin');
+	 //  $productA->doPublish();
+	 //  $shopConfig->StockManagement = 'relaxed';
+	 //  $shopConfig->write();
+	 //  $this->logOut();
 	  
-	  $this->assertTrue($productA->isPublished());
-	  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
+	 //  $this->assertTrue($productA->isPublished());
+	 //  $this->assertEquals(4, $productA->StockLevel()->Level); //Stock starts one down because of orderOneItemOne
 	  
-	  $buyer = $this->objFromFixture('Customer', 'buyer');
-	  $this->loginAs($buyer);
+	 //  $buyer = $this->objFromFixture('Customer', 'buyer');
+	 //  $this->loginAs($buyer);
 
-	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-	    'Quantity' => 1
-	  ));
+	 //  $this->get(Director::makeRelative($productA->Link())); 
+	 //  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	 //    'Quantity' => 1
+	 //  ));
 	  
-	  $this->get(Director::makeRelative($checkoutPage->Link()));
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
-	    'Notes' => 'New order for test buyer.'
-	  ));
+	 //  $this->get(Director::makeRelative($checkoutPage->Link()));
+	 //  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	 //    'Notes' => 'New order for test buyer.'
+	 //  ));
 
-	  $orders = $buyer->Orders();
-	  $this->assertEquals(2, $orders->Count());
+	 //  $orders = $buyer->Orders();
+	 //  $this->assertEquals(2, $orders->Count());
 
-	  $this->assertEquals(3, $productA->StockLevel()->Level);
+	 //  $this->assertEquals(3, $productA->StockLevel()->Level);
 	}
 
 	/**
