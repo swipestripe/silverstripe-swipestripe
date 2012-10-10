@@ -200,8 +200,16 @@ class Product extends Page {
     $priceField = new PriceField('Price');
     $fields->addFieldToTab('Root.Main', $priceField, 'Content');
 
-    $categoriesField = new CategoriesField('ProductCategories', 'Categories', 'ProductCategory');
-    $fields->addFieldToTab('Root.Main', $categoriesField, 'Content');
+    $categories = ProductCategory::get()->map('ID', 'Breadcrumbs')->toArray();
+    arsort($categories);
+    $fields->addFieldToTab(
+      'Root.Main', 
+      ListboxField::create('ProductCategories', 'Categories')
+        ->setMultiple(true)
+        ->setSource($categories)
+        ->setAttribute('data-placeholder', 'Add categories'), 
+      'Content'
+    );
 		
 		//Stock level field
     if ($shopConfig->StockCheck) {
@@ -297,7 +305,11 @@ class Product extends Page {
   }
 
   public function SummaryOfImage() {
-    return $this->Images()->First()->SummaryOfImage();
+    $image = $this->Images()->First();
+    if ($image && $image->exists()) {
+      return $image->SummaryOfImage();
+    }
+    return 'no image';
   }
 	
 	/**
@@ -310,7 +322,7 @@ class Product extends Page {
 	  $categories = $this->ProductCategories();
 	  
 	  if ($categories) foreach ($categories as $productCategory) {
-	    $summary[] = $productCategory->Title;
+	    $summary[] = $productCategory->getBreadcrumbs(' > ');
 	  } 
 	  
 	  return implode(', ', $summary);
