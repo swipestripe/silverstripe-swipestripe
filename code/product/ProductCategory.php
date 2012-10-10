@@ -122,3 +122,17 @@ class ProductCategory_Controller extends Page_Controller {
   }
 
 }
+
+
+class ProductCategory_Products extends DataObject {
+
+  public static $db = array(
+    'ProductOrder' => 'Int'
+  );
+
+  public static $has_one = array(
+    'ProductCategory' => 'ProductCategory',
+    'Product' => 'Product'
+  );
+}
+
