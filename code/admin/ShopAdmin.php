@@ -933,6 +933,147 @@ class ShopAdmin_Stock extends ShopAdmin {
 
 }
 
+class ShopAdmin_Attribute extends ShopAdmin {
+
+	static $url_rule = 'ShopConfig/Attribute';
+	static $url_priority = 55;
+
+	public static $url_handlers = array(
+		'ShopConfig/Attribute/AttributeSettingsForm' => 'AttributeSettingsForm',
+		'ShopConfig/Attribute' => 'AttributeSettings'
+	);
+
+	public function Breadcrumbs($unlinked = false) {
+
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
+
+		if ($items->count() > 1) $items->remove($items->pop());
+
+		$items->push(new ArrayData(array(
+			'Title' => 'Attribute Settings',
+			'Link' => false
+		)));
+
+		return $items;
+	}
+
+	public function SettingsForm($request = null) {
+		return $this->AttributeSettingsForm();
+	}
+
+	public function AttributeSettings($request) {
+
+		if ($request->isAjax()) {
+			$controller = $this;
+			$responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->AttributeSettingsForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith('ShopAdminSettings_Content');
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			); 
+			return $responseNegotiator->respond($this->getRequest());
+		}
+
+		return $this->renderWith('ShopAdminSettings');
+	}
+
+	public function AttributeSettingsForm() {
+
+		$shopConfig = ShopConfig::get()->First();
+
+		$fields = new FieldList(
+			$rootTab = new TabSet('Root',
+				$tabMain = new Tab('Attribute',
+					GridField::create(
+			      'Attributes',
+			      'Attributes',
+			      $shopConfig->Attributes(),
+			      GridFieldConfig_HasManyRelationEditor::create()
+			    )
+				)
+			)
+		);
+
+		$actions = new FieldList();
+		$actions->push(FormAction::create('saveAttributeSettings', _t('GridFieldDetailForm.Save', 'Save'))
+			->setUseButtonTag(true)
+			->addExtraClass('ss-ui-action-constructive')
+			->setAttribute('data-icon', 'add'));
+
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
+		);
+
+		$form->setTemplate('ShopAdminSettings_EditForm');
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'Attribute/AttributeSettingsForm'));
+
+		$form->loadDataFrom($shopConfig);
+
+		return $form;
+	}
+
+	public function saveAttributeSettings($data, $form) {
+
+		//Hack for LeftAndMain::getRecord()
+		self::$tree_class = 'ShopConfig';
+
+		$config = ShopConfig::get()->First();
+		$form->saveInto($config);
+		$config->write();
+		$form->sessionMessage('Saved Attribute Settings', 'good');
+
+		$controller = $this;
+		$responseNegotiator = new PjaxResponseNegotiator(
+			array(
+				'CurrentForm' => function() use(&$controller) {
+					//return $controller->renderWith('ShopAdminSettings_Content');
+					return $controller->AttributeSettingsForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					//return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			),
+			$this->response
+		); 
+		return $responseNegotiator->respond($this->getRequest());
+	}
+
+	public function getSnippet() {
+
+		return $this->customise(array(
+			'Title' => 'Attribute Management',
+			'Help' => 'Create default attributes',
+			'Link' => Controller::join_links($this->Link('ShopConfig'), 'Attribute'),
+			'LinkTitle' => 'Edit default attributes'
+		))->renderWith('ShopAdmin_Snippet');
+	}
+
+}
+
 class ShopAdmin_LeftAndMainExtension extends Extension {
 
 	public function alternateMenuDisplayCheck($className) {

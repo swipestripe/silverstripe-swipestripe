@@ -21,6 +21,7 @@ class Variation extends DataObject {
     'Price' => 'Decimal(19,4)',
     'Currency' => 'Varchar(3)',
   	'Status' => "Enum('Enabled,Disabled','Enabled')",
+    'SortOrder' => 'Int'
   );
 
   public function Amount() {
@@ -61,7 +62,6 @@ class Variation extends DataObject {
    * @var Array
    */
   public static $summary_fields = array(
-    'SummaryOfStock' => 'Stock',
     'SummaryOfPrice' => 'Added Price',
     'Status' => 'Status',
 	);
@@ -79,6 +79,8 @@ class Variation extends DataObject {
   public static $defaults = array(
     'Status' => 'Enabled'
   );
+
+  public static $default_sort = 'SortOrder';
   
 	/**
 	 * Overloaded magic method so that attribute values can be retrieved for display 
@@ -140,7 +142,7 @@ class Variation extends DataObject {
     }
 
     //Stock level field
-    if ($shopConfig->StockCheck) {
+    if (ShopConfig::current_shop_config()->StockCheck) {
       $level = $this->StockLevel()->Level;
       //$fields->addFieldToTab('Root.Variation', new StockField('Stock', null, $level, $this));
       $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, -1));
@@ -298,7 +300,7 @@ class Variation extends DataObject {
     foreach ($variationOptions as $option) {
       $variationAttributeOptions[$option->AttributeID] = $option->ID;
     }
-    
+
     //If attributes are not equal between product and variation, variation is invalid
     if (array_diff_key($productAttributeOptions, $variationAttributeOptions)
      || array_diff_key($variationAttributeOptions, $productAttributeOptions)) {
@@ -306,7 +308,7 @@ class Variation extends DataObject {
     }
     
     foreach ($productAttributeOptions as $attributeID => $validOptionIDs) {
-      if (!in_array($variationAttributeOptions[$attributeID], $validOptionIDs)) {
+      if (!array_key_exists($variationAttributeOptions[$attributeID], $validOptionIDs)) {
         return false;
       }
     }

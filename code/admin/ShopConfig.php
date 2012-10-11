@@ -28,7 +28,9 @@ class ShopConfig extends DataObject {
     'ShippingCountries' => 'Country_Shipping',
     'BillingCountries' => 'Country_Billing',
     'ShippingRegions' => 'Region_Shipping',
-    'BillingRegions' => 'Region_Billing'
+    'BillingRegions' => 'Region_Billing',
+
+    'Attributes' => 'Attribute_Default'
   );
 
   public static $defaults = array(

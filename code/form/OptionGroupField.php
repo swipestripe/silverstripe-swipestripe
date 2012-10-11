@@ -34,7 +34,7 @@ class OptionGroupField extends CompositeField {
 
 		//Use the product to get the attributes and options and set them to the class
 		$items = new FieldList();
-	  $attributes = $this->product->Attributes()->map('ID', 'Label')->toArray();
+	  $attributes = $this->product->Attributes()->map()->toArray();
 
     if ($attributes) foreach ($attributes as $id => $title) {
       

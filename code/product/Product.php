@@ -241,7 +241,7 @@ class Product extends Page {
       'Attributes',
       'Attributes',
       $this->Attributes(),
-      GridFieldConfig_HasManyRelationEditor::create()
+      GridFieldConfig_BasicSortable::create()
     );
     $fields->addFieldToTab('Root.Attributes', $listField);
 

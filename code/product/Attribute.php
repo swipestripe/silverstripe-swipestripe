@@ -17,17 +17,18 @@ class Attribute extends DataObject {
   public static $singular_name = 'Attribute';
   public static $plural_name = 'Attributes';
 
+  public $firstWrite = false;
+
   /**
-   * DB fields for the Attribute, Title acts as the label for the select field on the 
-   * AddToCartForm - so it does not need to be unique.
+   * DB fields for the Attribute
    * 
    * @see Product_Controller::AddToCartForm()
    * @var Array
    */
   public static $db = array(
-    'Title' => 'Varchar(255)',
-    'Label' => 'Varchar(100)',
-    'Description' => 'Text'
+    'Title' => 'Varchar(100)',
+    'Description' => 'Text',
+    'SortOrder' => 'Int'
   );
   
   /**
@@ -39,8 +40,9 @@ class Attribute extends DataObject {
     'Options' => 'Option'
   );
 
-  static $has_one = array(    
-    'Product' => 'Product'
+  public static $has_one = array(    
+    'Product' => 'Product',
+    'DefaultAttribute' => 'Attribute_Default'
   );
   
   /**
@@ -58,11 +60,12 @@ class Attribute extends DataObject {
    * @var Array
    */
   public static $summary_fields = array(
-	  'Title' => 'Title',
-    'Label' => 'Label',
+    'Title' => 'Title',
     'Description' => 'Description',
     'OptionSummary' => 'Options'
 	);
+
+  public static $default_sort = 'SortOrder';
   
 	/**
 	 * Add some fields to the CMS for managing Attributes.
@@ -71,20 +74,45 @@ class Attribute extends DataObject {
 	 * @return FieldList
 	 */
   function getCMSFields() {
-    $fields = parent::getCMSFields();
 
-    $fields->removeByName('Products');
+    $fields = new FieldList(
+      $rootTab = new TabSet('Root',
+        $tabMain = new Tab('Attribute',
+          TextField::create('Title')
+            ->setRightTitle('For displaying on the product page'),
+          TextField::create('Description')
+            ->setRightTitle('For displaying on the order'),
+          HiddenField::create('ProductID')
+        )
+      )
+    );
 
-    //Should rename to default options only when editing default attributes
-    // $optionsField = $fields->fieldByName('Root.Options');
-    // if ($optionsField) $optionsField->setTitle('Default Options');
+    if (!$this->ID) {
+      $defaultAttributes = Attribute_Default::get();
+      if ($defaultAttributes && $defaultAttributes->exists()) {
 
-    $fields->replaceField('Title', new TextField('Title', 'Short descriptive title'));
-    $fields->replaceField('Label', new TextField('Label', 'Label for dropdown on the product page'));
-    
-    //Ability to edit fields added to CMS here
-		$this->extend('updateAttributeCMSFields', $fields);
-    
+        $fields->addFieldToTab(
+          'Root.Attribute', 
+          DropdownField::create(
+            'DefaultAttributeID', 
+            'Use existing attribute',
+            $defaultAttributes->map('ID', 'TitleOptionSummary')->toArray()
+          )->setHasEmptyDefault(true),
+          'Title'
+        );
+        $fields->addFieldToTab('Root.Attribute', new HeaderField('AttributeOr', 'Or create new one...', 5), 'Title');
+      }
+    }
+
+    if ($this->ID) {
+      $fields->addFieldToTab('Root.Options', GridField::create(
+        'Options',
+        'Options',
+        $this->Options(),
+        GridFieldConfig_BasicSortable::create()
+      ));
+    }
+
     return $fields;
   }
 
@@ -97,8 +125,50 @@ class Attribute extends DataObject {
     return $summary;
   }
 
+  public function TitleOptionSummary() {
+
+    $optionString = '';
+    $options  = $this->Options();
+    if ($options && $options->exists()) {
+      $optionString = implode(', ', $options->map()->toArray());
+    }
+    return $this->Title . " - $optionString";
+  }
+
+  public function onBeforeWrite() {
+    parent::onBeforeWrite();
+    $this->firstWrite = !$this->isInDB();
+
+    if ($this->firstWrite) {
+
+      $defaultAttribute = $this->DefaultAttribute();
+      if ($defaultAttribute && $defaultAttribute->exists()) {
+
+        $this->Title = $defaultAttribute->Title;
+        $this->Description = $defaultAttribute->Description;
+      }
+    }
+  }
+
   public function onAfterWrite() {
     parent::onAfterWrite();
+
+    //Check if first write
+    if ($this->firstWrite) {
+
+      $defaultAttribute = $this->DefaultAttribute();
+      if ($defaultAttribute && $defaultAttribute->exists()) {
+
+        $options = $defaultAttribute->Options();
+        if ($options && $options->exists()) foreach ($options as $option) {
+          $newOption = new Option();
+          $newOption->update($option->tomap());
+          $newOption->ID = null;
+          $newOption->AttributeID = $this->ID;
+          $newOption->write();
+        }
+      }
+    }
 
     //If product variation does not have a complete set of valid options, then disable it
     $product = $this->Product();
@@ -112,17 +182,47 @@ class Attribute extends DataObject {
     }
   }
 
+}
 
+class Attribute_Default extends Attribute {
 
+  public static $singular_name = 'Attribute';
+  public static $plural_name = 'Attributes';
 
-  /**
-   * Validation of {@link Attribute}s. Title must be unique in order for tabs in CMS to work.
-   * 
-   * @see AttributeValidator
-   * @return AttributeValidator
-   */
-  public function getCMSValidator() { 
-    return new AttributeValidator('Title', 'Label'); 
+  public static $has_one = array(    
+    'ShopConfig' => 'ShopConfig'
+  );
+
+  public function onBeforeWrite() {
+    parent::onBeforeWrite();
+    $this->ProductID = 0;
   }
 
+  function getCMSFields() {
+
+    $fields = new FieldList(
+      $rootTab = new TabSet('Root',
+        $tabMain = new Tab('Attribute',
+          TextField::create('Title')
+            ->setRightTitle('For displaying on the product page'),
+          TextField::create('Description')
+            ->setRightTitle('For displaying on the order'),
+          HiddenField::create('ProductID')
+        )
+      )
+    );
+
+    if ($this->ID) {
+      $fields->addFieldToTab('Root.Options', GridField::create(
+        'Options',
+        'Options',
+        $this->Options(),
+        GridFieldConfig_Basic::create()
+      ));
+    }
+
+    return $fields;
+  }
 }
+
+

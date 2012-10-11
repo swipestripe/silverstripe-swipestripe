@@ -22,7 +22,8 @@ class Option extends DataObject {
    */
   public static $db = array(
     'Title' => 'Varchar(255)',
-    'Description' => 'Text'
+    'Description' => 'Text',
+    'SortOrder' => 'Int'
   );
 
   /**
@@ -44,6 +45,8 @@ class Option extends DataObject {
     'Variations' => 'Variation'
   );
 
+  public static $default_sort = 'SortOrder';
+
   public function getCMSFields() {
     $fields = parent::getCMSFields();
     $fields->removeByName('Variations');
@@ -52,4 +55,15 @@ class Option extends DataObject {
     return $fields;
   }
 
+}
+
+class Option_Default extends Option {
+
+  public static $singular_name = 'Option';
+  public static $plural_name = 'Options';
+
+  public function onBeforeWrite() {
+    parent::onBeforeWrite();
+    $this->ProductID = 0;
+  }
 }
