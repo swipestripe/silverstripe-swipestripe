@@ -965,8 +965,8 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 		$actions->push(FormAction::create('doPublish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & Publish'))
 			->setUseButtonTag(true)
 			->addExtraClass('ss-ui-action-constructive')
-			->setAttribute('data-icon', 'add'));
-
+			->setAttribute('data-icon', 'add')
+		);
 
 		if($this->record->ID !== 0) {
 

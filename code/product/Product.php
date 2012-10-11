@@ -229,12 +229,11 @@ class Product extends Page {
     $fields->replaceField('URLSegment', $urlsegment);
 
     //Gallery
-    $fields->addFieldToTab('Root.Gallery', new GridField(
+    $fields->addFieldToTab('Root.Gallery', GridField::create(
       'Images', 
       'Images', 
       $this->Images(), 
-      GridFieldConfig_RelationEditor::create(10)
-        ->addComponent(new GridFieldSortableRows('SortOrder'))
+      GridFieldConfig_Gallery::create()
     ));
 
     //Product attributes
@@ -947,17 +946,12 @@ class Product_Image extends DataObject {
 
     $fields = new FieldList(
       $rootTab = new TabSet('Root',
-        $tabMain = new Tab('Variation',
+        $tabMain = new Tab('Image',
+          $uploadField,
           TextareaField::create('Caption')
-          //TextField::create('ImageID'),
-          //$uploadField
         )
       )
     );
-
-    if ($this->ID) {
-      $fields->addFieldToTab('Root.Variation', $uploadField);
-    }
 
     return $fields;
   }
