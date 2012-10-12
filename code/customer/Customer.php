@@ -41,32 +41,43 @@ class Customer extends Member {
 	);
 	
 	/**
-	 * If this Member has Orders, then prevent member from being deleted.
-	 * Belt and braces now, @see Customer::canDelete()
-	 * 
-	 * @see DataObject::onBeforeDelete()
-	 */
-	public function onBeforeDelete() {
-    
-    parent::onBeforeDelete();
-
-    $member = $this;
-    if ($member->inGroup('customers')) {
-      
-      $orders = $member->Orders();
-      if ($orders && $orders->exists()) {
-        throw new Exception(_t('Customer.CANNOT_DELETE_CUSTOMER', "Could not delete this customer they have orders."));
-      }
-    }
-	}
-	
-	/**
 	 * Prevent customers from being deleted.
 	 * 
 	 * @see Member::canDelete()
 	 */
   public function canDelete($member = null) {
 	  return false;
+	}
+
+	public function delete() {
+    if ($this->canDelete(Member::currentUser())) {
+
+    	if ($this->inGroup('customers')) {
+      
+	      $orders = $this->Orders();
+	      if ($orders && $orders->exists()) {
+	        throw new Exception(_t('Customer.CANNOT_DELETE_CUSTOMER', 'Could not delete this customer they have orders.'));
+	      }
+	    }
+      parent::delete();
+    }
+  }
+
+  function requireDefaultRecords() {
+		parent::requireDefaultRecords();
+
+		//Create a new group for customers
+		$allGroups = DataObject::get('Group');
+		$existingCustomerGroup = $allGroups->find('Title', 'Customers');
+		if (!$existingCustomerGroup) {
+		  
+		  $customerGroup = new Group();
+		  $customerGroup->Title = 'Customers';
+		  $customerGroup->setCode($customerGroup->Title);
+		  $customerGroup->write();
+
+		  Permission::grant($customerGroup->ID, 'VIEW_ORDER');
+		}
 	}
 
 	/**

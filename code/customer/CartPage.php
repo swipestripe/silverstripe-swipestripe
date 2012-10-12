@@ -50,6 +50,12 @@ class CartPage extends Page {
 	function canDelete($member = null) {
 	  return false;
 	}
+
+	public function delete() {
+    if ($this->canDelete(Member::currentUser())) {
+      parent::delete();
+    }
+  }
 	
 	/**
 	 * Prevent CMS users from unpublishing the cart page.
@@ -97,6 +103,14 @@ class CartPage extends Page {
  * @subpackage customer
  */
 class CartPage_Controller extends Page_Controller {
+
+	static $allowed_actions = array (
+    'index',
+    'CartForm',
+    'updateCart',
+    'removeItem',
+    'goToCheckout'
+  );
   
   /**
    * Include some CSS for the cart page.
@@ -122,6 +136,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @return CartForm A new cart form
 	 */
 	function CartForm() {
+
 	  $fields = new FieldList();
 	  $validator = new CartFormValidator();
 	  $currentOrder = $this->Cart();

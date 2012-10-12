@@ -29,17 +29,6 @@ class AccountPage extends Page {
 
 			DB::alteration_message('Account page \'Account\' created', 'created');
 		}
-		
-		//Create a new group for customers
-		$allGroups = DataObject::get('Group');
-		$existingCustomerGroup = $allGroups->find('Title', 'Customers');
-		if (!$existingCustomerGroup) {
-		  
-		  $customerGroup = new Group();
-		  $customerGroup->Title = 'Customers';
-		  $customerGroup->setCode($customerGroup->Title);
-		  $customerGroup->write();
-		}
 	}
 	
 	/**
@@ -61,6 +50,12 @@ class AccountPage extends Page {
 	function canDelete($member = null) {
 	  return false;
 	}
+
+	public function delete() {
+    if ($this->canDelete(Member::currentUser())) {
+      parent::delete();
+    }
+  }
 	
 	/**
 	 * Prevent CMS users from unpublishing the account page.
@@ -115,10 +110,8 @@ class AccountPage_Controller extends Page_Controller {
    * @var Array Set of actions
    */
   static $allowed_actions = array (
-    'index',
-    'order',
-  	'downloadproduct',
-    'logout'
+    'index' => 'VIEW_ORDER',
+    'order' => 'VIEW_ORDER'
   );
   
   /**
@@ -130,19 +123,13 @@ class AccountPage_Controller extends Page_Controller {
   function index() {
     
     Requirements::css('swipestripe/css/Shop.css');
-    
-    $memberID = Member::currentUserID();
-    if (!$memberID) {
-      return Security::permissionFailure($this, _t('AccountPage.LOGGED_IN',"You must be logged in to view this page."));
-    }
-
-    //Get the orders for this member
-    $Orders = DataObject::get('Order', "MemberID = '" . Convert::raw2sql($memberID) . "'", "Created DESC");
 
     return array( 
       'Content' => $this->Content, 
       'Form' => $this->Form,
-      'Orders' => $Orders,
+      'Orders' => Order::get()
+      	->where("MemberID = " . Convert::raw2sql(Member::currentUserID()))
+      	->sort('Created DESC'),
       'Customer' => Customer::currentUser()
     );
   }
@@ -156,43 +143,29 @@ class AccountPage_Controller extends Page_Controller {
 
 	  Requirements::css('swipestripe/css/Shop.css');
 
-		$memberID = Member::currentUserID();
-	  if (!Member::currentUserID()) {
-      return Security::permissionFailure($this, _t('AccountPage.LOGGED_IN',"You must be logged in to view this page."));
-    }
-
 		if ($orderID = $request->param('ID')) {
 		  
-		  $order = DataObject::get_one('Order', "\"Order\".\"ID\" = $orderID");
 		  $member = Customer::currentUser();
-  		if (!$member || !$member->ID) {
-        return Security::permissionFailure($this, _t('AccountPage.LOGGED_IN',"You must be logged in to view this page."));
-      }
+		  $order = Order::get()
+		  	->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
+		  	->First();
+
+		  if (!$order || !$order->exists()) {
+		  	return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
+		  }
+
+		  if (!$order->canView($member)) {
+		  	return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
+		  }
       
-      if ($member && $member != $order->Member()) {
-        return Security::permissionFailure($this, _t('AccountPage.CANNOT_VIEW_ORDER',"You cannot view orders that do not belong to you."));
-      }
-      
-      if ($order && $order->exists()) {
-        return array(
-					'Order' => $order
-				);
-      }
+      return array(
+				'Order' => $order
+			);
 		}
-		
-		return array(
-			'Order' => false,
-			'Message' => _t('AccountPage.NO_ORDER_EXISTS',"You do not have any order corresponding to this ID.")
-		);
+		else {
+			return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
+		}
 	}
-	
-	/**
-	 * Log the current member out and redirect to home page.
-	 */
-  public function logout() {
-    Security::logout(false);
-    Director::redirect("home/");
-  }
 	
 }
 

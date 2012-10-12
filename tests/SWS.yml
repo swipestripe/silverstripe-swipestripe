@@ -572,8 +572,11 @@ Customer:
 # ------------------------------------------      
 Permission:
    admin:
-      Code: ADMIN
-      GroupID: =>Group.admin
+    Code: ADMIN
+    GroupID: =>Group.admin
+  viewOrder:
+    Code: VIEW_ORDER
+    GroupID: =>Group.customers
 
 # ------------------------------------------
 # Orders

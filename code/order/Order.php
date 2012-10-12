@@ -9,7 +9,7 @@
  * @package swipestripe
  * @subpackage order
  */
-class Order extends DataObject {
+class Order extends DataObject implements PermissionProvider {
   
   /**
    * Order status once Order has been made, waiting for payment to clear/be approved
@@ -160,6 +160,22 @@ class Order extends DataObject {
 	 * @var String
 	 */
 	public static $default_sort = 'ID DESC';
+
+	function providePermissions() {
+    return array(
+      'VIEW_ORDER' => 'View orders'
+    );
+  }
+
+  function canView($member = null) {
+
+		if ($member == null && !$member = Member::currentUser()) return false;
+
+    $administratorPerm = Permission::check('ADMIN', 'any', $member);
+    $customerPerm = Permission::check('VIEW_ORDER', 'any', $member) && $member->ID == $this->MemberID;
+
+    return $administratorPerm || $customerPerm;
+	}
 	
 	/**
 	 * Prevent orders from being created in the CMS
@@ -179,6 +195,49 @@ class Order extends DataObject {
 	 */
   public function canDelete($member = null) {
     return false;
+	}
+
+  /**
+	 * Clean up Order Items (ItemOptions by extension), Addresses and Modifications.
+	 * All wrapped in a transaction.
+	 */
+	public function delete() {
+
+	  try {
+
+	  	DB::getConn()->transactionStart();
+
+	    $items = $this->Items();
+	    if ($items && $items->exists()) foreach ($items as $item) {
+        $item->delete();
+        $item->destroy();
+	    }
+	    
+	    $addresses = $this->Addresses();
+	    if ($addresses && $addresses->exists()) foreach ($addresses as $address) {
+	      $address->delete();
+	      $address->destroy();
+	    }
+	    
+	    $modifications = $this->Modifications();
+	    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
+	      $modification->delete();
+	      $modification->destroy();
+	    }
+	    
+	    parent::delete();
+	    DB::getConn()->transactionEnd();
+
+	  }
+	  catch (Exception $e) {
+	    DB::getConn()->transactionRollback();
+	    SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+	    //TODO: Show an error to the customer here?
+	  }
+
+	  if ($this->canDelete(Member::currentUser())) {
+      parent::delete();
+    }
 	}
 
 	/**
@@ -783,45 +842,6 @@ class Order extends DataObject {
 	 */
 	public function validate() {
 	  return parent::validate();
-	}
-	
-	/**
-	 * Clean up Order Items (ItemOptions by extension), Addresses and Modifications.
-	 * All wrapped in a transaction.
-	 */
-	public function delete() {
-
-	  try {
-
-	  	DB::getConn()->transactionStart();
-
-	    $items = $this->Items();
-	    if ($items && $items->exists()) foreach ($items as $item) {
-        $item->delete();
-        $item->destroy();
-	    }
-	    
-	    $addresses = $this->Addresses();
-	    if ($addresses && $addresses->exists()) foreach ($addresses as $address) {
-	      $address->delete();
-	      $address->destroy();
-	    }
-	    
-	    $modifications = $this->Modifications();
-	    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
-	      $modification->delete();
-	      $modification->destroy();
-	    }
-	    
-	    parent::delete();
-	    DB::getConn()->transactionEnd();
-
-	  }
-	  catch (Exception $e) {
-	    DB::getConn()->transactionRollback();
-	    SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
-	    //TODO: Show an error to the customer here?
-	  }
 	}
 	
 	/**

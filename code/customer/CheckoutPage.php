@@ -59,6 +59,12 @@ class CheckoutPage extends Page {
 	function canDelete($member = null) {
 	  return false;
 	}
+
+	public function delete() {
+    if ($this->canDelete(Member::currentUser())) {
+      parent::delete();
+    }
+  }
 	
 	/**
 	 * Prevent CMS users from unpublishing the checkout page.
@@ -107,6 +113,13 @@ class CheckoutPage extends Page {
  * @subpackage customer
  */
 class CheckoutPage_Controller extends Page_Controller {
+
+	static $allowed_actions = array (
+    'index',
+    'OrderForm',
+    'ProcessOrder',
+    'updateOrderFormCart'
+  );
   
   /**
    * Include some CSS and javascript for the checkout page
