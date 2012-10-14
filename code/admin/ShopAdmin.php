@@ -216,6 +216,7 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Licence';
 	static $url_priority = 55;
+	static $menu_title = 'Shop Licence';
 
 	public static $url_handlers = array(
 		'ShopConfig/Licence/LicenceSettingsForm' => 'LicenceSettingsForm',
@@ -337,6 +338,10 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 	}
 
 	public function getSnippet() {
+
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
+
 		return $this->customise(array(
 			'Title' => 'Licence Key',
 			'Help' => 'Set licence key.',
@@ -351,6 +356,7 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/EmailSettings';
 	static $url_priority = 55;
+	static $menu_title = 'Shop Emails';
 
 	public static $url_handlers = array(
 		'ShopConfig/EmailSettings/EmailSettingsForm' => 'EmailSettingsForm',
@@ -487,6 +493,10 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 	}
 
 	public function getSnippet() {
+
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
+
 		return $this->customise(array(
 			'Title' => 'Email Settings',
 			'Help' => 'Order notification and receipt details and recipeients.',
@@ -501,6 +511,7 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Countries';
 	static $url_priority = 55;
+	static $menu_title = 'Shop Countries';
 
 	public static $url_handlers = array(
 		'ShopConfig/Countries/CountriesForm' => 'CountriesForm',
@@ -639,6 +650,10 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 	}
 
 	public function getSnippet() {
+
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
+
 		return $this->customise(array(
 			'Title' => 'Countries and Regions',
 			'Help' => 'Shipping and billing countries and regions.',
@@ -653,6 +668,7 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/BaseCurrency';
 	static $url_priority = 55;
+	static $menu_title = 'Shop Base Currency';
 
 	public static $url_handlers = array(
 		'ShopConfig/BaseCurrency/BaseCurrencySettingsForm' => 'BaseCurrencySettingsForm',
@@ -781,6 +797,10 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 	}
 
 	public function getSnippet() {
+
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
+
 		return $this->customise(array(
 			'Title' => 'Base Currency',
 			'Help' => 'Set base currency.',
@@ -795,6 +815,7 @@ class ShopAdmin_Stock extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Stock';
 	static $url_priority = 55;
+	static $menu_title = 'Shop Stock Management';
 
 	public static $url_handlers = array(
 		'ShopConfig/Stock/StockSettingsForm' => 'StockSettingsForm',
@@ -921,7 +942,10 @@ class ShopAdmin_Stock extends ShopAdmin {
 	public function getSnippet() {
 
 		//TODO: Enable stock level management again
-		return '';
+		return false;
+
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
 
 		return $this->customise(array(
 			'Title' => 'Stock Management',
@@ -937,6 +961,7 @@ class ShopAdmin_Attribute extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Attribute';
 	static $url_priority = 55;
+	static $menu_title = 'Shop Product Attributes';
 
 	public static $url_handlers = array(
 		'ShopConfig/Attribute/AttributeSettingsForm' => 'AttributeSettingsForm',
@@ -1063,6 +1088,9 @@ class ShopAdmin_Attribute extends ShopAdmin {
 	}
 
 	public function getSnippet() {
+
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
 
 		return $this->customise(array(
 			'Title' => 'Attribute Management',
