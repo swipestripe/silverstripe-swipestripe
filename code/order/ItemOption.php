@@ -15,9 +15,10 @@ class ItemOption extends DataObject {
    * @var Array
    */
 	public static $db = array(
-	  'ObjectID' => 'Int',
-	  'ObjectClass' => 'Varchar',
-	  'ObjectVersion' => 'Int',
+	  // 'ObjectID' => 'Int',
+	  // 'ObjectClass' => 'Varchar',
+	  // 'ObjectVersion' => 'Int',
+	  'Description' => 'Varchar',
 	  'Price' => 'Decimal(19,4)',
     'Currency' => 'Varchar(3)',
 	);
@@ -43,45 +44,39 @@ class ItemOption extends DataObject {
 	);
 	
 	/**
-	 * Set table type to InnoDB to support transactions which are not currently implemented.
-	 * 
-	 * @var Array
-	 */
-	static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
-	);
-	
-	/**
 	 * Retrieve the object this item represents, usually a {@link Variation}.
 	 * Uses the object version so that the correct object details such as price are
 	 * retrieved.
 	 * 
 	 * @return DataObject 
 	 */
-	function Object() {
-	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
-	}
+	// function Object() {
+	// 	$objectClass = $this->ObjectClass;
+	// 	return $objectClass::get("\"ID\" = " . $this->ObjectID);
+
+	//   //return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
+	// }
 	
 	/**
 	 * By default all ItemOptions are valid.
 	 * 
 	 * @see DataObject::validate()
 	 */
-	function validate() {
-	  return parent::validate();
-	}
+	// function validate() {
+	//   return parent::validate();
+	// }
 
-  public function onAfterWrite() {
-    
-    //Update stock levels if a variation is being saved here
-    parent::onAfterWrite();
+ //  public function onAfterWrite() {
 
-    if (ShopConfig::current_shop_config()->StockManagement == 'strict') {
-    	$item = $this->Item();
-	    $variation = $this->Object();
-		  if ($variation && $variation->exists() && $variation instanceof Variation) {
-		    $item->updateStockLevels();
-		  }
-    }
-	}
+ //    // //Update stock levels if a variation is being saved here
+ //    // parent::onAfterWrite();
+
+ //    // if (ShopConfig::current_shop_config()->StockManagement == 'strict') {
+ //    // 	$item = $this->Item();
+	//    //  $variation = $this->Object();
+	// 	  // if ($variation && $variation->exists() && $variation instanceof Variation) {
+	// 	  //   $item->updateStockLevels();
+	// 	  // }
+ //    // }
+	// }
 }

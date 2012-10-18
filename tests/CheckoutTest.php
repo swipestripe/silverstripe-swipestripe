@@ -79,7 +79,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($productA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($productA->ID, $items->First()->Product()->ID);
 	  
 	  $orders = $buyer->Orders();
 	  $this->assertEquals(1, $orders->Count());
@@ -122,7 +122,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($productA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($productA->ID, $items->First()->Product()->ID);
 	  $this->logOut();
 	  
 	  //Unpublish the product thats in the cart
@@ -174,7 +174,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($productA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($productA->ID, $items->First()->Product()->ID);
 	  $this->logOut();
 	  
 	  //Delete the product thats in the cart
@@ -233,7 +233,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($shortsA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($shortsA->ID, $items->First()->Product()->ID);
 	  $this->logOut();
 	  
 	  $this->logInAs('admin');
@@ -292,7 +292,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($shortsA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($shortsA->ID, $items->First()->Product()->ID);
 	  $this->logOut();
 	  
 	  $this->logInAs('admin');
@@ -384,7 +384,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $variation = $order->Items()->First()->Variation();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($shortsA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($shortsA->ID, $items->First()->Product()->ID);
 	  $this->logOut();
 	  
 	  $this->logInAs('admin');
@@ -440,7 +440,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $variation = $order->Items()->First()->Variation();
 	  
 	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals($shortsA->ID, $items->First()->Object()->ID);
+	  $this->assertEquals($shortsA->ID, $items->First()->Product()->ID);
 	  $this->logOut();
 
 	  $checkoutPage = DataObject::get_one('CheckoutPage');

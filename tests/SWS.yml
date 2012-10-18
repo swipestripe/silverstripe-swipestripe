@@ -599,9 +599,8 @@ Order:
 Item:
   orderOneItemOne:
     OrderID: =>Order.orderOne
-    ObjectID: =>Product.productA
-    ObjectClass: Product
-    ObjectVersion: 2
+    ProductID: =>Product.productA
+    ProductVersion: 2
     Quantity: 1
     Currency: NZD
     Price: 500

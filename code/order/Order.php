@@ -475,52 +475,54 @@ class Order extends DataObject implements PermissionProvider {
 	 * @param DataObject $product The product to be represented by this order item
 	 * @param ArrayList $productOptions The product variations to be added, usually just one
 	 */
-	public function addItem(DataObject $product, $quantity = 1, ArrayList $productOptions = null) {
-
-	  //Check that product options exist if product requires them
-	  //TODO perform this validation in Item->validate(), cannot at this stage because Item is written before ItemOption, no transactions, chicken/egg problem
-	  if ((!$productOptions || !$productOptions->exists()) && $product->requiresVariation()) {
-	    user_error("Cannot add item to cart, product options are required.", E_USER_WARNING);
-	    //Debug::friendlyError();
-	    return;
-	  }
+	public function addItem(Product $product, Variation $variation, $quantity = 1, ArrayList $options = null) {
 
     //Increment the quantity if this item exists already
-    $item = $this->findIdenticalItem($product, $productOptions);
-    
+    $item = $this->findIdenticalItem($product, $variation, $options);
+
     if ($item && $item->exists()) {
       $item->Quantity = $item->Quantity + $quantity;
       $item->write();
     }
     else {
 
-      //TODO this needs transactions for Item->validate() to check that ItemOptions exist for Item before it is written
-      $item = new Item();
-      $item->ObjectID = $product->ID;
-      $item->ObjectClass = $product->class;
-      $item->ObjectVersion = $product->Version;
+    	DB::getConn()->transactionStart();
+      try {
 
-      $item->Price = $product->Amount()->getAmount();
-      $item->Currency = $product->Amount()->getCurrency();
+        $item = new Item();
+	      $item->ProductID = $product->ID;
+	      $item->ProductVersion = $product->Version;
 
-      $item->Quantity = $quantity;
-      $item->OrderID = $this->ID;
-      $item->write();
-      
-      
-      if ($productOptions && $productOptions->exists()) foreach ($productOptions as $productOption) {
-        
-        $itemOption = new ItemOption();
-        $itemOption->ObjectID = $productOption->ID;
-        $itemOption->ObjectClass = $productOption->class;
-        $itemOption->ObjectVersion = $productOption->Version;
+	      //TODO: Think about percentage discounts and stuff like that, needs to apply to variation as well for total price to be correct
+	      //TODO: Do not use Amount() here, need another accessor to support price discounts and changes though
+	      $item->Price = $product->Amount()->getAmount();
+	      $item->Currency = $product->Amount()->getCurrency();
 
-        $itemOption->Price = $productOption->Amount()->getAmount();
-        $itemOption->Currency = $productOption->Amount()->getCurrency();
+	      if ($variation && $variation->exists()) {
+	      	$item->VariationID = $variation->ID;
+	      	$item->VariationVersion = $variation->Version;
 
-        $itemOption->ItemID = $item->ID;
-        $itemOption->write();
+	      	//TODO: Do not use Amount() here, need another accessor to support price discounts and changes though
+		      $item->Price += $variation->Amount()->getAmount();
+	      }
+
+	      $item->Quantity = $quantity;
+	      $item->OrderID = $this->ID;
+	      $item->write();
+
+	      if ($options->exists()) foreach ($options as $option) {
+	      	$option->ItemID = $item->ID;
+	      	$option->write();
+	      }
       }
+      catch (Exception $e) {
+
+        DB::getConn()->transactionRollback();
+        SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+        throw $e;
+      }
+      DB::getConn()->transactionEnd();
+
     }
     
     $this->updateTotal();
@@ -533,32 +535,37 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @see Order::addItem()
 	 * @param DatObject $product
-	 * @param ArrayList $productOptions
+	 * @param ArrayList $options
 	 * @return DataObject
 	 */
-	public function findIdenticalItem($product, ArrayList $productOptions) {
-	  
-	  foreach ($this->Items() as $item) {
+	public function findIdenticalItem($product, $variation, ArrayList $options) {
 
-	    if ($item->ObjectID == $product->ID && $item->ObjectVersion == $product->Version) {
-	      
-  	    $productOptionsMap = array();
-  	    $existingOptionsMap = array();
-  	    
-    	  if ($productOptions) {
-    	    $productOptionsMap = $productOptions->map('ID', 'Version');
-    	  }
+		$items = $this->Items();
 
-    	  if ($item) foreach ($item->ItemOptions() as $itemOption) {
-    	    $productOption = $itemOption->Object();
-    	    $existingOptionsMap[$productOption->ID] = $productOption->Version;
-    	  }
-    	  
-    	  if ($productOptionsMap == $existingOptionsMap) {
-    	    return $item;
-    	  }
-	    }
+		$filtered = $items->filter(array(
+			'ProductID' => $product->ID, 
+			'ProductVersion' => $product->Version
+		));
+
+		if ($variation && $variation->exists()) {
+			$filtered = $filtered->filter(array(
+				'VariationID' => $variation->ID, 
+				'VariationVersion' => $variation->Version
+			));
+		}
+
+		//Could have many products of same variation at this point, need to check product options carefully
+		$optionsMap = $options->map('Description', 'Price');
+		$existingItems = clone $filtered;
+		foreach ($existingItems as $existingItem) {
+
+	    $existingOptionsMap = $existingItem->ItemOptions()->map('Description', 'Price')->toArray();
+
+  	  if ($optionsMap != $existingOptionsMap) {
+  	    $filtered = $filtered->exclude('ID', $existingItem->ID);
+  	  }
 	  }
+		return $filtered->first();
 	}
 	
 	/**
@@ -610,7 +617,7 @@ class Order extends DataObject implements PermissionProvider {
 	  $items = $this->Items();
 	  $products = new ArrayList();
 	  foreach ($items as $item) {
-	    $products->push($item->Object());
+	    $products->push($item->Product());
 	  }
 	  return $products;
 	}

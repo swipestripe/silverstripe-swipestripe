@@ -13,7 +13,7 @@
 	    
 	      <tr  class="itemRow $EvenOdd $FirstLast">
 	      
-			    <% control Object %>  
+			    <% control Product %>  
 			      <td>
 			        <% if Link %>
 			          <a href="$Link" target="_blank">$Title</a>
@@ -24,11 +24,7 @@
 			    <% end_control %>
 			    
 			    <td>
-				    <% if Variation %>
-				      $Variation.SummaryOfOptions
-				    <% else %>
-				      -
-				    <% end_if %>
+				    $SummaryOfOptions
 				  </td>
 				  
 				  <td>

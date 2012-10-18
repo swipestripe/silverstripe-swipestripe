@@ -680,6 +680,8 @@ class Product_Controller extends Page_Controller {
     $form = new AddToCartForm($controller, 'AddToCartForm', $fields, $actions, $validator);
     $form->disableSecurityToken();
 
+    $this->extend('updateAddToCartForm', $form);
+
     return $form;
 	}
   
@@ -691,7 +693,7 @@ class Product_Controller extends Page_Controller {
 	 */
   public function add(Array $data, Form $form) {
 
-    Cart::get_current_order(true)->addItem($this->getProduct(), $this->getQuantity(), $this->getProductOptions());
+    Cart::get_current_order(true)->addItem($this->getProduct(), $this->getVariation(), $this->getQuantity(), $this->getOptions());
     
     //Show feedback if redirecting back to the Product page
     if (!$this->getRequest()->requestVar('Redirect')) {
@@ -717,17 +719,10 @@ class Product_Controller extends Page_Controller {
     $request = $this->getRequest();
     return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
   }
-  
-  /**
-   * Get product variations based on current request, check that options in request
-   * correspond to a variation
-   * 
-   * @see SS_HTTPRequest
-   * @return ArrayList 
-   */
-  private function getProductOptions() {
-    
-    $productVariations = new ArrayList();
+
+  private function getVariation() {
+
+    $productVariation = new Variation();
     $request = $this->getRequest();
     $options = $request->requestVar('Options');
     $product = $this->data();
@@ -737,12 +732,13 @@ class Product_Controller extends Page_Controller {
 
       $variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
       if ($options == $variationOptions && $variation->isEnabled()) {
-        $productVariations->push($variation);
+        $productVariation = $variation;
       }
     }
-    return $productVariations;
+
+    return $productVariation;
   }
-  
+
   /**
    * Find the quantity based on current request
    * 
@@ -751,6 +747,13 @@ class Product_Controller extends Page_Controller {
   private function getQuantity() {
     $quantity = $this->getRequest()->requestVar('Quantity');
     return (isset($quantity)) ? $quantity : 1;
+  }
+
+  private function getOptions() {
+
+    $options = new ArrayList();
+    $this->extend('updateOptions', $options);
+    return $options;
   }
   
   /**
@@ -797,14 +800,14 @@ class Product_Controller extends Page_Controller {
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
       $variationOptions = array();
-      //if ($attributeOptions && is_array($attributeOptions)) {
+      if ($attributeOptions && is_array($attributeOptions)) {
         foreach ($attributeOptions as $attributeID => $optionID) {
           
           //Get option for attribute ID, if this variation has options for every attribute in the array then add it to filtered
           $attributeOption = $variation->getOptionForAttribute($attributeID);
           if ($attributeOption && $attributeOption->ID == $optionID) $variationOptions[$attributeID] = $optionID;
         }
-      //}
+       }
       
       if ($variationOptions == $attributeOptions && $variation->isEnabled()) {
         $filteredVariations->push($variation);

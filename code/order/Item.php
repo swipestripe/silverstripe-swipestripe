@@ -19,13 +19,11 @@ class Item extends DataObject {
    * @var Array
    */
 	public static $db = array(
-	  'ObjectID' => 'Int',
-	  'ObjectClass' => 'Varchar',
-		'ObjectVersion' => 'Int',
 	  'Price' => 'Decimal(19,4)',
     'Currency' => 'Varchar(3)',
 	  'Quantity' => 'Int',
-	  'DownloadCount' => 'Int' //If item represents a downloadable product,
+	  'ProductVersion' => 'Int',
+	  'VariationVersion' => 'Int'
 	);
 
 	public function Amount() {
@@ -45,7 +43,9 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	public static $has_one = array(
-		'Order' => 'Order'
+		'Order' => 'Order',
+		'Product' => 'Product',
+		'Variation' => 'Variation'
 	);
 	
 	/**
@@ -63,19 +63,8 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	public static $defaults = array(
-	  'Quantity' => 1,
-	  'DownloadCount' => 0
+	  'Quantity' => 1
 	);
-	
-	/**
-	 * Retrieve the object this item represents (e.g. {@link Product}). Uses versioning
-	 * so that the product that was bought can be retrieved with all the correct details.
-	 * 
-	 * @return DataObject 
-	 */
-	function Object() {
-	  return Versioned::get_version($this->ObjectClass, $this->ObjectID, $this->ObjectVersion);
-	}
 	
 	/**
 	 * Find item options and delete them to clean up DB.
@@ -148,16 +137,7 @@ class Item extends DataObject {
 	 * @return Mixed Variation if it exists, otherwise null
 	 */
 	function Variation() {
-	  $itemOptions = $this->ItemOptions();
-	  $variation = null;
-	  
-	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
-	    
-	    if ($itemOption->ObjectClass == 'Variation') {
-	      $variation = $itemOption->Object();
-	    }
-	  } 
-	  return $variation;
+		return ($this->VariationID) ? Versioned::get_version('Variation', $this->VariationID, $this->VariationVersion) : null;
 	}
 	
 	/**
@@ -166,12 +146,7 @@ class Item extends DataObject {
 	 * @return Mixed Product if it exists, otherwise null
 	 */
 	function Product() {
-	  
-	  $product = $this->Object();
-	  if ($product && $product->exists() && $product instanceof Product) {
-	    return $product;
-	  }
-	  return null;
+		return Versioned::get_version('Product', $this->ProductID, $this->ProductVersion);
 	}
 	
 	/**
@@ -187,20 +162,17 @@ class Item extends DataObject {
 	 * Validate that product exists and is published, variation exists for product if necessary
 	 * and quantity is greater than 0
 	 * 
-	 * TODO remove the check for $firstWrite when transactions are implemented
-	 * 
 	 * @see DataObject::validate()
 	 * @return ValidationResult
 	 */
 	function validate() {
 
 	  $result = new ValidationResult(); 
-	  $firstWrite = !$this->ID;
 	  
-	  $product = $this->Object();
+	  $product = $this->Product();
 	  $variation = $this->Variation();
 	  $quantity = $this->Quantity;
-	  
+
 	  //Check that product is published and exists
 	  if (!$product || !$product->exists() || !$product->isPublished()) {
 	    $result->error(
@@ -208,10 +180,9 @@ class Item extends DataObject {
 	      'ProductExistsError'
 	    );
 	  }
-	  
-	  //TODO need to change checks for variation so that variation is checked properly when transactions are implemented
+
 	  //Check that variation exists if required, not on first write when ItemOption hasn't had a chance to be written
-	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid()) && !$firstWrite) {
+	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid())) {
       $result->error(
 	      'Sorry, these product options are no longer available',
 	      'VariationExistsError'
@@ -280,5 +251,19 @@ class Item extends DataObject {
 	  else if ($product = $this->Product()) {
 	    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
 	  }
+	}
+
+	public function SummaryOfOptions() {
+		$summary = '';
+
+		$options = array();
+		if ($variation = $this->Variation()) $options[] = $variation->SummaryOfOptions();
+
+		foreach ($this->ItemOptions()->column('Description') as $description) {
+			$options[] = $description;
+		}
+
+		$summary .= implode(', ', $options);
+		return $summary;
 	}
 }

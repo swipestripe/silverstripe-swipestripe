@@ -42,6 +42,9 @@ class SWS_CartTest extends SWS_Test {
 
 		//Check that payment module is installed
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
+
+		//Add extension for product options
+		Object::add_extension('Product_Controller', 'CartTest_ProductExtension');
 	}
 
 	/**
@@ -82,7 +85,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals(1, $firstItem->Quantity);
 	  
 	  //Check that the correct product has been added
-	  $firstProduct = $firstItem->Object();
+	  $firstProduct = $firstItem->Product();
 	  $this->assertInstanceOf('Product', $firstProduct);
 	  $this->assertEquals($productA->Title, $firstProduct->Title);
 	  $this->assertEquals($productA->Price, $firstProduct->Price);
@@ -212,7 +215,7 @@ class SWS_CartTest extends SWS_Test {
 	  $items = $order->Items();
 	  $this->assertEquals(1, $items->Count());
 	  
-	  $firstProduct = $order->Items()->First()->Object();
+	  $firstProduct = $order->Items()->First()->Product();
 	  $this->assertEquals($firstVersion, $firstProduct->Version);
 	  
 	  //Publish again and check version in the cart
@@ -234,8 +237,8 @@ class SWS_CartTest extends SWS_Test {
 	  $items = $order->Items();
 	  $this->assertEquals(2, $items->Count());
 	  
-	  $this->assertEquals($firstVersion, $order->Items()->First()->Object()->Version);
-	  $this->assertEquals($secondVersion, $order->Items()->Last()->Object()->Version);
+	  $this->assertEquals($firstVersion, $order->Items()->First()->Product()->Version);
+	  $this->assertEquals($secondVersion, $order->Items()->Last()->Product()->Version);
 	}
 	
 	/**
@@ -302,8 +305,7 @@ class SWS_CartTest extends SWS_Test {
 	  $productA->doPublish();
 	  $this->logOut();
 	  
-	  $productALink = $productA->Link();
-	  $this->get(Director::makeRelative($productALink)); 
+	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
@@ -311,7 +313,6 @@ class SWS_CartTest extends SWS_Test {
 	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
-	  $firstProduct = clone $productA;
 	  
 	  $this->assertEquals(1, $order->Items()->Count());
 	  $this->assertEquals($productA->Price, $firstItem->Price);
@@ -320,18 +321,19 @@ class SWS_CartTest extends SWS_Test {
 	  $newAmount = new Price();
 	  $newAmount->setAmount(72.34);
 	  $newAmount->setCurrency('NZD');
+
+	  DataObject::flush_and_destroy_cache();
 	  
 	  $this->logInAs('admin');
 	  $productA->Price = $newAmount->getAmount(); 
 	  $productA->doPublish();
 	  $this->logOut();
-	  
-	  $productALink = $productA->Link();
-	  $this->get(Director::makeRelative($productALink)); 
+
+	  $this->get(Director::makeRelative($productA->Link())); 
 	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
 	    'Quantity' => 1
 	  ));
-	  
+
 	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 
@@ -339,12 +341,8 @@ class SWS_CartTest extends SWS_Test {
 	  $secondItem = $items->Last();
 
 	  $this->assertEquals(2, $order->Items()->Count());
-	  
-	  $this->assertEquals($firstProduct->Price, $firstItem->Price);
-	  $this->assertEquals($firstProduct->Currency, $firstItem->Currency);
-	  
-	  $this->assertEquals($newAmount->getAmount(), $secondItem->Price);
-	  $this->assertEquals($newAmount->getCurrency(), $secondItem->Currency);
+	  $this->assertTrue(in_array(500, $order->Items()->column('Price')));
+	  $this->assertTrue(in_array(72.34, $order->Items()->column('Price')));
 	}
 
 	/**
@@ -385,15 +383,17 @@ class SWS_CartTest extends SWS_Test {
 	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
-	  $itemOptions = $firstItem->ItemOptions();
-	  $variation = $itemOptions->First()->Object();
+	  $variation = $firstItem->Variation();
 
-	  $this->assertEquals(1, $itemOptions->Count());
+	  // $itemOptions = $firstItem->ItemOptions();
+	  // $variation = $itemOptions->First()->Object();
+
+	  // $this->assertEquals(1, $itemOptions->Count());
+
 	  $this->assertEquals($teeshirtAVariation->ID, $variation->ID);
 	  $this->assertEquals($teeshirtAVariation->Version, $variation->Version);
 	  $this->assertEquals($teeshirtAVariation->Status, $variation->Status);
 	  $this->assertEquals($teeshirtAVariation->ProductID, $variation->ProductID);
-	  $this->assertEquals('Variation', $variation->ClassName);
 	}
 	
 	/**
@@ -481,6 +481,32 @@ class SWS_CartTest extends SWS_Test {
     $data["Options[{$colorAttr->ID}]"] = $teeshirtARedOpt->ID; //Red
     $data["Options[{$materialAttr->ID}]"] = $teeshirtACottonOpt->ID; //Cotton
     
+    $this->post(
+      Director::absoluteURL($teeshirtA->Link() . '/AddToCartForm/'),
+      $data
+    );
+
+	  $order = Cart::get_current_order();
+	  $items = $order->Items();
+
+	  $this->assertEquals(0, $items->Count());
+	}
+
+	public function testAddProductNoVariation() {
+
+		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+	  $teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+
+    $this->logInAs('admin');
+	  $teeshirtA->doPublish();
+	  $this->logOut();
+
+	  $this->get(Director::makeRelative($teeshirtA->Link()));
+
+	  //Submit with incorrect variation values, for Medium, Red, Cotton
+	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
+    $data['Quantity'] = 1;
+
     $this->post(
       Director::absoluteURL($teeshirtA->Link() . '/AddToCartForm/'),
       $data
@@ -654,13 +680,16 @@ class SWS_CartTest extends SWS_Test {
 	  $order = Cart::get_current_order();
 	  $items = $order->Items();
 	  $firstItem = $items->First();
-	  $itemOptions = $firstItem->ItemOptions();
-	  $firstItemOption = $itemOptions->First();
-	  $variation = $firstItemOption->Object();
+	  $variation = $firstItem->Variation();
+
+	  // $itemOptions = $firstItem->ItemOptions();
+
+	  // $firstItemOption = $itemOptions->First();
+	  // $variation = $firstItemOption->Object();
 
 	  $this->assertEquals(1, $items->Count());
 	  $this->assertEquals(1, $firstItem->Quantity);
-	  $this->assertEquals($firstVersion, $firstItemOption->ObjectVersion);
+	  $this->assertEquals($firstVersion, $firstItem->VariationVersion);
 
 	  $this->logInAs('admin');
 	  $teeshirtA->doPublish();
@@ -682,11 +711,11 @@ class SWS_CartTest extends SWS_Test {
 
 	  $order = Cart::get_current_order();
 	  $items = $order->Items();
-	  $lastItemOption = $items->Last()->ItemOptions()->Last();
+	  // $lastItemOption = $items->Last()->ItemOptions()->Last();
 
 	  $this->assertEquals(2, $items->Count());
 	  $this->assertEquals(1, $items->Last()->Quantity);
-	  $this->assertEquals($secondVersion, $lastItemOption->ObjectVersion);
+	  $this->assertEquals($secondVersion, $items->Last()->VariationVersion);
 	}
 	
 	/**
@@ -982,6 +1011,124 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $this->assertEquals(0, $items->Count());
 	}
+
+	public function testAddProductOptionsToCart() {
+
+    $productA = $this->objFromFixture('Product', 'productA');
+
+	  $this->loginAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+
+	  //Add gift wrapping, extra $1.50
+    $this->get(Director::makeRelative($productA->Link()));
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1,
+      'GiftWrapped' => 1
+    ));
+
+	  $order = Cart::get_current_order();
+	  $items = $order->Items();
+	  
+	  $firstItem = $items->First();
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(1, $firstItem->Quantity);
+
+	  //Check that the correct product has been added
+	  $firstProduct = $firstItem->Product();
+	  $this->assertEquals($productA->ID, $firstProduct->ID);
+	  $this->assertEquals($productA->Price, $firstProduct->Price);
+	  $this->assertEquals($firstItem->UnitPrice()->getAmount(), $firstProduct->Price + 1.5);
+	}
+
+	public function testAddProductOptionsToCartMultiple() {
+
+    $productA = $this->objFromFixture('Product', 'productA');
+
+	  $this->loginAs('admin');
+	  $productA->doPublish();
+	  $this->logOut();
+
+	  //Add gift wrapping, extra $1.50
+    $this->get(Director::makeRelative($productA->Link()));
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1,
+      'GiftWrapped' => 1
+    ));
+
+	  $order = Cart::get_current_order();
+	  $items = $order->Items();
+	  
+	  $firstItem = $items->First();
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(1, $firstItem->Quantity);
+
+	  //Check that the correct product has been added
+	  $firstProduct = $firstItem->Product();
+	  $this->assertEquals($productA->ID, $firstProduct->ID);
+	  $this->assertEquals($productA->Price, $firstProduct->Price);
+	  $this->assertEquals($firstItem->UnitPrice()->getAmount(), $firstProduct->Price + 1.5);
+
+
+	  $this->get(Director::makeRelative($productA->Link()));
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1,
+      'GiftWrapped' => 1
+    ));
+
+	  $order = Cart::get_current_order();
+	  $items = $order->Items();
+	  
+	  $firstItem = $items->First();
+	  $this->assertEquals(1, $items->Count());
+	  $this->assertEquals(2, $firstItem->Quantity);
+
+	  //Check that the correct product has been added
+	  $firstProduct = $firstItem->Product();
+	  $this->assertEquals($productA->ID, $firstProduct->ID);
+	  $this->assertEquals($productA->Price, $firstProduct->Price);
+
+
+	  $this->get(Director::makeRelative($productA->Link()));
+    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+      'Quantity' => 1
+    ));
+
+	  $order = Cart::get_current_order();
+	  $items = $order->Items();
+	  
+	  $this->assertEquals(2, $items->Count());
+	  $this->assertEquals(1, $items->first()->Quantity);
+	  $this->assertEquals(2, $items->last()->Quantity);
+
+	  //Check that the correct product has been added
+	  $firstProduct = $firstItem->Product();
+	  $this->assertEquals($productA->ID, $items->first()->Product()->ID);
+	  $this->assertEquals($productA->Price, $items->first()->Product()->Price);
+	  $this->assertEquals($items->first()->UnitPrice()->getAmount(), $items->first()->Product()->Price);
+	}
 	
+}
+
+class CartTest_ProductExtension extends Extension {
+
+	function updateAddToCartForm($form) {
+		$fields = $form->Fields();
+		$fields->push(new CheckboxField('GiftWrapped', 'Gift Wrapped (+ $1.50)'));
+	}
+
+	function updateOptions($options) {
+
+		$request = $this->owner->getRequest();
+		$giftWrapped = $request->postVar('GiftWrapped');
+		if ($giftWrapped == 1) {
+
+			$option = new ItemOption();
+			$option->Description = 'Gift wrapped';
+			$option->Price = 1.50;
+			$option->Currency = ShopConfig::current_shop_config()->BaseCurrency;
+			$options->push($option);
+		}
+	}
 }
 

@@ -123,8 +123,10 @@ class CheckoutForm extends Form {
 
 				  foreach ($errors as $errorData) {
 				    $field = $fields->dataFieldByName($errorData['fieldName']);
-				    $field->setError($errorData['message'], $errorData['messageType']);
-				    $fields->replaceField($errorData['fieldName'], $field);
+            if ($field) {
+              $field->setError($errorData['message'], $errorData['messageType']);
+              $fields->replaceField($errorData['fieldName'], $field);
+            }
 				  }
 				} 
 				else {

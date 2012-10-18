@@ -1,9 +1,9 @@
 <tr>
   <td> 
-    <% if Item.Object.isPublished %>
-      <a href="$Item.Object.Link" target="_blank">$Item.Object.Title</a>
+    <% if Item.Product.isPublished %>
+      <a href="$Item.Product.Link" target="_blank">$Item.Product.Title</a>
     <% else %>
-      $Item.Object.Title
+      $Item.Product.Title
     <% end_if %>
      
     <% if Message %>
@@ -12,9 +12,7 @@
   </td>
   
   <td>
-    <% if Item.Variation %>
-      $Item.Variation.SummaryOfOptions
-    <% end_if %>
+    $Item.SummaryOfOptions
   </td>
   
   <td>
