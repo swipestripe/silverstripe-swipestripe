@@ -23,7 +23,7 @@ class CheckoutForm extends Form {
    * 
    * @var Array 
    */
-  protected $groupedFields = array();
+  private $groupedFields = array();
   
   /**
    * Set of extra fields set for this form, such as csrf token etc.
@@ -48,7 +48,6 @@ class CheckoutForm extends Form {
     
     //Send fields in as associative array, then loop through and add to $fields array for parent constructuor
     //Overload the Fields() method to get fields for specific areas of the form
-    
     $this->groupedFields = $groupedFields;
     
     $fields = new FieldList();
