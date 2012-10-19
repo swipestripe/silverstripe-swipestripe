@@ -28,8 +28,6 @@
     
     <td>
       <% control ShippingAddress %>
-        <% if FirstName %>
-
           $FirstName $Surname <br />
           
           <% if Company %>      $Company<br />      <% end_if %>
@@ -40,11 +38,6 @@
           <% if State %>        $State<br />        <% end_if %>
           <% if RegionName %>   $RegionName<br />  <% end_if %>
           <% if CountryName %>  $CountryName<br />  <% end_if %>
-        <% else %>
-
-          <p>* Picking order up in store.</p>
-
-        <% end_if %>
       <% end_control %>
     </td>
   </tr>

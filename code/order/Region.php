@@ -30,7 +30,8 @@ class Region extends DataObject {
    */
   public static $db = array(
 		'Code' => "Varchar", 
-	  'Title' => 'Varchar'
+	  'Title' => 'Varchar',
+    'SortOrder' => 'Int'
 	);
 	
 	/**
@@ -54,6 +55,8 @@ class Region extends DataObject {
     'Country.Title' => 'Country'
   );
 
+  public static $default_sort = 'SortOrder';
+
   /**
    * Convenience function to prevent errors thrown
    */
@@ -62,38 +65,23 @@ class Region extends DataObject {
   }
   
   /**
-   * Retrieve map of shipping regions including Country ID
+   * Retrieve map of shipping regions including Country code
    * 
    * @return Array 
    */
-  public static function shipping_regions() {
+  public static function shipping_map() {
 
     $countryRegions = array();
-    $regions = DataObject::get('Region_Shipping');
+    $regions = Region_Shipping::get();
     if ($regions && $regions->exists()) {
 
       foreach ($regions as $region) {
-        $countryRegions[$region->CountryID][$region->ID] = $region->Title;
+        $country = $region->Country();
+        $countryRegions[$country->Code][$region->Code] = $region->Title;
       }
     }
 	  return $countryRegions;
 	}
-	
-	/**
-   * Retrieve map of billing regions including Country ID
-   * Not currently used
-   * 
-   * @return Array 
-   */
-	public static function billing_regions() {
-	  
-	  $regions = DataObject::get('Region_Billing');
-    if ($regions && $regions->exists()) {
-      return $regions->map()->toArray();
-    }
-	  return array();
-	}
-
 }
 
 /**
@@ -113,9 +101,20 @@ class Region_Shipping extends Region {
    */
   function getCMSFields() {
 
+    // $fields = new FieldList(
+    //   $rootTab = new TabSet('Root',
+    //     $tabMain = new Tab('Region',
+    //       TextField::create('Code', _t('Region.CODE', 'Code')),
+    //       TextField::create('Title', _t('Region.TITLE', 'Title')),
+    //       DropdownField::create('CountryID', 'Country', Country_Shipping::get()->map()->toArray())
+    //     )
+    //   )
+    // );
+    // return $fields;
+
     $fields = parent::getCMSFields();
-    $countryField = new DropdownField('CountryID', 'Country', Country::shipping_countries());
-    $fields->replaceField('CountryID', $countryField);
+    $fields->replaceField('CountryID', DropdownField::create('CountryID', 'Country', Country_Shipping::get()->map()->toArray()));
+    $fields->removeByName('SortOrder');
     return $fields;
   }
 }

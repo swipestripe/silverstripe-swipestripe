@@ -311,37 +311,10 @@ class Country extends DataObject {
     'Title' => 'Title',
     'Code' => 'Code'
   );
-  
-  /**
-   * Get a map of shipping countries for dropdown fields etc.
-   * 
-   * @return Array Map of countries
-   */
-  public static function shipping_countries() {
 
-    $countries = DataObject::get('Country_Shipping', '', 'Title ASC');
-    if ($countries && $countries->exists()) {
-      return $countries->map()->toArray();
-    }
-	  return array();
-	}
-	
-	/**
-   * Get a map of billing countries for dropdown fields etc.
-   * 
-   * @return Array Map of countries
-   */
-	public static function billing_countries() {
-	  
-	  $countries = DataObject::get('Country_Billing', '', 'Title ASC');
-    if ($countries && $countries->exists()) {
-      return $countries->map()->toArray();
-    }
-	  return array();
-	}
+  public static $default_sort = 'Title ASC';
 
 	public static function get_codes() {
-		
 		return self::$iso_3166_countryCodes;
 	}
 
@@ -357,6 +330,34 @@ class Country extends DataObject {
  */
 class Country_Shipping extends Country {
 
+	public function getCMSFields() {
+
+		$fields = new FieldList(
+      $rootTab = new TabSet('Root',
+        $tabMain = new Tab('Country',
+          TextField::create('Code', _t('Country.CODE', 'Code')),
+          TextField::create('Title', _t('Country.TITLE', 'Title'))
+        )
+      )
+    );
+
+		if ($this->isInDB()) {
+			$listField = new GridField(
+	      'Regions',
+	      'Regions',
+	      $this->Regions(),
+	      GridFieldConfig_BasicSortable::create()
+	    );
+	    $fields->addFieldToTab('Root.Regions', $listField);
+		}
+
+    return $fields;
+	}
+
+	public function Regions() {
+		return Region_Shipping::get()
+			->where("\"CountryID\" = " . $this->ID);
+	}
 }
 
 /**
@@ -393,5 +394,10 @@ class Country_Billing extends Country {
 			DB::alteration_message('Billing countries created', 'created');
 		}
   }
+
+  public function Regions() {
+		return Region_Billing::get()
+			->where("\"CountryID\" = " . $this->ID);
+	}
 }
 

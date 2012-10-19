@@ -42,7 +42,7 @@ class Cart extends Extension {
         return Director::absoluteBaseURL() . 'Security/login';
         break;
       case 'Logout':
-        return Director::absoluteBaseURL() . 'Security/logout';
+        return Director::absoluteBaseURL() . 'Security/logout?BackURL=%2F';
         break;
       case 'Cart':
       default:

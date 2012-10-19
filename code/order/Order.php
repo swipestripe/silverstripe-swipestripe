@@ -87,7 +87,9 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	public static $has_one = array(
-	  'Member' => 'Customer'
+	  'Member' => 'Customer',
+	  'ShippingAddress' => 'Address_Shipping',
+	  'BillingAddress' => 'Address_Billing'
 	);
 
 	/*
@@ -98,8 +100,7 @@ class Order extends DataObject implements PermissionProvider {
 	public static $has_many = array(
 	  'Items' => 'Item',
 		'Payments' => 'Payment',
-	  'Modifications' => 'Modification',
-	  'Addresses' => 'Address'
+	  'Modifications' => 'Modification'
 	);
 	
 	/**
@@ -212,11 +213,17 @@ class Order extends DataObject implements PermissionProvider {
         $item->delete();
         $item->destroy();
 	    }
+
+	    $shippingAddress = $this->ShippingAddress();
+	    if ($shippingAddress && $shippingAddress->exists()) {
+	    	$shippingAddress->delete();
+	    	$shippingAddress->destroy();
+	    }
 	    
-	    $addresses = $this->Addresses();
-	    if ($addresses && $addresses->exists()) foreach ($addresses as $address) {
-	      $address->delete();
-	      $address->destroy();
+	    $billingAddress = $this->BillingAddress();
+	    if ($billingAddress && $billingAddress->exists()) {
+	    	$billingAddress->delete();
+	    	$billingAddress->destroy();
 	    }
 	    
 	    $modifications = $this->Modifications();
@@ -679,134 +686,32 @@ class Order extends DataObject implements PermissionProvider {
 
 	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = Cart::get_current_order();
-    
-    $billingCountries = Country::billing_countries();
-    $shippingCountries = Country::shipping_countries();
-    $shippingRegions = Region::shipping_regions();
 
     //If there is a current billing and shipping address, update them, otherwise create new ones
-    $existingBillingAddress = $this->BillingAddress();
     $existingShippingAddress = $this->ShippingAddress();
+    $shippingAddress =  ($existingShippingAddress && $existingShippingAddress->exists()) 
+    	? $existingShippingAddress
+    	: new Address_Shipping();
 
-    if ($existingBillingAddress && $existingBillingAddress->exists()) {
-      $newData = array();
-      if (isset($data['Billing']) && is_array($data['Billing'])) foreach ($data['Billing'] as $fieldName => $value) {
-        $newData[$fieldName] = $value;
-      }
-      
-      $newData['CountryID'] = $data['Billing']['Country'];
-      $newData['CountryName'] = (in_array($newData['CountryID'], array_keys($billingCountries))) 
-  	    ? $billingCountries[$newData['CountryID']] 
-  	    : null;
-  	    
-      if ($member->ID) $newData['MemberID'] = $member->ID;
-      $existingBillingAddress->update($newData);
-      $existingBillingAddress->write();
-    }
-    else {
-      $billingAddress = new Address();
-  	  $billingAddress->OrderID = $order->ID;
-  	  if ($member->ID) $billingAddress->MemberID = $member->ID;
-  	  $billingAddress->FirstName = $data['Billing']['FirstName'];
-  	  $billingAddress->Surname = $data['Billing']['Surname'];
-  	  $billingAddress->Company = $data['Billing']['Company'];
-  	  $billingAddress->Address = $data['Billing']['Address'];
-  	  $billingAddress->AddressLine2 = $data['Billing']['AddressLine2'];
-  	  $billingAddress->City = $data['Billing']['City'];
-  	  $billingAddress->PostalCode = $data['Billing']['PostalCode'];
-  	  $billingAddress->State = $data['Billing']['State'];
-  	  $billingAddress->CountryID = $data['Billing']['Country'];
+    $shippingAddress->update($data['Shipping']);
+    $shippingAddress->OrderID = $order->ID;
+    $shippingAddress->MemberID = $member->ID;
+    $shippingAddress->write();
 
-  	  $billingAddress->CountryName = (in_array($data['Billing']['Country'], array_keys($billingCountries))) 
-  	    ? $billingCountries[$data['Billing']['Country']] 
-  	    : null;
-  	  
-  	  $billingAddress->Type = 'Billing';
-  	  $billingAddress->write();
-    }
 
-    if ($existingShippingAddress && $existingShippingAddress->exists()) {
-      $newData = array();
-      if (isset($data['Shipping']) && is_array($data['Shipping'])) foreach ($data['Shipping'] as $fieldName => $value) {
-        $newData[$fieldName] = $value;
-      }
-      
-      $newData['CountryID'] = $data['Shipping']['Country'];
-      $newData['CountryName'] = (in_array($newData['CountryID'], array_keys($shippingCountries))) 
-  	    ? $shippingCountries[$newData['CountryID']] 
-  	    : null;
-  	    
-  	  
-  	  if (isset($newData['Region']) && isset($shippingRegions[$newData['Country']])) {
-  	    if (in_array($newData['Region'], array_keys($shippingRegions[$newData['Country']]))) {
-  	      $newData['RegionName'] = $shippingRegions[$newData['Country']][$newData['Region']];
-  	    }
-  	  }
-  	  else $newData['RegionName'] = null;
-  	  
-      
-      if ($member->ID) $newData['MemberID'] = $member->ID;
-      $existingShippingAddress->update($newData);
-      $existingShippingAddress->write();
-    }
-    else {
-  	  $shippingAddress = new Address();
-  	  $shippingAddress->OrderID = $order->ID;
-  	  if ($member->ID) $shippingAddress->MemberID = $member->ID;
-  	  $shippingAddress->FirstName = $data['Shipping']['FirstName'];
-  	  $shippingAddress->Surname = $data['Shipping']['Surname'];
-  	  $shippingAddress->Company = $data['Shipping']['Company'];
-  	  $shippingAddress->Address = $data['Shipping']['Address'];
-  	  $shippingAddress->AddressLine2 = $data['Shipping']['AddressLine2'];
-  	  $shippingAddress->City = $data['Shipping']['City'];
-  	  $shippingAddress->PostalCode = $data['Shipping']['PostalCode'];
-  	  $shippingAddress->State = $data['Shipping']['State'];
-  	  $shippingAddress->CountryID = $data['Shipping']['Country'];
-  	  $shippingAddress->Region = (isset($data['Shipping']['Region'])) ? $data['Shipping']['Region'] : null;
-  	  
-  	  $shippingAddress->CountryName = (in_array($data['Shipping']['Country'], array_keys($shippingCountries))) 
-  	    ? $shippingCountries[$data['Shipping']['Country']] 
-  	    : null;
-  	    
-  	  $shippingAddress->RegionName = (isset($data['Shipping']['Region']) && isset($shippingRegions[$data['Shipping']['Country']]) && in_array($data['Shipping']['Region'], array_keys($shippingRegions[$data['Shipping']['Country']]))) 
-  	    ? $shippingRegions[$data['Shipping']['Country']][$data['Shipping']['Region']] 
-  	    : null; 
-  	  
-  	  $shippingAddress->Type = 'Shipping';
-  	  $shippingAddress->write();
-    }
-	}
-	
-	/**
-	 * Retrieve the billing {@link Address} for this Order.
-	 * 
-	 * @return Address
-	 */
-	public function BillingAddress() {
-	  $address = null;
-	  
-	  $addresses = $this->Addresses();
-	  if ($addresses && $addresses->exists()) {
-	    $address = $addresses->find('Type', 'Billing');
-	  }
-	  
-	  return $address;
-	}
-	
-	/**
-	 * Retrieve the shipping {@link Address} for this Order.
-	 * 
-	 * @return Address
-	 */
-	public function ShippingAddress() {
-	  $address = null;
-	  
-	  $addresses = $this->Addresses();
-	  if ($addresses && $addresses->exists()) {
-	    $address = $addresses->find('Type', 'Shipping');
-	  }
-	  
-	  return $address;
+    $existingBillingAddress = $this->BillingAddress();
+    $billingAddress = ($existingBillingAddress && $existingBillingAddress->exists()) 
+    	? $existingBillingAddress
+    	: new Address_Billing();
+
+    $billingAddress->update($data['Billing']);
+    $billingAddress->OrderID = $order->ID;
+    $billingAddress->MemberID = $member->ID;
+    $billingAddress->write();
+
+    $order->ShippingAddressID = $shippingAddress->ID;
+    $order->BillingAddressID = $billingAddress->ID;
+    $order->write();
 	}
 	
 	/**

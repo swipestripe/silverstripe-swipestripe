@@ -32,6 +32,20 @@ class Variation extends DataObject {
     $amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
     $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+
+    //Transform amount for applying discounts etc.
+    $this->extend('updateAmount', $amount);
+
+    return $amount;
+  }
+
+  public function Price() {
+    
+    $amount = $this->Amount();
+
+    //Transform price here for display in different currencies etc.
+    $this->extend('updatePrice', $amount);
+
     return $amount;
   }
 

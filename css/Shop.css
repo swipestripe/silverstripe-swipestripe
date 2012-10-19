@@ -874,7 +874,6 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   border: 1px solid #ccc;
   border-bottom-color: #bbb;
   -webkit-border-radius: 4px;
@@ -1315,27 +1314,28 @@
   text-align: right;
   font-weight: bold;
 }
-.checkout .addresses .address-left {
+.checkout .address .field {
   float: left;
-  width: 48%;
+  margin: 0 10px 10px 0;
 }
-.checkout .addresses .address-right {
-  float: left;
-  width: 48%;
+.checkout .address .address-break {
+  clear: both;
 }
-.checkout .addresses .address-right h3 {
+.checkout .address #address-billing h3 {
   float: left;
   margin-right: 25px;
 }
-.checkout .addresses .address-right .shipping-same-address {
+.checkout .address #address-billing .shipping-same-address {
   float: left;
-}
-.checkout .addresses .address-right .shipping-firstname {
-  clear: left;
+  margin-top: 3px;
 }
 .checkout .personal-details div .CompositeField {
-  width: 48%;
   float: left;
+  margin: 0 10px 0 0;
+}
+.checkout .personal-details div .CompositeField p.alert {
+  max-width: 320px;
+  margin: 20px 0;
 }
 .checkout .order-details .modifier-set-field select {
   width: auto;
@@ -1360,7 +1360,10 @@
   margin-bottom: 0;
 }
 .checkout .notes textarea {
-  width: 50%;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .checkout .payment-details .PaymentSet {
   list-style: none;

@@ -243,16 +243,6 @@ $lang['en_US']['ShopConfig']['RECEIPT_TO'] = 'Sent to customer';
 $lang['en_US']['ShopConfig']['SIGNATURE'] = 'Signature';
 $lang['en_US']['ShopConfig']['SUBJECT_LINE'] = 'Subject line';
 $lang['en_US']['ShopConfig']['TO'] = 'To';
-$lang['en_US']['StockLevel']['PLURALNAME'] = array(
-	'Stock Levels',
-	50,
-	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
-);
-$lang['en_US']['StockLevel']['SINGULARNAME'] = array(
-	'Stock Level',
-	50,
-	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
 $lang['en_US']['Variation']['PLURALNAME'] = array(
 	'Variations',
 	50,

@@ -131,12 +131,15 @@ class Customer extends Member {
 	 * @return Address The last billing address
 	 */
 	public function BillingAddress() {
+
+		// TODO: Refactor this mess
 	  $address = null;
 
 	  $addresses = $this->Addresses();
 	  $addresses->sort('Created', 'ASC');
 	  if ($addresses && $addresses->exists()) foreach ($addresses as $billingAddress) {
-	    if ($billingAddress->Type == 'Billing') $address = $billingAddress; 
+	  	$order = $billingAddress->Order();
+	    if ($billingAddress->ClassName == 'Address_Billing' && $order->exists() &&  $order->Status != 'Cart') $address = $billingAddress; 
 	  }
 	  
 	  return $address;
@@ -149,12 +152,15 @@ class Customer extends Member {
 	 * @return Address The last shipping address
 	 */
 	public function ShippingAddress() {
+
+		// TODO: Refactor this mess
 	  $address = null;
 
 	  $addresses = $this->Addresses();
 	  $addresses->sort('Created', 'ASC');
 	  if ($addresses && $addresses->exists()) foreach ($addresses as $shippingAddress) {
-	    if ($shippingAddress->Type == 'Shipping') $address = $shippingAddress; 
+	  	$order = $shippingAddress->Order();
+	    if ($shippingAddress->Classname == 'Address_Shipping' && $order->exists() && $order->Status != 'Cart') $address = $shippingAddress;
 	  }
 	  return $address;
 	}

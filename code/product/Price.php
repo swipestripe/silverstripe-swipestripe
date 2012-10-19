@@ -20,7 +20,18 @@ class Price extends Money {
 			if(!isset($options['display'])) $options['display'] = Zend_Currency::NO_SYMBOL;
 			if(!isset($options['currency'])) $options['currency'] = $this->getCurrency();
 			if(!isset($options['symbol'])) $options['symbol'] = $this->currencyLib->getSymbol($this->getCurrency(), $this->getLocale());
-			return (is_numeric($amount)) ? $this->symbol . $this->currencyLib->toCurrency($amount, $options) : $this->symbol . '';
+
+			if (is_numeric($amount)) {
+				if ($amount < 0) {
+					return '- ' . $this->symbol . abs($this->currencyLib->toCurrency($amount, $options));
+				}
+				else {
+					return $this->symbol . $this->currencyLib->toCurrency($amount, $options);
+				}
+			}
+			else {
+				return $this->symbol . '';
+			}
 		}
 		else {
 

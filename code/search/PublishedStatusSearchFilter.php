@@ -15,7 +15,9 @@ class PublishedStatusSearchFilter extends SearchFilter {
    * 
    * @see SearchFilter::apply()
    */
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
+
+		return $query;
 	  
 	  $query = $this->applyRelation($query);
 		$value = $this->getValue();

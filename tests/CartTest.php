@@ -1098,14 +1098,14 @@ class SWS_CartTest extends SWS_Test {
 	  $items = $order->Items();
 	  
 	  $this->assertEquals(2, $items->Count());
-	  $this->assertEquals(1, $items->first()->Quantity);
-	  $this->assertEquals(2, $items->last()->Quantity);
+	  $this->assertTrue(array(1,2) == $items->column('Quantity'));
+	  $quantityKeys = array_flip($items->map('ID', 'Quantity')->toArray());
+	  $item = $items->find('ID', $quantityKeys[1]);
 
 	  //Check that the correct product has been added
-	  $firstProduct = $firstItem->Product();
-	  $this->assertEquals($productA->ID, $items->first()->Product()->ID);
-	  $this->assertEquals($productA->Price, $items->first()->Product()->Price);
-	  $this->assertEquals($items->first()->UnitPrice()->getAmount(), $items->first()->Product()->Price);
+	  $this->assertEquals($productA->ID, $item->Product()->ID);
+	  $this->assertEquals($productA->Price, $item->Product()->Price);
+	  $this->assertEquals($item->UnitPrice()->getAmount(), $item->Product()->Price);
 	}
 	
 }

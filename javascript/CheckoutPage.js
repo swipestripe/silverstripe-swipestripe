@@ -23,46 +23,35 @@
     	updateOrderFormCartAJAX();
 
     	/**
-    	 * Shipping same address checkbox, copy across billing address and save current
-    	 * shipping address to revert to
+    	 * Billing same address checkbox, copy across shipping address and save current
+    	 * billing address to revert to
     	 */
-    	var ShippingAddressVals = {};
-    	$('#CheckoutForm_OrderForm_ShipToBillingAddress').live('click', function(){
-    		if ($(this).is(':checked')) {
-    			$('#address-billing input[type=text], #address-billing select').each(function(){
+    	$('#CheckoutForm_OrderForm_BillToShippingAddress').live('click', copyAddress);
+    	$('#address-shipping input[type=text], #address-shipping select').live('keyup', copyAddress);
+    	$('#address-shipping input[type=text], #address-shipping select').live('blur', copyAddress);
+        copyAddress();
 
-        			var ID = $(this).attr('id');
-        			var newID = ID.replace(/Billing/i, 'Shipping');
-        			if ($('#'+newID).val()) ShippingAddressVals[newID] = $('#'+newID).val();
-        			$('#'+newID).val($('#'+ID).val());
-        		});
+    	function copyAddress(e) {
+    		if ($('#CheckoutForm_OrderForm_BillToShippingAddress').is(':checked')) {
+                $('#address-shipping input[type=text], #address-shipping select').each(function(){
+                    $('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
+                        .val($('#' + $(this).attr('id')).val())
+                        .parent().parent().hide();
+                });
     		}
-    		else if (!$.isEmptyObject(ShippingAddressVals)) {
-    			$('#address-shipping input[type=text], #address-shipping select').each(function(){
-        			var ID = $(this).attr('id');
-        			if (ShippingAddressVals[ID]) $(this).val(ShippingAddressVals[ID]);
-        		});
-    		}
-    		$('#CheckoutForm_OrderForm_Shipping-Country').change();
-    	});
-    	
-    	$('#address-billing input[type=text], #address-billing select').live('keyup', copyBillingAddressAcross);
-    	$('#address-billing input[type=text], #address-billing select').live('blur', copyBillingAddressAcross);
-    	function copyBillingAddressAcross() {
-    		if ($('#CheckoutForm_OrderForm_ShipToBillingAddress').is(':checked')) {
-    			var ID = $(this).attr('id');
-    			var newID = ID.replace(/Billing/i, 'Shipping');
-    			$('#'+newID).val($('#'+ID).val());
-                //Force change event on shipping selects
-                if ($(this).is('select')) $('#'+newID).change();
-    		}
+            //Only clear fields if specifically unticking checkbox
+            else if ($(e.currentTarget).attr('id') == 'CheckoutForm_OrderForm_BillToShippingAddress') {
+                $('#address-shipping input[type=text], #address-shipping select').each(function(){
+                    $('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
+                        .val('')
+                        .parent().parent().show();
+                });
+            }
     	}
     	
     	//Processing order indicator
     	$('#CheckoutForm_OrderForm_action_ProcessOrder').live('click', function() {
-    		$('#CheckoutForm_OrderForm_action_ProcessOrder')
-    			//.attr('disabled', 'disabled')
-    			.attr('Value', 'Processing...');
+    		$('#CheckoutForm_OrderForm_action_ProcessOrder').attr('Value', 'Processing...');
     		$('.Actions .loading').show();
     	});
     })

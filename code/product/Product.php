@@ -38,6 +38,20 @@ class Product extends Page {
     $amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
     $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+
+    //Transform amount for applying discounts etc.
+    $this->extend('updateAmount', $amount);
+
+    return $amount;
+  }
+
+  public function Price() {
+    
+    $amount = $this->Amount();
+
+    //Transform price here for display in different currencies etc.
+    $this->extend('updatePrice', $amount);
+
     return $amount;
   }
   
@@ -197,8 +211,7 @@ class Product extends Page {
     $fields = parent::getCMSFields();
 
     //Product fields
-    $priceField = new PriceField('Price');
-    $fields->addFieldToTab('Root.Main', $priceField, 'Content');
+    $fields->addFieldToTab('Root.Main', new PriceField('Price'), 'Content');
 
     $categories = ProductCategory::get()->map('ID', 'Breadcrumbs')->toArray();
     arsort($categories);

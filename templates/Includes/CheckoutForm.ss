@@ -9,31 +9,37 @@
   <% end_if %>
   
   <fieldset>
-  
-    <section class="addresses">
-	    <div id="address-billing" class="address-left">
-		    <% control Fields(BillingAddress) %>
-		      $FieldHolder
-		    <% end_control %>
-	    </div>
-	    
-	    <div id="address-shipping" class="address-right">
-	      <% control Fields(ShippingAddress) %>
-	        $FieldHolder
-	      <% end_control %>
-	    </div>
-    </section>
-    
-    <hr />
-    
-    <section class="personal-details">
+
+  	<% if Fields(PersonalDetails) %>
+  	<section class="personal-details">
 	    <% control Fields(PersonalDetails) %>
 	      $FieldHolder
 	    <% end_control %>
     </section>
     
     <hr />
+    <% end_if %>
 
+  	<section class="address">
+    	<div id="address-shipping">
+	      <% control Fields(ShippingAddress) %>
+	        $FieldHolder
+	      <% end_control %>
+	    </div>
+    </section>
+
+    <hr />
+  
+    <section class="address">
+	    <div id="address-billing">
+		    <% control Fields(BillingAddress) %>
+		      $FieldHolder
+		    <% end_control %>
+	    </div>
+    </section>
+    
+    <hr />
+    
     <section class="order-details">
 	    <h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
 	    <% include CheckoutFormOrder %>

@@ -49,6 +49,7 @@ class CheckoutForm extends Form {
     //Send fields in as associative array, then loop through and add to $fields array for parent constructuor
     //Overload the Fields() method to get fields for specific areas of the form
     $this->groupedFields = $groupedFields;
+    //$this->groupedFields = array_merge($groupedFields, $this->groupedFields);
     
     $fields = new FieldList();
     if (is_array($groupedFields)) foreach ($groupedFields as $setName => $setFields) {

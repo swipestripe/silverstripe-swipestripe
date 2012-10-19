@@ -145,36 +145,39 @@
     text-align: right;
     font-weight: bold;
   }
-  
-  .addresses {
-    .address-left {
-      float: left;
-      width: 48%;
-    }
-    
-    .address-right {
-      float: left;
-      width: 48%;
-      
-      h3 {
+
+  .address {
+  	.field {
+  		float: left;
+  		margin: 0 10px 10px 0;
+  	}
+
+  	.address-break {
+  		clear: both;
+  	}
+
+  	#address-billing {
+  		h3 {
         float: left;
         margin-right: 25px;
       }
       
       .shipping-same-address {
 	      float: left;
+	      margin-top: 3px;
 	    }
-	    
-	    .shipping-firstname {
-	      clear: left;
-	    }
-    }
+  	}
   }
   
   .personal-details {
     div .CompositeField {
-      width: 48%;
       float: left;
+      margin: 0 10px 0 0;
+
+      p.alert {
+      	max-width: 320px;
+      	margin: 20px 0;
+      }
     }
   }	
   
@@ -199,7 +202,8 @@
   
   .notes {
     textarea {
-      width: 50%;
+      width: 100%;
+      .box-sizing(border-box);
     }
   }
   

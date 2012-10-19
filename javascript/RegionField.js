@@ -3,15 +3,10 @@
 	//TODO need to namespace this properly
 	window.populateRegion = function() {
 
-		var regions = $.parseJSON('$regions');
-		var $countryField;
-		if ($('#CheckoutForm_OrderForm_Shipping-Country').length > 0) {
-			$countryField = $('#CheckoutForm_OrderForm_Shipping-Country');
-		}
-		if ($('select[name=CountryCode]').length > 0) {
-			$countryField = $('select[name=CountryCode]');
-		} 
-		
+		var regions = $.parseJSON('$regions'),
+				$countryField;
+
+		$countryField = $('#CheckoutForm_OrderForm_Shipping-CountryCode');		
 		var $regionField = $('.region select');
 		var defaultValue = '$defaultValue';
 
@@ -40,7 +35,7 @@
 						$regionField.val($("option:first", $regionField).val());
 					}
 				}
-				$('#CheckoutForm_OrderForm_Shipping-Region').change();
+				$('#CheckoutForm_OrderForm_Shipping-RegionCode').change();
 			});
 			$countryField.change();
 		}
@@ -48,6 +43,6 @@
 	
   $(document).ready(function() { 
   	populateRegion();
-  	$('#CheckoutForm_OrderForm_Shipping-Region').live('change', updateOrderFormCartAJAX);
+  	$('#CheckoutForm_OrderForm_Shipping-RegionCode').live('change', updateOrderFormCartAJAX);
   })
 })(jQuery);
