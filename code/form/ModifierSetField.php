@@ -37,7 +37,8 @@ class ModifierSetField extends DropdownField {
 	 */
 	function __construct($modifier, $title = "", $source = array(), $value = "", $form = null) {
 
-	  $name = "Modifiers[$modifier->ClassName]";
+		$className = get_class($modifier);
+	  $name = "Modifiers[$className]";
 	  $this->modifier = $modifier;
 
 		parent::__construct($name, $title, $source, $value, $form);
@@ -65,7 +66,7 @@ class ModifierSetField extends DropdownField {
 	/**
 	 * Get the modifier e.g: FlatFeeShipping
 	 * 
-	 * @return Object Mixed object, class depends on type of ModifierSetField e.g: FlatFeeShippingField
+	 * @return Object Mixed object, class depends on type of ModifierSetField
 	 */
 	function getModifier() {
 	  return $this->modifier;

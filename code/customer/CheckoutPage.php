@@ -378,15 +378,32 @@ class CheckoutPage_Controller extends Page_Controller {
 	 */
 	public function addModifierFields(&$fields, &$validator, $order) {
 
-		foreach (Modifier::combined_form_fields($order) as $field) {
-		  
-		  if ($field->modifiesSubTotal()) {
-		    $fields['SubTotalModifiers'][] = $field;
-		  }
-		  else {
-		    $fields['Modifiers'][] = $field;
-		  }
+		$subTotalMods = $order->SubTotalModifications();
+		$totalMods = $order->TotalModifications();
+
+		foreach ($subTotalMods as $modification) {
+			$modFields = $modification->getFormFields();
+			foreach ($modFields as $field) {
+				$fields['SubTotalModifiers'][] = $field;
+			}
 		}
+
+		foreach ($totalMods as $modification) {
+			$modFields = $modification->getFormFields();
+			foreach ($modFields as $field) {
+				$fields['Modifiers'][] = $field;
+			}
+		}
+
+		// foreach (Modifier::combined_form_fields($order) as $field) {
+		  
+		//   if ($field->modifiesSubTotal()) {
+		//     $fields['SubTotalModifiers'][] = $field;
+		//   }
+		//   else {
+		//     $fields['Modifiers'][] = $field;
+		//   }
+		// }
 	}
 	
 	/**
@@ -516,10 +533,10 @@ class CheckoutPage_Controller extends Page_Controller {
     }
     
     //Add addresses to order
-    $order->addAddressesAtCheckout($data);
+    $order->updateAddresses($data)->write();
 
     //Add modifiers to order
-    $order->addModifiersAtCheckout($data);
+    $order->updateModifications($data)->write();
 
 		Session::clear('Cart.OrderID');
 
@@ -556,43 +573,65 @@ class CheckoutPage_Controller extends Page_Controller {
 	 * @param SS_HTTPRequest $data Form data sent via AJAX POST.
 	 * @return String Rendered cart for the order form, template include 'CheckoutFormOrder'.
 	 */
-	function updateOrderFormCart(SS_HTTPRequest $data) {
+	function updateOrderFormCart(SS_HTTPRequest $request) {
 
-	  if ($data->isPOST()) {
+	  if ($request->isPOST()) {
 
   	  $fields = array();
       $validator = new OrderFormValidator();
       $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
       $order = Cart::get_current_order();
-      
+
       //Update the Order 
-      $order->addAddressesAtCheckout($data->postVars());
-      $order->addModifiersAtCheckout($data->postVars());
-      //TODO update personal details, notes and payment type?
-  
+      $order->update($request->postVars());
+      $order->updateAddresses($request->postVars());
+      $order->write();
+
+      //Has something in the order changed?
+      $order->updateModifications($request->postVars())
+      	->write();
+
+
+      //We want to have correct modifier data installed here so just add modifier fields once, and set their values at the same time
+      //Have the modifications added correctly by Modifier->addToOrder()
+
+
       //Create the part of the form that displays the Order
+      //This is going to go through and add modifiers based on current Form DATA because the order has been updated
       $this->addItemFields($fields, $validator, $order);
-      $this->addModifierFields($fields, $validator, $order); //This is going to go through and add modifiers based on current Form DATA
-      
-      //TODO This should be constructed for non-dropdown fields as well
-      //Update modifier form fields so that the dropdown values are correct
-      $newModifierData = array();
-      $subTotalModifiers = (isset($fields['SubTotalModifiers'])) ? $fields['SubTotalModifiers'] : array();
-      $totalModifiers = (isset($fields['Modifiers'])) ? $fields['Modifiers'] : array(); 
-      $modifierFields = array_merge($subTotalModifiers, $totalModifiers);
+      $this->addModifierFields($fields, $validator, $order); 
 
-      foreach ($modifierFields as $field) {
-  
-        if (method_exists($field, 'updateValue')) {
-          $field->updateValue($order, $data);
-        }
-  
-        $modifierClassName = get_class($field->getModifier());
-        $newModifierData['Modifiers'][$modifierClassName] = $field->Value();
-      }
 
-      //Add modifiers to the order again so that the new values are used
-      $order->addModifiersAtCheckout($newModifierData);
+
+
+      //New modifier fields may have been added that are not part of current POST data
+      //Need to add modifiers to the order again with this new data in mind
+      // $newModifierData = array();
+      // $subTotalModifiers = (isset($fields['SubTotalModifiers'])) ? $fields['SubTotalModifiers'] : array();
+      // $totalModifiers = (isset($fields['Modifiers'])) ? $fields['Modifiers'] : array(); 
+      // $modifierFields = array_merge($subTotalModifiers, $totalModifiers);
+
+      // foreach ($modifierFields as $field) {
+      //   if (method_exists($field, 'updateValue')) {
+      //     $field->updateValue($order, $request);
+      //   }
+
+      //   // SS_Log::log(new Exception(print_r($field->getName(), true)), SS_Log::NOTICE);
+      //   // SS_Log::log(new Exception(print_r($field->Value(), true)), SS_Log::NOTICE);
+  
+      //   $modifierClassName = get_class($field->getModifier());
+      //   $newModifierData['Modifiers'][$modifierClassName] = $field->Value();
+      // }
+
+      // //Add modifiers to the order again so that the new values are used
+      // $order->updateModifications($newModifierData);
+
+      // //Add modifier fields again because the order has changed
+      // $this->addModifierFields($fields, $validator, $order);
+
+
+
+
   
       $actions = new FieldList(
         new FormAction('ProcessOrder', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))

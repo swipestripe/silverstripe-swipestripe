@@ -6,6 +6,7 @@ class Price extends Money {
 
 	public function setSymbol($symbol) {
 		$this->symbol = $symbol;
+		return $this;
 	}
 
 	public function getSymbol() {

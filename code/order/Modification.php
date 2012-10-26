@@ -21,13 +21,37 @@ class Modification extends DataObject {
    * @var Array
    */
 	public static $db = array(
-	  'ModifierClass' => 'Varchar',
-		'ModifierOptionID' => 'Int', 
+		'Value' => 'Int',
 	  'Price' => 'Decimal(19,4)',
     'Currency' => 'Varchar(3)',
 	  'Description' => 'Text',
-	  'SubTotalModifier' => 'Boolean'
+	  'SubTotalModifier' => 'Boolean',
+	  'SortOrder' => 'Int'
 	);
+
+	/**
+	 * Relations for this class
+	 * 
+	 * @var Array
+	 */
+	public static $has_one = array(
+	  'Order' => 'Order'
+	);
+
+	public static $default_sort = 'SortOrder ASC';
+
+	public static function get_all() {
+		$mods = new ArrayList();
+
+		$classes = ClassInfo::subclassesFor('Modification');
+		foreach ($classes as $class) {
+
+			if ($class != 'Modification') $mods->push(new $class());
+		}
+
+		$mods->sort('SortOrder');
+		return $mods;
+	}
 
 	public function Amount() {
 
@@ -40,13 +64,14 @@ class Modification extends DataObject {
     return $amount;
   }
 
-	/**
-	 * Relations for this class
-	 * 
-	 * @var Array
-	 */
-	public static $has_one = array(
-	  'Order' => 'Order'
-	);
+	public function add($order, $value = null) {
+		return;
+	}
+
+	public function getFormFields() {
+
+		$fields = new FieldList();
+		return $fields;
+	}
 	
 }

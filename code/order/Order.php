@@ -612,6 +612,7 @@ class Order extends DataObject implements PermissionProvider {
 	  $this->TotalPrice = $total; 
 	  $this->SubTotalCurrency = $shopConfig->BaseCurrency;
 
+	  //TODO: change this so doesn't write() in here
     $this->write();
 	}
 
@@ -658,23 +659,90 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @param Array $data
 	 */
-	public function addModifiersAtCheckout(Array $data) {
+	public function updateModifications(Array $data) {
 
 	  //Remove existing Modifications
     $existingModifications = $this->Modifications();
     foreach ($existingModifications as $modification) {
       $modification->delete();
     }
+    $this->updateTotal();
+
+    $mods = Modification::get_all();
+
+    //$mods = ClassInfo::subclassesFor('Modification');
+
+    //Do need to do these in order
+
+		foreach ($mods as $modification) {
+
+			$class = get_class($modification);
+			$value = isset($data['Modifiers'][$class]) ? $data['Modifiers'][$class] : null;
+
+			$modification->add($this, $value);
+			$this->updateTotal();
+		}
+
+		return $this;
+
+
+
+
+
+
+    $modifiers = Modifier::ordered_modifiers();
+    SS_Log::log(new Exception(print_r($modifiers, true)), SS_Log::NOTICE);
+
+    foreach ($modifiers as $modifierData) {
+
+
+    	//Create the modifiers
+    	//Set the options for each modifier based on order address
+    	//Try and set the value for the modifier based on current post
+    	$modifierClass = $modifierData['class'];
+    	$value = isset($data['Modifiers'][$modifierClass]) ? $data['Modifiers'][$modifierClass] : null;
+
+    	$modifier = new $modifierClass($this);
+		  $modifier->setValue($value);
+
+		  SS_Log::log(new Exception(print_r($modifier->Options, true)), SS_Log::NOTICE);
+		  SS_Log::log(new Exception(print_r($modifier->Value, true)), SS_Log::NOTICE);
+
+		  $modifier->createModification();
+
+
+
+  		if (isset($data['Modifiers']) && is_array($data['Modifiers'])) {
+
+  			$modifierClass = $modifierData['class'];
+	    	$value = isset($data['Modifiers'][$modifierClass]) ? $data['Modifiers'][$modifierClass] : null;
+
+	    	if (class_exists($modifierClass) && $value) {
+	    		
+		      // $modifier = new $modifierClass($order);
+		      // $modifier->setValue($value);
+
+		      //$modifier->addToOrder($this, $value);
+
+		      // $modification = $modifier->getModification();
+		      // $modification->OrderID = $this->ID;
+		      // $modification->write();
+		    }
+		    //$this->updateTotal();
+  		}
+    }
 
     //Save new Modifications
-	  if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {
-	    
-	    if (class_exists($modifierClass)) {
-	      $modifier = new $modifierClass();
-	      $modifier->addToOrder($this, $value);
-	    }
-	  }
-	  $this->updateTotal();
+	  // if (isset($data['Modifiers']) && is_array($data['Modifiers'])) foreach ($data['Modifiers'] as $modifierClass => $value) {
+
+	  //   if (class_exists($modifierClass)) {
+	  //     $modifier = new $modifierClass();
+	  //     $modifier->addToOrder($this, $value);
+	  //   }
+	  //   $this->updateTotal();
+	  // }
+
+	  return $this;
 	}
 	
 	/**
@@ -682,7 +750,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @param Array $data
 	 */
-	public function addAddressesAtCheckout(Array $data) {
+	public function updateAddresses(Array $data) {
 
 	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $order = Cart::get_current_order();
@@ -711,7 +779,7 @@ class Order extends DataObject implements PermissionProvider {
 
     $order->ShippingAddressID = $shippingAddress->ID;
     $order->BillingAddressID = $billingAddress->ID;
-    $order->write();
+    return $this;
 	}
 	
 	/**
@@ -788,8 +856,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function SubTotalModifications() {
-	  $orderID = $this->ID;
-	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 1");
+		return $this->Modifications()->where("\"SubTotalModifier\" = 1");
 	}
 	
 	/**
@@ -798,8 +865,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function TotalModifications() {
-	  $orderID = $this->ID;
-	  return DataObject::get('Modification', "\"OrderID\" = $orderID AND \"SubTotalModifier\" = 0");
+		return $this->Modifications()->where("\"SubTotalModifier\" = 0");
 	}
 
 }

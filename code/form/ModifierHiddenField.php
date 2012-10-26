@@ -39,7 +39,7 @@ class ModifierHiddenField extends HiddenField {
 	 */
 	function __construct($modifier, $title = null, $value = "", $maxLength = null, $form = null) {
 
-	  $name = "Modifiers[$modifier->ClassName]";
+	  $name = "Modifiers[" . get_class($modifier) . "]";
 	  $this->modifier = $modifier;
 
 		parent::__construct($name, $title, $value, $maxLength, $form);
@@ -67,7 +67,7 @@ class ModifierHiddenField extends HiddenField {
 	/**
 	 * Get the modifier e.g: FlatFeeShipping
 	 * 
-	 * @return Object Mixed object, class depends on type of ModifierSetField e.g: FlatFeeShippingField
+	 * @return Object Mixed object, class depends on type of ModifierSetField
 	 */
 	function getModifier() {
 	  return $this->modifier;

@@ -70,46 +70,6 @@ $lang['en_US']['Customer']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['FlatFeeShipping']['PLURALNAME'] = array(
-	'Flat Fee Shippings',
-	50,
-	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
-);
-$lang['en_US']['FlatFeeShipping']['SINGULARNAME'] = array(
-	'Flat Fee Shipping',
-	50,
-	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
-$lang['en_US']['FlatFeeShippingRate']['PLURALNAME'] = array(
-	'Flat Fee Shipping Rats',
-	50,
-	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
-);
-$lang['en_US']['FlatFeeShippingRate']['SINGULARNAME'] = array(
-	'Flat Fee Shipping Rate',
-	50,
-	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
-$lang['en_US']['FlatFeeTax']['PLURALNAME'] = array(
-	'Flat Fee Taxs',
-	50,
-	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
-);
-$lang['en_US']['FlatFeeTax']['SINGULARNAME'] = array(
-	'Flat Fee Tax',
-	50,
-	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
-$lang['en_US']['FlatFeeTaxRate']['PLURALNAME'] = array(
-	'Flat Fee Tax Rats',
-	50,
-	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
-);
-$lang['en_US']['FlatFeeTaxRate']['SINGULARNAME'] = array(
-	'Flat Fee Tax Rate',
-	50,
-	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
 $lang['en_US']['Form']['FLAT_FEE_SHIPPING_COUNTRY_NOT_MATCH'] = 'This shipping option is no longer available for the shipping country you have selected sorry';
 $lang['en_US']['Form']['FLAT_FEE_SHIPPING_NOT_EXISTS'] = 'This shipping option is no longer available sorry';
 $lang['en_US']['Form']['FLAT_FEE_SHIPPING_OPTION_NOT_EXISTS'] = 'This shipping option is no longer available sorry';
