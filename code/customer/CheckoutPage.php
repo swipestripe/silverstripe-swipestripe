@@ -516,6 +516,8 @@ class CheckoutPage_Controller extends Page_Controller {
 		$order->OrderedOn = SS_Datetime::now()->getValue();
 		$order->write();
 
+		//TODO Save status updates for the order instead of saving a Note on the Order directly
+
 		//Save the order items (not sure why can't do this with writeComponents() perhaps because Items() are cached?!)
 	  foreach ($items as $item) {
       $item->OrderID = $order->ID;

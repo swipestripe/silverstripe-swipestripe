@@ -70,16 +70,6 @@ class Order extends DataObject implements PermissionProvider {
     $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
     return $amount;
   }
-	
-	/**
-	 * Default values for Order
-	 * 
-	 * @var Array
-	 */
-	public static $defaults = array(
-	  'ReceiptSent' => false,
-	  'NotificationSent' => false
-	);
 
 	/**
 	 * Relations for this Order
@@ -100,7 +90,8 @@ class Order extends DataObject implements PermissionProvider {
 	public static $has_many = array(
 	  'Items' => 'Item',
 		'Payments' => 'Payment',
-	  'Modifications' => 'Modification'
+	  'Modifications' => 'Modification',
+	  'Updates' => 'Status'
 	);
 	
 	/**
@@ -168,7 +159,7 @@ class Order extends DataObject implements PermissionProvider {
     );
   }
 
-  function canView($member = null) {
+  public function canView($member = null) {
 
 		if ($member == null && !$member = Member::currentUser()) return false;
 
