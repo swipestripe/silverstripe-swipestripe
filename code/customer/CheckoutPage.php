@@ -394,16 +394,6 @@ class CheckoutPage_Controller extends Page_Controller {
 				$fields['Modifiers'][] = $field;
 			}
 		}
-
-		// foreach (Modifier::combined_form_fields($order) as $field) {
-		  
-		//   if ($field->modifiesSubTotal()) {
-		//     $fields['SubTotalModifiers'][] = $field;
-		//   }
-		//   else {
-		//     $fields['Modifiers'][] = $field;
-		//   }
-		// }
 	}
 	
 	/**
@@ -587,52 +577,13 @@ class CheckoutPage_Controller extends Page_Controller {
       $order->updateAddresses($request->postVars());
       $order->write();
 
-      //Has something in the order changed?
       $order->updateModifications($request->postVars())
       	->write();
 
-
-      //We want to have correct modifier data installed here so just add modifier fields once, and set their values at the same time
-      //Have the modifications added correctly by Modifier->addToOrder()
-
-
       //Create the part of the form that displays the Order
-      //This is going to go through and add modifiers based on current Form DATA because the order has been updated
       $this->addItemFields($fields, $validator, $order);
       $this->addModifierFields($fields, $validator, $order); 
 
-
-
-
-      //New modifier fields may have been added that are not part of current POST data
-      //Need to add modifiers to the order again with this new data in mind
-      // $newModifierData = array();
-      // $subTotalModifiers = (isset($fields['SubTotalModifiers'])) ? $fields['SubTotalModifiers'] : array();
-      // $totalModifiers = (isset($fields['Modifiers'])) ? $fields['Modifiers'] : array(); 
-      // $modifierFields = array_merge($subTotalModifiers, $totalModifiers);
-
-      // foreach ($modifierFields as $field) {
-      //   if (method_exists($field, 'updateValue')) {
-      //     $field->updateValue($order, $request);
-      //   }
-
-      //   // SS_Log::log(new Exception(print_r($field->getName(), true)), SS_Log::NOTICE);
-      //   // SS_Log::log(new Exception(print_r($field->Value(), true)), SS_Log::NOTICE);
-  
-      //   $modifierClassName = get_class($field->getModifier());
-      //   $newModifierData['Modifiers'][$modifierClassName] = $field->Value();
-      // }
-
-      // //Add modifiers to the order again so that the new values are used
-      // $order->updateModifications($newModifierData);
-
-      // //Add modifier fields again because the order has changed
-      // $this->addModifierFields($fields, $validator, $order);
-
-
-
-
-  
       $actions = new FieldList(
         new FormAction('ProcessOrder', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
       );

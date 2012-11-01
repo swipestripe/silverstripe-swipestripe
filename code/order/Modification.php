@@ -48,7 +48,6 @@ class Modification extends DataObject {
 
 			if ($class != 'Modification') $mods->push(new $class());
 		}
-
 		$mods->sort('SortOrder');
 		return $mods;
 	}
