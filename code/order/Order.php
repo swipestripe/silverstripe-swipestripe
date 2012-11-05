@@ -127,11 +127,11 @@ class Order extends DataObject implements PermissionProvider {
 			'filter' => 'PartialMatchFilter'
 		),
 		'HasPayment' => array(
-			'filter' => 'PaymentSearchFilter',
+			'filter' => 'ShopSearchFilter_Payment',
 		),
   	'Status' => array(
   	  'title' => 'Status',
-  		'filter' => 'OptionSetSearchFilter',
+  		'filter' => 'ShopSearchFilter_OptionSet',
   	)
 	);
 
@@ -246,26 +246,37 @@ class Order extends DataObject implements PermissionProvider {
 	 */
   public function scaffoldSearchFields(){
 
-  	Requirements::customCSS('
-			.west .optionset li {
-				width: 100%;
-			}
-		');
+		$fields = parent::scaffoldSearchFields();
 
-		$fieldSet = parent::scaffoldSearchFields();
+		$fields->removeByName('HasPayment');
 
-		$fieldSet->push(CheckboxSetField::create('HasPayment', 'Has Payment', array(
-		  1 => 'Yes',
-		  2 => 'No'
-		)));
+		$request = Controller::curr()->getRequest();
+		$query = $request->requestVar('q');
+		$statusVal = isset($query['Status']) ? $query['Status'] : array();
 
-		$fieldSet->push(new CheckboxSetField('Status', 'Status', array(
+		$fields->push(CheckboxSetField::create('Status', 'Status', array(
 		  'Pending' => 'Pending',
 		  'Processing' => 'Processing',
 		  'Dispatched' => 'Dispatched'
-		)));
-		return $fieldSet;
+		))->setValue($statusVal));
+
+		return $fields;
 	}
+
+	/**
+	 * Get a new search context for filtering
+	 * the search results in OrderAdmin
+	 * 
+	 * @see DataObject::getDefaultSearchContext()
+	 * @return ShopSearchContext
+	 */
+  public function getDefaultSearchContext() {
+  	return new ShopSearchContext_Order(
+  		$this->class,
+  		$this->scaffoldSearchFields(),
+  		$this->defaultSearchFilters()
+  	);
+  }
 
 	/**
 	 * Set the LastActive time when {@link Order} first created.
@@ -316,8 +327,7 @@ class Order extends DataObject implements PermissionProvider {
 		$fields = new FieldList();
 
     $fields->push(new TabSet('Root', 
-      Tab::create('Order'),
-      Tab::create('Actions')
+      Tab::create('Order')
     ));
 
     $fields->addFieldToTab('Root.Order', new LiteralField(
@@ -331,32 +341,44 @@ class Order extends DataObject implements PermissionProvider {
 		$fields->addFieldToTab('Root.Order', new LiteralField('MainDetails', $htmlSummary));
 
 		//Action fields
-		$fields->addFieldToTab('Root.Actions', new HeaderField('OrderStatus', 'Order Status', 3));
+		$fields->addFieldToTab('Root.Status', new HeaderField('OrderStatus', 'Order Status', 3));
 		$statuses = $this->dbObject('Status')->enumValues();
-		//unset($statuses['Cart']);
-		$fields->addFieldToTab('Root.Actions', new DropdownField('Status', 'Status', $statuses));
-		
-		$fields->addFieldToTab('Root.Actions', new HeaderField('PaymentStatus', 'Payments Status', 3));
-		$fields->addFieldToTab('Root.Actions', new LiteralField('PaymentStatusP', "<p>Payment status of this order is currently <strong>$this->PaymentStatus</strong>.</p>"));
-    //$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
-		
-		if ($this->Payments()) foreach ($this->Payments() as $item) {
-		  
-		  $customerName = (DataObject::get_by_id('Member', $item->PaidByID)) ? DataObject::get_by_id('Member', $item->PaidByID)->getName() : '';
-		  $value = $item->dbObject('Amount')->Nice();
-		  $date = $item->dbObject('Created')->Format('j M y g:i a');
-		  $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
-		  
-		  $paymentMessage = $item->Message;
-		  $paymentMessage = '';
+		unset($statuses['Cart']);
+		$fields->addFieldToTab('Root.Status', new DropdownField('Status', 'Status', $statuses));
 
-		  $fields->addFieldToTab('Root.Actions', new DropdownField(
-		  	'Payments['.$item->ID.']', 
-		  	"$paymentType by $customerName <br />$value <br />$date <br />$paymentMessage", 
-		    singleton('Payment')->dbObject('Status')->enumValues(),
-		    $item->Status
-		  ));
-		}
+		//Payments
+    $listField = new GridField(
+      'Payments',
+      'Payments',
+      $this->Payments(),
+      GridFieldConfig_Basic::create()
+    );
+    $fields->addFieldToTab('Root.Payments', $listField);
+		
+
+		// $fields->addFieldToTab('Root.Actions', new HeaderField('PaymentStatus', 'Payments Status', 3));
+		// $fields->addFieldToTab('Root.Actions', new LiteralField('PaymentStatusP', "<p>Payment status of this order is currently <strong>$this->PaymentStatus</strong>.</p>"));
+  //   //$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
+		
+		// if ($this->Payments()) foreach ($this->Payments() as $item) {
+		  
+		//   $customerName = (DataObject::get_by_id('Member', $item->PaidByID)) ? DataObject::get_by_id('Member', $item->PaidByID)->getName() : '';
+		//   $value = $item->dbObject('Amount')->Nice();
+		//   $date = $item->dbObject('Created')->Format('j M y g:i a');
+		//   $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
+		  
+		//   $paymentMessage = $item->Message;
+		//   $paymentMessage = '';
+
+		//   $fields->addFieldToTab('Root.Actions', new DropdownField(
+		//   	'Payments['.$item->ID.']', 
+		//   	"$paymentType by $customerName <br />$value <br />$date <br />$paymentMessage", 
+		//     singleton('Payment')->dbObject('Status')->enumValues(),
+		//     $item->Status
+		//   ));
+		// }
+
+
 		
 		//Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);

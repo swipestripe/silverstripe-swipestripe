@@ -114,7 +114,7 @@ class Product extends Page {
     ),
     'Category' => array(
       'field' => 'TextField',
-      'filter' => 'ProductCategorySearchFilter',
+      'filter' => 'ShopSearchFilter_ProductCategory',
       'title' => 'Category'
     )
   );

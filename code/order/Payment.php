@@ -15,9 +15,9 @@ class Payment_Extension extends DataExtension {
 	);
 
 	static $summary_fields = array(
-	  'ID' => 'Payment ID',
+		'Status' => 'Status',
 	  'SummaryOfAmount' => 'Amount',
-	  'SummaryOfType' => 'Type',
+	  'Method' => 'Method',
 	  'PaidBy.Name' => 'Customer'
 	);
 
@@ -51,15 +51,6 @@ class Payment_Extension extends DataExtension {
 	}
 	
 	/**
-	 * Helper to get type of {@link Payment} depending on payment class used.
-	 * 
-	 * @return String Payment class name with camel case exploded
-	 */
-	function SummaryOfType() {
-	  return implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', $this->owner->ClassName));
-	}
-	
-	/**
 	 * Fields to display this {@link Payment} in the CMS, removed some of the 
 	 * unnecessary fields.
 	 * 
@@ -68,28 +59,17 @@ class Payment_Extension extends DataExtension {
 	 */
   function updateCMSFields(FieldList &$fields) {
 
-    $toBeRemoved = array(
-      'IP',
-      'ProxyIP',
-      'PaidForID',
-      'PaidForClass',
-      'PaymentDate',
-      'ExceptionError',
-      'Token',
-      'PayerID',
-      'RecurringPaymentID'
-    );
-	  foreach($toBeRemoved as $field) {
-			$fields->removeByName($field);
-		}
-		
 		$toBeReadOnly = array(
-		  'TransactionID',
-		  'PaidByID'
+		  'Amount[Currency]',
+		  'Amount[Amount]',
+		  'OrderID',
+		  'PaidByID',
+		  'HTTPStatus',
+		  'Method'
 		);
-		foreach ($toBeReadOnly as $field) {
-		  if ($fields->fieldByName($field)) {
-		    $fields->makeFieldReadonly($field);
+		foreach ($toBeReadOnly as $fieldName) {
+		  if ($fields->dataFieldByName($fieldName)) {
+		    $fields->makeFieldReadonly($fieldName);
 		  }
 		}
     

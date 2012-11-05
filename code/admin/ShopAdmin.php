@@ -35,7 +35,6 @@ class ShopAdmin extends ModelAdmin {
 		parent::init();
 
 		Requirements::css(CMS_DIR . '/css/screen.css');
-		Requirements::css('swipestripe/css/ShopAdmin.css');
 		
 		Requirements::combine_files(
 			'cmsmain.js',
@@ -52,6 +51,7 @@ class ShopAdmin extends ModelAdmin {
 				Requirements::add_i18n_javascript(CMS_DIR . '/javascript/lang', true, true)
 			)
 		);
+		Object::useCustomClass('HtmlEditorField_Toolbar', 'HTMLEditorField_Toolbar');
 	}
 
 	/**
@@ -193,7 +193,14 @@ class ShopAdmin extends ModelAdmin {
 		$snippets = new ArrayList();
 		$subClasses = ClassInfo::subclassesFor('ShopAdmin');
 
+		$classes = array();
 		foreach ($subClasses as $className) {
+			$classes[$className] = $className::$url_priority;
+
+		}
+		asort($classes);
+
+		foreach ($classes as $className => $order) {
 			$obj = new $className();
 			$snippet = $obj->getSnippet();
 
@@ -349,13 +356,12 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 			'LinkTitle' => 'Edit Licence key'
 		))->renderWith('ShopAdmin_Snippet');
 	}
-
 }
 
 class ShopAdmin_EmailAdmin extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/EmailSettings';
-	static $url_priority = 55;
+	static $url_priority = 60;
 	static $menu_title = 'Shop Emails';
 
 	public static $url_handlers = array(
@@ -510,7 +516,7 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 class ShopAdmin_CountriesAdmin extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Countries';
-	static $url_priority = 55;
+	static $url_priority = 70;
 	static $menu_title = 'Shop Countries';
 
 	public static $url_handlers = array(
@@ -667,7 +673,7 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 class ShopAdmin_BaseCurrency extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/BaseCurrency';
-	static $url_priority = 55;
+	static $url_priority = 65;
 	static $menu_title = 'Shop Base Currency';
 
 	public static $url_handlers = array(
@@ -814,7 +820,7 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 class ShopAdmin_Attribute extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Attribute';
-	static $url_priority = 55;
+	static $url_priority = 75;
 	static $menu_title = 'Shop Product Attributes';
 
 	public static $url_handlers = array(

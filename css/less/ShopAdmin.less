@@ -40,8 +40,59 @@
     }
   }
 
-  .sws-snippets {
+  .snippets {
     overflow-x: hidden;
     overflow-y: scroll;
+
+    .snippet {
+    	width: 250px;
+    	height: 200px;
+    	float: left;
+    	margin: 0 10px 10px 0;
+    	border: 1px solid #AAA;
+    	position: relative;
+    	background: #fff;
+
+    	.inner-snippet {
+    		padding: 10px;
+    	}
+
+    	h3 {
+    		margin: 0;
+    		padding: 5px;
+    		font-weight: normal;
+		    vertical-align: middle;
+		    background-color: #B0BEC7;
+		    background-image: linear-gradient(#B0BEC7, #92A5B2);
+		    background-size: 100% auto;
+		    border-bottom: 1px solid #748D9D;
+		    border-top: 1px solid #C2CDD4;
+		    color: #1F1F1F;
+		    display: block;
+		    font-size: 12px;
+		    height: 24px;
+		    line-height: 24px;
+		    overflow: hidden;
+		    padding: 7px 15px 7px 15px;
+		    text-overflow: ellipsis;
+		    text-shadow: 1px 1px 0 #BFCAD2;
+		    white-space: nowrap;
+		    border-left: 0;
+		    border-right: 0;
+		    
+    	}
+
+    	.ss-ui-button {
+    		float: right;
+    		position: absolute; 
+    		bottom: 10px; 
+    		right: 10px;
+    	}
+    }
   }
+
+  .west .optionset li {
+		width: 100%;
+	}
+
 }
