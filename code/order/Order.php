@@ -623,7 +623,7 @@ class Order extends DataObject implements PermissionProvider {
     $this->SubTotalCurrency = $shopConfig->BaseCurrency;
 
 	  $this->TotalPrice = $total; 
-	  $this->SubTotalCurrency = $shopConfig->BaseCurrency;
+	  $this->TotalCurrency = $shopConfig->BaseCurrency;
 
 	  //TODO: change this so doesn't write() in here
     $this->write();

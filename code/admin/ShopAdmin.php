@@ -35,6 +35,7 @@ class ShopAdmin extends ModelAdmin {
 		parent::init();
 
 		Requirements::css(CMS_DIR . '/css/screen.css');
+		Requirements::css('swipestripe/css/ShopAdmin.css');
 		
 		Requirements::combine_files(
 			'cmsmain.js',
@@ -428,7 +429,8 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 						->setValue(_t('ShopConfig.RECEIPT_TO', 'Sent to customer'))
 						->performReadonlyTransformation(),
 					new TextField('ReceiptSubject', _t('ShopConfig.SUBJECT_LINE', 'Subject line')),
-					new TextareaField('ReceiptBody', _t('ShopConfig.MESSAGE', 'Message (order details are included in the email)')),
+					TextareaField::create('ReceiptBody', _t('ShopConfig.MESSAGE', 'Message'))
+						->setRightTitle(_t('ShopConfig.MESSAGE_DETAILS', 'Order details are included in the email below this message')),
 					new TextareaField('EmailSignature', _t('ShopConfig.SIGNATURE', 'Signature'))
 				),
 				new Tab('Notification',
@@ -437,7 +439,8 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 						->performReadonlyTransformation(),
 					new TextField('NotificationTo', _t('ShopConfig.TO', 'To')),
 					new TextField('NotificationSubject', _t('ShopConfig.SUBJECT_LINE', 'Subject line')),
-					new TextareaField('NotificationBody', _t('ShopConfig.MESSAGE', 'Message (order details are included in the email)'))
+					TextareaField::create('NotificationBody', _t('ShopConfig.MESSAGE', 'Message'))
+						->setRightTitle(_t('ShopConfig.MESSAGE_DETAILS', 'Order details are included in the email below this message'))
 				)
 			)
 		);
@@ -964,6 +967,10 @@ class ShopAdmin_Attribute extends ShopAdmin {
 
 class ShopAdmin_LeftAndMainExtension extends Extension {
 
+	public function onAfterInit() {
+		Requirements::css('swipestripe/css/ShopAdmin.css');
+	}
+
 	public function alternateMenuDisplayCheck($className) {
 		if (class_exists($className)) {
 			$obj = new $className();
@@ -1271,3 +1278,4 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 		}
 	}
 }
+

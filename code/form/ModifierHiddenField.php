@@ -38,7 +38,7 @@ class ModifierHiddenField extends HiddenField {
 	 * @param form The parent form
 	 */
 	function __construct($modifier, $title = null, $value = "", $maxLength = null, $form = null) {
-
+		
 	  $name = "Modifiers[" . get_class($modifier) . "]";
 	  $this->modifier = $modifier;
 

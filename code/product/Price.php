@@ -24,7 +24,7 @@ class Price extends Money {
 
 			if (is_numeric($amount)) {
 				if ($amount < 0) {
-					return '- ' . $this->symbol . abs($this->currencyLib->toCurrency($amount, $options));
+					return '- ' . $this->symbol . $this->currencyLib->toCurrency(abs($amount), $options);
 				}
 				else {
 					return $this->symbol . $this->currencyLib->toCurrency($amount, $options);

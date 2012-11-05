@@ -180,6 +180,7 @@ class CheckoutPage_Controller extends Page_Controller {
     	$shippingAddressData = ($shippingAddress && $shippingAddress->exists()) 
     		? $shippingAddress->getCheckoutFormData()
     		: array();
+    	unset($shippingAddressData['Shipping[RegionCode]']); //Not available billing address option
 
     	$billingAddress = $member->BillingAddress();
     	$billingAddressData = ($billingAddress && $billingAddress->exists()) 
