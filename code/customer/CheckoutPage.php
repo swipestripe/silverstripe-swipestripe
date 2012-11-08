@@ -11,15 +11,6 @@
  */
 class CheckoutPage extends Page {
   
-  /**
-   * Adding ChequeMessage field, a requirement for ChequePayment::ChequeContent().
-   * 
-   * @var Array Database field descriptions
-   */
-  static $db = array(
-    'ChequeMessage' => 'HTMLText'
-  );
-  
 	/**
 	 * Automatically create a CheckoutPage if one is not found
 	 * on the site at the time the database is built (dev/build).
@@ -533,6 +524,8 @@ class CheckoutPage_Controller extends Page_Controller {
 
 		Session::clear('Cart.OrderID');
 
+		$order->onBeforePayment();
+
     try {
 
       $paymentData = array(
@@ -577,8 +570,9 @@ class CheckoutPage_Controller extends Page_Controller {
 
       //Update the Order 
       $order->update($request->postVars());
-      $order->updateAddresses($request->postVars());
-      $order->write();
+
+      $order->updateAddresses($request->postVars())
+      	->write();
 
       $order->updateModifications($request->postVars())
       	->write();

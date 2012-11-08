@@ -22,9 +22,7 @@
   </td>
   
   <td>
-	  <% control Item %>   
-	    $UnitPrice.Nice
-	  <% end_control %>
+  	$Item.UnitPrice.Nice
   </td>
 
   <td>
@@ -32,8 +30,6 @@
   </td>
   
   <td>
-	  <% control Item %>   
-	    $Total.Nice
-	  <% end_control %>
+	  $Item.TotalPrice.Nice
   </td>
 </tr>

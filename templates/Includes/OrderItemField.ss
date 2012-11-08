@@ -24,6 +24,6 @@
   </td>
   
   <td> 
-	  $Item.Total.Nice
+	  $Item.TotalPrice.Nice
   </td>
 </tr>

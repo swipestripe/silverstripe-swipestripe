@@ -19,7 +19,7 @@
 	      </h5>
 	      
 	      <p class="product-brief-price">
-	        $Amount.Nice
+	        $Price.Nice
 	      </p>
 	      
 	    </div>

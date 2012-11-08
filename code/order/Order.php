@@ -40,10 +40,13 @@ class Order extends DataObject implements PermissionProvider {
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
+
 	  'TotalPrice' => 'Decimal(19,4)',
-    'TotalCurrency' => 'Varchar(3)',
     'SubTotalPrice' => 'Decimal(19,4)',
-    'SubTotalCurrency' => 'Varchar(3)',
+
+    'BaseCurrency' => 'Varchar(3)',
+    'BaseCurrencySymbol' => 'Varchar(10)',
+
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
 	  'Notes' => 'Text'
@@ -54,9 +57,21 @@ class Order extends DataObject implements PermissionProvider {
 		// TODO: Multi currency
 
     $amount = new Price();
-		$amount->setCurrency($this->TotalCurrency);
     $amount->setAmount($this->TotalPrice);
-    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+    $amount->setCurrency($this->BaseCurrency);
+    $amount->setSymbol($this->BaseCurrencySymbol);
+    return $amount;
+  }
+
+  /**
+   * Display price, can decorate for multiple currency etc.
+   * 
+   * @return Price
+   */
+  public function TotalPrice() {
+    
+    $amount = $this->Total();
+    $this->extend('updatePrice', $amount);
     return $amount;
   }
 
@@ -65,10 +80,39 @@ class Order extends DataObject implements PermissionProvider {
   	// TODO: Multi currency
 
     $amount = new Price();
-		$amount->setCurrency($this->SubTotalCurrency);
     $amount->setAmount($this->SubTotalPrice);
-    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+    $amount->setCurrency($this->BaseCurrency);
+    $amount->setSymbol($this->BaseCurrencySymbol);
     return $amount;
+  }
+
+  /**
+   * Display price, can decorate for multiple currency etc.
+   * 
+   * @return Price
+   */
+  public function SubTotalPrice() {
+    
+    $amount = $this->SubTotal();
+    $this->extend('updatePrice', $amount);
+    return $amount;
+  }
+
+  public function CartTotalPrice() {
+
+  	$total = $this->SubTotal();
+  	$amount = $total->getAmount();
+
+  	//Remove cost of modifications for displaying on the cart
+  	$mods = $this->SubTotalModifications();
+
+  	if ($mods && $mods->exists()) foreach ($mods as $mod) {
+  		$amount -= $mod->Amount()->getAmount();
+  	}
+
+  	$total->setAmount($amount);
+    $this->extend('updatePrice', $total);
+    return $total;
   }
 
 	/**
@@ -287,6 +331,13 @@ class Order extends DataObject implements PermissionProvider {
 	public function onBeforeWrite() {
     parent::onBeforeWrite();
     if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
+
+    //Set the base currency
+    if (!$this->BaseCurrency || !$this->BaseCurrencySymbol) {
+    	$shopConfig = ShopConfig::current_shop_config();
+    	$this->BaseCurrency = $shopConfig->BaseCurrency;
+    	$this->BaseCurrencySymbol = $shopConfig->BaseCurrencySymbol;
+    }
   }
 
   public function onAfterWrite() {
@@ -294,6 +345,10 @@ class Order extends DataObject implements PermissionProvider {
 
   	//If status has changed from Cart reduce the stock
   	//If status has changed to Cancelled increase the stock
+  }
+
+  public function onBeforePayment() {
+  	$this->extend('onBeforePayment');
   }
 
   /**
@@ -354,32 +409,7 @@ class Order extends DataObject implements PermissionProvider {
       GridFieldConfig_Basic::create()
     );
     $fields->addFieldToTab('Root.Payments', $listField);
-		
 
-		// $fields->addFieldToTab('Root.Actions', new HeaderField('PaymentStatus', 'Payments Status', 3));
-		// $fields->addFieldToTab('Root.Actions', new LiteralField('PaymentStatusP', "<p>Payment status of this order is currently <strong>$this->PaymentStatus</strong>.</p>"));
-  //   //$fields->addFieldToTab('Root.Actions', new DropdownField('PaymentStatus', 'Payment Status', $this->dbObject('PaymentStatus')->enumValues()));
-		
-		// if ($this->Payments()) foreach ($this->Payments() as $item) {
-		  
-		//   $customerName = (DataObject::get_by_id('Member', $item->PaidByID)) ? DataObject::get_by_id('Member', $item->PaidByID)->getName() : '';
-		//   $value = $item->dbObject('Amount')->Nice();
-		//   $date = $item->dbObject('Created')->Format('j M y g:i a');
-		//   $paymentType = implode(' ', preg_split('/(?<=\\w)(?=[A-Z])/', get_class($item)));
-		  
-		//   $paymentMessage = $item->Message;
-		//   $paymentMessage = '';
-
-		//   $fields->addFieldToTab('Root.Actions', new DropdownField(
-		//   	'Payments['.$item->ID.']', 
-		//   	"$paymentType by $customerName <br />$value <br />$date <br />$paymentMessage", 
-		//     singleton('Payment')->dbObject('Status')->enumValues(),
-		//     $item->Status
-		//   ));
-		// }
-
-
-		
 		//Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);
 
@@ -451,8 +481,8 @@ class Order extends DataObject implements PermissionProvider {
 	  
 	  $outstanding = new Price();
 	  $outstanding->setAmount($total);
-	  $outstanding->setCurrency($this->Total()->getCurrency());
-	  $outstanding->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+	  $outstanding->setCurrency($this->BaseCurrency);
+	  $outstanding->setSymbol($this->BaseCurrencySymbol);
 	  
 	  return $outstanding;
 	}
@@ -474,7 +504,8 @@ class Order extends DataObject implements PermissionProvider {
 	  
 	  $totalPaid = new Price();
 	  $totalPaid->setAmount($paid);
-	  $totalPaid->setCurrency($this->Total()->getCurrency());
+	  $totalPaid->setCurrency($this->BaseCurrency);
+	  $totalPaid->setSymbol($this->BaseCurrencySymbol);
 	  
 	  return $totalPaid;
 	}
@@ -599,8 +630,8 @@ class Order extends DataObject implements PermissionProvider {
 	  
 	  $total = 0;
 	  $subTotal = 0;
-	  $items = DataObject::get('Item', 'OrderID = '.$this->ID);
-	  $modifications = DataObject::get('Modification', 'OrderID = '.$this->ID);
+	  $items = $this->Items();
+	  $modifications = $this->Modifications();
 	  $shopConfig = ShopConfig::current_shop_config();
 	  
 	  if ($items) foreach ($items as $item) {
@@ -619,11 +650,8 @@ class Order extends DataObject implements PermissionProvider {
 	    }
 	  }
 
-    $this->SubTotalPrice = $subTotal; 
-    $this->SubTotalCurrency = $shopConfig->BaseCurrency;
-
-	  $this->TotalPrice = $total; 
-	  $this->TotalCurrency = $shopConfig->BaseCurrency;
+    $this->SubTotalPrice = $subTotal;
+	  $this->TotalPrice = $total;
 
 	  //TODO: change this so doesn't write() in here
     $this->write();

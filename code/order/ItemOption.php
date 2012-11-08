@@ -16,18 +16,34 @@ class ItemOption extends DataObject {
    */
 	public static $db = array(
 	  'Description' => 'Varchar',
-	  'Price' => 'Decimal(19,4)',
-    'Currency' => 'Varchar(3)',
+	  'Price' => 'Decimal(19,4)'
 	);
 
 	public function Amount() {
 
 		// TODO: Multi currency
 
+		$order = $this->Order();
+
     $amount = new Price();
-		$amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
-    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+    $amount->setCurrency($order->BaseCurrency);
+    $amount->setSymbol($order->BaseCurrencySymbol);
+    return $amount;
+  }
+
+  /**
+   * Display price, can decorate for multiple currency etc.
+   * 
+   * @return Price
+   */
+  public function Price() {
+    
+    $amount = $this->Amount();
+
+    //Transform price here for display in different currencies etc.
+    $this->extend('updatePrice', $amount);
+
     return $amount;
   }
 

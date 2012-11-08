@@ -3,9 +3,9 @@
 	    <tr>
 	      <th><% _t('Order.PRODUCT','Product') %></th>
         <th><% _t('Order.OPTIONS','Options') %></th>
-        <th><% _t('Order.UNIT_PRICE','Unit Price') %> ($SubTotal.Currency)</th>
+        <th><% _t('Order.UNIT_PRICE','Unit Price') %> ($TotalPrice.Currency)</th>
         <th><% _t('Order.QUANTITY','Quantity') %></th>
-        <th><% _t('Order.SUB_TOTAL','Sub Total') %> ($SubTotal.Currency)</th>
+        <th><% _t('Order.SUB_TOTAL','Sub Total') %> ($TotalPrice.Currency)</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -35,7 +35,7 @@
 		        $Quantity
 		      </td>
   
-		      <td>$Total.Nice</td>
+		      <td>$TotalPrice.Nice</td>
 		    
 		    </tr>
 	    <% end_control %>
@@ -44,28 +44,28 @@
         <% control SubTotalModifications %>
           <tr>
             <td colspan="4" class="row-header">$Description</td>
-            <td>$Amount.Nice</td>
+            <td>$Price.Nice</td>
           </tr>
         <% end_control %>
       <% end_if %>
 	    
 	    <tr>
         <td colspan="4" class="row-header"><% _t('Order.SUB_TOTAL','Sub Total') %></td>
-        <td>$SubTotal.Nice</td>
+        <td>$SubTotalPrice.Nice</td>
       </tr>
 	    
 	    <% if TotalModifications %>
 	      <% control TotalModifications %>
 	        <tr>
 		        <td colspan="4" class="row-header">$Description</td>
-		        <td>$Amount.Nice</td>
+		        <td>$Price.Nice</td>
 		      </tr>
 	      <% end_control %>
 	    <% end_if %>
 	
 	    <tr>
 	      <td colspan="4" class="row-header"><% _t('Order.TOTAL','Total') %></td>
-	      <td>$Total.Nice</td>
+	      <td>$TotalPrice.Nice</td>
 	    </tr>
 	  </tbody>
 	</table>

@@ -52,7 +52,6 @@ class ShopAdmin extends ModelAdmin {
 				Requirements::add_i18n_javascript(CMS_DIR . '/javascript/lang', true, true)
 			)
 		);
-		Object::useCustomClass('HtmlEditorField_Toolbar', 'HTMLEditorField_Toolbar');
 	}
 
 	/**

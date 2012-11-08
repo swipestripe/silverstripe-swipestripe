@@ -20,7 +20,6 @@ class Item extends DataObject {
    */
 	public static $db = array(
 	  'Price' => 'Decimal(19,4)',
-    'Currency' => 'Varchar(3)',
 	  'Quantity' => 'Int',
 	  'ProductVersion' => 'Int',
 	  'VariationVersion' => 'Int'
@@ -30,10 +29,27 @@ class Item extends DataObject {
 
 		// TODO: Multi currency
 
+		$order = $this->Order();
+
     $amount = new Price();
-		$amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
-    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+    $amount->setCurrency($order->BaseCurrency);
+    $amount->setSymbol($order->BaseCurrencySymbol);
+    return $amount;
+  }
+
+  /**
+   * Display price, can decorate for multiple currency etc.
+   * 
+   * @return Price
+   */
+  public function Price() {
+    
+    $amount = $this->Amount();
+
+    //Transform price here for display in different currencies etc.
+    $this->extend('updatePrice', $amount);
+
     return $amount;
   }
 
@@ -86,48 +102,60 @@ class Item extends DataObject {
 	    $itemOption->destroy();
 	  }
 	}
+
+	public function UnitAmount() {
+
+		$itemAmount = $this->Amount();
+
+		$amount = $itemAmount->getAmount();
+
+	  foreach ($this->ItemOptions() as $itemOption) {
+	    $amount += $itemOption->Amount()->getAmount();
+	  } 
+
+	  $unitAmount = clone $itemAmount;
+	  $unitAmount->setAmount($amount);
+	  return $unitAmount;
+	}
 	
 	/**
-	 * Get unit price for this Item including price or any {@link ItemOption}s.
+	 * Get unit price for this Item including price of any {@link ItemOption}s.
 	 * 
 	 * @return Money Item price inclusive of item options prices
 	 */
 	public function UnitPrice() {
 
-	  $amount = $this->Amount()->getAmount();
+		$itemPrice = $this->Price();
+	  $amount = $itemPrice->getAmount();
+
 	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amount += $itemOption->Amount()->getAmount();
+	    $amount += $itemOption->Price()->getAmount();
 	  } 
 
 	  // TODO: Multi currency
-	  
-	  $unitPrice = new Price();
+
+	  $unitPrice = clone $itemPrice;
 	  $unitPrice->setAmount($amount);
-	  $unitPrice->setCurrency($this->Amount()->getCurrency());
-	  $unitPrice->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
 	  return $unitPrice;
 	}
 	
 	/**
 	 * Get unit price for this item including item options price and quantity.
 	 * 
-	 * @return Money Item total inclusive of item options prices and quantity
+	 * @return Price Item total inclusive of item options prices and quantity
 	 */
 	public function Total() {
 
-	  $amount = $this->Amount()->getAmount();
-	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amount += $itemOption->Amount()->getAmount();
-	  } 
-	  $amount = $amount * $this->Quantity;
+		$unitAmount = $this->UnitAmount();
+		$unitAmount->setAmount($unitAmount->getAmount() * $this->Quantity);
+		return $unitAmount;
+	}
 
-	  // TODO: Multi currency
-	  
-	  $subTotal = new Price();
-	  $subTotal->setAmount($amount);
-	  $subTotal->setCurrency($this->Amount()->getCurrency());
-	  $subTotal->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
-	  return $subTotal;
+	public function TotalPrice() {
+
+		$unitPrice = $this->UnitPrice();
+		$unitPrice->setAmount($unitPrice->getAmount() * $this->Quantity);
+		return $unitPrice;
 	}
 
 	/**

@@ -41,6 +41,9 @@ class ShopConfig extends DataObject {
   );
 
   public static function current_shop_config() {
+
+  	//TODO: lazy load this
+
     return ShopConfig::get()->First();
   }
 

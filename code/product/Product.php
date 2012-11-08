@@ -30,14 +30,20 @@ class Product extends Page {
     'Currency' => 'Varchar(3)'
   );
 
+  /**
+   * Actual price in base currency, can decorate to apply discounts etc.
+   * 
+   * @return Price
+   */
   public function Amount() {
 
     // TODO: Multi currency
+  	$shopConfig = ShopConfig::current_shop_config();
 
     $amount = new Price();
-    $amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
-    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+    $amount->setCurrency($shopConfig->BaseCurrency);
+    $amount->setSymbol($shopConfig->BaseCurrencySymbol);
 
     //Transform amount for applying discounts etc.
     $this->extend('updateAmount', $amount);
@@ -45,6 +51,11 @@ class Product extends Page {
     return $amount;
   }
 
+  /**
+   * Display price, can decorate for multiple currency etc.
+   * 
+   * @return Price
+   */
   public function Price() {
     
     $amount = $this->Amount();
@@ -567,7 +578,7 @@ class Product_Controller extends Page_Controller {
 
   /**
    * URL handlers to redirect URLs of the type /product/[Product URL Segment]
-   * to the correct actions. As well as directing norman nested URLs to the same
+   * to the correct actions. As well as directing normal nested URLs to the same
    * actions. This is so that Products without a ParentID (not part of the site tree) 
    * can be accessed from a nicely formatted generic URL.
    * 
@@ -575,18 +586,7 @@ class Product_Controller extends Page_Controller {
    * @var Array
    */
   public static $url_handlers = array( 
-    '' => 'index',
-  	'AddToCartForm' => 'AddToCartForm',
-    'add' => 'add',
-  	'options' => 'options',
-    'variationprice' => 'variationprice',
-  	
-    '$ID!/AddToCartForm' => 'AddToCartForm',
-    '$ID!/add' => 'add',
-    '$ID/options' => 'options',
-    '$ID/variationprice' => 'variationprice',
-  	'$ID!/SearchForm' => 'SearchForm',
-    '$ID!/results' => 'results',
+  	'$ID!/$Action/$OtherID' => 'handleAction',
     '$ID!' => 'index',
   );
   
@@ -607,8 +607,12 @@ class Product_Controller extends Page_Controller {
       
       $params = $this->getURLParams();
       
-      if ($urlSegment = $params['ID']) {
-        $product = DataObject::get_one('Product', "URLSegment = '" . convert::raw2sql($urlSegment) . "'");
+      if ($urlSegment = Convert::raw2sql($params['ID'])) {
+
+        $product = Product::get()
+        	->where("\"URLSegment\" = '$urlSegment'")
+        	->limit(1)
+        	->first();
         
         if ($product && $product->exists()) {
           $this->dataRecord = $product; 
@@ -630,7 +634,7 @@ class Product_Controller extends Page_Controller {
    * @param SS_HTTPRequest $request
    */
   public function index(SS_HTTPRequest $request) {
-    
+
     //Update stock levels before displaying product
     Order::delete_abandoned();
 
@@ -886,7 +890,7 @@ class Product_Controller extends Page_Controller {
       }
     }
     
-    $data['totalPrice'] = $product->Amount()->Nice();
+    $productPrice = $product->Price();
     
     if ($variation) {
 
@@ -898,17 +902,12 @@ class Product_Controller extends Page_Controller {
 
         // TODO: Multi currency
 
-        $newTotal = new Price();
-        $newTotal->setCurrency($product->Amount()->getCurrency());
-        $newTotal->setAmount($product->Amount()->getAmount() + $variation->Amount()->getAmount());
-        $newTotal->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
-        $data['totalPrice'] = $newTotal->Nice();
-      }
-      else { //Variations have been changed so only positive values, so this is unnecessary
-        //$data['priceDifference'] = '(' . $variation->Amount()->Nice() . ')';
+        $variationPrice = $variation->Price();
+        $productPrice->setAmount($productPrice->getAmount() + $variationPrice->getAmount());
       }
     }
 
+    $data['totalPrice'] = $productPrice->Nice();
     return json_encode($data);
   }
 }

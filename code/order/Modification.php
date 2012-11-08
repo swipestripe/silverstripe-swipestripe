@@ -23,7 +23,6 @@ class Modification extends DataObject {
 	public static $db = array(
 		'Value' => 'Int',
 	  'Price' => 'Decimal(19,4)',
-    'Currency' => 'Varchar(3)',
 	  'Description' => 'Text',
 	  'SubTotalModifier' => 'Boolean',
 	  'SortOrder' => 'Int'
@@ -55,11 +54,24 @@ class Modification extends DataObject {
 	public function Amount() {
 
 		// TODO: Multi currency
+		$order = $this->Order();
 
 		$amount = new Price();
-		$amount->setCurrency($this->Currency);
     $amount->setAmount($this->Price);
-    $amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
+    $amount->setCurrency($order->BaseCurrency);
+    $amount->setSymbol($order->BaseCurrencySymbol);
+    return $amount;
+  }
+
+  /**
+   * Display price, can decorate for multiple currency etc.
+   * 
+   * @return Price
+   */
+  public function Price() {
+    
+    $amount = $this->Amount();
+    $this->extend('updatePrice', $amount);
     return $amount;
   }
 
@@ -68,9 +80,7 @@ class Modification extends DataObject {
 	}
 
 	public function getFormFields() {
-
-		$fields = new FieldList();
-		return $fields;
+		return new FieldList();
 	}
 	
 }
