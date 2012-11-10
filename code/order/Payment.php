@@ -57,7 +57,7 @@ class Payment_Extension extends DataExtension {
 	 * @see DataObjectDecorator::updateCMSFields()
 	 * @return FieldList
 	 */
-  function updateCMSFields(FieldList &$fields) {
+  function updateCMSFields(FieldList $fields) {
 
 		$toBeReadOnly = array(
 		  'Amount[Currency]',
