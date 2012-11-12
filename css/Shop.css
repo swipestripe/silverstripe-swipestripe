@@ -1337,6 +1337,32 @@
   max-width: 320px;
   margin: 20px 0;
 }
+.checkout .order-details {
+  position: relative;
+}
+.checkout .order-details h3 {
+  float: left;
+}
+.checkout .order-details #checkout-order-table.loading-currently {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  background: #fff;
+}
+.checkout .order-details .cart-loading {
+  float: left;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 2;
+  text-align: center;
+}
+.checkout .order-details .cart-loading div {
+  position: relative;
+  top: 50%;
+  margin: 0 auto;
+}
 .checkout .order-details .modifier-set-field select {
   width: auto;
   margin: 0;

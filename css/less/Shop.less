@@ -182,6 +182,36 @@
   }	
   
   .order-details {
+  	position: relative;
+
+  	h3 {
+  		float: left;
+  	}
+
+  	#checkout-order-table {
+  		&.loading-currently{
+  			.opacity(50);
+  			background: #fff;
+  		}
+  	}
+
+  	.cart-loading {
+  		float: left;
+	  	width: 100%;
+	  	height: 100%;
+	  	position: absolute; 
+	  	top: 0px; 
+	  	left: 0px;
+	  	z-index: 2;
+	  	text-align: center;
+
+	  	div {
+	  		position: relative;
+	  		top: 50%;
+	  		margin: 0 auto;
+	  	}
+	  }
+
     .modifier-set-field select {
       width: auto;
       margin: 0;

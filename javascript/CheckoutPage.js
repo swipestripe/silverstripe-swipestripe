@@ -15,8 +15,16 @@
 			  url: window.location.pathname + '/updateOrderFormCart',
 			  type: 'POST',
 			  data: values,
+			  beforeSend: function() {
+			  	$('#cart-loading-js').show();
+			  	$('#checkout-order-table').addClass('loading-currently');
+			  },
 			  success: function(data){
 			    $('#checkout-order-table').replaceWith(data);
+			  },
+			  complete: function() {
+			  	$('#cart-loading-js').hide();
+			  	$('#checkout-order-table').removeClass('loading-currently');
 			  }
 			});
     	}
