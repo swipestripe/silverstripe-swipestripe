@@ -42,6 +42,13 @@
     
     <section class="order-details">
 	    <h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
+
+	    <div id="cart-loading-js" class="cart-loading">
+	    	<div>
+	    		<h4>Loading...</h4>
+	    	</div>
+	    </div>
+	    
 	    <% include CheckoutFormOrder %>
     </section>
     
