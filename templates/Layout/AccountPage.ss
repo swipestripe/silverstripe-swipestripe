@@ -34,7 +34,7 @@
 			        <% if CountryName %>  $CountryName<br />  <% end_if %>
 			      <% end_control %>
 	        </td>
-	        <td>$Total.Nice</td>
+	        <td>$TotalPrice.Nice</td>
 	        <td>$Status ($PaymentStatus)</td>
 	        <td><a href="$Link"><% _t('AccountPage.VIEW_THIS_ORDER','View this order') %></a></td>
 	      </tr>
