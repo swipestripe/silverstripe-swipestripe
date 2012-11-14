@@ -52,6 +52,7 @@ class Option extends DataObject {
     $fields->removeByName('Variations');
     $fields->removeByName('ProductID');
     $fields->removeByName('AttributeID');
+    $fields->removeByName('SortOrder');
     return $fields;
   }
 

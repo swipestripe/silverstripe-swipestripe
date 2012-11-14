@@ -14,10 +14,10 @@ class ShopAdmin extends ModelAdmin {
 	// static $session_namespace = 'CMSMain';
 
 	public static $managed_models = array(
-		'ShopConfig',
 		'Product',
 		'Order',
-		'Customer'
+		'Customer',
+		'ShopConfig'
 	);
 
 	public static $url_handlers = array(

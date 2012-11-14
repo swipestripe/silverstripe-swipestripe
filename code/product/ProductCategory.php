@@ -56,6 +56,29 @@ class ProductCategory extends Page {
     
     return $fields;
 	}
+
+	public function isSection() {
+
+		$current = Controller::curr();
+		$request = $current->getRequest();
+
+		$url = $request->getURL();
+
+		if (stristr($url, 'product/')) {
+
+			$params = $request->allParams();
+			$productID = $params['ID'];
+
+			$product = Product::get()
+				->where("\"URLSegment\" = '{$productID}'")
+				->first();
+
+			if ($product && $product->exists()) {
+				return $this->isCurrent() || in_array($product->ID, $this->Products()->column('ID'));
+			}
+		}
+		return parent::isSection();
+	}
 }
 
 /**

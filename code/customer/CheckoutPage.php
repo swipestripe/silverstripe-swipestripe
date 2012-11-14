@@ -530,7 +530,8 @@ class CheckoutPage_Controller extends Page_Controller {
 
       $paymentData = array(
 				'Amount' => $order->Total()->getAmount(),
-				'Currency' => $order->Total()->getCurrency()
+				'Currency' => $order->Total()->getCurrency(),
+				'Reference' => $order->ID
 			);
 			$paymentProcessor->payment->OrderID = $order->ID;
 			$paymentProcessor->payment->PaidByID = $member->ID;

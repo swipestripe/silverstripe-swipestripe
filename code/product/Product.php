@@ -977,7 +977,7 @@ class Product_Image extends DataObject {
    * @return Image|String If no image can be found returns '(No Image)'
    */
   public function SummaryOfImage() {
-    if ($Image = $this->Image()) return $Image->CMSThumbnail();
+    if ($image = $this->Image()) return $image->CMSThumbnail();
     else return '(No Image)';
   }
 }
