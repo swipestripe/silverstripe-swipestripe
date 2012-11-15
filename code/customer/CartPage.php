@@ -141,19 +141,17 @@ class CartPage_Controller extends Page_Controller {
 	  $validator = new CartFormValidator();
 	  $currentOrder = $this->Cart();
 	  $items = $currentOrder->Items();
-	  
+
 	  if ($items) foreach ($items as $item) {
-	    
-	    $quantityField = new CartQuantityField('Quantity['.$item->ID.']', '', $item->Quantity, null, null, $item);
-	    
-	    $fields->push($quantityField); 
-	    
-	    $itemOptions = $item->ItemOptions();
-	    if ($itemOptions && $itemOptions->exists()) foreach($itemOptions as $itemOption) {
-	      //TODO if item option is not a Variation then add it as another row to the checkout
-	      //Like gift wrapping as an option perhaps
-	    } 
-	    
+
+	    $fields->push(CartQuantityField::create(
+	    	'Quantity['.$item->ID.']', 
+	    	'', 
+	    	$item->Quantity, 
+	    	null, 
+	    	null, 
+	    	$item
+	    )); 
 	    $validator->addRequiredField('Quantity['.$item->ID.']');
 	  }
 
@@ -161,10 +159,10 @@ class CartPage_Controller extends Page_Controller {
       new FormAction('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
       new FormAction('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
     );
-    
-    $cartForm = new CartForm($this, 'CartForm', $fields, $actions, $validator, $currentOrder);
-    $cartForm->disableSecurityToken();
-    return $cartForm;
+
+    $form = new CartForm($this, 'CartForm', $fields, $actions, $validator, $currentOrder);
+    $form->disableSecurityToken();
+    return $form;
 	}
 	
 	/**
@@ -174,6 +172,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form Form that data was submitted from
 	 */
 	function updateCart(Array $data, Form $form) {
+
 	  $this->saveCart($data, $form);
 	  $this->redirectBack();
 	}
@@ -186,6 +185,7 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form Form that data was submitted from
 	 */
 	function removeItem(Array $data, Form $form) {
+
 	  $itemID = isset($data['action_removeItem']) ? $data['action_removeItem'] : null;
 	  if ($itemID) {
 	    $data['Quantity'][$itemID] = 0;
@@ -216,6 +216,8 @@ class CartPage_Controller extends Page_Controller {
 	 */
 	private function saveCart(Array $data, Form $form) {
 
+		SS_Log::log(new Exception(print_r('saveCart', true)), SS_Log::NOTICE);
+
 	  $currentOrder = Cart::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 
@@ -223,6 +225,9 @@ class CartPage_Controller extends Page_Controller {
 
 	    if ($item = $currentOrder->Items()->find('ID', $itemID)) {
   	    if ($quantity == 0) {
+
+  	    	SS_Log::log(new Exception(print_r($item->toMap(), true)), SS_Log::NOTICE);
+
     	    $item->delete();
     	  }
     	  else {

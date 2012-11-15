@@ -86,7 +86,7 @@ class CartQuantityField extends TextField {
 		if ($quantity == 0) {
 		  $removingItem = true;
 		}
-		
+
 	  //Check that item exists and is in the current order
 	  if (!$item || !$item->exists() || !$items->find('ID', $item->ID)) {
 	    
