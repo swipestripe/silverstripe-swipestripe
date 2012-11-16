@@ -1,9 +1,7 @@
 <div class="product sws">
 
   <div class="product-image">
-	  <% control Product.FirstImage %>
-	    $Image.CroppedImage(250,250)
-	  <% end_control %>
+	  $Product.FirstImage.CroppedImage(250,250)
   </div>
 
   <div class="product-meta">

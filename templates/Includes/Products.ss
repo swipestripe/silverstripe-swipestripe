@@ -8,9 +8,7 @@
 	    
 	      <div class="product-brief-image">
 	        <a href="$Link">
-	        <% control FirstImage %>
-	          $Image.CroppedImage(137,145)
-	        <% end_control %>
+	          $FirstImage.CroppedImage(137,145)
 	        </a>
 	      </div>
 	      

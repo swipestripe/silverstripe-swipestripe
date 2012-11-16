@@ -252,47 +252,45 @@ class Product extends Page {
     $urlsegment->setURLPrefix($url);
     $fields->replaceField('URLSegment', $urlsegment);
 
-    //Gallery
-    $fields->addFieldToTab('Root.Gallery', GridField::create(
-      'Images', 
-      'Images', 
-      $this->Images(), 
-      GridFieldConfig_Gallery::create()
-    ));
+    if ($this->isInDB()) {
 
-    //Product attributes
-    $listField = new GridField(
-      'Attributes',
-      'Attributes',
-      $this->Attributes(),
-      GridFieldConfig_BasicSortable::create()
-    );
-    $fields->addFieldToTab('Root.Attributes', $listField);
+    	//Gallery
+  		$fields->addFieldToTab('Root.Gallery', ProductImageUploadField::create('Images', ''));
 
-    //Product variations
-    $attributes = $this->Attributes();
-    if ($attributes && $attributes->exists()) {
-      
-      //Remove the stock level field if there are variations, each variation has a stock field
-      $fields->removeByName('Stock');
-      
-      $variationFieldList = array();
-      foreach ($attributes as $attribute) {
-        $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
-      }
-      $variationFieldList = array_merge($variationFieldList, singleton('Variation')->summaryFields());
+	    //Product attributes
+	    $listField = new GridField(
+	      'Attributes',
+	      'Attributes',
+	      $this->Attributes(),
+	      GridFieldConfig_BasicSortable::create()
+	    );
+	    $fields->addFieldToTab('Root.Attributes', $listField);
 
-      $config = GridFieldConfig_HasManyRelationEditor::create();
-      $dataColumns = $config->getComponentByType('GridFieldDataColumns');
-      $dataColumns->setDisplayFields($variationFieldList);
+	    //Product variations
+	    $attributes = $this->Attributes();
+	    if ($attributes && $attributes->exists()) {
+	      
+	      //Remove the stock level field if there are variations, each variation has a stock field
+	      $fields->removeByName('Stock');
+	      
+	      $variationFieldList = array();
+	      foreach ($attributes as $attribute) {
+	        $variationFieldList['AttributeValue_'.$attribute->ID] = $attribute->Title;
+	      }
+	      $variationFieldList = array_merge($variationFieldList, singleton('Variation')->summaryFields());
 
-      $listField = new GridField(
-        'Variations',
-        'Variations',
-        $this->Variations(),
-        $config
-      );
-      $fields->addFieldToTab('Root.Variations', $listField);
+	      $config = GridFieldConfig_HasManyRelationEditor::create();
+	      $dataColumns = $config->getComponentByType('GridFieldDataColumns');
+	      $dataColumns->setDisplayFields($variationFieldList);
+
+	      $listField = new GridField(
+	        'Variations',
+	        'Variations',
+	        $this->Variations(),
+	        $config
+	      );
+	      $fields->addFieldToTab('Root.Variations', $listField);
+	    }
     }
 
     //Ability to edit fields added to CMS here
@@ -328,11 +326,8 @@ class Product extends Page {
   }
 
   public function SummaryOfImage() {
-    $image = $this->Images()->First();
-    if ($image && $image->exists()) {
-      return $image->SummaryOfImage();
-    }
-    return 'no image';
+  	if ($image = $this->FirstImage()) return $image->CMSThumbnail();
+    else return '(No Image)';
   }
 	
 	/**
@@ -920,65 +915,43 @@ class Product_Controller extends Page_Controller {
  * @package swipestripe
  * @subpackage product
  */
-class Product_Image extends DataObject {
 
-  public static $singular_name = 'Image';
+class Product_Image extends Image {
+
+	public static $singular_name = 'Image';
   public static $plural_name = 'Images';
-  
-  /**
-   * DB fields
-   * 
-   * @var Array
-   */
-  static $db = array (
+
+	static $db = array (
     'Caption' => 'Text',
     'SortOrder' => 'Int'
   );
 
-  /**
-   * Has one relations
-   * 
-   * @var Array
-   */
-  static $has_one = array (
-    'Image' => 'Image',
+	static $has_one = array (
     'Product' => 'Product'
-  );
-
-  static $summary_fields = array(
-    // 'SortOrder' => 'SortOrder',
-    'SummaryOfImage' => 'Image',
-    'Caption' => 'Caption'
   );
 
   public static $default_sort = 'SortOrder';
 
   public function getCMSFields() {
 
-    $uploadField = new UploadField('Image', 'Image');
-    $uploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
-    $uploadField->setConfig('allowedMaxFileNumber', 1);
+  	$fields = parent::getCMSFields();
 
-    $fields = new FieldList(
-      $rootTab = new TabSet('Root',
-        $tabMain = new Tab('Image',
-          $uploadField,
-          TextareaField::create('Caption')
-        )
-      )
-    );
+  	$fileAttributes = $fields->fieldByName('Root.Main.FilePreview')->fieldByName('FilePreviewData');
+  	$fileAttributes->push(TextareaField::create('Caption', 'Caption:')->setRows(4));
 
-    return $fields;
-  }
-  
-  /**
-   * Helper method to return a thumbnail image for displaying in CTF fields in CMS.
-   * 
-   * @return Image|String If no image can be found returns '(No Image)'
-   */
-  public function SummaryOfImage() {
-    if ($image = $this->Image()) return $image->CMSThumbnail();
-    else return '(No Image)';
+  	//$fields->addFieldToTab('Root.Main', HiddenField::create('SortOrder'));
+  	$fields->removeFieldsFromTab('Root.Main', array(
+  		'Title',
+  		'Name',
+  		'OwnerID',
+  		'ParentID',
+  		'Created',
+  		'LastEdited',
+  		'BackLinkCount',
+  		'Di'
+  	));
+  	return $fields;
   }
 }
+
 
