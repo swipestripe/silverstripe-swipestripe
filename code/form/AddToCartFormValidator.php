@@ -88,6 +88,19 @@ class AddToCartFormValidator extends RequiredFields {
   		$valid = false;
 	  }
 
+	  //Validate that base currency is set for this cart
+	  $config = ShopConfig::current_shop_config();
+	  if (!$config->BaseCurrency) {
+	  	$this->form->sessionMessage(
+  		  _t('Form.BASE_CURRENCY_NOT_SET', 'The currency is not set.'),
+  		  'bad'
+  		);
+  		
+  		//Have to set an error for Form::validate()
+  		$this->errors[] = true;
+  		$valid = false;
+	  }
+
 		return $valid;
 	}
 	

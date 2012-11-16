@@ -302,6 +302,12 @@ class Product extends Page {
       ), 'Title');
     }
 
+    if ($warning = ShopConfig::base_currency_warning()) {
+      $fields->addFieldToTab('Root.Main', new LiteralField('BaseCurrencyWarning', 
+	      '<p class="message warning">'.$warning.'</p>'
+	    ), 'Title');
+    }
+    
     return $fields;
 	}
 

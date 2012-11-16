@@ -25,6 +25,8 @@ class ShopAdmin extends ModelAdmin {
 		'$ModelClass/$Action/$ID' => 'handleAction',
 	);
 
+	public static $hidden_sections = array();
+
 	public function init() {
 
 		// set reading lang
@@ -204,7 +206,7 @@ class ShopAdmin extends ModelAdmin {
 			$obj = new $className();
 			$snippet = $obj->getSnippet();
 
-			if ($snippet) {
+			if ($snippet && !in_array($className, self::$hidden_sections)) {
 				$snippets->push(new ArrayData(array(
 					'Content' => $snippet
 				)));
@@ -219,6 +221,8 @@ class ShopAdmin extends ModelAdmin {
 
 }
 
+
+
 class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 
 	static $url_rule = 'ShopConfig/Licence';
@@ -229,6 +233,13 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 		'ShopConfig/Licence/LicenceSettingsForm' => 'LicenceSettingsForm',
 		'ShopConfig/Licence' => 'LicenceSettings'
 	);
+
+	public function init() {
+		parent::init();
+		if (!in_array(get_class($this), self::$hidden_sections)) {
+			$this->modelClass = 'ShopConfig';
+		}
+	}
 
 	public function Breadcrumbs($unlinked = false) {
 
@@ -368,6 +379,13 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 		'ShopConfig/EmailSettings/EmailSettingsForm' => 'EmailSettingsForm',
 		'ShopConfig/EmailSettings' => 'EmailSettings'
 	);
+
+	public function init() {
+		parent::init();
+		if (!in_array(get_class($this), self::$hidden_sections)) {
+			$this->modelClass = 'ShopConfig';
+		}
+	}
 
 	public function Breadcrumbs($unlinked = false) {
 
@@ -526,6 +544,13 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 		'ShopConfig/Countries' => 'Countries'
 	);
 
+	public function init() {
+		parent::init();
+		if (!in_array(get_class($this), self::$hidden_sections)) {
+			$this->modelClass = 'ShopConfig';
+		}
+	}
+
 	public function Breadcrumbs($unlinked = false) {
 
 		$request = $this->getRequest();
@@ -683,6 +708,13 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 		'ShopConfig/BaseCurrency' => 'BaseCurrencySettings'
 	);
 
+	public function init() {
+		parent::init();
+		if (!in_array(get_class($this), self::$hidden_sections)) {
+			$this->modelClass = 'ShopConfig';
+		}
+	}
+
 	public function Breadcrumbs($unlinked = false) {
 
 		$request = $this->getRequest();
@@ -754,11 +786,14 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 			->addExtraClass('ss-ui-action-constructive')
 			->setAttribute('data-icon', 'add'));
 
+		$validator = new RequiredFields('BaseCurrency');
+
 		$form = new Form(
 			$this,
 			'EditForm',
 			$fields,
-			$actions
+			$actions,
+			$validator
 		);
 
 		$form->setTemplate('ShopAdminSettings_EditForm');
@@ -829,6 +864,13 @@ class ShopAdmin_Attribute extends ShopAdmin {
 		'ShopConfig/Attribute/AttributeSettingsForm' => 'AttributeSettingsForm',
 		'ShopConfig/Attribute' => 'AttributeSettings'
 	);
+
+	public function init() {
+		parent::init();
+		if (!in_array(get_class($this), self::$hidden_sections)) {
+			$this->modelClass = 'ShopConfig';
+		}
+	}
 
 	public function Breadcrumbs($unlinked = false) {
 

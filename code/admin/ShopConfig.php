@@ -60,6 +60,18 @@ class ShopConfig extends DataObject {
     return $warning;
   }
 
+  public static function base_currency_warning() {
+    $config = self::current_shop_config();
+    $warning = null;
+
+    if (!$config->BaseCurrency) {
+     $warning = _t('ShopConfig.BASE_CURRENCY_WARNING','
+         Warning: Base currency is not set, please set base currency in the shop settings area before proceeding
+     ');
+    }
+    return $warning;
+  }
+
   /**
    * Setup a default ShopConfig record if none exists
    */

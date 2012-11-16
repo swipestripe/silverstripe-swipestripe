@@ -9,6 +9,15 @@
  */
 class ItemOption extends DataObject {
 
+	/**
+	 * Relations for this class
+	 * 
+	 * @var Array
+	 */
+	public static $has_one = array(
+	  'Item' => 'Item'
+	);
+
   /**
    * DB fields for this class
    * 
@@ -47,12 +56,8 @@ class ItemOption extends DataObject {
     return $amount;
   }
 
-	/**
-	 * Relations for this class
-	 * 
-	 * @var Array
-	 */
-	public static $has_one = array(
-	  'Item' => 'Item'
-	);
+  public function Order() {
+  	return $this->Item()->Order();
+  }
+
 }

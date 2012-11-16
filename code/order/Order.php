@@ -769,6 +769,13 @@ class Order extends DataObject implements PermissionProvider {
 	  
 	  $result = new ValidationResult(); 
 	  $items = $this->Items();
+
+	  if (!$this->BaseCurrency) {
+	  	$result->error(
+	      'Base currency is not set for this order',
+	      'BaseCurrencyError'
+	    );
+	  }
 	  
 	  if (!$items || !$items->exists()) {
 	    $result->error(
@@ -798,7 +805,8 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::validate()
 	 */
 	public function validate() {
-	  return parent::validate();
+	  $result = parent::validate();
+	  return $result;
 	}
 	
 	/**

@@ -215,9 +215,6 @@ class CartPage_Controller extends Page_Controller {
 	 * @param Form $form Form that data was submitted from
 	 */
 	private function saveCart(Array $data, Form $form) {
-
-		SS_Log::log(new Exception(print_r('saveCart', true)), SS_Log::NOTICE);
-
 	  $currentOrder = Cart::get_current_order();
 	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
 
