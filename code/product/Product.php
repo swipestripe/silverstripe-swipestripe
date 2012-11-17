@@ -88,15 +88,6 @@ class Product extends Page {
   );
   
   /**
-   * Belongs many many relations for Product
-   * 
-   * @var Array
-   */
-  public static $belongs_many_many = array(    
-    'ProductCategories' => 'ProductCategory'
-  );
-  
-  /**
    * Defaults for Product
    * 
    * @var Array
@@ -113,8 +104,7 @@ class Product extends Page {
   public static $summary_fields = array(
     'SummaryOfImage' => 'Image',
     'SummaryOfPrice' => 'Price',
-	  'Title' => 'Title',
-    'SummaryOfCategories' => 'Categories'
+	  'Title' => 'Title'
 	);
 
   public static $searchable_fields = array(
@@ -122,22 +112,11 @@ class Product extends Page {
       'field' => 'TextField',
       'filter' => 'PartialMatchFilter',
       'title' => 'Name'
-    ),
-    'Category' => array(
-      'field' => 'TextField',
-      'filter' => 'ShopSearchFilter_ProductCategory',
-      'title' => 'Category'
     )
   );
 
-  public static $casting = array(
-    'Category' => 'Varchar',
-  );
-	
 	/**
 	 * Set firstWrite flag if this is the first time this Product is written.
-	 * If this product is a child of a ProductCategory, make sure that ProductCategory 
-	 * is in the ProductCategories for this Product.
 	 * 
 	 * @see SiteTree::onBeforeWrite()
 	 * @see Product::onAfterWrite()
@@ -159,15 +138,6 @@ class Product extends Page {
         $stockLevel->Level = $newLevel;
         $stockLevel->write();
         $this->StockLevelID = $stockLevel->ID;
-      }
-    }
-    
-    //If the ParentID is set to a ProductCategory, select that category for this Product
-    $parent = $this->getParent();
-    if ($parent && $parent instanceof ProductCategory) {
-      $productCategories = $this->ProductCategories();
-      if (!in_array($parent->ID, array_keys($productCategories->map()->toArray()))) {
-        $productCategories->add($parent);
       }
     }
   }
@@ -224,17 +194,6 @@ class Product extends Page {
     //Product fields
     $fields->addFieldToTab('Root.Main', new PriceField('Price'), 'Content');
 
-    $categories = ProductCategory::get()->map('ID', 'Breadcrumbs')->toArray();
-    arsort($categories);
-    $fields->addFieldToTab(
-      'Root.Main', 
-      ListboxField::create('ProductCategories', 'Categories')
-        ->setMultiple(true)
-        ->setSource($categories)
-        ->setAttribute('data-placeholder', 'Add categories'), 
-      'Content'
-    );
-		
 		//Stock level field
     if ($shopConfig->StockCheck) {
       $level = $this->StockLevel()->Level;
@@ -335,22 +294,6 @@ class Product extends Page {
   	if ($image = $this->FirstImage()) return $image->CMSThumbnail();
     else return '(No Image)';
   }
-	
-	/**
-	 * Summary of product categories for convenience, categories are comma seperated.
-	 * 
-	 * @return String
-	 */
-  public function SummaryOfCategories() {
-	  $summary = array();
-	  $categories = $this->ProductCategories();
-	  
-	  if ($categories) foreach ($categories as $productCategory) {
-	    $summary[] = $productCategory->getBreadcrumbs(' > ');
-	  } 
-	  
-	  return implode(', ', $summary);
-	}
 	
 	/**
 	 * Get the URL for this Product, products that are not part of the SiteTree are 
