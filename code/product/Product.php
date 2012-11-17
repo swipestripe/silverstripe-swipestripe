@@ -272,6 +272,40 @@ class Product extends Page {
     return $fields;
 	}
 
+	public function getSettingsFields() {
+		$fields = parent::getSettingsFields();
+
+		$parentTypeField = $fields->dataFieldByName('ParentType');
+	  if ($parentTypeField && $parentTypeField->exists() && $parentTypeField instanceof OptionsetField) {
+	    // $source = $parentTypeField->getSource();
+	    // $source['exempt'] = _t('ShopAdmin.NOT_PART_OF_SITE_TREE',"Not part of the site tree");
+	    $source = array(
+				"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
+				"exempt" => _t('ShopAdmin.NOT_PART_OF_SITE_TREE',"Not part of the site tree"),
+				"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page"),
+			);
+	    $parentTypeField->setSource($source);
+	    $parentTypeField->setValue($this->getParentType());
+	  }
+
+	  Requirements::customScript("
+	  	(function($) {
+				$(document).ready(function() {
+					$('#Form_EditForm_ParentType_exempt').live('click', function(e){
+						e.stopPropagation();
+						$('#Form_EditForm_ParentID').val(-1);
+						$('#ParentID').css('display', 'none');
+					});
+	  			if ($('#Form_EditForm_ParentID').val() == -1) {
+	  				$('#Form_EditForm_ParentType_exempt').click();
+	  			}
+				});
+			})(jQuery);
+	  ");
+
+		return $fields;
+	}
+
   /**
    * Set custom validator for validating EditForm in {@link ShopAdmin}. Not currently used.
    * 
