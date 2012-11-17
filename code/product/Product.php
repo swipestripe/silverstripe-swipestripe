@@ -205,11 +205,13 @@ class Product extends Page {
     }
 
     //Replace URL Segment field
-    $urlsegment = new SiteTreeURLSegmentField("URLSegment", 'URLSegment');
-    $baseLink = Controller::join_links(Director::absoluteBaseURL(), 'product/');
-    $url = (strlen($baseLink) > 36) ? "..." .substr($baseLink, -32) : $baseLink;
-    $urlsegment->setURLPrefix($url);
-    $fields->replaceField('URLSegment', $urlsegment);
+    if ($this->ParentID == -1) {
+    	$urlsegment = new SiteTreeURLSegmentField("URLSegment", 'URLSegment');
+	    $baseLink = Controller::join_links(Director::absoluteBaseURL(), 'product/');
+	    $url = (strlen($baseLink) > 36) ? "..." .substr($baseLink, -32) : $baseLink;
+	    $urlsegment->setURLPrefix($url);
+	    $fields->replaceField('URLSegment', $urlsegment);
+    }
 
     if ($this->isInDB()) {
 
