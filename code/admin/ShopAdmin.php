@@ -153,6 +153,10 @@ class ShopAdmin extends ModelAdmin {
 				->addComponents($detailForm);
 		}
 
+		if ($this->modelClass == 'Order') {
+			$fieldConfig->removeComponentsByType('GridFieldAddNewButton');
+		}
+
 		$listField = new GridField(
 			$this->sanitiseClassName($this->modelClass),
 			false,

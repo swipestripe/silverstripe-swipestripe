@@ -24,7 +24,7 @@
 	  <% include OrderDownloads %>
 	<% end_if %>
 	
-	<% if Notes %>
+	<% if CustomerUpdates %>
 	  <% include OrderNotes %>
 	<% end_if %>
 

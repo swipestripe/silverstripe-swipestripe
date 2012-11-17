@@ -49,7 +49,6 @@ class Order extends DataObject implements PermissionProvider {
 
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
-	  'Notes' => 'Text',
 	  'Env' => 'Varchar(10)'
 	);
 
@@ -136,7 +135,7 @@ class Order extends DataObject implements PermissionProvider {
 	  'Items' => 'Item',
 		'Payments' => 'Payment',
 	  'Modifications' => 'Modification',
-	  'Updates' => 'Status'
+	  'Updates' => 'Order_Update'
 	);
 	
 	/**
@@ -205,7 +204,7 @@ class Order extends DataObject implements PermissionProvider {
 	 */
 	public static $first_id = null;
 
-	function providePermissions() {
+	public function providePermissions() {
     return array(
       'VIEW_ORDER' => 'View orders'
     );
@@ -411,18 +410,27 @@ class Order extends DataObject implements PermissionProvider {
 		))->renderWith("OrderAdmin");
 		$fields->addFieldToTab('Root.Order', new LiteralField('MainDetails', $htmlSummary));
 
-		//Action fields
-		$fields->addFieldToTab('Root.Status', new HeaderField('OrderStatus', 'Order Status', 3));
-		$statuses = $this->dbObject('Status')->enumValues();
-		unset($statuses['Cart']);
-		$fields->addFieldToTab('Root.Status', new DropdownField('Status', 'Status', $statuses));
+		//Updates
+		$listField = new GridField(
+      'Updates',
+      'Updates',
+      $this->Updates(),
+      GridFieldConfig_Basic::create()
+    );
+    $fields->addFieldToTab('Root.Updates', $listField);
 
 		//Payments
+		$config = GridFieldConfig_Basic::create()
+			->removeComponentsByType('GridFieldAddNewButton')
+			->removeComponentsByType('GridFieldEditButton')
+			->removeComponentsByType('GridFieldDeleteAction')
+			->addComponent(new GridFieldViewButton());
+
     $listField = new GridField(
       'Payments',
       'Payments',
       $this->Payments(),
-      GridFieldConfig_Basic::create()
+      $config
     );
     $fields->addFieldToTab('Root.Payments', $listField);
 
@@ -869,4 +877,95 @@ class Order extends DataObject implements PermissionProvider {
 		return $this->Modifications()->where("\"SubTotalModifier\" = 0");
 	}
 
+	public function CustomerUpdates() {
+		return $this->Updates()->where("\"Visible\" = 1");
+	}
+
+}
+
+class Order_Update extends DataObject {
+
+	public static $singular_name = 'Update';
+  public static $plural_name = 'Updates';
+
+	public static $db = array(
+		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled')",
+	  'Note' => 'Text',
+	  'Visible' => 'Boolean'
+	);
+
+	/**
+	 * Relations for this class
+	 * 
+	 * @var Array
+	 */
+	public static $has_one = array(
+		'Order' => 'Order',
+		'Member' => 'Member'
+	);
+
+	public static $summary_fields = array(
+		'Created.Nice' => 'Created',
+		'Status' => 'Order Status',
+		'Note' => 'Note',
+		'Member.Name' => 'Owner',
+		'VisibleSummary' => 'Visible'
+	);
+
+	public function canEdit($member = null) {
+    return false;
+	}
+
+	public function canDelete($member = null) {
+    return false;
+	}
+
+  /**
+	 * Clean up Order Items (ItemOptions by extension), Addresses and Modifications.
+	 * All wrapped in a transaction.
+	 */
+	public function delete() {
+	  if ($this->canDelete(Member::currentUser())) {
+      parent::delete();
+    }
+	}
+
+  /**
+   * Update stock levels for {@link Item}.
+   * 
+   * @see DataObject::onAfterWrite()
+   */
+	public function onAfterWrite() {
+	  parent::onAfterWrite();
+	  
+	  //Update the Order, setting the same status
+	  if ($this->Status) {
+	  	$order = $this->Order();
+		  $order->Status = $this->Status;
+		  $order->write();
+	  }
+	}
+
+	public function getCMSFields() {
+
+		$fields = parent::getCMSFields();
+
+		$visibleField = CheckboxField::create('Visible', 'Visible')
+			->setRightTitle('Should this update be visible to the customer?');
+		$fields->replaceField('Visible', $visibleField);
+
+		$memberField = HiddenField::create('MemberID', 'Member', Member::currentUserID());
+		$fields->replaceField('MemberID', $memberField);
+		$fields->removeByName('OrderID');
+
+		return $fields;
+	}
+
+	public function Created() {
+		return $this->dbObject('Created');
+	}
+
+	public function VisibleSummary() {
+		return ($this->Visible) ? 'True' : '';
+	}
 }

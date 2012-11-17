@@ -59,20 +59,13 @@ class Payment_Extension extends DataExtension {
 	 */
   function updateCMSFields(FieldList $fields) {
 
-		$toBeReadOnly = array(
-		  'Amount[Currency]',
-		  'Amount[Amount]',
-		  'OrderID',
-		  'PaidByID',
-		  'HTTPStatus',
-		  'Method'
-		);
-		foreach ($toBeReadOnly as $fieldName) {
-		  if ($fields->dataFieldByName($fieldName)) {
-		    $fields->makeFieldReadonly($fieldName);
-		  }
-		}
-    
+  	$fields->removeByName('OrderID');
+  	$fields->removeByName('HTTPStatus');
+  	$fields->removeByName('Amount');
+
+  	$str = $this->owner->dbObject('Amount')->Nice();
+  	$fields->insertBefore(TextField::create('Amount_', 'Amount', $str), 'Method');
+
     return $fields;
 	}
 

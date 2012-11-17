@@ -2,9 +2,11 @@
   <tr>
     <th><% _t('OrderNotes.NOTES','Notes') %></th>
   </tr>
+  <% loop CustomerUpdates %>
   <tr>
     <td>
-      $Notes
+      $Note
     </td>
   </tr>
+  <% end_loop %>
 </table>

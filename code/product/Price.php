@@ -1,4 +1,5 @@
 <?php
+require_once 'Zend/Locale/Math.php';
 
 class Price extends Money {
 
@@ -11,6 +12,10 @@ class Price extends Money {
 
 	public function getSymbol() {
 		return $this->symbol;
+	}
+
+	public function getAmount() {
+		return Zend_Locale_Math::round($this->amount, 2);
 	}
 
 	public function Nice($options = array()) {
