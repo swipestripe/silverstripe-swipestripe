@@ -49,7 +49,8 @@ class Order extends DataObject implements PermissionProvider {
 
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
-	  'Notes' => 'Text'
+	  'Notes' => 'Text',
+	  'Env' => 'Varchar(10)'
 	);
 
 	public function Total() {
@@ -197,6 +198,13 @@ class Order extends DataObject implements PermissionProvider {
 	 */
 	public static $default_sort = 'ID DESC';
 
+	/**
+	 * The starting number for Order IDs. If none set starts at 1.
+	 * 
+	 * @var Int
+	 */
+	public static $first_id = null;
+
 	function providePermissions() {
     return array(
       'VIEW_ORDER' => 'View orders'
@@ -338,6 +346,14 @@ class Order extends DataObject implements PermissionProvider {
     	$this->BaseCurrency = $shopConfig->BaseCurrency;
     	$this->BaseCurrencySymbol = $shopConfig->BaseCurrencySymbol;
     }
+
+    //If orders do not exist
+    if ((!Order::get()->count() && true) && is_numeric(self::$first_id) && self::$first_id > 0) {
+    	$this->ID = self::$first_id;
+    }
+
+    //Set environment order was placed in
+    $this->Env = Director::get_environment_type();
   }
 
   public function onAfterWrite() {

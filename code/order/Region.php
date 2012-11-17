@@ -115,6 +115,7 @@ class Region_Shipping extends Region {
     $fields = parent::getCMSFields();
     $fields->replaceField('CountryID', DropdownField::create('CountryID', 'Country', Country_Shipping::get()->map()->toArray()));
     $fields->removeByName('SortOrder');
+    $fields->removeByName('ShopConfigID');
     return $fields;
   }
 }

@@ -342,12 +342,18 @@ class Country_Shipping extends Country {
     );
 
 		if ($this->isInDB()) {
+
+			$config = GridFieldConfig_BasicSortable::create();
+			// $detailForm = $config->getComponentByType('GridFieldDetailForm');
+			// $detailForm->setItemRequestClass('GridFieldDetailForm_HasManyItemRequest');
+
 			$listField = new GridField(
 	      'Regions',
 	      'Regions',
 	      $this->Regions(),
-	      GridFieldConfig_BasicSortable::create()
+	      $config
 	    );
+
 	    $fields->addFieldToTab('Root.Regions', $listField);
 		}
 
