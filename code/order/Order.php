@@ -296,7 +296,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::scaffoldSearchFields()
 	 * @return FieldSet
 	 */
-  public function scaffoldSearchFields(){
+  public function scaffoldSearchFields($params = array()){
 
 		$fields = parent::scaffoldSearchFields();
 
