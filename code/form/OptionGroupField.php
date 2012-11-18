@@ -64,7 +64,7 @@ class OptionGroupField extends CompositeField {
 	 * 
 	 * @see CompositeField::FieldHolder()
 	 */
-	function FieldHolder() {
+	function FieldHolder($params = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('swipestripe/javascript/OptionGroupField.js');
 		return parent::FieldHolder();

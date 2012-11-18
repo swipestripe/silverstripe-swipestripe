@@ -10,7 +10,7 @@ class Price extends Money {
 		return $this;
 	}
 
-	public function getSymbol() {
+	public function getSymbol($currency = null, $locale = null) {
 		return $this->symbol;
 	}
 
