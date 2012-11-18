@@ -69,7 +69,8 @@ class ShopSearchFilter_Payment extends SearchFilter {
 	public function apply(DataQuery $query) {
 
 		$this->model = $query->applyRelation($this->relation);
-		$value = array_pop($this->getValue());
+		$values = $this->getValue();
+		$value = array_pop($values);
 
 		if ($value == 2 || $value == 1) {
 			$query->leftJoin(
