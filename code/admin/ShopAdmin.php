@@ -1090,6 +1090,17 @@ class ShopAdmin_ItemRequest extends GridFieldDetailForm_ItemRequest {
 
 		$form->loadDataFrom($this->record);
 
+		//TODO apply same technique to CMSMain using updateEditForm($form)
+		//If all variations are disabled 
+		if ($this->record instanceof Product && $this->record->requiresVariation()) {
+			$statuses = $this->record->Variations()->column('Status');
+
+			if (!in_array('Enabled', $this->record->Variations()->column('Status'))) {
+				$form->sessionMessage('All the variations are disabled for this product, customers will not be able to purchase this product until some variations are enabled.', 'bad');
+			}
+		}
+		
+
 		// TODO Coupling with CMS
 		$toplevelController = $this->getToplevelController();
 		if ($toplevelController && $toplevelController instanceof LeftAndMain) {

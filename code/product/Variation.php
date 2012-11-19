@@ -460,13 +460,13 @@ class Variation extends DataObject {
     }
 
     //Unpublish product if variations do not exist
-		$product = $this->Product();
-		$variations = $product->Variations();
+		// $product = $this->Product();
+		// $variations = $product->Variations();
 
     //TODO this might not be a good idea to unpublish the product
-		if (!in_array('Enabled', $variations->map('ID', 'Status')->toArray())) {
-		  $product->doUnpublish(); 
-		}
+		// if (!in_array('Enabled', $variations->map('ID', 'Status')->toArray())) {
+		//   $product->doUnpublish(); 
+		// }
 	}
 	
 	/**

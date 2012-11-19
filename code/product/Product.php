@@ -473,7 +473,7 @@ class Product extends Page {
 	    $variations = $this->Variations();
 	    if ($variations && $variations->exists()) foreach ($variations as $variation) {
 	      //If there is a single variation in stock, then this product is in stock
-	      if ($variation->InStock()) {
+	      if ($variation->InStock() && $variation->isEnabled()) {
 	        $inStock = true;
 	        continue;
 	      } 
