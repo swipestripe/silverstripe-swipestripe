@@ -1,23 +1,35 @@
-;(function($) {
-	$(document).ready(function() { 
+(function($) {
+	$.entwine('ss', function($){
 
-		$('.galleryfield-files').sortable({ 
-			opacity: 0.5,
-			axis: 'y',
-			update: function(event, ui) {
+		$('.galleryfield-files').entwine({
+			onmatch : function() {
+				var self = this;
 
-				var ids = new Array(),
-						config = $.parseJSON($('div.ss-upload input').data('config').replace(/'/g,'"'));
+				this.sortable({ 
+					opacity: 0.5,
+					axis: 'y',
+					update: function(event, ui) {
 
-				$('.galleryfield-files .ss-uploadfield-item').each(function(){
-					ids.push($(this).attr('data-fileid'));
+						var ids = new Array(),
+								config = $.parseJSON($('div.ss-upload input').data('config').replace(/'/g,'"'));
+
+						$('.galleryfield-files .ss-uploadfield-item').each(function(){
+							ids.push($(this).attr('data-fileid'));
+						});
+
+						$.post(
+							config['urlSort'], 
+							{'ids' : ids}
+						)
+					}
 				});
-
-				$.post(
-					config['urlSort'], 
-					{'ids' : ids}
-				)
-			}
+				
+				this._super();
+			},
+			onunmatch: function() {
+				this._super();
+			},
 		});
+
 	});
 }(jQuery));
