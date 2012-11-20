@@ -15,6 +15,7 @@ class Customer extends Member {
    * 
    * @var Array
    */
+  //TODO: Refactor customer addresses
   static $db = array(
 		'Address' => 'Varchar(255)',
 		'AddressLine2' => 'Varchar(255)',
@@ -90,8 +91,7 @@ class Customer extends Member {
 		$fields = new FieldList();
 
     $fields->push(new TabSet('Root', 
-      Tab::create('Customer'),
-      Tab::create('Address')
+      Tab::create('Customer')
     ));
 
     $password = new ConfirmedPasswordField(
@@ -110,15 +110,6 @@ class Customer extends Member {
     	new EmailField('Email'),
     	new ConfirmedPasswordField('Password'),
     	$password
-    ));
-
-    $fields->addFieldsToTab('Root.Address', array(
-    	new TextField('Address', _t('Customer.ADDRESS', "Address")),
-    	new TextField('AddressLine2', ' '),
-    	new TextField('City', _t('Customer.CITY', 'City')),
-    	new TextField('State', _t('Customer.STATE', 'State')),
-    	new TextField('PostalCode', _t('Customer.POSTAL_CODE', 'Postal Code')),
-    	new DropdownField('Country', _t('Customer.COUNTRY', 'Country'), Country::get_codes())
     ));
 
     return $fields;

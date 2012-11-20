@@ -462,8 +462,8 @@ class CheckoutPage_Controller extends Page_Controller {
     }
 
 		//Save or create a new customer/member
-		//Need to save billing address info to Member for Payment class to work
 
+    //TODO: Refactor customer addresses
 		$memberData = array(
 		  'FirstName' => $data['Billing']['FirstName'],
 		  'Surname' => $data['Billing']['Surname'],
