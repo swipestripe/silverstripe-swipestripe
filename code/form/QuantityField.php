@@ -20,8 +20,8 @@ class QuantityField extends TextField {
 	  $valid = true;
 		$quantity = $this->Value();
 		
-    if ($quantity == null || !is_numeric($quantity) || $quantity <= 0) {
-	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be at least one (1).');
+    if ($quantity == null || !is_numeric($quantity)) {
+	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
@@ -33,6 +33,33 @@ class QuantityField extends TextField {
 			);
 	    $valid = false;
 	  }
+	  else if ($quantity <= 0) {
+	    $errorMessage = _t('Form.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 1');
+			if ($msg = $this->getCustomValidationMessage()) {
+				$errorMessage = $msg;
+			}
+			
+			$validator->validationError(
+				$this->getName(),
+				$errorMessage,
+				"error"
+			);
+	    $valid = false;
+	  }
+	  else if ($quantity > 2147483647) {
+	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
+			if ($msg = $this->getCustomValidationMessage()) {
+				$errorMessage = $msg;
+			}
+			
+			$validator->validationError(
+				$this->getName(),
+				$errorMessage,
+				"error"
+			);
+	    $valid = false;
+	  }
+
 
 	  return $valid;
 	}

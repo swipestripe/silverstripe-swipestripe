@@ -83,7 +83,7 @@ class CartQuantityField extends TextField {
 		$quantity = $this->Value();
 
 		$removingItem = false;
-		if ($quantity == 0) {
+		if ($quantity <= 0) {
 		  $removingItem = true;
 		}
 
@@ -102,38 +102,69 @@ class CartQuantityField extends TextField {
 			);
 			$valid = false;
 	  }
-	  else if ($item && !$removingItem) {
-	    
-	    //If quantity is zero the item is removed already @see CartPage::saveCart()
-  	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
-  	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be at least one (1).');
-  			if ($msg = $this->getCustomValidationMessage()) {
-  				$errorMessage = $msg;
-  			}
-  			
-  			$validator->validationError(
-  				$this->getName(),
-  				$errorMessage,
-  				"error"
-  			);
-  	    $valid = false;
-  	  }
+	  else if ($item) {
 
-	    $validation = $item->validateForCart();
-	    if (!$validation->valid()) {
-	      
-	      $errorMessage = $validation->message();
-  			if ($msg = $this->getCustomValidationMessage()) {
-  				$errorMessage = $msg;
-  			}
-  			
-  			$validator->validationError(
-  				$this->getName(),
-  				$errorMessage,
-  				"error"
-  			);
-  	    $valid = false;
-	    }
+	  	//If removing item, cannot subtract past 0
+	  	if ($removingItem) {
+	  		if ($quantity < 0) {
+			    $errorMessage = _t('Form.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 0');
+					if ($msg = $this->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
+					
+					$validator->validationError(
+						$this->getName(),
+						$errorMessage,
+						"error"
+					);
+			    $valid = false;
+			  }
+	  	}
+	  	else {
+	  		//If quantity is invalid
+	  	  if ($quantity == null || !is_numeric($quantity)) {
+			    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
+					if ($msg = $this->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
+					
+					$validator->validationError(
+						$this->getName(),
+						$errorMessage,
+						"error"
+					);
+			    $valid = false;
+			  }
+			  else if ($quantity > 2147483647) {
+			    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
+					if ($msg = $this->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
+					
+					$validator->validationError(
+						$this->getName(),
+						$errorMessage,
+						"error"
+					);
+			    $valid = false;
+			  }
+
+		    $validation = $item->validateForCart();
+		    if (!$validation->valid()) {
+		      
+		      $errorMessage = $validation->message();
+	  			if ($msg = $this->getCustomValidationMessage()) {
+	  				$errorMessage = $msg;
+	  			}
+	  			
+	  			$validator->validationError(
+	  				$this->getName(),
+	  				$errorMessage,
+	  				"error"
+	  			);
+	  	    $valid = false;
+		    }
+	  	}
 	  }
 	  
 	  //Check that quantity for an item is not being pushed beyond available stock levels for a product

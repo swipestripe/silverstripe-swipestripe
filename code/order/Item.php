@@ -225,9 +225,9 @@ class Item extends DataObject {
 	  }
 	  
 	  //Check that quantity is correct
-	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0) {
+	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0 || $quantity > 2147483647) {
 	    $result->error(
-	      'Quantity for this product needs to be greater than 0',
+	      'Quantity for this product needs to be between 1 - 2,147,483,647',
 	      'QuantityError'
 	    );
 	  }
