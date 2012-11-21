@@ -950,8 +950,10 @@ class Order_Update extends DataObject {
 
 		$fields = parent::getCMSFields();
 
-		$visibleField = CheckboxField::create('Visible', 'Visible')
-			->setRightTitle('Should this update be visible to the customer?');
+		$visibleField = DropdownField::create('Visible', 'Visible', array(
+			1 => 'Yes',
+			0 => 'No'
+		))->setRightTitle('Should this update be visible to the customer?');
 		$fields->replaceField('Visible', $visibleField);
 
 		$memberField = HiddenField::create('MemberID', 'Member', Member::currentUserID());
