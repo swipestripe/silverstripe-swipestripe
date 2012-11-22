@@ -51,7 +51,7 @@ class ModifierHiddenField extends HiddenField {
 	 * @see FormField::FieldHolder()
 	 * @return String
 	 */
-  function FieldHolder() {
+  function FieldHolder($properties = array()) {
 		return $this->renderWith($this->template);
 	}
 	
