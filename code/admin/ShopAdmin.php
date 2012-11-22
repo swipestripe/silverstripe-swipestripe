@@ -613,7 +613,7 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 			      'ShippingCountries',
 			      'Shipping Countries',
 			      $shopConfig->ShippingCountries(),
-			      GridFieldConfig_RelationEditor::create()
+			      GridFieldConfig_RecordEditor::create()
 							->removeComponentsByType('GridFieldFilterHeader')
 							->removeComponentsByType('GridFieldAddExistingAutocompleter')
 			    )
@@ -623,7 +623,7 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 			      'BillingCountries',
 			      'Billing Countries',
 			      $shopConfig->BillingCountries(),
-			      GridFieldConfig_RelationEditor::create()
+			      GridFieldConfig_RecordEditor::create()
 							->removeComponentsByType('GridFieldFilterHeader')
 							->removeComponentsByType('GridFieldAddExistingAutocompleter')
 			    )
@@ -632,10 +632,6 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 		);
 
 		$actions = new FieldList();
-		$actions->push(FormAction::create('saveCountries', _t('GridFieldDetailForm.Save', 'Save'))
-			->setUseButtonTag(true)
-			->addExtraClass('ss-ui-action-constructive')
-			->setAttribute('data-icon', 'add'));
 
 		$form = new Form(
 			$this,
@@ -653,37 +649,6 @@ class ShopAdmin_CountriesAdmin extends ShopAdmin {
 		$form->loadDataFrom($shopConfig);
 
 		return $form;
-	}
-
-	public function saveCountries($data, $form) {
-
-		//Hack for LeftAndMain::getRecord()
-		self::$tree_class = 'ShopConfig';
-
-		$config = ShopConfig::get()->First();
-		$form->saveInto($config);
-		$config->write();
-		$form->sessionMessage('Saved Countries', 'good');
-
-		$controller = $this;
-		$responseNegotiator = new PjaxResponseNegotiator(
-			array(
-				'CurrentForm' => function() use(&$controller) {
-					return $controller->CountriesForm()->forTemplate();
-				},
-				'Content' => function() use(&$controller) {
-					return $controller->renderWith('ShopAdminSettings_Content');
-				},
-				'Breadcrumbs' => function() use (&$controller) {
-					return $controller->renderWith('CMSBreadcrumbs');
-				},
-				'default' => function() use(&$controller) {
-					return $controller->renderWith($controller->getViewer('show'));
-				}
-			),
-			$this->response
-		); 
-		return $responseNegotiator->respond($this->getRequest());
 	}
 
 	public function getSnippet() {
