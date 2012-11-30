@@ -737,8 +737,10 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 		$fields = new FieldList(
 			$rootTab = new TabSet("Root",
 				$tabMain = new Tab('BaseCurrency',
-					new TextField('BaseCurrency', _t('ShopConfig.BASE_CURRENCY', 'Base Currency')),
-					new TextField('BaseCurrencySymbol', _t('ShopConfig.BASE_CURRENCY_SYMBOL', 'Base Currency Symbol'))
+					TextField::create('BaseCurrency', _t('ShopConfig.BASE_CURRENCY', 'Base Currency'))
+						->setRightTitle('3 letter code for base currency - <a href="http://en.wikipedia.org/wiki/ISO_4217#Active_codes" target="_blank">available codes</a>'),
+					TextField::create('BaseCurrencySymbol', _t('ShopConfig.BASE_CURRENCY_SYMBOL', 'Base Currency Symbol'))
+						->setRightTitle('Symbol to be used for the base currency e.g: $')
 				)
 			)
 		);
