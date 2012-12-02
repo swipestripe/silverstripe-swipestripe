@@ -41,7 +41,7 @@
 	    				values += '&NextAttributeID='+nextAttributeID;
 	    				
 	    				$.ajax({
-	  					  url: window.location.pathname + 'options/',
+	  					  url: window.location.pathname + '/options/',
 	  					  type: 'POST',
 		  				  data: values,
 	  					  success: function(data) {
@@ -73,7 +73,7 @@
     			var values = $('#AddToCartForm_AddToCartForm').serialize();
     			
     			$.ajax({
-					  url: window.location.pathname + 'variationprice/',
+					  url: window.location.pathname + '/variationprice/',
 					  type: 'POST',
 	  				  data: values,
 					  success: function(data) {
