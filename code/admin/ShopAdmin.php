@@ -299,6 +299,14 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 			$rootTab = new TabSet("Root",
 				$tabMain = new Tab('LicenceKey',
 					new TextField('LicenceKey', _t('ShopConfig.LICENCE_KEY', 'Licence Key'))
+				),
+				new Tab('ExtensionKeys',
+					GridField::create(
+            'ExtensionKeys',
+            'ExtensionKeys',
+            $shopConfig->ExtensionKeys(),
+            GridFieldConfig_RecordEditor::create()
+          )
 				)
 			)
 		);
@@ -365,8 +373,8 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
 
 		return $this->customise(array(
-			'Title' => 'Licence Key',
-			'Help' => 'Set licence key.',
+			'Title' => 'Licence Keys',
+			'Help' => 'Set licence keys for shop and shop extensions.',
 			'Link' => Controller::join_links($this->Link('ShopConfig'), 'Licence'),
 			'LinkTitle' => 'Edit Licence key'
 		))->renderWith('ShopAdmin_Snippet');

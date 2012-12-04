@@ -30,7 +30,9 @@ class ShopConfig extends DataObject {
     'ShippingRegions' => 'Region_Shipping',
     'BillingRegions' => 'Region_Billing',
 
-    'Attributes' => 'Attribute_Default'
+    'Attributes' => 'Attribute_Default',
+
+    'ExtensionKeys' => 'ShopConfig_ExtensionKey'
   );
 
   public static $defaults = array(
@@ -108,6 +110,28 @@ class ShopConfig_Controller extends Page_Controller {
     $config = ShopConfig::current_shop_config();
     $data['Key'] = $config->LicenceKey;
 
+    $base = Director::baseFolder() . '/swipestripe-';
+    $dirs = glob($base . '*', GLOB_ONLYDIR);
+    $extensionLicenseKeys = $config->ExtensionKeys()->map('Title', 'LicenceKey')->toArray();
+    //$extensionLicenseKeys = ShopSettings::get_extension_license_keys();
+    
+    if ($dirs && is_array($dirs)) {
+
+      $data['Extensions'] = array();
+
+      foreach ($dirs as $dir) {
+        $extensionName = str_replace($base, '', $dir);
+
+        if ($extensionName){
+        	$key = (isset($extensionLicenseKeys[$extensionName])) ? $extensionLicenseKeys[$extensionName] : null;
+          $data['Extensions'][]['Extension'] = array(
+          	'Name' => $extensionName,
+            'Key' => $key
+          );
+        } 
+      }
+    }
+
     $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><SwipeStripe></SwipeStripe>");
     $this->array_to_xml($data, $xml);
     
@@ -138,4 +162,46 @@ class ShopConfig_Controller extends Page_Controller {
       }
     }
   }
+}
+
+class ShopConfig_ExtensionKey extends DataObject {
+
+	public static $singular_name = 'Extension Licence Key';
+  public static $plural_name = 'Extension Licence Keys';
+
+	public static $db = array(
+		'Title' => 'Varchar',
+		'LicenceKey' => 'Varchar'
+	);
+
+	public static $has_one = array(
+		'ShopConfig' => 'ShopConfig'
+	);
+
+	public static $summary_fields = array(
+		'Title' => 'Title',
+		'LicenceKey' => 'Licence Key'
+	);
+
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+
+		$exts = array();
+		$base = Director::baseFolder() . '/swipestripe-';
+    $dirs = glob($base . '*', GLOB_ONLYDIR);
+
+    if ($dirs && is_array($dirs)) foreach ($dirs as $dir) {
+
+      $extensionName = str_replace($base, '', $dir);
+      $exts[$extensionName] = $extensionName;
+    }
+
+		$fields->replaceField('Title', DropdownField::create('Title', 'Extension', $exts)
+			->setRightTitle('Name of the extension for this licence key')
+		);
+
+		$fields->removeByName('ShopConfigID');
+
+		return $fields;
+	}
 }
