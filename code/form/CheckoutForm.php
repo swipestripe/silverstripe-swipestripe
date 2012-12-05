@@ -16,21 +16,7 @@ class CheckoutForm extends Form {
    * @var Order
    */
   public $currentOrder;
-  
-  /**
-   * Fields for this form are grouped in sets, they are stored in an array so that the template
-   * can pull out a set of fields for a different part of the form.
-   * 
-   * @var Array 
-   */
-  private $groupedFields = array();
-  
-  /**
-   * Set of extra fields set for this form, such as csrf token etc.
-   * 
-   * @var FieldList
-   */
-  private $extraFieldsSet;
+
   
   /**
    * Construct the form, get the grouped fields and set the fields for this form appropriately,
@@ -44,23 +30,43 @@ class CheckoutForm extends Form {
    * @param Validator $validator
    * @param Order $currentOrder
    */
-  function __construct($controller, $name, $groupedFields, FieldList $actions, $validator = null, Order $currentOrder = null) {
-    
-    //Send fields in as associative array, then loop through and add to $fields array for parent constructuor
-    //Overload the Fields() method to get fields for specific areas of the form
-    $this->groupedFields = $groupedFields;
-    //$this->groupedFields = array_merge($groupedFields, $this->groupedFields);
-    
-    $fields = new FieldList();
-    if (is_array($groupedFields)) foreach ($groupedFields as $setName => $setFields) {
-      foreach ($setFields as $field) $fields->push($field);
-    }
-    else if ($groupedFields instanceof FieldList) $fields = $groupedFields;
-    
+  function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null, Order $currentOrder = null) {
+
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		$this->setTemplate('CheckoutForm');
 		$this->currentOrder = $currentOrder;
-		$this->extraFieldsSet = new FieldList();
+  }
+
+  public function getShippingAddressFields() {
+  	return $this->Fields()->fieldByName('ShippingAddress');
+  }
+
+  public function getBillingAddressFields() {
+  	return $this->Fields()->fieldByName('BillingAddress');
+  }
+
+  public function getPersonalDetailsFields() {
+  	return $this->Fields()->fieldByName('PersonalDetails');
+  }
+
+  public function getItemsFields() {
+  	return $this->Fields()->fieldByName('ItemsFields')->FieldList();
+  }
+
+  public function getSubTotalModificationsFields() {
+  	return $this->Fields()->fieldByName('SubTotalModificationsFields')->FieldList();
+  }
+
+  public function getTotalModificationsFields() {
+  	return $this->Fields()->fieldByName('TotalModificationsFields')->FieldList();
+  }
+
+  public function getNotesFields() {
+  	return $this->Fields()->fieldByName('NotesFields');
+  }
+
+  public function getPaymentFields() {
+  	return $this->Fields()->fieldByName('PaymentFields');
   }
   
   /**
@@ -71,37 +77,6 @@ class CheckoutForm extends Form {
   function Cart() {
     return $this->currentOrder;
   }
-  
-	/**
-	 * Return the forms fields for the template, but filter the fields for 
-	 * a particular 'set' of fields.
-	 * 
-	 * @return FieldList The form fields
-	 */
-	function Fields($set = null) {
-
-	  if ($set) {
-	    $fields = new FieldList();
-		
-  		//TODO fix this, have to disable security token for now @see CheckoutPage::OrderForm()
-  	  foreach ($this->getExtraFields() as $field) {
-  			if (!$this->extraFieldsSet->fieldByName($field->getName())) {
-  			  $this->extraFieldsSet->push($field);
-  			  $fields->push($field);
-  			}
-  		}
-  
-  		if ($set && isset($this->groupedFields[$set])) {
-  
-  		  if (is_array($this->groupedFields[$set])) foreach ($this->groupedFields[$set] as $field) {
-  		    $fields->push($field);
-  		  }
-  		  else $fields->push($this->groupedFields[$set]);
-  		}
-  		return $fields;
-	  }
-	  else return parent::Fields(); //For the validator to get fields
-	}
 	
 	/**
 	 * Overloaded so that form error messages are displayed.

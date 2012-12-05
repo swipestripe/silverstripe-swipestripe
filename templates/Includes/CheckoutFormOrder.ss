@@ -13,7 +13,7 @@
   
     <% if Items %>
     
-      <% control Top.Fields(Items) %>
+      <% control Top.ItemsFields %>
 	      $FieldHolder
 	    <% end_control %>
 	    
@@ -24,8 +24,8 @@
         </td>
       </tr>
     <% end_if %>
-    
-    <% control Top.Fields(SubTotalModifiers) %>
+
+    <% control Top.SubTotalModificationsFields %>
       $FieldHolder
     <% end_control %>
     
@@ -34,7 +34,7 @@
       <td>$SubTotalPrice.Nice</td>
     </tr>
     
-    <% control Top.Fields(Modifiers) %>
+    <% control Top.TotalModificationsFields %>
       $FieldHolder
     <% end_control %>
 
@@ -42,6 +42,7 @@
       <td colspan="4" class="row-header"><% _t('CheckoutFormOrder.TOTAL','Total') %></td>
       <td>$TotalPrice.Nice</td>
     </tr>
+
   </tbody>
 </table>
 <% end_control %>

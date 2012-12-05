@@ -7,12 +7,12 @@
   <% else %>
     <p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
   <% end_if %>
-  
+
   <fieldset>
 
-  	<% if Fields(PersonalDetails) %>
+  	<% if PersonalDetailsFields %>
   	<section class="personal-details">
-	    <% control Fields(PersonalDetails) %>
+	    <% control PersonalDetailsFields %>
 	      $FieldHolder
 	    <% end_control %>
     </section>
@@ -22,7 +22,7 @@
 
   	<section class="address">
     	<div id="address-shipping">
-	      <% control Fields(ShippingAddress) %>
+	      <% control ShippingAddressFields %>
 	        $FieldHolder
 	      <% end_control %>
 	    </div>
@@ -32,7 +32,7 @@
   
     <section class="address">
 	    <div id="address-billing">
-		    <% control Fields(BillingAddress) %>
+		    <% control BillingAddressFields %>
 		      $FieldHolder
 		    <% end_control %>
 	    </div>
@@ -51,17 +51,18 @@
 	    
 	    <% include CheckoutFormOrder %>
     </section>
-    
+   
+
     <section class="notes">
-	    <% control Fields(Notes) %>
+	    <% control NotesFields %>
 	      $FieldHolder
 	    <% end_control %>
     </section>
     
     <hr />
-    
+   
     <section class="payment-details">
-	    <% control Fields(Payment) %>
+	    <% control PaymentFields %>
 	      $FieldHolder
 	    <% end_control %>
     </section>
