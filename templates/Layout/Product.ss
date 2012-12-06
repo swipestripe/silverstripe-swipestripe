@@ -9,7 +9,7 @@
 	  <h3 class="product-price-js">$Product.Price.Nice</h3>
 	
 	  <div class="add-to-cart">
-	    $AddToCartForm(1)
+	    $ProductForm(1)
 	  </div>
   </div>
 

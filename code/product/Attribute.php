@@ -183,6 +183,50 @@ class Attribute extends DataObject {
     }
   }
 
+  public function getOptionField($prev = null) {
+  	return Attribute_OptionField::create($this, $prev);
+  }
+
+}
+
+class Attribute_OptionField extends DropdownField {
+
+	public function __construct($attr, $prev = null) {
+
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript('swipestripe/javascript/Attribute_OptionField.js');
+
+		$product = $attr->Product();
+
+	  //Pass in the attribute ID
+	  $name = "Options[" . $attr->ID . "]";
+	  $title = $attr->Title;
+	  $source = $product->getOptionsForAttribute($attr->ID)->map();
+	  $value = null;
+	  
+	  $this->addExtraClass('dropdown');
+
+	  //If previous attribute field exists, listen to it and react with new options
+	  if ($prev && $prev->exists()) {
+
+	  	$this->setAttribute('data-prev', "Options[" . $prev->ID  . "]");
+
+	  	$variations = $product->Variations();
+	  	$options = array();
+	  	if ($variations && $variations->exists()) foreach ($variations as $variation) {
+
+	  		$prevOption = $variation->getOptionForAttribute($prev->ID);
+	  		$option = $variation->getOptionForAttribute($attr->ID);
+
+	  		$options[$prevOption->ID][$option->ID] = $option->Title;
+	  	}
+
+	  	$this->setAttribute('data-map', json_encode($options));
+	  }
+	  
+		parent::__construct($name, $title, $source, $value);
+	}
 }
 
 class Attribute_Default extends Attribute {

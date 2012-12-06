@@ -1,5 +1,5 @@
 (function($) {
-	$.entwine('ss', function($){
+	$.entwine('sws', function($){
 
 		$('.galleryfield-files').entwine({
 			onmatch : function() {

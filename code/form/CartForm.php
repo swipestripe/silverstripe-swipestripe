@@ -14,7 +14,7 @@ class CartForm extends Form {
    * 
    * @var Order
    */
-  public $currentOrder;
+  public $order;
   
   /**
    * Construct the form, set the current order and the template to be used for rendering.
@@ -26,160 +26,321 @@ class CartForm extends Form {
    * @param Validator $validator
    * @param Order $currentOrder
    */
-  function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null, Order $currentOrder = null) {
+  function __construct($controller, $name) {
+
+  	Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript('swipestripe/javascript/CartForm.js');
+
+  	$this->order = Cart::get_current_order();
     
+    $fields = $this->createFields();
+    $actions = $this->createActions();
+    $validator = $this->createValidator();
+
 		parent::__construct($controller, $name, $fields, $actions, $validator);
+
+		$this->addExtraClass('cart-form');
 		$this->setTemplate('CartForm');
-		$this->currentOrder = $currentOrder;
+  }
+
+  public function createFields() {
+
+  	$fields = FieldList::create();
+  	$items = $this->order->Items();
+
+  	if ($items) foreach ($items as $item) {
+
+	    $fields->push(CartForm_QuantityField::create(
+	    	'Quantity['.$item->ID.']', 
+	    	$item->Quantity, 
+	    	$item
+	    )); 
+	  }
+	  return $fields;
+  }
+
+  public function createActions() {
+
+  	$actions = FieldList::create(
+      FormAction::create('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
+      FormAction::create('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
+    );
+    return $actions;
+  }
+
+  public function createValidator() {
+
+  	$validator = RequiredFields::create();
+
+  	$items = $this->order->Items();
+  	if ($items) foreach ($items as $item) {
+	    $validator->addRequiredField('Quantity['.$item->ID.']');
+	  }
+  	return $validator;
   }
 
   /**
-   * Set quantity to 0 for items to be removed in order to avoid issues with Item->validate() when the item
-   * options are no longer valid.
-   */
-  public function httpSubmission($request) {
-		$vars = $request->requestVars();
-		if(isset($funcName)) {
-			Form::set_current_action($funcName);
-		}
+	 * Update the current cart quantities then redirect back to the cart page.
+	 * 
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
+	 */
+	public function updateCart(Array $data, Form $form) {
 
-		//Set quantity to zero for items we are removing
-		if (isset($vars['action_removeItem'])) {
-			$removeID = $vars['action_removeItem'];
-			$vars['Quantity'][$removeID] = 0;
-		}
-
-		// Populate the form
-		$this->loadDataFrom($vars, true);
-	
-		// Protection against CSRF attacks
-		$token = $this->getSecurityToken();
-		if(!$token->checkRequest($request)) {
-			$this->httpError(400, "Sorry, your session has timed out.");
-		}
-		
-		// Determine the action button clicked
-		$funcName = null;
-		foreach($vars as $paramName => $paramVal) {
-			if(substr($paramName,0,7) == 'action_') {
-				// Break off querystring arguments included in the action
-				if(strpos($paramName,'?') !== false) {
-					list($paramName, $paramVars) = explode('?', $paramName, 2);
-					$newRequestParams = array();
-					parse_str($paramVars, $newRequestParams);
-					$vars = array_merge((array)$vars, (array)$newRequestParams);
-				}
-				
-				// Cleanup action_, _x and _y from image fields
-				$funcName = preg_replace(array('/^action_/','/_x$|_y$/'),'',$paramName);
-				break;
-			}
-		}
-		
-		// If the action wasnt' set, choose the default on the form.
-		if(!isset($funcName) && $defaultAction = $this->defaultAction()){
-			$funcName = $defaultAction->actionName();
-		}
-			
-		if(isset($funcName)) {
-			$this->setButtonClicked($funcName);
-		}
-		
-		// Permission checks (first on controller, then falling back to form)
-		if(
-			// Ensure that the action is actually a button or method on the form,
-			// and not just a method on the controller.
-			$this->controller->hasMethod($funcName)
-			&& !$this->controller->checkAccessAction($funcName)
-			// If a button exists, allow it on the controller
-			&& !$this->actions->fieldByName('action_' . $funcName)
-		) {
-			return $this->httpError(
-				403, 
-				sprintf('Action "%s" not allowed on controller (Class: %s)', $funcName, get_class($this->controller))
-			);
-		} elseif(
-			$this->hasMethod($funcName)
-			&& !$this->checkAccessAction($funcName)
-			// No checks for button existence or $allowed_actions is performed -
-			// all form methods are callable (e.g. the legacy "callfieldmethod()")
-		) {
-			return $this->httpError(
-				403, 
-				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->name)
-			);
-		}
-		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set
-		// explicitly in allowed_actions in order to run)
-		// Uncomment the following for checking security against running actions on form fields
-		/* else {
-			// Try to find a field that has the action, and allows it
-			$fieldsHaveMethod = false;
-			foreach ($this->Fields() as $field){
-				if ($field->hasMethod($funcName) && $field->checkAccessAction($funcName)) {
-					$fieldsHaveMethod = true;
-				}
-			}
-			if (!$fieldsHaveMethod) {
-				return $this->httpError(
-					403, 
-					sprintf('Action "%s" not allowed on any fields of form (Name: "%s")', $funcName, $this->Name())
-				);
-			}
-		}*/
-		
-		// Validate the form
-		if(!$this->validate()) {
-			if(Director::is_ajax()) {
-				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through
-				// FormResponse)
-				$acceptType = $request->getHeader('Accept');
-				if(strpos($acceptType, 'application/json') !== FALSE) {
-					// Send validation errors back as JSON with a flag at the start
-					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
-					$response->addHeader('Content-Type', 'application/json');
-				} else {
-					$this->setupFormErrors();
-					// Send the newly rendered form tag as HTML
-					$response = new SS_HTTPResponse($this->forTemplate());
-					$response->addHeader('Content-Type', 'text/html');
-				}
-				
-				return $response;
-			} else {
-				if($this->getRedirectToFormOnValidationError()) {
-					if($pageURL = $request->getHeader('Referer')) {
-						if(Director::is_site_url($pageURL)) {
-							// Remove existing pragmas
-							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
-							return $this->controller->redirect($pageURL . '#' . $this->FormName());
-						}
-					}
-				}
-				return $this->controller->redirectBack();
-			}
-		}
-		
-		// First, try a handler method on the controller (has been checked for allowed_actions above already)
-		if($this->controller->hasMethod($funcName)) {
-			return $this->controller->$funcName($vars, $this, $request);
-		// Otherwise, try a handler method on the form object.
-		} elseif($this->hasMethod($funcName)) {
-			return $this->$funcName($vars, $this, $request);
-		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
-			return $field->$funcName($vars, $this, $request);
-		}
-		
-		return $this->httpError(404);
+	  $this->saveCart($data, $form);
+	  $this->controller->redirectBack();
 	}
-  
+
+	/**
+	 * Update the current cart quantities and redirect to checkout.
+	 * 
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
+	 */
+	public function goToCheckout(Array $data, Form $form) {
+
+	  $this->saveCart($data, $form);
+	  
+	  if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
+	    $this->controller->redirect($checkoutPage->AbsoluteLink());
+	  }
+	  else Debug::friendlyError(500);
+	}
+
+
+	/**
+	 * Save the cart, update the order item quantities and the order total.
+	 * 
+	 * @param Array $data Data submitted from the form via POST
+	 * @param Form $form Form that data was submitted from
+	 */
+	private function saveCart(Array $data, Form $form) {
+	  $currentOrder = Cart::get_current_order();
+	  $quantities = (isset($data['Quantity'])) ?$data['Quantity'] :null;
+
+	  if ($quantities) foreach ($quantities as $itemID => $quantity) {
+
+	    if ($item = $currentOrder->Items()->find('ID', $itemID)) {
+  	    if ($quantity == 0) {
+
+  	    	SS_Log::log(new Exception(print_r($item->toMap(), true)), SS_Log::NOTICE);
+
+    	    $item->delete();
+    	  }
+    	  else {
+    	    $item->Quantity = $quantity;
+  	      $item->write();
+    	  }
+	    }
+	  }
+	  $currentOrder->updateTotal();
+	}
+
   /*
    * Retrieve the current {@link Order} which is the cart.
    * 
    * @return Order The current order (cart)
    */
-  function Cart() {
-    return $this->currentOrder;
+  public function Cart() {
+    return $this->order;
   }
+  
+}
 
+/**
+ * Quantity field for displaying each {@link Item} in an {@link Order} on the {@link CartPage}.
+ */
+class CartForm_QuantityField extends TextField {
+
+	/**
+	 * Template for rendering the field
+	 *
+	 * @var String
+	 */
+	protected $template = "CartForm_QuantityField";
+	
+	/**
+	 * Current {@link Item} represented by this field.
+	 * 
+	 *  @var Item
+	 */
+	protected $item;
+	
+	/**
+	 * Construct the field and set the current {@link Item} that this field represents.
+	 * 
+	 * @param String $name
+	 * @param String $title
+	 * @param String $value
+	 * @param Int $maxLength
+	 * @param Form $form
+	 * @param Item $item
+	 */
+  function __construct($name, $value = "", $item = null){
+
+		$this->item = $item;
+		parent::__construct($name, '', $value, null, null);
+	}
+	
+	/**
+	 * Render the field with the appropriate template.
+	 * 
+	 * @see FormField::FieldHolder()
+	 */
+  function FieldHolder($properties = array()) {
+  	$obj = ($properties) ? $this->customise($properties) : $this;
+		return $this->renderWith($this->template);
+	}
+	
+	/**
+	 * Retrieve the current {@link Item} this field represents. Used in the template.
+	 * 
+	 * @return Item
+	 */
+	function Item() {
+	  return $this->item;
+	}
+	
+	/**
+	 * Set the current {@link Item} this field represents
+	 * 
+	 * @param Item $item
+	 */
+	function setItem(Item $item) {
+	  $this->item = $item;
+	}
+	
+	/**
+	 * Validate this field, check that the current {@link Item} is in the current 
+	 * {@Link Order} and is valid for adding to the cart.
+	 * 
+	 * @see FormField::validate()
+	 * @return Boolean
+	 */
+  function validate($validator) {
+
+	  $valid = true;
+	  $item = $this->Item();
+    $currentOrder = Cart::get_current_order();
+		$items = $currentOrder->Items();
+		$quantity = $this->Value();
+
+		$removingItem = false;
+		if ($quantity <= 0) {
+		  $removingItem = true;
+		}
+
+	  //Check that item exists and is in the current order
+	  if (!$item || !$item->exists() || !$items->find('ID', $item->ID)) {
+	    
+	    $errorMessage = _t('Form.ITEM_IS_NOT_IN_ORDER', 'This product is not in the Cart.');
+			if ($msg = $this->getCustomValidationMessage()) {
+				$errorMessage = $msg;
+			}
+	    
+	    $validator->validationError(
+				$this->getName(),
+				$errorMessage,
+				"error"
+			);
+			$valid = false;
+	  }
+	  else if ($item) {
+
+	  	//If removing item, cannot subtract past 0
+	  	if ($removingItem) {
+	  		if ($quantity < 0) {
+			    $errorMessage = _t('Form.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 0');
+					if ($msg = $this->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
+					
+					$validator->validationError(
+						$this->getName(),
+						$errorMessage,
+						"error"
+					);
+			    $valid = false;
+			  }
+	  	}
+	  	else {
+	  		//If quantity is invalid
+	  	  if ($quantity == null || !is_numeric($quantity)) {
+			    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
+					if ($msg = $this->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
+					
+					$validator->validationError(
+						$this->getName(),
+						$errorMessage,
+						"error"
+					);
+			    $valid = false;
+			  }
+			  else if ($quantity > 2147483647) {
+			    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
+					if ($msg = $this->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
+					
+					$validator->validationError(
+						$this->getName(),
+						$errorMessage,
+						"error"
+					);
+			    $valid = false;
+			  }
+
+		    $validation = $item->validateForCart();
+		    if (!$validation->valid()) {
+		      
+		      $errorMessage = $validation->message();
+	  			if ($msg = $this->getCustomValidationMessage()) {
+	  				$errorMessage = $msg;
+	  			}
+	  			
+	  			$validator->validationError(
+	  				$this->getName(),
+	  				$errorMessage,
+	  				"error"
+	  			);
+	  	    $valid = false;
+		    }
+	  	}
+	  }
+	  
+	  //Check that quantity for an item is not being pushed beyond available stock levels for a product
+	  $quantityChange = $quantity - $item->Quantity;
+	  
+	  if ($item) {
+	    $variation = $item->Variation();
+	    $product = $item->Product();
+	    $stockLevel = 0;
+	    if ($variation) {
+	      $stockLevel = $variation->StockLevel()->Level;
+	    }
+	    else {
+	      $stockLevel = $product->StockLevel()->Level;
+	    }
+	    if ($quantityChange > 0 && $quantityChange > $stockLevel && $stockLevel > -1) {
+	      //If the change in quantity is greater than the remaining stock level then there is a problem
+	      $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'Quantity is greater than remaining stock.');
+  			if ($msg = $this->getCustomValidationMessage()) {
+  				$errorMessage = $msg;
+  			}
+  			
+	      $validator->validationError(
+  				$this->getName(),
+  				$errorMessage,
+  				"error"
+  			);
+  	    $valid = false;
+	    }
+	  }
+	  
+	  return $valid;
+	}
+	
 }

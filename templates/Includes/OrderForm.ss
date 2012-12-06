@@ -49,7 +49,7 @@
 	    	</div>
 	    </div>
 	    
-	    <% include CheckoutFormOrder %>
+	    <% include OrderFormCart %>
     </section>
    
 
