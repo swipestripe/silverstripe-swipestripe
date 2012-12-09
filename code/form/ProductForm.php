@@ -282,40 +282,6 @@ class ProductForm_Validator extends RequiredFields {
   		$valid = false;
   		return $valid;
 	  }
-	  
-	  //Validate that the product/variation being added is inStock()
-	  $stockLevel = 0;
-	  if ($product) {
-	    if ($product->requiresVariation()) {
-	      $stockLevel = $productVariations->First()->StockLevel()->Level;
-	    }
-	    else {
-	      $stockLevel = $product->StockLevel()->Level;
-	    }
-	  }
-	  if ($stockLevel == 0) {
-	    $this->form->sessionMessage(
-  		  _t('Form.STOCK_LEVEL', ''), //"Sorry, this product is out of stock." - similar message will already be displayed on product page
-  		  'bad'
-  		);
-  		
-  		//Have to set an error for Form::validate()
-  		$this->errors[] = true;
-  		$valid = false;
-	  }
-	  
-	  //Validate the quantity is not greater than the available stock
-	  $quantity = $request->postVar('Quantity');
-	  if ($stockLevel > 0 && $stockLevel < $quantity) {
-	    $this->form->sessionMessage(
-  		  _t('Form.STOCK_LEVEL_MORE_THAN_QUANTITY', 'The quantity is greater than available stock for this product.'),
-  		  'bad'
-  		);
-  		
-  		//Have to set an error for Form::validate()
-  		$this->errors[] = true;
-  		$valid = false;
-	  }
 
 	  //Validate that base currency is set for this cart
 	  $config = ShopConfig::current_shop_config();

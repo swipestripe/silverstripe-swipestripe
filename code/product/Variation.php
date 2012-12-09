@@ -56,8 +56,7 @@ class Variation extends DataObject {
    */
   public static $has_one = array(
     'Product' => 'Product',
-    'Image' => 'Product_Image',
-    'StockLevel' => 'StockLevel'
+    'Image' => 'Product_Image'
   );
   
   /**
@@ -155,16 +154,6 @@ class Variation extends DataObject {
       $fields->addFieldToTab('Root.Variation', $optionField);
     }
 
-    //Stock level field
-    if (ShopConfig::current_shop_config()->StockCheck) {
-      $level = $this->StockLevel()->Level;
-      //$fields->addFieldToTab('Root.Variation', new StockField('Stock', null, $level, $this));
-      $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, -1));
-    }
-    else {
-      $fields->addFieldToTab('Root.Variation', new Hiddenfield('Stock', null, -1));
-    }
-
     $fields->addFieldToTab('Root.Variation', PriceField::create('Price', 'Price')
       ->setRightTitle('Amount that this variation will increase the base product price by')
     );
@@ -217,41 +206,12 @@ class Variation extends DataObject {
 	}
   
   /**
-   * Summary of stock, not currently used.
-   * 
-   * @return String
-   */
-  public function SummaryOfStock() {
-    $level = $this->StockLevel()->Level;
-    if ($level == -1) {
-      return 'unlimited';
-    }
-    return $level;
-  }
-  
-  /**
    * Summarize the Product price, returns Amount formatted with Nice()
    * 
    * @return String
    */
   public function SummaryOfPrice() {
     return $this->Amount()->Nice();
-  }
-  
-  /**
-   * Basic check to see if Product is in stock. Not currently used.
-   * 
-   * @return Boolean
-   */
-  public function InStock() {
-    
-    $inStock = false;
-    
-    $stockLevel = $this->StockLevel();
-    if ($stockLevel && $stockLevel->exists() && $stockLevel->Level != 0) {
-      $inStock = true;
-    }
-    return $inStock;
   }
   
   /**
@@ -481,74 +441,7 @@ class Variation extends DataObject {
     //Save in base currency
     $shopConfig = ShopConfig::current_shop_config();
     $this->Currency = $shopConfig->BaseCurrency;
-
-    // TODO: move this to onAfterWrite() ?
-    //If a stock level is set then update StockLevel
-    $request = Controller::curr()->getRequest();
-    if ($request) {
-
-      $newLevel = $request->requestVar('Stock');
-      if (isset($newLevel)) {
-        $stockLevel = $this->StockLevel();
-        $stockLevel->Level = $newLevel;
-        $stockLevel->write();
-        $this->StockLevelID = $stockLevel->ID;
-      }
-    }
   }
-	
-  /**
-	 * Update the stock level for this {@link Product}. A negative quantity is passed 
-	 * when product is added to a cart, a positive quantity when product is removed from a 
-	 * cart.
-	 * 
-	 * @param Int $quantity
-	 * @return Void
-	 */
-  public function updateStockBy($quantity) {
-    
-    $stockLevel = $this->StockLevel();
-    //Do not change stock level if it is already set to unlimited (-1)
-	  if ($stockLevel->Level != -1) {
-      $stockLevel->Level += $quantity;
-  	  if ($stockLevel->Level < 0) $stockLevel->Level = 0;
-  	  $stockLevel->write();
-    }
-	}
-	
-	/**
-	 * Get the quantity of this product that is currently in shopping carts
-	 * or unprocessed orders
-	 * 
-	 * @return Int
-	 */
-  public function getUnprocessedQuantity() {
-	  
-	  //Get items with this objectID/objectClass (nevermind the version)
-	  //where the order status is either cart, pending or processing
-	  $objectID = $this->ID;
-	  $objectClass = $this->class;
-	  $totalQuantity = array(
-	    'InCarts' => 0,
-	    'InOrders' => 0
-	  );
-
-	  //TODO refactor using COUNT(Item.Quantity)
-	  $itemOptions = DataObject::get(
-	  	'ItemOption', 
-	    "\"ItemOption\".\"ObjectID\" = $objectID AND \"ItemOption\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')",
-	    '',
-	    "INNER JOIN \"Item\" ON \"Item\".\"ID\" = \"ItemOption\".\"ItemID\" INNER JOIN \"Order\" ON \"Order\".\"ID\" = \"Item\".\"OrderID\""
-	  );
-	  
-	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
-
-	    $item = $itemOption->Item();
-	    if ($item->Order()->Status == 'Cart') $totalQuantity['InCarts'] += $item->Quantity;
-	    else $totalQuantity['InOrders'] += $item->Quantity;
-	  }
-	  return $totalQuantity;
-	}
 }
 
 class Variation_Options extends DataObject {

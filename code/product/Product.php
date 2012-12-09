@@ -65,15 +65,6 @@ class Product extends Page {
 
     return $amount;
   }
-  
-  /**
-   * Has one relations for Product
-   * 
-   * @var Array
-   */
-  public static $has_one = array(
-    'StockLevel' => 'StockLevel'
-  );
 
   /**
    * Has many relations for Product.
@@ -128,18 +119,6 @@ class Product extends Page {
     //Save in base currency
     $shopConfig = ShopConfig::current_shop_config();
     $this->Currency = $shopConfig->BaseCurrency;
-    
-    //If a stock level is set then update StockLevel
-    $request = Controller::curr()->getRequest();
-    if ($request) {
-      $newLevel = $request->requestVar('Stock');
-      if (isset($newLevel)) {
-        $stockLevel = $this->StockLevel();
-        $stockLevel->Level = $newLevel;
-        $stockLevel->write();
-        $this->StockLevelID = $stockLevel->ID;
-      }
-    }
   }
   
 	/**
@@ -152,9 +131,7 @@ class Product extends Page {
     parent::onAfterWrite();
 
     if ($this->firstWrite) {
-      
-      //TODO Make sure there is a StockLevel for this product by default
-      
+
       //Copy product images across when duplicating product
       $original = DataObject::get_by_id($this->class, $this->original['ID']);
       if ($original) {
@@ -193,16 +170,6 @@ class Product extends Page {
 
     //Product fields
     $fields->addFieldToTab('Root.Main', new PriceField('Price'), 'Content');
-
-		//Stock level field
-    if ($shopConfig->StockCheck) {
-      $level = $this->StockLevel()->Level;
-      //$fields->addFieldToTab('Root.Main', new StockField('Stock', null, $level, $this), 'Content');
-      $fields->addFieldToTab('Root.Main', new Hiddenfield('Stock', null, -1), 'Content');
-    }
-		else {
-      $fields->addFieldToTab('Root.Main', new Hiddenfield('Stock', null, -1), 'Content');
-    }
 
     //Replace URL Segment field
     if ($this->ParentID == -1) {
@@ -322,7 +289,7 @@ class Product extends Page {
 
     if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
-      if ($variation->isEnabled() && $variation->InStock()) {
+      if ($variation->isEnabled()) {
         $option = $variation->getOptionForAttribute($attributeID);
         if ($option) $options->push($option); 
       }
@@ -356,118 +323,6 @@ class Product extends Page {
   		}
     }
     return $result;
-	}
-
-	/**
-	 * Get parent type for Product, extra parent type of exempt where the product is not
-	 * part of the site tree (instead associated to product categories).
-	 * 
-	 * @see SiteTree::getParentType()
-	 * @return String Returns root, exempt or subpage
-	 */
-  public function getParentType() {
-    $parentType = null;
-    if ($this->ParentID == 0) {
-      $parentType = 'root';
-    }
-    else if ($this->ParentID == -1) {
-      $parentType = 'exempt';
-    }
-    else {
-      $parentType = 'subpage';
-    }
-    return $parentType;
-	}
-
-  /**
-   * Update the stock level for this {@link Product}. A negative quantity is passed 
-   * when product is added to a cart, a positive quantity when product is removed from a 
-   * cart.
-   * 
-   * @param Int $quantity
-   * @return Void
-   */
-  public function updateStockBy($quantity) {
-    $stockLevel = $this->StockLevel();
-
-    //Do not change stock level if it is already set to unlimited (-1)
-    if ($stockLevel->Level != -1) {
-      $stockLevel->Level += $quantity;
-      if ($stockLevel->Level < 0) $stockLevel->Level = 0;
-      $stockLevel->write();
-    }
-  }
-	
-	/**
-	 * Product is in stock if stock level for product is != 0 or if ANY of its product
-	 * variations is in stock.
-	 * 
-	 * @return Boolean 
-	 */
-	public function InStock() {
-	  //if has variations, check if any variations in stock
-	  //else check if this is in stock
-	  $inStock = false;
-	  if ($this->requiresVariation()) {
-
-	    //Check variations for stock levels
-	    $variations = $this->Variations();
-	    if ($variations && $variations->exists()) foreach ($variations as $variation) {
-	      //If there is a single variation in stock, then this product is in stock
-	      if ($variation->InStock() && $variation->isEnabled()) {
-	        $inStock = true;
-	        continue;
-	      } 
-	    }
-	    else {
-	      $inStock = false;
-	    }
-	  }
-	  else {
-	    $stockLevel = $this->StockLevel();
-	    if ($stockLevel && $stockLevel->exists() && $stockLevel->Level != 0) {
-	      $inStock = true;
-	    }
-	  }
-	  return $inStock;
-	}
-	
-	/**
-	 * Get the quantity of this product that is currently in shopping carts
-	 * or unprocessed orders
-	 * 
-	 * @return Array Number in carts and number in orders
-	 */
-  public function getUnprocessedQuantity() {
-	  
-	  //Get items with this objectID/objectClass (nevermind the version)
-	  //where the order status is either cart, pending or processing
-	  $objectID = $this->ID;
-	  $objectClass = $this->class;
-	  $totalQuantity = array(
-	    'InCarts' => 0,
-	    'InOrders' => 0
-	  );
-
-	  //TODO refactor using COUNT(Item.Quantity)
-    /*
-	  $items = DataObject::get(
-	  	'Item', 
-	    "\"Item\".\"ObjectID\" = $objectID AND \"Item\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')",
-	    '',
-	    "INNER JOIN \"Order\" ON \"Order\".\"ID\" = \"Item\".\"OrderID\""
-	  );
-    */
-
-    $items = Item::get()
-      ->where("\"Item\".\"ObjectID\" = $objectID AND \"Item\".\"ObjectClass\" = '$objectClass' AND \"Order\".\"Status\" IN ('Cart','Pending','Processing')")
-      ->innerJoin('Order', "\"Order\".\"ID\" = \"Item\".\"OrderID\"");
-	  
-	  if ($items && $items->exists()) foreach ($items as $item) {
-	    if ($item->Order()->Status == 'Cart') $totalQuantity['InCarts'] += $item->Quantity;
-	    else $totalQuantity['InOrders'] += $item->Quantity;
-	  }
-	  return $totalQuantity;
 	}
 }
 

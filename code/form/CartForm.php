@@ -311,35 +311,6 @@ class CartForm_QuantityField extends TextField {
 	  	}
 	  }
 	  
-	  //Check that quantity for an item is not being pushed beyond available stock levels for a product
-	  $quantityChange = $quantity - $item->Quantity;
-	  
-	  if ($item) {
-	    $variation = $item->Variation();
-	    $product = $item->Product();
-	    $stockLevel = 0;
-	    if ($variation) {
-	      $stockLevel = $variation->StockLevel()->Level;
-	    }
-	    else {
-	      $stockLevel = $product->StockLevel()->Level;
-	    }
-	    if ($quantityChange > 0 && $quantityChange > $stockLevel && $stockLevel > -1) {
-	      //If the change in quantity is greater than the remaining stock level then there is a problem
-	      $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'Quantity is greater than remaining stock.');
-  			if ($msg = $this->getCustomValidationMessage()) {
-  				$errorMessage = $msg;
-  			}
-  			
-	      $validator->validationError(
-  				$this->getName(),
-  				$errorMessage,
-  				"error"
-  			);
-  	    $valid = false;
-	    }
-	  }
-	  
 	  return $valid;
 	}
 	

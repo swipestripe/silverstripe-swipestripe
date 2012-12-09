@@ -1,15 +1,8 @@
 <?php
 /**
  * An Item for an {@link Order}.
- * 
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage order
  */
 class Item extends DataObject {
-
-	private $previousQuantity = 0;
 
   /**
    * DB fields for an Item, the object this Item represents (e.g. {@link Product}
@@ -89,12 +82,6 @@ class Item extends DataObject {
 	 */
 	public function onBeforeDelete() {
 	  parent::onBeforeDelete();
-
-	  if (ShopConfig::current_shop_config()->StockManagement == 'strict') {
-	  	$this->previousQuantity = $this->Quantity;
-		  $this->Quantity = 0;
-		  $this->updateStockLevels();
-	  }
 	  
 	  $itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
 	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
@@ -232,52 +219,6 @@ class Item extends DataObject {
 	    );
 	  }
 	  return $result;
-	}
-	
-	/**
-	 * Update the quantity of the item. 
-	 * previousQuantity starts at 0.
-	 * 
-	 * @see DataObject::onBeforeWrite()
-	 */
-  function onBeforeWrite() {
-    parent::onBeforeWrite();
-
-    //previousQuantity starts at 0
-    if ($this->isChanged('Quantity')) {
-  		if(isset($this->original['Quantity'])) {
-  			$this->previousQuantity = $this->original['Quantity'];
-  		}
-    }
-  }
-	
-  /**
-   * Update stock levels for {@link Item}.
-   * 
-   * @see DataObject::onAfterWrite()
-   */
-	public function onAfterWrite() {
-	  parent::onAfterWrite();
-	  if (ShopConfig::current_shop_config()->StockManagement == 'strict') $this->updateStockLevels();
-	}
-	
-	/**
-	 * Update {@link StockLevel} for {@link Product} - or {@link Variation} if it
-	 * exists. 
-	 * 
-	 * @see Item::onBeforeDelete()
-	 * @see Item::onAfterWrite()
-	 */
-	public function updateStockLevels() {
-
-		$quantityChange = $this->previousQuantity - $this->Quantity;
-
-	  if ($variation = $this->Variation()) {
-	    $variation->updateStockBy($quantityChange);
-	  }
-	  else if ($product = $this->Product()) {
-	    if (!$product->requiresVariation()) $product->updateStockBy($quantityChange);
-	  }
 	}
 
 	public function SummaryOfOptions() {
