@@ -313,5 +313,9 @@ class CartForm_QuantityField extends TextField {
 	  
 	  return $valid;
 	}
+
+	public function Type() {
+		return 'cartquantity';	
+	}
 	
 }

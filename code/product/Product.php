@@ -443,7 +443,6 @@ class Product_Controller extends Page_Controller {
  * @package swipestripe
  * @subpackage product
  */
-
 class Product_Image extends Image {
 
 	public static $singular_name = 'Image';

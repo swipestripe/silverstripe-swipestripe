@@ -1,6 +1,6 @@
 <tr>
   <td>
-    <a href="#" data-item="$Item.ID" class="remove-item-js">remove</a>
+    <a href="#" data-item="$Item.ID" class="remove-item-js"></a>
   </td>
 
   <td> 
