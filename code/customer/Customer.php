@@ -9,20 +9,7 @@
  */
 class Customer extends Member {
   
-  /**
-   * Extra DB fields, mostly for address - requirements for the Payment class.
-   * Also ties Member class with Address and Order classes.
-   * 
-   * @var Array
-   */
-  //TODO: Refactor customer addresses
   static $db = array(
-		'Address' => 'Varchar(255)',
-		'AddressLine2' => 'Varchar(255)',
-		'City' => 'Varchar(100)',
-		'PostalCode' => 'Varchar(30)',
-		'State' => 'Varchar(100)',
-		'Country' => 'Varchar',
 		'HomePhone' => 'Varchar(100)'
 	);
 	
@@ -32,7 +19,6 @@ class Customer extends Member {
 	 * @var Array
 	 */
 	static $has_many = array(
-	  'Addresses' => 'Address',
 	  'Orders' => 'Order'
 	);
 
@@ -113,47 +99,6 @@ class Customer extends Member {
     ));
 
     return $fields;
-	}
-	
-	/**
-	 * Retrieve the last used billing address for this Member from their previous saved addresses.
-	 * TODO make this more efficient
-	 * 
-	 * @return Address The last billing address
-	 */
-	public function BillingAddress() {
-
-		// TODO: Refactor this mess
-	  $address = null;
-
-	  $addresses = $this->Addresses();
-	  $addresses->sort('Created', 'ASC');
-	  if ($addresses && $addresses->exists()) foreach ($addresses as $billingAddress) {
-	  	$order = $billingAddress->Order();
-	    if ($billingAddress->ClassName == 'Address_Billing' && $order->exists() &&  $order->Status != 'Cart') $address = $billingAddress; 
-	  }
-	  
-	  return $address;
-	}
-	
-	/**
-	 * Retrieve the last used shipping address for this Member from their previous saved addresses.
-	 * TODO make this more efficient
-	 * 
-	 * @return Address The last shipping address
-	 */
-	public function ShippingAddress() {
-
-		// TODO: Refactor this mess
-	  $address = null;
-
-	  $addresses = $this->Addresses();
-	  $addresses->sort('Created', 'ASC');
-	  if ($addresses && $addresses->exists()) foreach ($addresses as $shippingAddress) {
-	  	$order = $shippingAddress->Order();
-	    if ($shippingAddress->Classname == 'Address_Shipping' && $order->exists() && $order->Status != 'Cart') $address = $shippingAddress;
-	  }
-	  return $address;
 	}
 	
 	/**

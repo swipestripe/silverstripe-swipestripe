@@ -48,51 +48,5 @@
 			}
 		});
 
-		$('input.shipping-same-address').entwine({
-
-			onmatch : function() {
-				var self = this;
-				var form = this.closest('form');
-
-				console.log(this);
-
-				this._copyAddress();
-
-				this.on('click', function(e) {
-					self._copyAddress(e);
-				});
-				
-				$('#address-shipping input[type=text], #address-shipping select', form).on('keyup blur', function(e){
-					self._copyAddress(e);
-				});
-
-				this._super();
-			},
-
-			onunmatch: function() {
-				this._super();
-			},
-			
-			_copyAddress: function(e) {
-				var form = this.closest('form');
-
-				if (this.is(':checked')) {
-	        $('#address-shipping input[type=text], #address-shipping select', form).each(function(){
-            $('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
-	            .val($('#' + $(this).attr('id')).val())
-	            .parent().parent().hide();
-	        });
-    		}
-    		//Only clear fields if specifically unticking checkbox
-        else if ($(e.currentTarget).attr('id') == this.attr('id')) {
-          $('#address-shipping input[type=text], #address-shipping select', form).each(function(){
-            $('#' + $(this).attr('id').replace(/Shipping/i, 'Billing'))
-              .val('')
-              .parent().parent().show();
-          });
-        }
-			}
-		});
-
 	});
 })(jQuery);

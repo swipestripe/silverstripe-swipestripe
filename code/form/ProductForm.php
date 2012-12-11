@@ -10,6 +10,8 @@ class ProductForm extends Form {
 
 	function __construct($controller, $name, $quantity = null, $redirectURL = null) {
 
+		parent::__construct($controller, $name, FieldList::create(), FieldList::create(), null);
+
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript('swipestripe/javascript/ProductForm.js');
@@ -18,11 +20,9 @@ class ProductForm extends Form {
 		$this->quantity = $quantity;
 		$this->redirectURL = $redirectURL;
 
-    $fields = $this->createFields();
-    $actions = $this->createActions();
-    $validator = $this->createValidator();
-
-		parent::__construct($controller, $name, $fields, $actions, $validator);
+    $this->fields = $this->createFields();
+    $this->actions = $this->createActions();
+    $this->validator = $this->createValidator();
 
 		$this->addExtraClass('product-form');
 
@@ -69,6 +69,8 @@ class ProductForm extends Form {
 
     $fields->push(ProductForm_QuantityField::create('Quantity', 'Quantity', $this->quantity));
 
+    $this->extend('updateFields', $fields);
+		foreach ($fields as $field) $field->setForm($this);
     return $fields;
   }
 
@@ -76,6 +78,9 @@ class ProductForm extends Form {
   	$actions = new FieldList(
       new FormAction('add', 'Add To Cart')
     );
+
+    $this->extend('updateActions', $actions);
+  	foreach ($actions as $action) $action->setForm($this);
     return $actions;
   }
 
@@ -86,6 +91,9 @@ class ProductForm extends Form {
     	'ProductID',
       'Quantity'
     );
+
+    $this->extend('updateValidator', $validator);
+	  $validator->setForm($this);
     return $validator;
   }
 	

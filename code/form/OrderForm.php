@@ -22,6 +22,8 @@ class OrderForm extends Form {
    */
   function __construct($controller, $name) {
 
+  	parent::__construct($controller, $name, FieldList::create(), FieldList::create(), null);
+
   	Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript('swipestripe/javascript/OrderForm.js');
@@ -30,11 +32,9 @@ class OrderForm extends Form {
     $this->customer = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $this->controller = $controller;
 
-    $fields = $this->createFields();
-    $actions = $this->createActions();
-    $validator = $this->createValidator();
-
-		parent::__construct($controller, $name, $fields, $actions, $validator);
+    $this->fields = $this->createFields();
+    $this->actions = $this->createActions();
+    $this->validator = $this->createValidator();
 
 		$this->setTemplate('OrderForm');
 		$this->addExtraClass('order-form');
@@ -133,65 +133,12 @@ class OrderForm extends Form {
 
 
     $fields = FieldList::create(
-
-    	$shippingAddressFields = CompositeField::create(
-		    HeaderField::create(_t('CheckoutPage.SHIPPING_ADDRESS',"Shipping Address"), 3),
-				TextField::create('Shipping[FirstName]', _t('CheckoutPage.FIRSTNAME',"First Name"))
-					->addExtraClass('shipping-firstname')
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_FIRSTNAME',"Please enter a first name.")),
-				TextField::create('Shipping[Surname]', _t('CheckoutPage.SURNAME',"Surname"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_SURNAME',"Please enter a surname.")),
-				TextField::create('Shipping[Company]', _t('CheckoutPage.COMPANY',"Company")),
-				TextField::create('Shipping[Address]', _t('CheckoutPage.ADDRESS',"Address"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_ADDRESS',"Please enter an address."))
-					->addExtraClass('address-break'),
-				TextField::create('Shipping[AddressLine2]', '&nbsp;'),
-				TextField::create('Shipping[City]', _t('CheckoutPage.CITY',"City"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_CITY',"Please enter a city.")),
-				TextField::create('Shipping[PostalCode]', _t('CheckoutPage.POSTAL_CODE',"Postal Code")),
-				TextField::create('Shipping[State]', _t('CheckoutPage.STATE',"State"))
-					->addExtraClass('address-break'),
-				DropdownField::create('Shipping[CountryCode]', 
-						_t('CheckoutPage.COUNTRY',"Country"), 
-						Country_Shipping::get()->map('Code', 'Title')->toArray()
-					)->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_COUNTRY',"Please enter a country."))
-		  )->setID('ShippingAddress')->setName('ShippingAddress'),
-
-			$billingAddressFields = CompositeField::create(
-		    HeaderField::create(_t('CheckoutPage.BILLINGADDRESS',"Billing Address"), 3),
-		    $checkbox = CheckboxField::create('BillToShippingAddress', _t('CheckoutPage.SAME_ADDRESS',"same as shipping address?"))
-		    	->addExtraClass('shipping-same-address'),
-				TextField::create('Billing[FirstName]', _t('CheckoutPage.FIRSTNAME',"First Name"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURFIRSTNAME',"Please enter your first name."))
-					->addExtraClass('address-break'),
-				TextField::create('Billing[Surname]', _t('CheckoutPage.SURNAME',"Surname"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURSURNAME',"Please enter your surname.")),
-				TextField::create('Billing[Company]', _t('CheckoutPage.COMPANY',"Company")),
-				TextField::create('Billing[Address]', _t('CheckoutPage.ADDRESS',"Address"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURADDRESS',"Please enter your address."))
-					->addExtraClass('address-break'),
-				TextField::create('Billing[AddressLine2]', '&nbsp;'),
-				TextField::create('Billing[City]', _t('CheckoutPage.CITY',"City"))
-					->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCITY',"Please enter your city")),
-				TextField::create('Billing[PostalCode]', _t('CheckoutPage.POSTALCODE',"Postal Code")),
-				TextField::create('Billing[State]', _t('CheckoutPage.STATE',"State"))
-					->addExtraClass('address-break'),
-				DropdownField::create('Billing[CountryCode]', 
-						_t('CheckoutPage.COUNTRY',"Country"), 
-						Country_Billing::get()->map('Code', 'Title')->toArray()
-					)->setCustomValidationMessage(_t('CheckoutPage.PLEASEENTERYOURCOUNTRY',"Please enter your country."))
-		  )->setID('BillingAddress')->setName('BillingAddress'),
-
 			$itemFields,
-
 			$subTotalModsFields,
-
 			$totalModsFields,
-
 			$notesFields = CompositeField::create(
 		    TextareaField::create('Notes', _t('CheckoutPage.NOTES_ABOUT_ORDER',"Notes about this order"))
 	    )->setName('NotesFields'),
-
 	    $paymentFields
     );
 
@@ -199,6 +146,8 @@ class OrderForm extends Form {
 			$fields->push($personalFields);
 		}
 
+		$this->extend('updateFields', $fields);
+		foreach ($fields as $field) $field->setForm($this);
 		return $fields;
   }
 
@@ -206,22 +155,15 @@ class OrderForm extends Form {
   	$actions = FieldList::create(
   		new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
   	);
+
+  	$this->extend('updateActions', $actions);
+  	foreach ($actions as $action) $action->setForm($this);
   	return $actions;
   }
 
   public function createValidator() {
 
-  	$validator = new OrderForm_Validator(
-			'Shipping[FirstName]',
-	  	'Shipping[Surname]',
-	  	'Shipping[Address]',
-	  	'Shipping[City]',
-	  	'Shipping[CountryCode]',
-	  	'Billing[FirstName]',
-	  	'Billing[Surname]',
-	  	'Billing[Address]',
-	  	'Billing[City]',
-	  	'Billing[CountryCode]',
+  	$validator = OrderForm_Validator::create(
 	  	'PaymentMethod'
 		);
 
@@ -230,15 +172,9 @@ class OrderForm extends Form {
 			$validator->addRequiredField('Email');
 		}
 
+		$this->extend('updateValidator', $validator);
+		$validator->setForm($this);
 		return $validator;
-  }
-
-  public function getShippingAddressFields() {
-  	return $this->Fields()->fieldByName('ShippingAddress');
-  }
-
-  public function getBillingAddressFields() {
-  	return $this->Fields()->fieldByName('BillingAddress');
   }
 
   public function getPersonalDetailsFields() {
@@ -341,19 +277,6 @@ class OrderForm extends Form {
     }
 
 		//Save or create a new customer/member
-
-    //TODO: Refactor customer addresses
-		$memberData = array(
-		  'FirstName' => $data['Billing']['FirstName'],
-		  'Surname' => $data['Billing']['Surname'],
-			'Address' => $data['Billing']['Address'],
-		  'AddressLine2' => $data['Billing']['AddressLine2'],
-			'City' => $data['Billing']['City'],
-		  'State' => $data['Billing']['State'],
-			'Country' => $data['Billing']['CountryCode'],
-		  'PostalCode' => $data['Billing']['PostalCode']
-		);
-
 		$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
 		if (!$member->exists()) {
 
@@ -367,11 +290,13 @@ class OrderForm extends Form {
   			return false;
 			}
 
-			$member = new Customer();
-			
+			$member = Customer::create();
 			$form->saveInto($member);
-			$member->update($data['Billing']);
-			$member->Email = $data['Email'];
+			$member->update(array(
+			  'FirstName' => $data['BillingFirstName'],
+			  'Surname' => $data['BillingSurname'],
+			  'Email' => $data['Email']
+			));
 			$member->write();
 			$member->addToGroupByCode('customers');
 			$member->logIn();
@@ -396,15 +321,6 @@ class OrderForm extends Form {
 			$update->MemberID = $member->ID;
 			$update->write();
 		}
-
-		//Save the order items (not sure why can't do this with writeComponents() perhaps because Items() are cached?!)
-	  foreach ($items as $item) {
-      $item->OrderID = $order->ID;
-		  $item->write();
-    }
-    
-    //Add addresses to order
-    $order->updateAddresses($data)->write();
 
     //Add modifiers to order
     $order->updateModifications($data)->write();
@@ -450,9 +366,6 @@ class OrderForm extends Form {
       //Update the Order 
       $order->update($request->postVars());
 
-      $order->updateAddresses($request->postVars())
-      	->write();
-
       $order->updateModifications($request->postVars())
       	->write();
 
@@ -460,10 +373,26 @@ class OrderForm extends Form {
       	$this->controller, 
       	'OrderForm'
       )->disableSecurityToken();
+
       $form->validate();
 
   	  return $form->renderWith('OrderFormCart');
 	  }
+	}
+
+	function populateFields() {
+
+		//Populate values in the form the first time
+    if (!Session::get("FormInfo.{$this->FormName()}.errors")) {
+
+    	$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+    	$data = array_merge(
+	    	$member->toMap()
+	    );
+
+    	$this->extend('populateFields', $data);
+	    $this->loadDataFrom($data);
+    }
 	}
 }
 

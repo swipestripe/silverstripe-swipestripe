@@ -25,9 +25,7 @@
             </td>
           </tr>
         </table>
-  
-        <% include OrderAddresses %>
-     
+
         <% include Order %>
          
         <% if Payments %>

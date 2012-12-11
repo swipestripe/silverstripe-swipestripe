@@ -13,7 +13,6 @@
 	      <tr>
 	        <th>#</th>
 	        <th><% _t('AccountPage.DATE','Date') %></th>
-          <th><% _t('AccountPage.SHIP_TO','Ship to') %></th>
           <th><% _t('AccountPage.TOTAL','Total') %></th>
           <th><% _t('AccountPage.STATUS','Status') %></th>
 	        <th>&nbsp;</th>
@@ -24,16 +23,6 @@
 	      <tr>
 	        <td>$ID</td>
 	        <td>$OrderedOn.Format(j M y)</td>
-	        <td>
-	          <% control ShippingAddress %>
-			        <% if Address %>      $Address<br />      <% end_if %>
-			        <% if AddressLine2 %> $AddressLine2<br /> <% end_if %>
-			        <% if City %>         $City<br />         <% end_if %>
-			        <% if PostalCode %>   $PostalCode<br />   <% end_if %>
-			        <% if State %>        $State<br />        <% end_if %>
-			        <% if CountryName %>  $CountryName<br />  <% end_if %>
-			      <% end_control %>
-	        </td>
 	        <td>$TotalPrice.Nice</td>
 	        <td>$Status ($PaymentStatus)</td>
 	        <td><a href="$Link"><% _t('AccountPage.VIEW_THIS_ORDER','View this order') %></a></td>

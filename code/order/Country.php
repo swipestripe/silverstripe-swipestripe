@@ -317,6 +317,8 @@ class Country extends DataObject {
 	public static function get_codes() {
 		return self::$iso_3166_countryCodes;
 	}
+
+	//TODO validate that Code is unique for each country
 }
 
 /**

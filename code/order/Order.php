@@ -49,7 +49,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	  'OrderedOn' => 'SS_Datetime',
 	  'LastActive' => 'SS_Datetime',
-	  'Env' => 'Varchar(10)'
+	  'Env' => 'Varchar(10)',
 	);
 
 	public function Total() {
@@ -121,9 +121,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	public static $has_one = array(
-	  'Member' => 'Customer',
-	  'ShippingAddress' => 'Address_Shipping',
-	  'BillingAddress' => 'Address_Billing'
+	  'Member' => 'Customer'
 	);
 
 	/*
@@ -241,7 +239,7 @@ class Order extends DataObject implements PermissionProvider {
 	}
 
   /**
-	 * Clean up Order Items (ItemOptions by extension), Addresses and Modifications.
+	 * Clean up Order Items (ItemOptions by extension) and Modifications.
 	 * All wrapped in a transaction.
 	 */
 	public function delete() {
@@ -254,18 +252,6 @@ class Order extends DataObject implements PermissionProvider {
 	    if ($items && $items->exists()) foreach ($items as $item) {
         $item->delete();
         $item->destroy();
-	    }
-
-	    $shippingAddress = $this->ShippingAddress();
-	    if ($shippingAddress && $shippingAddress->exists()) {
-	    	$shippingAddress->delete();
-	    	$shippingAddress->destroy();
-	    }
-	    
-	    $billingAddress = $this->BillingAddress();
-	    if ($billingAddress && $billingAddress->exists()) {
-	    	$billingAddress->delete();
-	    	$billingAddress->destroy();
 	    }
 	    
 	    $modifications = $this->Modifications();
@@ -346,7 +332,7 @@ class Order extends DataObject implements PermissionProvider {
     	$this->BaseCurrencySymbol = $shopConfig->BaseCurrencySymbol;
     }
 
-    //If orders do not exist
+    //If orders do not exist set the first ID
     if ((!Order::get()->count() && true) && is_numeric(self::$first_id) && self::$first_id > 0) {
     	$this->ID = self::$first_id;
     }
@@ -405,9 +391,10 @@ class Order extends DataObject implements PermissionProvider {
     	"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"
     ));
 
+    //Override this in updateOrderCMSFields to change the order template in the CMS
     $htmlSummary = $this->customise(array(
 			'MemberEmail' => $this->Member()->Email
-		))->renderWith("OrderAdmin");
+		))->renderWith('OrderAdmin');
 		$fields->addFieldToTab('Root.Order', new LiteralField('MainDetails', $htmlSummary));
 
 		//Updates
@@ -747,43 +734,6 @@ class Order extends DataObject implements PermissionProvider {
 	}
 	
 	/**
-	 * Add addresses to this Order at the checkout.
-	 * 
-	 * @param Array $data
-	 */
-	public function updateAddresses(Array $data) {
-
-	  $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
-    $order = Cart::get_current_order();
-
-    //If there is a current billing and shipping address, update them, otherwise create new ones
-    $existingShippingAddress = $this->ShippingAddress();
-    $shippingAddress =  ($existingShippingAddress && $existingShippingAddress->exists()) 
-    	? $existingShippingAddress
-    	: new Address_Shipping();
-
-    $shippingAddress->update($data['Shipping']);
-    $shippingAddress->OrderID = $order->ID;
-    $shippingAddress->MemberID = $member->ID;
-    $shippingAddress->write();
-
-
-    $existingBillingAddress = $this->BillingAddress();
-    $billingAddress = ($existingBillingAddress && $existingBillingAddress->exists()) 
-    	? $existingBillingAddress
-    	: new Address_Billing();
-
-    $billingAddress->update($data['Billing']);
-    $billingAddress->OrderID = $order->ID;
-    $billingAddress->MemberID = $member->ID;
-    $billingAddress->write();
-
-    $order->ShippingAddressID = $shippingAddress->ID;
-    $order->BillingAddressID = $billingAddress->ID;
-    return $this;
-	}
-	
-	/**
 	 * Valdiate this Order for use in Validators at checkout. Makes sure
 	 * Items exist and each Item is valid.
 	 * 
@@ -920,10 +870,6 @@ class Order_Update extends DataObject {
     return false;
 	}
 
-  /**
-	 * Clean up Order Items (ItemOptions by extension), Addresses and Modifications.
-	 * All wrapped in a transaction.
-	 */
 	public function delete() {
 	  if ($this->canDelete(Member::currentUser())) {
       parent::delete();

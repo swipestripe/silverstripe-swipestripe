@@ -16,33 +16,6 @@ ShopConfig:
     NotificationSubject: Notification for order
 
 # ------------------------------------------
-# Stock Levels
-# ------------------------------------------  
-StockLevel:
-  levelProductA:
-    Level: 5
-  levelProductB:
-    Level: -1
-  levelTeeshirtExtraLargePurpleCotton:
-    Level: 5
-  levelTeeshirtSmallPurpleCotton:
-    Level: -1
-  levelTeeshirtSmallRedCotton:
-    Level: -1
-  levelTeeshirtSmallRedPolyester:
-    Level: -1
-  levelJeans: #Should be superceded by levelJeansSmall and levelJeansMedium
-    Level: -1
-  levelJeansSmall:
-    Level: 0
-  levelJeansMedium:
-    Level: 1
-  levelShortsSmallRedCotton:
-    Level: -1
-  levelShortsA:
-    Level: -1
-
-# ------------------------------------------
 # Products
 # ------------------------------------------
 Product:
@@ -52,14 +25,12 @@ Product:
     Price: 500
     Currency: NZD
     Date: 2011-02-17 18:45:00
-    StockLevelID: =>StockLevel.levelProductA
   productB:
     Title: Product B
     URLSegment: product-b
     Price: 19.95
     Currency: NZD 
     Date: 2011-01-31 20:48:00
-    StockLevelID: =>StockLevel.levelProductB
   teeshirtA:
     Title: Striped Tee
     URLSegment: striped-tee
@@ -72,13 +43,11 @@ Product:
     Price: 24.95
     Currency: NZD 
     Date: 2011-01-31 20:49:00
-    StockLevelID: =>StockLevel.levelShortsA
   jeans:
     Title: Jeans
     URLSegment: jeans
     Price: 34.99
     Currency: NZD 
-    StockLevelID: =>StockLevel.levelJeans #This level should be superceded by variation stock level
   brokenProduct:
     Title: Broken Product
     URLSegment: broken-product
@@ -283,17 +252,14 @@ Variation:
     ProductID: =>Product.teeshirtA
     Currency: NZD
     Price: 0.00
-    StockLevelID: =>StockLevel.levelTeeshirtSmallRedCotton
   teeshirtSmallRedPolyester:
     ProductID: =>Product.teeshirtA
     Currency: NZD
     Price: 1.05 
-    StockLevelID: =>StockLevel.levelTeeshirtSmallRedPolyester
   teeshirtSmallPurpleCotton:
     ProductID: =>Product.teeshirtA
     Currency: NZD
     Price: 0.00 
-    StockLevelID: =>StockLevel.levelTeeshirtSmallPurpleCotton
   teeshirtSmallPurplePolyester:
     ProductID: =>Product.teeshirtA
     Currency: NZD
@@ -318,7 +284,6 @@ Variation:
     ProductID: =>Product.teeshirtA
     Currency: NZD
     Price: 0.00 
-    StockLevelID: =>StockLevel.levelTeeshirtExtraLargePurpleCotton
 
 # Shorts Variations
 # Small, Red, Cotton
@@ -334,7 +299,6 @@ Variation:
     Currency: NZD
     Price: 0.00
     Status: Enabled
-    StockLevelID: =>StockLevel.levelShortsSmallRedCotton
 
 # Jeans Variations
 # Small
@@ -345,13 +309,11 @@ Variation:
     Currency: NZD
     Price: 0.00
     Status: Enabled
-    StockLevelID: =>StockLevel.levelJeansSmall
   jeansMedium:
     ProductID: =>Product.jeans
     Currency: NZD
     Price: 0.00
     Status: Enabled
-    StockLevelID: =>StockLevel.levelJeansMedium
 
 # Broken product Variations
 # Small, Red

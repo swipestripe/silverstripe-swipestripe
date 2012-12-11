@@ -142,31 +142,8 @@ class CheckoutPage_Controller extends Page_Controller {
     	'OrderForm'
     )->disableSecurityToken();
 
-    //Populate values in the form the first time
-    if (!Session::get("FormInfo.{$form->FormName()}.errors")) {
-
-    	$shippingAddress = $member->ShippingAddress();
-    	$shippingAddressData = ($shippingAddress && $shippingAddress->exists()) 
-    		? $shippingAddress->getCheckoutFormData()
-    		: array();
-    	unset($shippingAddressData['Shipping[RegionCode]']); //Not available billing address option
-
-    	$billingAddress = $member->BillingAddress();
-    	$billingAddressData = ($billingAddress && $billingAddress->exists()) 
-    		? $billingAddress->getCheckoutFormData()
-    		: array();
-
-    	//If billing address is a subset of shipping address, consider them equal
-    	$intersect = array_intersect(array_values($shippingAddressData), array_values($billingAddressData));
-    	if (array_values($intersect) == array_values($billingAddressData)) $billingAddressData['BillToShippingAddress'] = true;
-
-    	$data = array_merge(
-	    	$member->toMap(), 
-	    	$shippingAddressData,
-	    	$billingAddressData
-	    );
-	    $form->loadDataFrom($data);
-    }
+    //Populate fields the first time form is loaded
+    $form->populateFields();
 
     return $form;
   }
