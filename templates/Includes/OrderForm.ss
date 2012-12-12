@@ -19,26 +19,6 @@
     
     <hr />
     <% end_if %>
-
-  	<section class="address">
-    	<div id="address-shipping">
-	      <% control ShippingAddressFields %>
-	        $FieldHolder
-	      <% end_control %>
-	    </div>
-    </section>
-
-    <hr />
-  
-    <section class="address">
-	    <div id="address-billing">
-		    <% control BillingAddressFields %>
-		      $FieldHolder
-		    <% end_control %>
-	    </div>
-    </section>
-    
-    <hr />
     
     <section class="order-details">
 	    <h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
