@@ -22,8 +22,6 @@ class OrderForm extends Form {
    */
   function __construct($controller, $name) {
 
-  	parent::__construct($controller, $name, FieldList::create(), FieldList::create(), null);
-
   	Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript('swipestripe/javascript/OrderForm.js');
@@ -32,9 +30,15 @@ class OrderForm extends Form {
     $this->customer = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
     $this->controller = $controller;
 
-    $this->fields = $this->createFields();
-    $this->actions = $this->createActions();
-    $this->validator = $this->createValidator();
+    $fields = $this->createFields();
+    $actions = $this->createActions();
+    $validator = $this->createValidator();
+
+    parent::__construct($controller, $name, $fields, $actions, $validator);
+
+    $this->extend('updateFields', $this->fields);
+    $this->extend('updateActions', $this->actions);
+    $this->extend('updateValidator', $this->validator);
 
 		$this->setTemplate('OrderForm');
 		$this->addExtraClass('order-form');
@@ -62,8 +66,7 @@ class OrderForm extends Form {
 		    new HeaderField(_t('CheckoutPage.ACCOUNT',"Account"), 3),
 		    new CompositeField(
 	  			EmailField::create('Email', _t('CheckoutPage.EMAIL', 'Email'))
-	  				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', "Please enter your email address.")),
-	  			TextField::create('HomePhone', _t('CheckoutPage.PHONE',"Phone"))
+	  				->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', "Please enter your email address."))
 		    ),
 		    new CompositeField(
   	      new FieldGroup(
@@ -146,8 +149,7 @@ class OrderForm extends Form {
 			$fields->push($personalFields);
 		}
 
-		$this->extend('updateFields', $fields);
-		foreach ($fields as $field) $field->setForm($this);
+		//foreach ($fields as $field) $field->setForm($this);
 		return $fields;
   }
 
@@ -156,8 +158,7 @@ class OrderForm extends Form {
   		new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
   	);
 
-  	$this->extend('updateActions', $actions);
-  	foreach ($actions as $action) $action->setForm($this);
+  	// foreach ($actions as $action) $action->setForm($this);
   	return $actions;
   }
 
@@ -172,8 +173,7 @@ class OrderForm extends Form {
 			$validator->addRequiredField('Email');
 		}
 
-		$this->extend('updateValidator', $validator);
-		$validator->setForm($this);
+		// $validator->setForm($this);
 		return $validator;
   }
 
@@ -292,11 +292,6 @@ class OrderForm extends Form {
 
 			$member = Customer::create();
 			$form->saveInto($member);
-			$member->update(array(
-			  'FirstName' => $data['BillingFirstName'],
-			  'Surname' => $data['BillingSurname'],
-			  'Email' => $data['Email']
-			));
 			$member->write();
 			$member->addToGroupByCode('customers');
 			$member->logIn();
@@ -390,7 +385,7 @@ class OrderForm extends Form {
 	    	$member->toMap()
 	    );
 
-    	$this->extend('populateFields', $data);
+    	$this->extend('updatePopulateFields', $data);
 	    $this->loadDataFrom($data);
     }
 	}
@@ -441,6 +436,8 @@ class OrderForm_Validator extends RequiredFields {
     		$valid = false;
 		  }
 		}
+
+		// SS_Log::log(new Exception(print_r($this->getErrors(), true)), SS_Log::NOTICE);
 		
 		return $valid;
 	}

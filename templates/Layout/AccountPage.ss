@@ -1,10 +1,6 @@
 <div class="account-page sws">
 	<h2>$Title</h2>
-	
-	<p>
-	Hi <strong>$Customer.FirstName</strong>
-	</p>
-	
+
 	$Content
 	
 	<% if Orders %>

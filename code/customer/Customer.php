@@ -8,10 +8,6 @@
  * @subpackage customer
  */
 class Customer extends Member {
-  
-  static $db = array(
-		'HomePhone' => 'Varchar(100)'
-	);
 	
 	/**
 	 * Link customers to {@link Address}es and {@link Order}s.

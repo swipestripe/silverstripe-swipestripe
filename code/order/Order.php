@@ -145,6 +145,7 @@ class Order extends DataObject implements PermissionProvider {
 	  'ID' => 'Order No',
 		'OrderedOn' => 'Ordered On',
 		'Member.Name' => 'Customer',
+		'Member.Email' => 'Email',
 		'SummaryOfTotal' => 'Total',
 		'Status' => 'Status'
 	);
