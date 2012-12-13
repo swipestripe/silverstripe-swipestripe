@@ -286,7 +286,7 @@ class OrderForm extends Form {
   				_t('CheckoutPage.MEMBER_ALREADY_EXISTS', 'Sorry, a member already exists with that email address. If this is your email address, please log in first before placing your order.'),
   				'bad'
   			);
-  			$this->redirectBack();
+  			$this->controller->redirectBack();
   			return false;
 			}
 

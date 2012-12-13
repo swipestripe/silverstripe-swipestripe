@@ -8,6 +8,10 @@
  * @subpackage customer
  */
 class Customer extends Member {
+
+	static $db = array(
+		'Code' => 'Int' //Just to trigger creating a Customer table
+	);
 	
 	/**
 	 * Link customers to {@link Address}es and {@link Order}s.
