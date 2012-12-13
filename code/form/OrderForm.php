@@ -22,23 +22,20 @@ class OrderForm extends Form {
    */
   function __construct($controller, $name) {
 
+  	parent::__construct($controller, $name, FieldList::create(), FieldList::create(), null);
+
   	Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript('swipestripe/javascript/OrderForm.js');
 
   	$this->order = Cart::get_current_order();
     $this->customer = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
-    $this->controller = $controller;
 
-    $fields = $this->createFields();
-    $actions = $this->createActions();
-    $validator = $this->createValidator();
+		$this->fields = $this->createFields();
+		$this->actions = $this->createActions();
+		$this->validator = $this->createValidator();
 
-    parent::__construct($controller, $name, $fields, $actions, $validator);
-
-    $this->extend('updateFields', $this->fields);
-    $this->extend('updateActions', $this->actions);
-    $this->extend('updateValidator', $this->validator);
+    $this->setupFormErrors();
 
 		$this->setTemplate('OrderForm');
 		$this->addExtraClass('order-form');
@@ -149,7 +146,8 @@ class OrderForm extends Form {
 			$fields->push($personalFields);
 		}
 
-		//foreach ($fields as $field) $field->setForm($this);
+		$this->extend('updateFields', $fields);
+		$fields->setForm($this);
 		return $fields;
   }
 
@@ -158,7 +156,8 @@ class OrderForm extends Form {
   		new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
   	);
 
-  	// foreach ($actions as $action) $action->setForm($this);
+  	$this->extend('updateActions', $actions);
+  	$actions->setForm($this);
   	return $actions;
   }
 
@@ -173,7 +172,8 @@ class OrderForm extends Form {
 			$validator->addRequiredField('Email');
 		}
 
-		// $validator->setForm($this);
+		$this->extend('updateValidator', $validator);
+		$validator->setForm($this);
 		return $validator;
   }
 
@@ -209,6 +209,18 @@ class OrderForm extends Form {
   function Cart() {
     return $this->order;
   }
+
+  /**
+	 * Set up current form errors in session to
+	 * the current form if appropriate.
+	 */
+	public function setupFormErrors() {
+
+		//Only run when fields exist
+		if ($this->fields->exists()) {
+			parent::setupFormErrors();
+		}
+	}
 	
 	/**
 	 * Overloaded so that form error messages are displayed.
@@ -218,46 +230,19 @@ class OrderForm extends Form {
 	 */
   function validate(){
 
-		if($this->validator){
+  	$valid = true;
+  	if($this->validator){
 			$errors = $this->validator->validate();
 
-			if ($errors){
-
-				if (Director::is_ajax()) { // && $this->validator->getJavascriptValidationHandler() == 'prototype') {
-				  
-				  //Set error messages to form fields for display after form is rendered
-				  $fields = $this->Fields();
-
-				  foreach ($errors as $errorData) {
-				    $field = $fields->dataFieldByName($errorData['fieldName']);
-            if ($field) {
-              $field->setError($errorData['message'], $errorData['messageType']);
-              $fields->replaceField($errorData['fieldName'], $field);
-            }
-				  }
-				} 
-				else {
-				
-					$data = $this->getData();
-
-					$formError = array();
-					if ($formMessageType = $this->MessageType()) {
-					  $formError['message'] = $this->Message();
-					  $formError['messageType'] = $formMessageType;
-					}
-
-					// Load errors into session and post back
-					Session::set("FormInfo.{$this->FormName()}", array(
-						'errors' => $errors,
-						'data' => $data,
-					  'formError' => $formError
-					));
-
-				}
-				return false;
+			if($errors){
+				// Load errors into session and post back
+				$data = $this->getData();
+				Session::set("FormInfo.{$this->FormName()}.errors", $errors); 
+				Session::set("FormInfo.{$this->FormName()}.data", $data);
+				$valid = false;
 			}
 		}
-		return true;
+		return $valid;
 	}
 
   public function process($data, $form) {
@@ -369,7 +354,7 @@ class OrderForm extends Form {
       	'OrderForm'
       )->disableSecurityToken();
 
-      $form->validate();
+      // $form->validate();
 
   	  return $form->renderWith('OrderFormCart');
 	  }
@@ -403,8 +388,6 @@ class OrderForm_Validator extends RequiredFields {
 	 * @return Boolean Returns TRUE if the submitted data is valid, otherwise FALSE.
 	 */
 	function php($data) {
-	  
-	  //TODO move the form error messages to CheckoutForm::validate()
 
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();
@@ -436,9 +419,6 @@ class OrderForm_Validator extends RequiredFields {
     		$valid = false;
 		  }
 		}
-
-		// SS_Log::log(new Exception(print_r($this->getErrors(), true)), SS_Log::NOTICE);
-		
 		return $valid;
 	}
 	

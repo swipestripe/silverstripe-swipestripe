@@ -28,17 +28,21 @@ class CartForm extends Form {
    */
   function __construct($controller, $name) {
 
-  	parent::__construct($controller, $name, FieldList::create(), FieldList::create(), null);
-
   	Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript('swipestripe/javascript/CartForm.js');
 
   	$this->order = Cart::get_current_order();
     
-    $this->fields = $this->createFields();
-    $this->actions = $this->createActions();
-    $this->validator = $this->createValidator();
+    $fields = $this->createFields();
+    $actions = $this->createActions();
+    $validator = $this->createValidator();
+
+    parent::__construct($controller, $name, $fields, $actions, $validator);
+
+    $this->extend('updateFields', $this->fields);
+    $this->extend('updateActions', $this->actions);
+    $this->extend('updateValidator', $this->validator);
 
 		$this->addExtraClass('cart-form');
 		$this->setTemplate('CartForm');
@@ -57,9 +61,6 @@ class CartForm extends Form {
 	    	$item
 	    )); 
 	  }
-	  
-	  $this->extend('updateFields', $fields);
-		foreach ($fields as $field) $field->setForm($this);
 	  return $fields;
   }
 
@@ -69,9 +70,6 @@ class CartForm extends Form {
       FormAction::create('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
       FormAction::create('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
     );
-
-  	$this->extend('updateActions', $actions);
-  	foreach ($actions as $action) $action->setForm($this);
     return $actions;
   }
 
@@ -83,9 +81,6 @@ class CartForm extends Form {
   	if ($items) foreach ($items as $item) {
 	    $validator->addRequiredField('Quantity['.$item->ID.']');
 	  }
-
-	  $this->extend('updateValidator', $validator);
-	  $validator->setForm($this);
   	return $validator;
   }
 
