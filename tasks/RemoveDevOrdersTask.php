@@ -16,7 +16,6 @@ class RemoveDevOrdersTask extends BuildTask {
 	protected $description = "Remove orders that were placed while website was in 'dev' mode.";
 
 	function run($request) {
-
 		$orders = Order::get()
 	  	->where("\"Order\".\"Env\" = 'dev'");
 

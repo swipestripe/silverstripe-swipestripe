@@ -29,19 +29,16 @@ class Customer extends Member {
 	 * @see Member::canDelete()
 	 */
   public function canDelete($member = null) {
-	  return false;
+
+  	$orders = $this->Orders();
+    if ($orders && $orders->exists()) {
+    	return false;
+    }
+    return Permission::check('ADMIN', 'any', $member);
 	}
 
 	public function delete() {
     if ($this->canDelete(Member::currentUser())) {
-
-    	if ($this->inGroup('customers')) {
-      
-	      $orders = $this->Orders();
-	      if ($orders && $orders->exists()) {
-	        throw new Exception(_t('Customer.CANNOT_DELETE_CUSTOMER', 'Could not delete this customer they have orders.'));
-	      }
-	    }
       parent::delete();
     }
   }
