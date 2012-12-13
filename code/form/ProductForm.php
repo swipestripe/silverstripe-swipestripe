@@ -24,6 +24,8 @@ class ProductForm extends Form {
     $this->actions = $this->createActions();
     $this->validator = $this->createValidator();
 
+    $this->setupFormErrors();
+
 		$this->addExtraClass('product-form');
 
 
@@ -45,6 +47,18 @@ class ProductForm extends Form {
 		}
 		$this->setAttribute('data-map', json_encode($map));
   }
+
+  /**
+	 * Set up current form errors in session to
+	 * the current form if appropriate.
+	 */
+	public function setupFormErrors() {
+
+		//Only run when fields exist
+		if ($this->fields->exists()) {
+			parent::setupFormErrors();
+		}
+	}
 
   public function createFields() {
 
@@ -70,7 +84,7 @@ class ProductForm extends Form {
     $fields->push(ProductForm_QuantityField::create('Quantity', 'Quantity', $this->quantity));
 
     $this->extend('updateFields', $fields);
-		foreach ($fields as $field) $field->setForm($this);
+		$fields->setForm($this);
     return $fields;
   }
 
@@ -80,7 +94,7 @@ class ProductForm extends Form {
     );
 
     $this->extend('updateActions', $actions);
-  	foreach ($actions as $action) $action->setForm($this);
+  	$actions->setForm($this);
     return $actions;
   }
 

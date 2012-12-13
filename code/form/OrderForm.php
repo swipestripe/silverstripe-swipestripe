@@ -41,6 +41,18 @@ class OrderForm extends Form {
 		$this->addExtraClass('order-form');
   }
 
+  /**
+	 * Set up current form errors in session to
+	 * the current form if appropriate.
+	 */
+	public function setupFormErrors() {
+
+		//Only run when fields exist
+		if ($this->fields->exists()) {
+			parent::setupFormErrors();
+		}
+	}
+
   public function createFields() {
 
   	$order = $this->order;
@@ -210,18 +222,6 @@ class OrderForm extends Form {
     return $this->order;
   }
 
-  /**
-	 * Set up current form errors in session to
-	 * the current form if appropriate.
-	 */
-	public function setupFormErrors() {
-
-		//Only run when fields exist
-		if ($this->fields->exists()) {
-			parent::setupFormErrors();
-		}
-	}
-	
 	/**
 	 * Overloaded so that form error messages are displayed.
 	 * 
