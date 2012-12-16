@@ -7,7 +7,7 @@
  * delete product, is unpublished, versions still exist
  * new version of product created when amount changed
  * variations disabled when new attribute added
- * correct options for variations returned on product page on first, second and third attribute dropdowns
+ * correct options for variations returned on product page on first dropdown
  * cannot save negative amount for product variation
  * 
  * TODO
@@ -203,7 +203,7 @@ class SWS_ProductTest extends SWS_Test {
 
 	  //Find the options for the first attribute select
 	  $selectFinder = new DomXPath($productPage);
-	  $firstAttributeSelectID = 'AddToCartForm_AddToCartForm_Options-'.$firstAttributeID;
+	  $firstAttributeSelectID = 'ProductForm_ProductForm_Options-'.$firstAttributeID;
 	  $firstSelect = $selectFinder->query("//select[@id='$firstAttributeSelectID']");
 	  
 	  foreach ($firstSelect as $node) {
@@ -219,112 +219,6 @@ class SWS_ProductTest extends SWS_Test {
   	    $this->assertEquals(1, $options->length);
   	  }
 	  }
-  }
-  
-  /**
-   * Post add to cart form and retreive second set of product options
-   */
-  function testProductOptionsSecondSet() {
-    
-    $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-    $attributes = $teeshirtA->Attributes();
-    $options = $teeshirtA->Options();
-    $variations = $teeshirtA->Variations();
-    
-    $this->loginAs('admin');
-    $teeshirtA->doPublish();	  
-    $this->logOut();
-    
-    $this->loginAs($this->objFromFixture('Customer', 'buyer'));
-    $this->get(Director::makeRelative($teeshirtA->Link())); 
-    
-	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
-	  
-	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
-	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
-    
-    $data = $this->getFormData('AddToCartForm_AddToCartForm');
-    unset($data["Options[{$colorAttr->ID}]"]);
-    unset($data["Options[{$materialAttr->ID}]"]);
-    unset($data["Options[{$sizeAttr->ID}]"]);
-    
-    $data['Options'][$colorAttr->ID] = $teeshirtARedOpt->ID;
-    $data['NextAttributeID'] = $materialAttr->ID;
-    
-    $this->post(
-      Director::absoluteURL($teeshirtA->Link() . '/options/'),
-      $data
-    );
-    
-    $decoded = json_decode($this->mainSession->lastContent());
-    
-    $expected = array(
-      $teeshirtACottonOpt->ID => $teeshirtACottonOpt->Title,
-      $teeshirtAPolyesterOpt->ID => $teeshirtAPolyesterOpt->Title
-    );
-    $actual = array();
-    foreach ($decoded->options as $optionID => $optionName) {
-      $actual[$optionID] = $optionName;
-    }
-    $this->assertEquals($expected, $actual);
-  }
-  
-  /**
-   * Post add to cart form and retreive third set of product options
-   */
-  function testProductOptionsThirdSet() {
-    
-    $teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-	  $attributes = $teeshirtA->Attributes();
-	  $options = $teeshirtA->Options();
-	  $variations = $teeshirtA->Variations();
-	  
-	  $this->loginAs('admin');
-    $teeshirtA->doPublish();	  
-	  $this->logOut();
-	  
-	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
-	  $this->get(Director::makeRelative($teeshirtA->Link()));
-
-	  $sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-	  $colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-	  $materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
-	  
-	  $teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-	  $teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
-	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
-	  $teeshirtAExtraLargeOpt = $this->objFromFixture('Option', 'optExtraLargeTeeshirt');
-	  
-    $data = $this->getFormData('AddToCartForm_AddToCartForm');
-	  unset($data["Options[{$colorAttr->ID}]"]);
-    unset($data["Options[{$materialAttr->ID}]"]);
-    unset($data["Options[{$sizeAttr->ID}]"]);
-	  
-    $data['Options'][$colorAttr->ID] = $teeshirtARedOpt->ID;
-    $data['Options'][$materialAttr->ID] = $teeshirtACottonOpt->ID;
-    $data['NextAttributeID'] = $sizeAttr->ID;
-
-	  $this->post(
-	    Director::absoluteURL($teeshirtA->Link() . '/options/'),
-	    $data
-	  );
-	  
-	  $decoded = json_decode($this->mainSession->lastContent());
-	  
-	  $expected = array(
-	    $teeshirtASmallOpt->ID => $teeshirtASmallOpt->Title,
-	    $teeshirtAExtraLargeOpt->ID => $teeshirtAExtraLargeOpt->Title
-	  );
-	  $actual = array();
-	  foreach ($decoded->options as $optionID => $optionName) {
-	    $actual[$optionID] = $optionName;
-	  }
-	  $this->assertEquals($expected, $actual);
   }
   
 	/**
