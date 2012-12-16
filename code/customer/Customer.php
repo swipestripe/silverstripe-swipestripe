@@ -112,6 +112,8 @@ class Customer extends Member {
     	$password
     ));
 
+    $this->extend('updateCMSFields', $fields);
+
     return $fields;
 	}
 	
