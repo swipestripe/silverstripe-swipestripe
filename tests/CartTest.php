@@ -42,9 +42,6 @@ class SWS_CartTest extends SWS_Test {
 
 		//Check that payment module is installed
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
-
-		//Add extension for product options
-		Object::add_extension('Product_Controller', 'CartTest_ProductExtension');
 	}
 
 	/**
@@ -72,7 +69,7 @@ class SWS_CartTest extends SWS_Test {
     $productALink = $productA->Link();
     $this->get(Director::makeRelative($productALink));
 
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+    $this->submitForm('ProductForm_ProductForm', null, array(
       'Quantity' => 1
     ));
 
@@ -104,7 +101,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -114,7 +111,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals(1, $items->First()->Quantity);
 	  
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 2
 	  ));
 	  
@@ -137,7 +134,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -148,7 +145,7 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $message = null;
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => -1
 	  ));
 	  
@@ -171,7 +168,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -181,7 +178,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals(1, $items->First()->Quantity);
 	  
 	  $this->get(Director::makeRelative($productALink));
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 0
 	  ));
 	  
@@ -207,7 +204,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -229,7 +226,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertTrue($secondVersion > $firstVersion);
 	  
 	  $this->get(Director::makeRelative($productALink));
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -257,7 +254,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -286,7 +283,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -306,7 +303,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->logOut();
 	  
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 	  
@@ -316,7 +313,6 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $this->assertEquals(1, $order->Items()->Count());
 	  $this->assertEquals($productA->Price, $firstItem->Price);
-	  $this->assertEquals($productA->Currency, $firstItem->Currency);
 	  
 	  $newAmount = new Price();
 	  $newAmount->setAmount(72.34);
@@ -330,7 +326,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->logOut();
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -373,7 +369,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -428,7 +424,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
-	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
+	  $data = $this->getFormData('ProductForm_ProductForm');
     $data['Quantity'] = 1;
     $data["Options[{$sizeAttr->ID}]"] = $teeshirtASmallOpt->ID; //Small
     $data["Options[{$colorAttr->ID}]"] = $teeshirtARedOpt->ID; //Red
@@ -475,7 +471,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
 	  //Submit with incorrect variation values, for Medium, Red, Cotton
-	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
+	  $data = $this->getFormData('ProductForm_ProductForm');
     $data['Quantity'] = 1;
     $data["Options[{$sizeAttr->ID}]"] = $teeshirtAMediumOpt->ID; //Medium
     $data["Options[{$colorAttr->ID}]"] = $teeshirtARedOpt->ID; //Red
@@ -504,7 +500,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->get(Director::makeRelative($teeshirtA->Link()));
 
 	  //Submit with incorrect variation values, for Medium, Red, Cotton
-	  $data = $this->getFormData('AddToCartForm_AddToCartForm');
+	  $data = $this->getFormData('ProductForm_ProductForm');
     $data['Quantity'] = 1;
 
     $this->post(
@@ -545,7 +541,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -561,7 +557,7 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 2,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -600,7 +596,7 @@ class SWS_CartTest extends SWS_Test {
 	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
 	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -624,7 +620,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -670,7 +666,7 @@ class SWS_CartTest extends SWS_Test {
 	  $this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
 	  $this->assertEquals($teeshirtACottonOpt->ID, $teeshirtAVariation->getOptionForAttribute($materialAttr->ID)->ID);
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -702,7 +698,7 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $this->get(Director::makeRelative($teeshirtA->Link())); 
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -744,7 +740,7 @@ class SWS_CartTest extends SWS_Test {
 	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
 	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -840,7 +836,7 @@ class SWS_CartTest extends SWS_Test {
 	  $teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
 	  $teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => $quantity,
 	    "Options[{$sizeAttr->ID}]" => $teeshirtASmallOpt->ID,  //Small
 	    "Options[{$colorAttr->ID}]" => $teeshirtARedOpt->ID, //Red
@@ -891,7 +887,7 @@ class SWS_CartTest extends SWS_Test {
     $productALink = $productA->Link();
     $this->get(Director::makeRelative($productALink));
 
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+    $this->submitForm('ProductForm_ProductForm', null, array(
       'Quantity' => 1
     ));
 
@@ -918,7 +914,7 @@ class SWS_CartTest extends SWS_Test {
     $productALink = $productA->Link();
     $this->get(Director::makeRelative($productALink));
 
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+    $this->submitForm('ProductForm_ProductForm', null, array(
       'Quantity' => 1
     ));
 
@@ -996,7 +992,7 @@ class SWS_CartTest extends SWS_Test {
 
 	  $message = null;
 	  try {
-  	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+  	  $this->submitForm('ProductForm_ProductForm', null, array(
   	    'Quantity' => 1
   	  ));
 	  }
@@ -1011,124 +1007,7 @@ class SWS_CartTest extends SWS_Test {
 	  
 	  $this->assertEquals(0, $items->Count());
 	}
-
-	public function testAddProductOptionsToCart() {
-
-    $productA = $this->objFromFixture('Product', 'productA');
-
-	  $this->loginAs('admin');
-	  $productA->doPublish();
-	  $this->logOut();
-
-	  //Add gift wrapping, extra $1.50
-    $this->get(Director::makeRelative($productA->Link()));
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-      'Quantity' => 1,
-      'GiftWrapped' => 1
-    ));
-
-	  $order = Cart::get_current_order();
-	  $items = $order->Items();
-	  
-	  $firstItem = $items->First();
-	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals(1, $firstItem->Quantity);
-
-	  //Check that the correct product has been added
-	  $firstProduct = $firstItem->Product();
-	  $this->assertEquals($productA->ID, $firstProduct->ID);
-	  $this->assertEquals($productA->Price, $firstProduct->Price);
-	  $this->assertEquals($firstItem->UnitPrice()->getAmount(), $firstProduct->Price + 1.5);
-	}
-
-	public function testAddProductOptionsToCartMultiple() {
-
-    $productA = $this->objFromFixture('Product', 'productA');
-
-	  $this->loginAs('admin');
-	  $productA->doPublish();
-	  $this->logOut();
-
-	  //Add gift wrapping, extra $1.50
-    $this->get(Director::makeRelative($productA->Link()));
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-      'Quantity' => 1,
-      'GiftWrapped' => 1
-    ));
-
-	  $order = Cart::get_current_order();
-	  $items = $order->Items();
-	  
-	  $firstItem = $items->First();
-	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals(1, $firstItem->Quantity);
-
-	  //Check that the correct product has been added
-	  $firstProduct = $firstItem->Product();
-	  $this->assertEquals($productA->ID, $firstProduct->ID);
-	  $this->assertEquals($productA->Price, $firstProduct->Price);
-	  $this->assertEquals($firstItem->UnitPrice()->getAmount(), $firstProduct->Price + 1.5);
-
-
-	  $this->get(Director::makeRelative($productA->Link()));
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-      'Quantity' => 1,
-      'GiftWrapped' => 1
-    ));
-
-	  $order = Cart::get_current_order();
-	  $items = $order->Items();
-	  
-	  $firstItem = $items->First();
-	  $this->assertEquals(1, $items->Count());
-	  $this->assertEquals(2, $firstItem->Quantity);
-
-	  //Check that the correct product has been added
-	  $firstProduct = $firstItem->Product();
-	  $this->assertEquals($productA->ID, $firstProduct->ID);
-	  $this->assertEquals($productA->Price, $firstProduct->Price);
-
-
-	  $this->get(Director::makeRelative($productA->Link()));
-    $this->submitForm('AddToCartForm_AddToCartForm', null, array(
-      'Quantity' => 1
-    ));
-
-	  $order = Cart::get_current_order();
-	  $items = $order->Items();
-	  
-	  $this->assertEquals(2, $items->Count());
-	  $this->assertTrue(array(1,2) == $items->column('Quantity'));
-	  $quantityKeys = array_flip($items->map('ID', 'Quantity')->toArray());
-	  $item = $items->find('ID', $quantityKeys[1]);
-
-	  //Check that the correct product has been added
-	  $this->assertEquals($productA->ID, $item->Product()->ID);
-	  $this->assertEquals($productA->Price, $item->Product()->Price);
-	  $this->assertEquals($item->UnitPrice()->getAmount(), $item->Product()->Price);
-	}
 	
 }
 
-class CartTest_ProductExtension extends Extension {
-
-	function updateAddToCartForm($form) {
-		$fields = $form->Fields();
-		$fields->push(new CheckboxField('GiftWrapped', 'Gift Wrapped (+ $1.50)'));
-	}
-
-	function updateOptions($options) {
-
-		$request = $this->owner->getRequest();
-		$giftWrapped = $request->postVar('GiftWrapped');
-		if ($giftWrapped == 1) {
-
-			$option = new ItemOption();
-			$option->Description = 'Gift wrapped';
-			$option->Price = 1.50;
-			$option->Currency = ShopConfig::current_shop_config()->BaseCurrency;
-			$options->push($option);
-		}
-	}
-}
 

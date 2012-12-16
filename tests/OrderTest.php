@@ -41,13 +41,13 @@ class SWS_OrderTest extends SWS_Test {
 	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'New order for test buyer.'
 	  ));
 
@@ -99,13 +99,13 @@ class SWS_OrderTest extends SWS_Test {
 	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'New order for test buyer.'
 	  ));
 

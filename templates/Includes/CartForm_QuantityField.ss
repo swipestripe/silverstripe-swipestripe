@@ -1,6 +1,6 @@
 <tr>
   <td>
-    $RemoveItemAction
+    <a href="#" data-item="$Item.ID" class="remove-item-js"></a>
   </td>
 
   <td> 
@@ -26,7 +26,11 @@
   </td>
 
   <td>
-    <div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock</div>
+    <div id="$Name" class="field $Type $extraClass">
+    	$titleBlock
+    	<div class="middleColumn">$Field</div>
+    	$rightTitleBlock
+    </div>
   </td>
   
   <td>

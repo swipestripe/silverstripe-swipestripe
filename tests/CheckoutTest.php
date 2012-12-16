@@ -71,7 +71,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -86,7 +86,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'New order for test buyer.'
 	  ));
 
@@ -114,7 +114,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -138,7 +138,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'This order should fail.'
 	  ));
 	  
@@ -166,7 +166,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->loginAs($buyer);
 
 	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -190,7 +190,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'This order should fail.'
 	  ));
 	  
@@ -222,7 +222,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  $this->assertEquals('Enabled', $shortsAVariation->Status);
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
@@ -249,7 +249,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'This order should fail.'
 	  ));
 	  
@@ -281,7 +281,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  $this->assertEquals('Enabled', $shortsAVariation->Status);
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
@@ -307,7 +307,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'This order should fail.'
 	  ));
 	  
@@ -337,7 +337,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
     try {
-  	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+  	  $this->submitForm('OrderForm_OrderForm', null, array(
   	    'Notes' => 'This order should fail.'
   	  ));
     }
@@ -372,7 +372,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
 	  $this->assertEquals('Enabled', $shortsAVariation->Status);
 	  
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
@@ -399,7 +399,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Notes' => 'This order should fail.'
 	  ));
 	  
@@ -428,7 +428,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->loginAs($this->objFromFixture('Customer', 'buyer'));
 
 	  $this->get(Director::makeRelative($shortsA->Link()));
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1,
 	    'Options[1]' => $shortsAVariation->getOptionForAttribute(1)->ID,  //Small
 	    'Options[2]' => $shortsAVariation->getOptionForAttribute(2)->ID, //Red
@@ -446,7 +446,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $checkoutPage = DataObject::get_one('CheckoutPage');
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('CheckoutForm_OrderForm', null, array(
+	  $this->submitForm('OrderForm_OrderForm', null, array(
 	    'Billing[FirstName]' => ''
 	  ));
 	  
@@ -472,7 +472,7 @@ class SWS_CheckoutTest extends SWS_Test {
 
 	  $productALink = $productA->Link();
 	  $this->get(Director::makeRelative($productALink)); 
-	  $this->submitForm('AddToCartForm_AddToCartForm', null, array(
+	  $this->submitForm('ProductForm_ProductForm', null, array(
 	    'Quantity' => 1
 	  ));
 
@@ -484,7 +484,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	  $this->get(Director::makeRelative($checkoutPage->Link()));
 	  
 	  //Submit the form without restrictions on what can be POST'd
-	  $data = $this->getFormData('CheckoutForm_OrderForm');
+	  $data = $this->getFormData('OrderForm_OrderForm');
     $data['PaymentMethod'] = '';
 
 	  $this->post(
