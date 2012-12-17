@@ -35,14 +35,28 @@ class CartForm extends Form {
 		Requirements::javascript('swipestripe/javascript/CartForm.js');
 
   	$this->order = Cart::get_current_order();
-    
+
     $this->fields = $this->createFields();
-    $this->actions = $this->createActions();
-    $this->validator = $this->createValidator();
+		$this->actions = $this->createActions();
+		$this->validator = $this->createValidator();
+
+    $this->setupFormErrors();
 
 		$this->addExtraClass('cart-form');
 		$this->setTemplate('CartForm');
   }
+
+  /**
+	 * Set up current form errors in session to
+	 * the current form if appropriate.
+	 */
+	public function setupFormErrors() {
+
+		//Only run when fields exist
+		if ($this->fields->exists()) {
+			parent::setupFormErrors();
+		}
+	}
 
   public function createFields() {
 
@@ -57,9 +71,9 @@ class CartForm extends Form {
 	    	$item
 	    )); 
 	  }
-	  
+
 	  $this->extend('updateFields', $fields);
-		foreach ($fields as $field) $field->setForm($this);
+		$fields->setForm($this);
 	  return $fields;
   }
 
@@ -69,9 +83,8 @@ class CartForm extends Form {
       FormAction::create('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
       FormAction::create('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
     );
-
-  	$this->extend('updateActions', $actions);
-  	foreach ($actions as $action) $action->setForm($this);
+    $this->extend('updateActions', $actions);
+  	$actions->setForm($this);
     return $actions;
   }
 
@@ -85,7 +98,7 @@ class CartForm extends Form {
 	  }
 
 	  $this->extend('updateValidator', $validator);
-	  $validator->setForm($this);
+		$validator->setForm($this);
   	return $validator;
   }
 
