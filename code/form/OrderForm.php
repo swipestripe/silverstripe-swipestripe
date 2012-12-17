@@ -347,7 +347,7 @@ class OrderForm extends Form {
       SS_Log::log(new Exception(print_r($result->message(), true)), SS_Log::NOTICE);
       SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
 
-      $this->redirect($order->Link());
+      $this->controller->redirect($order->Link());
     }
   }
 
