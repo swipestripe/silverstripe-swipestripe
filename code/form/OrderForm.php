@@ -229,7 +229,6 @@ class OrderForm extends Form {
 	 * @see Form::validate()
 	 */
   function validate(){
-
   	$valid = true;
   	if($this->validator){
 			$errors = $this->validator->validate();

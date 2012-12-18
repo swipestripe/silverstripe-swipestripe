@@ -408,19 +408,19 @@ class Order extends DataObject implements PermissionProvider {
     $fields->addFieldToTab('Root.Updates', $listField);
 
 		//Payments
-		$config = GridFieldConfig_Basic::create()
-			->removeComponentsByType('GridFieldAddNewButton')
-			->removeComponentsByType('GridFieldEditButton')
-			->removeComponentsByType('GridFieldDeleteAction')
-			->addComponent(new GridFieldViewButton());
+		// $config = GridFieldConfig_Basic::create()
+		// 	->removeComponentsByType('GridFieldAddNewButton')
+		// 	->removeComponentsByType('GridFieldEditButton')
+		// 	->removeComponentsByType('GridFieldDeleteAction')
+		// 	->addComponent(new GridFieldViewButton());
 
-    $listField = new GridField(
-      'Payments',
-      'Payments',
-      $this->Payments(),
-      $config
-    );
-    $fields->addFieldToTab('Root.Payments', $listField);
+  //   $listField = new GridField(
+  //     'Payments',
+  //     'Payments',
+  //     $this->Payments(),
+  //     $config
+  //   );
+  //   $fields->addFieldToTab('Root.Payments', $listField);
 
 		//Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);
