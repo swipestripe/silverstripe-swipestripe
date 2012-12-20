@@ -816,7 +816,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function SubTotalModifications() {
-		return $this->Modifications()->where("\"SubTotalModifier\" = 1");
+		$mods = $this->Modifications();
+		if ($mods && $mods->exists()) {
+			return $mods->where("\"SubTotalModifier\" = 1");
+		}
+		return null;
 	}
 	
 	/**
@@ -825,7 +829,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function TotalModifications() {
-		return $this->Modifications()->where("\"SubTotalModifier\" = 0");
+		$mods = $this->Modifications();
+		if ($mods && $mods->exists()) {
+			return $mods->where("\"SubTotalModifier\" = 0");
+		}
+		return null;
 	}
 
 	public function CustomerUpdates() {

@@ -108,7 +108,7 @@ class OrderForm extends Form {
 	  $subTotalModsFields = CompositeField::create()->setName('SubTotalModificationsFields');
 	  $subTotalMods = $order->SubTotalModifications();
 
-		foreach ($subTotalMods as $modification) {
+		if ($subTotalMods && $subTotalMods->exists()) foreach ($subTotalMods as $modification) {
 			$modFields = $modification->getFormFields();
 			foreach ($modFields as $field) {
 				$subTotalModsFields->push($field);
@@ -118,7 +118,7 @@ class OrderForm extends Form {
 		$totalModsFields = CompositeField::create()->setName('TotalModificationsFields');
 		$totalMods = $order->TotalModifications();
 
-		foreach ($totalMods as $modification) {
+		if ($totalMods && $totalMods->exists()) foreach ($totalMods as $modification) {
 			$modFields = $modification->getFormFields();
 			foreach ($modFields as $field) {
 				$totalModsFields->push($field);
