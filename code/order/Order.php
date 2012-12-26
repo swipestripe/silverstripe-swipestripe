@@ -387,11 +387,6 @@ class Order extends DataObject implements PermissionProvider {
       Tab::create('Order')
     ));
 
-    $fields->addFieldToTab('Root.Order', new LiteralField(
-    	'Title', 
-    	"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"
-    ));
-
     //Override this in updateOrderCMSFields to change the order template in the CMS
     $htmlSummary = $this->customise(array(
 			'MemberEmail' => $this->Member()->Email
