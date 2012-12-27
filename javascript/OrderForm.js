@@ -20,7 +20,6 @@
 
 			updateCart: function() {
 				var self = this;
-
 				var values = this.serialize();
     		
     		$.ajax({

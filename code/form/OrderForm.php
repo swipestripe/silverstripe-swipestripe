@@ -108,7 +108,7 @@ class OrderForm extends Form {
 	  $subTotalModsFields = CompositeField::create()->setName('SubTotalModificationsFields');
 	  $subTotalMods = $order->SubTotalModifications();
 
-		foreach ($subTotalMods as $modification) {
+		if ($subTotalMods && $subTotalMods->exists()) foreach ($subTotalMods as $modification) {
 			$modFields = $modification->getFormFields();
 			foreach ($modFields as $field) {
 				$subTotalModsFields->push($field);
@@ -118,7 +118,7 @@ class OrderForm extends Form {
 		$totalModsFields = CompositeField::create()->setName('TotalModificationsFields');
 		$totalMods = $order->TotalModifications();
 
-		foreach ($totalMods as $modification) {
+		if ($totalMods && $totalMods->exists()) foreach ($totalMods as $modification) {
 			$modFields = $modification->getFormFields();
 			foreach ($modFields as $field) {
 				$totalModsFields->push($field);
@@ -229,7 +229,6 @@ class OrderForm extends Form {
 	 * @see Form::validate()
 	 */
   function validate(){
-
   	$valid = true;
   	if($this->validator){
 			$errors = $this->validator->validate();
@@ -332,7 +331,7 @@ class OrderForm extends Form {
       SS_Log::log(new Exception(print_r($result->message(), true)), SS_Log::NOTICE);
       SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
 
-      $this->redirect($order->Link());
+      $this->controller->redirect($order->Link());
     }
   }
 

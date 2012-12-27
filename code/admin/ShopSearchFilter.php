@@ -49,6 +49,14 @@ class ShopSearchFilter_OptionSet extends SearchFilter {
 			return $this->getValue() == null || $this->getValue() == '';
 		}
 	}
+
+	protected function applyOne(DataQuery $query) {
+		return;
+	}
+
+	protected function excludeOne(DataQuery $query) {
+		return;
+	}
 }
 
 /**
@@ -95,6 +103,14 @@ class ShopSearchFilter_Payment extends SearchFilter {
 	public function isEmpty() {
 		return $this->getValue() == null || $this->getValue() == ''; //|| $this->getValue() == 0;
 	}
+
+	protected function applyOne(DataQuery $query) {
+		return;
+	}
+
+	protected function excludeOne(DataQuery $query) {
+		return;
+	}
 }
 
 /**
@@ -135,5 +151,13 @@ class ShopSearchFilter_PublishedStatus extends SearchFilter {
 	 */
 	public function isEmpty() {
 		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+	}
+
+	protected function applyOne(DataQuery $query) {
+		return;
+	}
+
+	protected function excludeOne(DataQuery $query) {
+		return;
 	}
 }

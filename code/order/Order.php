@@ -387,11 +387,6 @@ class Order extends DataObject implements PermissionProvider {
       Tab::create('Order')
     ));
 
-    $fields->addFieldToTab('Root.Order', new LiteralField(
-    	'Title', 
-    	"<h2>Order #$this->ID - ".$this->dbObject('Created')->Format('g:i a, j M y')." - ".$this->Member()->getName()."</h2>"
-    ));
-
     //Override this in updateOrderCMSFields to change the order template in the CMS
     $htmlSummary = $this->customise(array(
 			'MemberEmail' => $this->Member()->Email
@@ -407,22 +402,7 @@ class Order extends DataObject implements PermissionProvider {
     );
     $fields->addFieldToTab('Root.Updates', $listField);
 
-		//Payments
-		$config = GridFieldConfig_Basic::create()
-			->removeComponentsByType('GridFieldAddNewButton')
-			->removeComponentsByType('GridFieldEditButton')
-			->removeComponentsByType('GridFieldDeleteAction')
-			->addComponent(new GridFieldViewButton());
-
-    $listField = new GridField(
-      'Payments',
-      'Payments',
-      $this->Payments(),
-      $config
-    );
-    $fields->addFieldToTab('Root.Payments', $listField);
-
-		//Ability to edit fields added to CMS here
+    //Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);
 
     return $fields;
@@ -816,7 +796,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function SubTotalModifications() {
-		return $this->Modifications()->where("\"SubTotalModifier\" = 1");
+		$mods = $this->Modifications();
+		if ($mods && $mods->exists()) {
+			return $mods->where("\"SubTotalModifier\" = 1");
+		}
+		return null;
 	}
 	
 	/**
@@ -825,7 +809,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function TotalModifications() {
-		return $this->Modifications()->where("\"SubTotalModifier\" = 0");
+		$mods = $this->Modifications();
+		if ($mods && $mods->exists()) {
+			return $mods->where("\"SubTotalModifier\" = 0");
+		}
+		return null;
 	}
 
 	public function CustomerUpdates() {
