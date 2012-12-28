@@ -213,13 +213,25 @@ class Attribute_OptionField extends DropdownField {
 	  	$this->setAttribute('data-prev', "Options[" . $prev->ID  . "]");
 
 	  	$variations = $product->Variations();
+
 	  	$options = array();
+	  	$temp = array();
 	  	if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
 	  		$prevOption = $variation->getOptionForAttribute($prev->ID);
 	  		$option = $variation->getOptionForAttribute($attr->ID);
 
-	  		$options[$prevOption->ID][$option->ID] = $option->Title;
+	  		$temp[$prevOption->ID][$option->SortOrder][$option->ID] = $option->Title;
+	  	}
+
+	  	//Using SortOrder to sort the options
+	  	foreach ($temp as $prevID => $optionArray) {
+	  		ksort($optionArray);
+	  		$sorted = array();
+	  		foreach ($optionArray as $sort => $optionData) {
+	  			$sorted += $optionData;
+	  		}
+	  		$options[$prevID] = $sorted;
 	  	}
 
 	  	$this->setAttribute('data-map', json_encode($options));
