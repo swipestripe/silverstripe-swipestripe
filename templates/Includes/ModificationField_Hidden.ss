@@ -1,10 +1,10 @@
 <tr class="modifier-hidden-field">
 
-  <td colspan="4" class="row-header">
+  <td class="row-header">
     $Title
   </td>
 
-  <td>
+  <td class="totals-column" colspan="3">
     <div id="$Name" class="field $Type $extraClass">
       $titleBlock
       <div class="middleColumn">

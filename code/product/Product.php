@@ -294,6 +294,7 @@ class Product extends Page {
         if ($option) $options->push($option); 
       }
     }
+    $options = $options->sort('SortOrder');
     return $options;
   }
   

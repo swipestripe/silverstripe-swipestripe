@@ -181,9 +181,9 @@ class Variation extends DataObject {
 	  $temp = array();
 	  $summary = '';
 	  if ($options && $options->exists()) foreach ($options as $option) {
-	    $temp[] = $option->Title;
+	    $temp[] = '<strong>' . $option->Attribute()->Title . ':</strong> ' . $option->Title;
 	  } 
-	  $summary = implode(', ', $temp);
+	  $summary = implode('<br /> ', $temp);
 	  return $summary;
 	}
 	

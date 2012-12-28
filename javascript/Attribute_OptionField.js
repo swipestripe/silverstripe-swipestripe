@@ -12,7 +12,7 @@
 				if (prev.length) {
 					prev.on('change', function(e) {
 						self._updateOptions(e);
-					});
+					}).change();
 				}
 				this._super();
 			},

@@ -22,10 +22,6 @@
 		    <% include OrderPayments %>
 		  <% end_if %>
 		  
-		  <% if Downloads %>
-		    <% include OrderDownloads %>
-		  <% end_if %>
-		  
 		  <% if CustomerUpdates %>
 		    <% include OrderNotes %>
 		  <% end_if %>
