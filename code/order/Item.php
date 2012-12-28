@@ -222,6 +222,9 @@ class Item extends DataObject {
 	}
 
 	public function SummaryOfOptions() {
+
+		//TODO: Make this more flexible for formatting
+
 		$summary = '';
 
 		$options = array();
@@ -231,7 +234,7 @@ class Item extends DataObject {
 			$options[] = $description;
 		}
 
-		$summary .= implode(', ', $options);
+		$summary .= implode('<br /> ', $options);
 		return $summary;
 	}
 }
