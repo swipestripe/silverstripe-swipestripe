@@ -3,11 +3,6 @@
  * Order, created as soon as a user adds a {@link Product} to their cart, the cart is 
  * actually an Order with status of 'Cart'. Has many {@link Item}s and can have {@link Modification}s
  * which might represent a {@link Modifier} like shipping, tax, coupon codes.
- * 
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage order
  */
 class Order extends DataObject implements PermissionProvider {
   
@@ -340,13 +335,13 @@ class Order extends DataObject implements PermissionProvider {
 
     //Set environment order was placed in
     $this->Env = Director::get_environment_type();
+
+    //Update paid status
+    $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
   }
 
   public function onAfterWrite() {
   	parent::onAfterWrite();
-
-  	//If status has changed from Cart reduce the stock
-  	//If status has changed to Cancelled increase the stock
   }
 
   public function onBeforePayment() {
@@ -508,7 +503,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean
 	 */
 	public function getPaid() {
-	  return $this->TotalPaid()->getAmount() == $this->Total()->getAmount();
+	  return ($this->Total()->getAmount() - $this->TotalPaid()->getAmount()) <= 0;
 	}
 	
 	/**
@@ -851,10 +846,6 @@ class Order_Update extends DataObject {
 		'VisibleSummary' => 'Visible'
 	);
 
-	public function canEdit($member = null) {
-    return false;
-	}
-
 	public function canDelete($member = null) {
     return false;
 	}
@@ -871,6 +862,7 @@ class Order_Update extends DataObject {
    * @see DataObject::onAfterWrite()
    */
 	public function onAfterWrite() {
+
 	  parent::onAfterWrite();
 	  
 	  //Update the Order, setting the same status

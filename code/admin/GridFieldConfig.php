@@ -40,12 +40,12 @@ class GridFieldConfig_BasicSortable extends GridFieldConfig {
 		$this->addComponent(new GridFieldDetailForm());
 
 		if (class_exists('GridFieldSortableRows')) {
-      $this->addComponent(new GridFieldSortableRows('SortOrder'));
-    }
+			$this->addComponent(new GridFieldSortableRows('SortOrder'));
+		}
 
-    $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
-  	$this->addComponent(new GridFieldPageCount('toolbar-header-right'));
-  	$pagination->setThrowExceptionOnBadDataType(false);
+		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
+		$this->addComponent(new GridFieldPageCount('toolbar-header-right'));
+		$pagination->setThrowExceptionOnBadDataType(false);
 
 		$sort->setThrowExceptionOnBadDataType(false);
 		$filter->setThrowExceptionOnBadDataType(false);
