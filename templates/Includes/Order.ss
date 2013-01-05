@@ -41,7 +41,7 @@
 	    <% if SubTotalModifications %>
         <% control SubTotalModifications %>
           <tr>
-            <td class="row-header">$Description</td>
+            <td class="row-header mod-title">$Description</td>
             <td class="totals-column" colspan="3">$Price.Nice</td>
           </tr>
         <% end_control %>
@@ -55,7 +55,7 @@
 	    <% if TotalModifications %>
 	      <% control TotalModifications %>
 	        <tr>
-		        <td class="row-header">$Description</td>
+		        <td class="row-header mod-title">$Description</td>
 		        <td class="totals-column" colspan="3">$Price.Nice</td>
 		      </tr>
 	      <% end_control %>
