@@ -41,13 +41,23 @@ class Modification extends DataObject {
 
 	public static function get_all() {
 		$mods = new ArrayList();
+		$temp = array();
 
 		$classes = ClassInfo::subclassesFor('Modification');
 		foreach ($classes as $class) {
 
-			if ($class != 'Modification') $mods->push(new $class());
+			if ($class != 'Modification') {
+				$mod = new $class();
+				$temp[$mod->SortOrder] = $mod;
+			}
 		}
-		$mods->sort('SortOrder');
+		
+		//Sorting the modifications so they are applied in correct order
+		ksort($temp);	
+
+		foreach ($temp as $mod) {
+			$mods->push($mod);
+		}
 		return $mods;
 	}
 

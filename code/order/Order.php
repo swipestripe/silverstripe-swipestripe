@@ -709,6 +709,7 @@ class Order extends DataObject implements PermissionProvider {
     $this->updateTotal();
 
     $mods = Modification::get_all();
+
 		foreach ($mods as $modification) {
 
 			$class = get_class($modification);
