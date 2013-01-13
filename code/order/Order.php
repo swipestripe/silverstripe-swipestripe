@@ -243,6 +243,12 @@ class Order extends DataObject implements PermissionProvider {
 	  try {
 
 	  	DB::getConn()->transactionStart();
+	  	
+	  	$payments = $this->Payments();
+	    if ($payments && $payments->exists()) foreach ($payments as $payment) {
+        $payment->delete();
+        $payment->destroy();
+	    }
 
 	    $items = $this->Items();
 	    if ($items && $items->exists()) foreach ($items as $item) {
@@ -254,6 +260,12 @@ class Order extends DataObject implements PermissionProvider {
 	    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
 	      $modification->delete();
 	      $modification->destroy();
+	    }
+	    
+	    $updates = $this->Updates();
+	    if ($updates && $updates->exists()) foreach ($updates as $update) {
+        $update->delete();
+        $update->destroy();
 	    }
 	    
 	    parent::delete();
