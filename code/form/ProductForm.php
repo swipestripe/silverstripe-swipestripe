@@ -45,6 +45,7 @@ class ProductForm extends Form {
 				'free' => _t('Product.FREE', 'Free'),
 			);
 		}
+
 		$this->setAttribute('data-map', json_encode($map));
   }
 

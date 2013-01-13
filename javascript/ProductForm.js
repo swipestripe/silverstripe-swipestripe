@@ -9,6 +9,7 @@
 				this.find('.attribute_option select').on('change', function(e) {
 					self._updatePrice(e);
 				});
+				self._updatePrice();
 
 				this._super();
 			},
