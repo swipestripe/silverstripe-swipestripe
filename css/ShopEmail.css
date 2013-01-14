@@ -175,3 +175,13 @@
 .order .table td .alert {
   margin-bottom: 0px;
 }
+.order .table td.row-header {
+  text-align: right;
+  font-weight: bold;
+}
+.order .table td.mod-title {
+  font-weight: normal;
+}
+.order .table .totals-column {
+  text-align: right;
+}
