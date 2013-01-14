@@ -1,13 +1,13 @@
-Swipe Stripe License Agreement
-==============================
+SwipeStripe License Agreement
+=============================
 
-THIS LICENSE AGREEMENT IS A LEGAL AGREEMENT BETWEEN THE PERSON, COMPANY, OR ORGANIZATION THAT HAS LICENSED THIS SOFTWARE ("YOU" OR "CUSTOMER") AND SWIPE STRIPE ("SWIPE STRIPE", "WE" OR "US"). BY INSTALLING, COPYING AND/OR OTHERWISE USING THE SOFTWARE ("SOFTWARE"), THE CUSTOMER ACCEPTS THE SOFTWARE AND AGREES TO THE TERMS OF THIS AGREEMENT. READ IT CAREFULLY BEFORE COMPLETING THE INSTALLATION PROCESS AND USING THE SOFTWARE. BY INSTALLING AND/OR USING THE SOFTWARE, YOU ARE CONFIRMING YOUR ACCEPTANCE OF THE SOFTWARE AND AGREEING TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO BE BOUND BY THESE TERMS, OR DO NOT HAVE THE AUTHORITY TO BIND THE CUSTOMER TO THESE TERMS, THEN DO NOT INSTALL AND/OR USE THE SOFTWARE.
-THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATIES. ALL TITLE AND INTELLECTUAL PROPERTY RIGHTS IN AND TO THE SOFTWARE ARE OWNED BY SWIPE STRIPE. THE SOFTWARE IS HEREBY MADE AVAILABLE FOR USE (LICENSED), NOT SOLD.
-THIS LICENSE AGREEMENT SHALL APPLY ONLY TO THE SOFTWARE SUPPLIED BY SWIPE STRIPE HEREWITH REGARDLESS OF WHETHER OTHER SOFTWARE IS REFERRED TO OR DESCRIBED HEREIN.
+THIS LICENSE AGREEMENT IS A LEGAL AGREEMENT BETWEEN THE PERSON, COMPANY, OR ORGANIZATION THAT HAS LICENSED THIS SOFTWARE ("YOU" OR "CUSTOMER") AND SWIPESTRIPE ("SWIPESTRIPE", "WE" OR "US"). BY INSTALLING, COPYING AND/OR OTHERWISE USING THE SOFTWARE ("SOFTWARE"), THE CUSTOMER ACCEPTS THE SOFTWARE AND AGREES TO THE TERMS OF THIS AGREEMENT. READ IT CAREFULLY BEFORE COMPLETING THE INSTALLATION PROCESS AND USING THE SOFTWARE. BY INSTALLING AND/OR USING THE SOFTWARE, YOU ARE CONFIRMING YOUR ACCEPTANCE OF THE SOFTWARE AND AGREEING TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO BE BOUND BY THESE TERMS, OR DO NOT HAVE THE AUTHORITY TO BIND THE CUSTOMER TO THESE TERMS, THEN DO NOT INSTALL AND/OR USE THE SOFTWARE.
+THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATIES. ALL TITLE AND INTELLECTUAL PROPERTY RIGHTS IN AND TO THE SOFTWARE ARE OWNED BY SWIPESTRIPE. THE SOFTWARE IS HEREBY MADE AVAILABLE FOR USE (LICENSED), NOT SOLD.
+THIS LICENSE AGREEMENT SHALL APPLY ONLY TO THE SOFTWARE SUPPLIED BY SWIPESTRIPE HEREWITH REGARDLESS OF WHETHER OTHER SOFTWARE IS REFERRED TO OR DESCRIBED HEREIN.
 
 LICENSE GRANT
 =============
-Upon the terms and conditions of this Agreement, Swipe Stripe grants you a non-exclusive license to use the Software on one installation to be accessible by one URL (web address) and only for the purpose of operating an electronic commerce store on the Internet. You must provide SWIPE STRIPE with the exact URL (Unique Resource Locator) of the website you install the Software to.
+Upon the terms and conditions of this Agreement, Swipe Stripe grants you a non-exclusive license to use the Software on one installation to be accessible by one URL (web address) and only for the purpose of operating an electronic commerce store on the Internet. You must provide SWIPESTRIPE with the exact URL (Unique Resource Locator) of the website you install the Software to.
 
 You are permitted to
 --------------------
@@ -45,25 +45,25 @@ Swipe Stripe does not provide Swipe Stripe extensions for modified versions of t
 
 OWNERSHIP
 =========
-The Software (including, but not limited to Swipe Stripe Shopping Cart, and modules/components developed by SWIPE STRIPE), documentation, any error corrections, all copyrights, patents, trade secrets, trademarks and other intellectual property rights protecting or pertaining to any aspect of the Software are the property of SWIPE STRIPE.
-All modifications or enhancements or derivative works based on the Software whether created by SWIPE STRIPE or you are the property of SWIPE STRIPE.
+The Software (including, but not limited to Swipe Stripe Shopping Cart, and modules/components developed by SWIPESTRIPE), documentation, any error corrections, all copyrights, patents, trade secrets, trademarks and other intellectual property rights protecting or pertaining to any aspect of the Software are the property of SWIPESTRIPE.
+All modifications or enhancements or derivative works based on the Software whether created by SWIPESTRIPE or you are the property of SWIPESTRIPE.
 Any additional modules, applications, files and/or scripts for use with the Software, which are created from scratch by you or a third party, are proprietary to you or the respective third party.
 
 You acknowledge and agree that
 ------------------------------
 * The Software is protected under copyright and other laws and international treaty provisions;
-* You agree that you will not, at any time, contest anywhere in the world SWIPE STRIPE's ownership of the Software, nor will you challenge the validity of SWIPE STRIPE's rights in the Software.
-* You have no rights hereunder to use any trademark or service mark belonging to SWIPE STRIPE.
-* SWIPE STRIPE and its licensors retain all copyrights and other intellectual property rights in the Software;
+* You agree that you will not, at any time, contest anywhere in the world SWIPESTRIPE's ownership of the Software, nor will you challenge the validity of SWIPESTRIPE's rights in the Software.
+* You have no rights hereunder to use any trademark or service mark belonging to SWIPESTRIPE.
+* SWIPESTRIPE and its licensors retain all copyrights and other intellectual property rights in the Software;
 * You acquire no ownership or other interest (other than your license rights explicitly stated in this License Agreement) in or to the Software.
 
 NO WARRANTY
 ===========
-THE SOFTWARE IS PROVIDED TO YOU "AS IS" AND SWIPE STRIPE MAKES NO WARRANTY AS TO ITS USE OR PERFORMANCE. SWIPE STRIPE AND ITS SUPPLIERS DO NOT AND CANNOT WARRANT THE PERFORMANCE OR RESULTS YOU MAY OBTAIN BY USING THE SOFTWARE. EXCEPT FOR ANY WARRANTY, CONDITION, REPRESENTATION, OR TERM TO THE EXTENT TO WHICH THE SAME CANNOT OR MAY NOT BE EXCLUDED OR LIMITED BY LAW APPLICABLE TO YOU IN YOUR JURISDICTION, SWIPE STRIPE AND ITS SUPPLIERS MAKE NO WARRANTIES, CONDITIONS, REPRESENTATIONS, OR TERMS (EXPRESS OR IMPLIED WHETHER BY STATUTE, COMMON LAW, CUSTOM, USAGE OR OTHERWISE) AS TO ANY MATTER INCLUDING WITHOUT LIMITATION NONINFRINGEMENT OF THIRD-PARTY RIGHTS, MERCHANTABILITY, INTEGRATION, SATISFACTORY QUALITY, OR FITNESS FOR ANY PARTICULAR PURPOSE.
+THE SOFTWARE IS PROVIDED TO YOU "AS IS" AND SWIPESTRIPE MAKES NO WARRANTY AS TO ITS USE OR PERFORMANCE. SWIPESTRIPE AND ITS SUPPLIERS DO NOT AND CANNOT WARRANT THE PERFORMANCE OR RESULTS YOU MAY OBTAIN BY USING THE SOFTWARE. EXCEPT FOR ANY WARRANTY, CONDITION, REPRESENTATION, OR TERM TO THE EXTENT TO WHICH THE SAME CANNOT OR MAY NOT BE EXCLUDED OR LIMITED BY LAW APPLICABLE TO YOU IN YOUR JURISDICTION, SWIPESTRIPE AND ITS SUPPLIERS MAKE NO WARRANTIES, CONDITIONS, REPRESENTATIONS, OR TERMS (EXPRESS OR IMPLIED WHETHER BY STATUTE, COMMON LAW, CUSTOM, USAGE OR OTHERWISE) AS TO ANY MATTER INCLUDING WITHOUT LIMITATION NONINFRINGEMENT OF THIRD-PARTY RIGHTS, MERCHANTABILITY, INTEGRATION, SATISFACTORY QUALITY, OR FITNESS FOR ANY PARTICULAR PURPOSE.
 
 LIMITATION OF LIABILITY
 =======================
-IN NO EVENT WILL SWIPE STRIPE OR ITS SUPPLIERS BE LIABLE TO YOU FOR ANY DAMAGES, CLAIMS, OR COSTS WHATSOEVER OR ANY CONSEQUENTIAL, INDIRECT, INCIDENTAL DAMAGES, OR ANY LOST PROFITS OR LOST SAVINGS, EVEN IF A SWIPE STRIPE REPRESENTATIVE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS, OR COSTS OR FOR ANY CLAIM BY ANY THIRD PARTY. THE FOREGOING LIMITATIONS AND EXCLUSIONS APPLY TO THE EXTENT PERMITTED BY APPLICABLE LAW IN YOUR JURISDICTION. SWIPE STRIPE'S AGGREGATE LIABILITY AND THAT OF ITS SUPPLIERS UNDER OR IN CONNECTION WITH THIS AGREEMENT SHALL BE LIMITED TO THE AMOUNT PAID FOR THE SOFTWARE, IF ANY.
+IN NO EVENT WILL SWIPESTRIPE OR ITS SUPPLIERS BE LIABLE TO YOU FOR ANY DAMAGES, CLAIMS, OR COSTS WHATSOEVER OR ANY CONSEQUENTIAL, INDIRECT, INCIDENTAL DAMAGES, OR ANY LOST PROFITS OR LOST SAVINGS, EVEN IF A SWIPESTRIPE REPRESENTATIVE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS, OR COSTS OR FOR ANY CLAIM BY ANY THIRD PARTY. THE FOREGOING LIMITATIONS AND EXCLUSIONS APPLY TO THE EXTENT PERMITTED BY APPLICABLE LAW IN YOUR JURISDICTION. SWIPESTRIPE'S AGGREGATE LIABILITY AND THAT OF ITS SUPPLIERS UNDER OR IN CONNECTION WITH THIS AGREEMENT SHALL BE LIMITED TO THE AMOUNT PAID FOR THE SOFTWARE, IF ANY.
 
 GOVERNING LAW
 =============
@@ -78,22 +78,31 @@ TERMINATION
 
 Termination for convenience
 ---------------------------
-You may terminate this License for any reason, or for no reason, by destroying all copies of the Software. SWIPE STRIPE may terminate this License for any reason, or for no reason upon notifying you.
+You may terminate this License for any reason, or for no reason, by destroying all copies of the Software. SWIPESTRIPE may terminate this License for any reason, or for no reason upon notifying you.
 
 Termination for cause
 ---------------------
-SWIPE STRIPE may terminate this License if you breach your obligations hereunder. SWIPE STRIPE will effect such termination by giving you notice of termination, specifying therein the alleged breach.
+SWIPESTRIPE may terminate this License if you breach your obligations hereunder. SWIPESTRIPE will effect such termination by giving you notice of termination, specifying therein the alleged breach.
 
 Effect of termination
 ---------------------
-Upon termination of this License for any reason the following terms shall apply: (a) all rights granted under this License will immediately terminate and you must stop all use of the Software within 10 (ten) days, (b) you must destroy all copies of the Software, and will, within ten (10) days after the effective date of termination, provide SWIPE STRIPE with written confirmation of the fact that all such copies have been returned or destroyed;
+Upon termination of this License for any reason the following terms shall apply: (a) all rights granted under this License will immediately terminate and you must stop all use of the Software within 10 (ten) days, (b) you must destroy all copies of the Software, and will, within ten (10) days after the effective date of termination, provide SWIPESTRIPE with written confirmation of the fact that all such copies have been returned or destroyed;
 
 MISCELLANEOUS
 =============
-SWIPE STRIPE reserves the right to publish a selected list of users of the Software.
-SWIPE STRIPE reserves the right to change the terms of this license agreement at any time. Changes to the license agreement will be announced via email. Failure to receive notification of a change does not make those changes invalid.
-SWIPE STRIPE reserves the right to send you news and/or other important information by electronic mail from time to time. You will have the option to unsubscribe from receiving any further messages from SWIPE STRIPE.
+SWIPESTRIPE reserves the right to publish a selected list of users of the Software.
+SWIPESTRIPE reserves the right to change the terms of this license agreement at any time. Changes to the license agreement will be announced via email. Failure to receive notification of a change does not make those changes invalid.
+SWIPESTRIPE reserves the right to send you news and/or other important information by electronic mail from time to time. You will have the option to unsubscribe from receiving any further messages from SWIPESTRIPE.
 
+Copyright (c) 2012 Frank Mullenger <frankmullenger@gmail.com>
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 
-
+The above shall be included in all copies or substantial portions of the Software.
