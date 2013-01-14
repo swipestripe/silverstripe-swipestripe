@@ -37,10 +37,14 @@ class ProductForm extends Form {
 		if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
 			$variationPrice = $variation->Price();
-     	$productPrice->setAmount($productPrice->getAmount() + $variationPrice->getAmount());
+			
+			$amount = new Price();
+	    $amount->setAmount($productPrice->getAmount() + $variationPrice->getAmount());
+	    $amount->setCurrency($productPrice->BaseCurrency);
+	    $amount->setSymbol($productPrice->BaseCurrencySymbol);
 
 			$map[] = array(
-				'price' => $productPrice->Nice(),
+				'price' => $amount->Nice(),
 				'options' => $variation->Options()->column('ID'),
 				'free' => _t('Product.FREE', 'Free'),
 			);

@@ -67,10 +67,13 @@ class Product extends Page {
    * @var Array
    */
   public static $has_many = array(
-    'Images' => 'Product_Image',
     'Attributes' => 'Attribute',
     'Options' => 'Option',
     'Variations' => 'Variation'
+  );
+  
+  public static $many_many = array(
+  	'Images' => 'Image'	
   );
   
   /**
@@ -431,38 +434,26 @@ class Product_Controller extends Page_Controller {
   }
 }
 
-/**
- * A image for {@link Product}s.
- * 
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage product
- */
-class Product_Image extends Image {
-
-	public static $singular_name = 'Image';
-  public static $plural_name = 'Images';
-
+class Product_ImageExtension extends DataExtension {
+	
 	static $db = array (
     'Caption' => 'Text',
     'SortOrder' => 'Int'
   );
 
-	static $has_one = array (
-    'Product' => 'Product'
+	public static $belongs_many_many = array(
+    'Products' => 'Product'
   );
-
+  
   public static $default_sort = 'SortOrder';
 
-  public function getCMSFields() {
-
-  	$fields = parent::getCMSFields();
+  public function getUploadFields() {
+  	
+  	$fields = $this->owner->getCMSFields();
 
   	$fileAttributes = $fields->fieldByName('Root.Main.FilePreview')->fieldByName('FilePreviewData');
   	$fileAttributes->push(TextareaField::create('Caption', 'Caption:')->setRows(4));
 
-  	//$fields->addFieldToTab('Root.Main', HiddenField::create('SortOrder'));
   	$fields->removeFieldsFromTab('Root.Main', array(
   		'Title',
   		'Name',
@@ -471,10 +462,9 @@ class Product_Image extends Image {
   		'Created',
   		'LastEdited',
   		'BackLinkCount',
-  		'Di'
+  		'Dimensions'
   	));
   	return $fields;
   }
 }
-
 
