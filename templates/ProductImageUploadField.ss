@@ -10,9 +10,7 @@
 <% else %>
 
 	<div class="ss-uploadfield-addfile" <% if not $displayInput %>style="display: none;"<% end_if %>>
-
 		<div class="ss-uploadfield-item-preview ss-uploadfield-dropzone ui-corner-all">
-
 			<div>
 				<% _t('AssetUploadField.DROPAREA', 'Drop Area') %>
 				<span>
@@ -44,6 +42,8 @@
 				<% _t('UploadField.FROMCOMPUTER', 'From your computer') %>
 				<input id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> />
 			</label>
+			
+			<button class="ss-uploadfield-fromfiles ss-ui-button ui-corner-all" data-icon="network-cloud"><% _t('UploadField.FROMFILES', 'From files') %></button>
 
 			<% if not $autoUpload %>
 				<button class="ss-uploadfield-startall ss-ui-button ui-corner-all" title="<% _t('UploadField.STARTALLINFO', 'Start all uploads') %>" data-icon="navigation"><% _t('UploadField.STARTALL', 'Start all') %></button>
