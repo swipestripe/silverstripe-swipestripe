@@ -1,3 +1,5 @@
+<% require javascript(swipestripe/javascript/ProductImageUploadField.js) %>
+
 <% if isDisabled || isReadonly %>
 
 	<% if isSaveable %>
