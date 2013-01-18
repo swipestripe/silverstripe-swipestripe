@@ -12,25 +12,22 @@ purchased.
 
 Maintainer Contact
 ------------------
-SwipeStripe
-
-* [Contact Us](http://swipestripe.com/support/contact-us)
-* [Blog](http://swipestripe.com/blog)
-* [Twitter](https://twitter.com/#!/swipestripe)
-
-Version
--------
-1.0.1
+SwipeStripe  
+[Contact Us](http://swipestripe.com/support/contact-us)  
+[Twitter](https://twitter.com/#!/swipestripe)
 
 Requirements
 ------------
-* SilverStripe 2.4.*
-* SilverStripe payment module
+* SilverStripe 3.0.3 or greater (SilverStripe 3.1 works)
+
+Version
+-------
+2.0.0
 
 Documentation
 -------------
-* [Documentation found here](http://swipestripe.local/docs)
-* [Demo found here](http://swipestripe.local/docs/demo/)
+* [Documentation found here](http://swipestripe.com/dev/docs/swipestripe/en)
+* [Demo found here](http://swipestripe.com/dev/docs/swipestripe/en/Basics/Demo)
 
 Installation Instructions
 -------------------------
@@ -38,11 +35,7 @@ Installation Instructions
 2. Install the silverstripe payment module
 3. Run a dev/build?flush=1
 
-[More complete installation instructions here](http://swipestripe.local/docs/install/)
-
-Issues
-------
-[Please log bugs here](https://github.com/frankmullenger/silverstripe-swipestripe/issues).
+[More complete installation instructions here](http://swipestripe.com/dev/docs/swipestripe/en/Basics/Install)
 
 Attribution
 -----------
