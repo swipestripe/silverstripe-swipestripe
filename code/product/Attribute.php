@@ -221,7 +221,9 @@ class Attribute_OptionField extends DropdownField {
 	  		$prevOption = $variation->getOptionForAttribute($prev->ID);
 	  		$option = $variation->getOptionForAttribute($attr->ID);
 
-	  		$temp[$prevOption->ID][$option->SortOrder][$option->ID] = $option->Title;
+	  		if ($prevOption && $prevOption->exists() && $option && $option->exists()) {
+	  			$temp[$prevOption->ID][$option->SortOrder][$option->ID] = $option->Title;
+	  		}
 	  	}
 
 	  	//Using SortOrder to sort the options
