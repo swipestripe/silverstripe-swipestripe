@@ -22,7 +22,7 @@
 		    <% include OrderPayments %>
 		  <% end_if %>
 		  
-			<% if TotalOutstanding.Amount %>
+			<% if TotalOutstanding.Amount != 0 %>
 				<p class="alert alert-error">
 				  <strong class="alert-heading"><% _t('AccountPage_order.WARNING','Warning!') %></strong>
 				  There is an outstanding amount on this order, please <a href="{$BaseHref}/account/repay/{$ID}">complete payment for this order here</a>.
