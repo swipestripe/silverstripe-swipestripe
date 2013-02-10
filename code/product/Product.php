@@ -323,6 +323,14 @@ class Product extends Page {
     }
     return $result;
 	}
+	
+	public function Images() {
+  	return $this->getManyManyComponents(
+  		'Images',
+  		'',
+  		"\"Product_Images\".\"SortOrder\" ASC"
+  	);
+  }
 }
 
 /**
@@ -435,17 +443,10 @@ class Product_Controller extends Page_Controller {
 }
 
 class Product_ImageExtension extends DataExtension {
-	
-	static $db = array (
-    'Caption' => 'Text',
-    'SortOrder' => 'Int'
-  );
 
 	public static $belongs_many_many = array(
     'Products' => 'Product'
   );
-  
-  public static $default_sort = 'SortOrder';
 
   public function getUploadFields() {
   	
@@ -466,5 +467,28 @@ class Product_ImageExtension extends DataExtension {
   	));
   	return $fields;
   }
+  
+  public function Caption() {
+
+  	//TODO: Make this more generic and not require a db query each time
+  	$controller = Controller::curr();
+		$page = $controller->data();
+
+  	$joinObj = Product_Images::get()
+			->where("\"ProductID\" = '{$page->ID}' AND \"ImageID\" = '{$this->owner->ID}'")
+			->first();
+			
+		return $joinObj->Caption;
+  }
+}
+
+class Product_Images extends DataObject {
+	
+	static $db = array (
+		'ProductID' => 'Int',
+		'ImageID' => 'Int',
+    'Caption' => 'Text',
+    'SortOrder' => 'Int'
+  );
 }
 
