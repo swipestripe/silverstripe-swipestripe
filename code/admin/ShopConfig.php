@@ -25,13 +25,7 @@ class ShopConfig extends DataObject {
   );
 
   public static $has_many = array(
-    'ShippingCountries' => 'Country_Shipping',
-    'BillingCountries' => 'Country_Billing',
-    'ShippingRegions' => 'Region_Shipping',
-    'BillingRegions' => 'Region_Billing',
-
     'Attributes' => 'Attribute_Default',
-
     'ExtensionKeys' => 'ShopConfig_ExtensionKey'
   );
 
