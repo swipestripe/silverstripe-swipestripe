@@ -111,7 +111,9 @@ class AccountPage_Controller extends Page_Controller {
    */
   static $allowed_actions = array (
     'index' => 'VIEW_ORDER',
-    'order' => 'VIEW_ORDER'
+    'order' => 'VIEW_ORDER',
+    'repay' => 'VIEW_ORDER',
+    'RepayForm' => 'VIEW_ORDER'
   );
   
   /**
@@ -157,7 +159,7 @@ class AccountPage_Controller extends Page_Controller {
 		  if (!$order->canView($member)) {
 		  	return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
 		  }
-      
+
       return array(
 				'Order' => $order
 			);
@@ -167,5 +169,51 @@ class AccountPage_Controller extends Page_Controller {
 		}
 	}
 	
-}
+	function repay($request) {
 
+	  Requirements::css('swipestripe/css/Shop.css');
+
+		if ($orderID = $request->param('ID')) {
+		  
+		  $member = Customer::currentUser();
+		  $order = Order::get()
+		  	->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
+		  	->First();
+
+		  if (!$order || !$order->exists()) {
+		  	return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
+		  }
+
+		  if (!$order->canView($member)) {
+		  	return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
+		  }
+		  
+		  Session::set('Repay', array(
+        'OrderID' => $order->ID
+      ));
+      Session::save();
+		  
+      return array(
+				'Order' => $order,
+				'RepayForm' => $this->RepayForm()
+			);
+		}
+		else {
+			return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
+		}
+	}
+
+	function RepayForm() {
+
+    $form = RepayForm::create(
+    	$this, 
+    	'RepayForm'
+    )->disableSecurityToken();
+
+    //Populate fields the first time form is loaded
+    $form->populateFields();
+
+    return $form;
+  }
+	
+}

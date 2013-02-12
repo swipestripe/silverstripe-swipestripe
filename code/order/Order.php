@@ -231,7 +231,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean False always
 	 */
   public function canDelete($member = null) {
-    return false;
+    return true;
 	}
 
   /**

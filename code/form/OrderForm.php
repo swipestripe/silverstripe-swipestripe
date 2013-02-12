@@ -311,7 +311,7 @@ class OrderForm extends Form {
     try {
 
       $paymentData = array(
-				'Amount' => $order->Total()->getAmount(),
+				'Amount' => number_format($order->Total()->getAmount(), 2, '.', ''),
 				'Currency' => $order->Total()->getCurrency(),
 				'Reference' => $order->ID
 			);

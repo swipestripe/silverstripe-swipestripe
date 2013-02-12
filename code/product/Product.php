@@ -5,11 +5,6 @@
  * has attributes (e.g Size, Color) then it must have Variations. Products are Versioned so that
  * when a Product is added to an Order, then subsequently changed, the Order can get the correct
  * details about the Product.
- * 
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage product
  */
 class Product extends Page {
   
