@@ -40,8 +40,8 @@ class ProductForm extends Form {
 			
 			$amount = new Price();
 	    $amount->setAmount($productPrice->getAmount() + $variationPrice->getAmount());
-	    $amount->setCurrency($productPrice->BaseCurrency);
-	    $amount->setSymbol($productPrice->BaseCurrencySymbol);
+	    $amount->setCurrency($productPrice->getCurrency());
+	    $amount->setSymbol($productPrice->getSymbol());
 
 			$map[] = array(
 				'price' => $amount->Nice(),
