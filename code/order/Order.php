@@ -468,7 +468,7 @@ class Order extends DataObject implements PermissionProvider {
 	  $total = $this->Total()->getAmount();
 
 	  foreach ($this->Payments() as $payment) {
-	    if ($payment->Status != 'Failure') {
+	    if ($payment->Status != 'Failure' && $payment->Status != 'Pending') {
 	      $total -= $payment->Amount->getAmount();
 	    }
 	  }
