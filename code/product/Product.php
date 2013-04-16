@@ -406,29 +406,11 @@ class Product_Controller extends Page_Controller {
     $this->extend('onInit');
   }
   
-  /**
-   * Display a {@link Product}.
-   * 
-   * @param SS_HTTPRequest $request
-   */
-  public function index(SS_HTTPRequest $request) {
-
-    //Update stock levels before displaying product
-    //Order::delete_abandoned();
-
-    $product = $this->data();
-
-    if ($product && $product->exists()) {
-      $data = array(
-      	'Product' => $product,
-        'Content' => $this->Content, 
-       	'Form' => $this->ProductForm() 
-      );
-      return $this->Customise($data)->renderWith(array('Product','Page'));
-    }
-    else {
-      return $this->httpError(404, 'Sorry that product could not be found');
-    }
+  /**  
+	 * Legacy function allowing access to product data via $Product variable in templates
+	 */
+	public function Product() {
+		return $this->data();
   }
 
   public function ProductForm($quantity = null, $redirectURL = null) {
