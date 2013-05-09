@@ -460,7 +460,7 @@ class Order extends DataObject implements PermissionProvider {
 	
 	/**
 	 * Calculate the total outstanding for this order that remains to be paid,
-	 * all payments except 'Failure' payments are considered
+	 * all payments except 'Failure'  && 'Pending' payments are considered
 	 * 
 	 * @return Money With value and currency of total outstanding
 	 */
@@ -468,7 +468,7 @@ class Order extends DataObject implements PermissionProvider {
 	  $total = $this->Total()->getAmount();
 
 	  foreach ($this->Payments() as $payment) {
-	    if ($payment->Status != 'Failure') {
+	    if ($payment->Status != 'Failure' && $payment->Status != 'Pending') {
 	      $total -= $payment->Amount->getAmount();
 	    }
 	  }
