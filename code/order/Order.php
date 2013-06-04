@@ -576,6 +576,8 @@ class Order extends DataObject implements PermissionProvider {
     }
     
     $this->updateTotal();
+    
+    return $item;
 	}
 	
 	/**
