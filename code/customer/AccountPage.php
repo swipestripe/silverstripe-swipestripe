@@ -110,11 +110,19 @@ class AccountPage_Controller extends Page_Controller {
    * @var Array Set of actions
    */
   static $allowed_actions = array (
-    'index' => 'VIEW_ORDER',
-    'order' => 'VIEW_ORDER',
-    'repay' => 'VIEW_ORDER',
-    'RepayForm' => 'VIEW_ORDER'
+    'index',
+    'order',
+    'repay',
+    'RepayForm'
   );
+  
+  public function init() {
+    parent::init();
+
+    if(!Permission::check('VIEW_ORDER')) {
+    	return $this->redirect(Director::absoluteBaseURL() . 'Security/login?BackURL=' . urlencode($this->getRequest()->getVar('url')));
+    }
+  }
   
   /**
    * Check access permissions for account page and return content for displaying the 
