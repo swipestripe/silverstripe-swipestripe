@@ -132,14 +132,11 @@ class ShopAdmin extends ModelAdmin {
 		
 		$list = $this->getList();
 
-		$exportButton = new GridFieldExportButton('before');
+		$exportButton = new GridFieldExportButton('after');
 		$exportButton->setExportColumns($this->getExportFields());
 
 		$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
-				->addComponent($exportButton)
-				->removeComponentsByType('GridFieldFilterHeader');
-				//->removeComponentsByType('GridFieldToolbarHeader')
-				// ->removeComponentsByType('GridFieldExportButton');
+				->addComponent($exportButton);
 
 		if ($this->modelClass == 'Order' || $this->modelClass == 'Customer') {
 			$fieldConfig->removeComponentsByType('GridFieldAddNewButton');
