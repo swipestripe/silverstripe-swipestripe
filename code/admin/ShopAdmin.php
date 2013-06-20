@@ -137,9 +137,9 @@ class ShopAdmin extends ModelAdmin {
 
 		$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
 				->addComponent($exportButton)
-				->removeComponentsByType('GridFieldFilterHeader')
+				->removeComponentsByType('GridFieldFilterHeader');
 				//->removeComponentsByType('GridFieldToolbarHeader')
-				->removeComponentsByType('GridFieldExportButton');
+				// ->removeComponentsByType('GridFieldExportButton');
 
 		if ($this->modelClass == 'Order' || $this->modelClass == 'Customer') {
 			$fieldConfig->removeComponentsByType('GridFieldAddNewButton');
