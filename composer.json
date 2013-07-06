@@ -1,0 +1,17 @@
+{
+	"name": "swipestripe/swipestripe",
+	"description": "Ecommerce module to create online shops using SilverStripe.",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "ecommerce", "e-commerce", "shop", "swipestripe", "swipe stripe"],
+	"authors": [
+	{
+		"name": "Frank Mullenger",
+		"email": "frankmullenger@gmail.com"
+	}
+	],
+	"require":
+	{
+		"silverstripe/framework": ">=3.1.x-dev,<4.0",
+		"silverstripe/cms": ">=3.1.x-dev,<4.0"
+	}
+}
