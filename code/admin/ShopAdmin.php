@@ -2,27 +2,33 @@
 
 class ShopAdmin extends ModelAdmin {
 
-	static $url_segment = 'shop';
+	private static $url_segment = 'shop';
 
-	static $url_priority = 50;
+	private static $url_priority = 50;
 
-	static $menu_title = 'Shop';
+	private static $menu_title = 'Shop';
 
 	public $showImportForm = false;
 
-	public static $managed_models = array(
+	private static $managed_models = array(
 		//'Product',
 		'Order',
 		'Customer',
 		'ShopConfig'
 	);
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'$ModelClass/$Action' => 'handleAction',
 		'$ModelClass/$Action/$ID' => 'handleAction',
 	);
 
-	public static $hidden_sections = array();
+	protected static $hidden_sections = array();
+	
+	private static $allowed_actions = array(
+		'EditForm',
+		'SettingsContent',
+		'SettingsForm'
+	);
 
 	public function init() {
 
@@ -213,12 +219,20 @@ class ShopAdmin extends ModelAdmin {
 
 
 class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
+	
+	private static $tree_class = 'ShopConfig';
+	
+	private static $allowed_actions = array(
+		'LicenceSettings',
+		'LicenceSettingsForm',
+		'saveLicenceSettings'
+	);
 
-	static $url_rule = 'ShopConfig/Licence';
-	static $url_priority = 55;
-	static $menu_title = 'Shop Licence';
+	private static $url_rule = 'ShopConfig/Licence';
+	protected static $url_priority = 55;
+	private static $menu_title = 'Shop Licence';
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'ShopConfig/Licence/LicenceSettingsForm' => 'LicenceSettingsForm',
 		'ShopConfig/Licence' => 'LicenceSettings'
 	);
@@ -287,11 +301,11 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 				),
 				new Tab('ExtensionKeys',
 					GridField::create(
-            'ExtensionKeys',
-            'ExtensionKeys',
-            $shopConfig->ExtensionKeys(),
-            GridFieldConfig_RecordEditor::create()
-          )
+						'ExtensionKeys',
+						'ExtensionKeys',
+						$shopConfig->ExtensionKeys(),
+						GridFieldConfig_RecordEditor::create()
+					)
 				)
 			)
 		);
@@ -367,12 +381,20 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 }
 
 class ShopAdmin_EmailAdmin extends ShopAdmin {
+	
+	private static $tree_class = 'ShopConfig';
+	
+	private static $allowed_actions = array(
+		'EmailSettings',
+		'EmailSettingsForm',
+		'saveEmailSettings'
+	);
 
-	static $url_rule = 'ShopConfig/EmailSettings';
-	static $url_priority = 60;
-	static $menu_title = 'Shop Emails';
+	private static $url_rule = 'ShopConfig/EmailSettings';
+	protected static $url_priority = 60;
+	private static $menu_title = 'Shop Emails';
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'ShopConfig/EmailSettings/EmailSettingsForm' => 'EmailSettingsForm',
 		'ShopConfig/EmailSettings' => 'EmailSettings'
 	);
@@ -486,7 +508,7 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 	public function saveEmailSettings($data, $form) {
 
 		//Hack for LeftAndMain::getRecord()
-		self::$tree_class = 'ShopConfig';
+		// self::$tree_class = 'ShopConfig';
 
 		$config = ShopConfig::get()->First();
 		$form->saveInto($config);
@@ -531,12 +553,20 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 }
 
 class ShopAdmin_BaseCurrency extends ShopAdmin {
+	
+	private static $tree_class = 'ShopConfig';
+	
+	private static $allowed_actions = array(
+		'BaseCurrencySettings',
+		'BaseCurrencySettingsForm',
+		'saveBaseCurrencySettings'
+	);
 
-	static $url_rule = 'ShopConfig/BaseCurrency';
-	static $url_priority = 65;
-	static $menu_title = 'Shop Base Currency';
+	private static $url_rule = 'ShopConfig/BaseCurrency';
+	protected static $url_priority = 65;
+	private static $menu_title = 'Shop Base Currency';
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'ShopConfig/BaseCurrency/BaseCurrencySettingsForm' => 'BaseCurrencySettingsForm',
 		'ShopConfig/BaseCurrency' => 'BaseCurrencySettings'
 	);
@@ -690,12 +720,20 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 }
 
 class ShopAdmin_Attribute extends ShopAdmin {
+	
+	private static $tree_class = 'ShopConfig';
+	
+	private static $allowed_actions = array(
+		'AttributeSettings',
+		'AttributeSettingsForm',
+		'saveAttributeSettings'
+	);
 
-	static $url_rule = 'ShopConfig/Attribute';
-	static $url_priority = 75;
-	static $menu_title = 'Shop Product Attributes';
+	private static $url_rule = 'ShopConfig/Attribute';
+	protected static $url_priority = 75;
+	private static $menu_title = 'Shop Product Attributes';
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'ShopConfig/Attribute/AttributeSettingsForm' => 'AttributeSettingsForm',
 		'ShopConfig/Attribute' => 'AttributeSettings'
 	);
@@ -761,11 +799,11 @@ class ShopAdmin_Attribute extends ShopAdmin {
 			$rootTab = new TabSet('Root',
 				$tabMain = new Tab('Attribute',
 					GridField::create(
-			      'Attributes',
-			      'Attributes',
-			      $shopConfig->Attributes(),
-			      GridFieldConfig_HasManyRelationEditor::create()
-			    )
+						'Attributes',
+						'Attributes',
+						$shopConfig->Attributes(),
+						GridFieldConfig_HasManyRelationEditor::create()
+					)
 				)
 			)
 		);

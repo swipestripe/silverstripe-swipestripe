@@ -1,5 +1,11 @@
 <?php
 class GridFieldDetailForm_HasManyItemRequest extends GridFieldDetailForm_ItemRequest {
+	
+	private static $allowed_actions = array(
+		'edit',
+		'view',
+		'ItemEditForm'
+	);
 
 	/**
 	 * Builds an item edit form.  The arguments to getCMSFields() are the popupController and
