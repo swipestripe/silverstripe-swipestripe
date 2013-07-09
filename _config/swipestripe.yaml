@@ -9,3 +9,6 @@ Director:
 Modifier:
   Enabled:
     -
+
+ShopAdmin:
+  menu_icon: 'swipestripe/images/basket.png'
