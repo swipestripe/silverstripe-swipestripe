@@ -275,7 +275,7 @@ class ShopAdmin_LicenceKeyAdmin extends ShopAdmin {
 					'Content' => function() use(&$controller) {
 						return $controller->renderWith('ShopAdminSettings_Content');
 					},
-					'Breadcrumbs' => function() use (&$controller) {
+					'Breadcrumbs' => function() use(&$controller) {
 						return $controller->renderWith('CMSBreadcrumbs');
 					},
 					'default' => function() use(&$controller) {

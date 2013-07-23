@@ -4,23 +4,24 @@
 	<% end_if %>
 
 		<div class="cms-content-header north">
+			
 			<div class="cms-content-header-info">
-
 				<% with Controller %>
 					<!-- 	<% include BackLink_Button %> -->
-					<h2>
-						<% include CMSBreadcrumbs %>
-					</h2>
+					<% include CMSBreadcrumbs %>
 				<% end_with %>
 			</div>
+			
 
-			<div class="cms-content-header-tabs ss-ui-tabs-nav">
+			<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
 
 				<% if Fields.hasTabset %>
 					<% with Fields.fieldByName('Root') %>
 						<ul>
 						<% loop Tabs %>
-							<li<% if extraClass %> class="$extraClass"<% end_if %>><a href="#$id">$Title</a></li>
+							<li <% if extraClass %>class="$extraClass"<% end_if %>>
+								<a href="#$id" class="cms-panel-link" title="Form_EditForm">$Title</a>
+							</li>
 						<% end_loop %>
 						</ul>
 					<% end_with %>
