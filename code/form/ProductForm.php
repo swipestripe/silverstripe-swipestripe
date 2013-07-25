@@ -7,8 +7,12 @@ class ProductForm extends Form {
 	protected $product;
 	protected $quantity;
 	protected $redirectURL;
+	
+	private static $allowed_actions = array(
+		'add'
+	);
 
-	function __construct($controller, $name, $quantity = null, $redirectURL = null) {
+	public function __construct($controller, $name, $quantity = null, $redirectURL = null) {
 
 		parent::__construct($controller, $name, FieldList::create(), FieldList::create(), null);
 
@@ -20,11 +24,11 @@ class ProductForm extends Form {
 		$this->quantity = $quantity;
 		$this->redirectURL = $redirectURL;
 
-    $this->fields = $this->createFields();
-    $this->actions = $this->createActions();
-    $this->validator = $this->createValidator();
+		$this->fields = $this->createFields();
+		$this->actions = $this->createActions();
+		$this->validator = $this->createValidator();
 
-    $this->setupFormErrors();
+		$this->setupFormErrors();
 
 		$this->addExtraClass('product-form');
 
@@ -39,9 +43,9 @@ class ProductForm extends Form {
 			$variationPrice = $variation->Price();
 			
 			$amount = new Price();
-	    $amount->setAmount($productPrice->getAmount() + $variationPrice->getAmount());
-	    $amount->setCurrency($productPrice->getCurrency());
-	    $amount->setSymbol($productPrice->getSymbol());
+			$amount->setAmount($productPrice->getAmount() + $variationPrice->getAmount());
+			$amount->setCurrency($productPrice->getCurrency());
+			$amount->setSymbol($productPrice->getSymbol());
 
 			$map[] = array(
 				'price' => $amount->Nice(),
@@ -51,9 +55,9 @@ class ProductForm extends Form {
 		}
 
 		$this->setAttribute('data-map', json_encode($map));
-  }
+	}
 
-  /**
+	/**
 	 * Set up current form errors in session to
 	 * the current form if appropriate.
 	 */
@@ -65,56 +69,56 @@ class ProductForm extends Form {
 		}
 	}
 
-  public function createFields() {
+	public function createFields() {
 
-  	$product = $this->product;
+		$product = $this->product;
 
-  	$fields = FieldList::create(
-      HiddenField::create('ProductClass', 'ProductClass', $product->ClassName),
-      HiddenField::create('ProductID', 'ProductID', $product->ID),
-      HiddenField::create('Redirect', 'Redirect', $this->redirectURL)
-    );
+		$fields = FieldList::create(
+			HiddenField::create('ProductClass', 'ProductClass', $product->ClassName),
+			HiddenField::create('ProductID', 'ProductID', $product->ID),
+			HiddenField::create('Redirect', 'Redirect', $this->redirectURL)
+		);
 
-    $attributes = $this->product->Attributes();
-    $prev = null;
+		$attributes = $this->product->Attributes();
+		$prev = null;
 
-    if ($attributes && $attributes->exists()) foreach ($attributes as $attribute) {
+		if ($attributes && $attributes->exists()) foreach ($attributes as $attribute) {
 
-    	$field = $attribute->getOptionField($prev);
-    	$fields->push($field);
+			$field = $attribute->getOptionField($prev);
+			$fields->push($field);
 
-    	$prev = $attribute;
-    }
+			$prev = $attribute;
+		}
 
-    $fields->push(ProductForm_QuantityField::create('Quantity', 'Quantity', $this->quantity));
+		$fields->push(ProductForm_QuantityField::create('Quantity', 'Quantity', $this->quantity));
 
-    $this->extend('updateFields', $fields);
+		$this->extend('updateFields', $fields);
 		$fields->setForm($this);
-    return $fields;
-  }
+		return $fields;
+	}
 
-  public function createActions() {
-  	$actions = new FieldList(
-      new FormAction('add', 'Add To Cart')
-    );
+	public function createActions() {
+		$actions = new FieldList(
+			new FormAction('add', 'Add To Cart')
+		);
 
-    $this->extend('updateActions', $actions);
-  	$actions->setForm($this);
-    return $actions;
-  }
+		$this->extend('updateActions', $actions);
+		$actions->setForm($this);
+		return $actions;
+	}
 
-  public function createValidator() {
+	public function createValidator() {
 
-  	$validator = new ProductForm_Validator(
-    	'ProductClass', 
-    	'ProductID',
-      'Quantity'
-    );
+		$validator = new ProductForm_Validator(
+			'ProductClass', 
+			'ProductID',
+			'Quantity'
+		);
 
-    $this->extend('updateValidator', $validator);
-	  $validator->setForm($this);
-    return $validator;
-  }
+		$this->extend('updateValidator', $validator);
+		$validator->setForm($this);
+		return $validator;
+	}
 	
 	/**
 	 * Overloaded so that form error messages are displayed.
@@ -122,8 +126,8 @@ class ProductForm extends Form {
 	 * @see OrderFormValidator::php()
 	 * @see Form::validate()
 	 */
-  public function validate(){
-    
+	public function validate(){
+
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -144,15 +148,15 @@ class ProductForm extends Form {
 
 					$formError = array();
 					if ($formMessageType = $this->MessageType()) {
-					  $formError['message'] = $this->Message();
-					  $formError['messageType'] = $formMessageType;
+						$formError['message'] = $this->Message();
+						$formError['messageType'] = $formMessageType;
 					}
 
 					// Load errors into session and post back
 					Session::set("FormInfo.{$this->FormName()}", array(
 						'errors' => $errors,
 						'data' => $data,
-					  'formError' => $formError
+						'formError' => $formError
 					));
 
 				}
@@ -170,93 +174,93 @@ class ProductForm extends Form {
 	 */
 	public function add(Array $data, Form $form) {
 
-    Cart::get_current_order(true)
-    	->addItem(
-    		$this->getProduct(), 
-    		$this->getVariation(), 
-    		$this->getQuantity(), 
-    		$this->getOptions()
-    );
-    
-    //Show feedback if redirecting back to the Product page
-    if (!$this->getRequest()->requestVar('Redirect')) {
-      $cartPage = DataObject::get_one('CartPage');
-      $message = ($cartPage) 
-        ? 'The product was added to <a href="' . $cartPage->Link() . '">your cart</a>.'
-        : "The product was added to your cart.";
-      $form->sessionMessage(
-  			$message,
-  			'good'
-  		);
-    }
-    $this->goToNextPage();
-  }
+		Cart::get_current_order(true)
+			->addItem(
+				$this->getProduct(), 
+				$this->getVariation(), 
+				$this->getQuantity(), 
+				$this->getOptions()
+		);
+		
+		//Show feedback if redirecting back to the Product page
+		if (!$this->getRequest()->requestVar('Redirect')) {
+			$cartPage = DataObject::get_one('CartPage');
+			$message = ($cartPage) 
+				? 'The product was added to <a href="' . $cartPage->Link() . '">your cart</a>.'
+				: "The product was added to your cart.";
+			$form->sessionMessage(
+				$message,
+				'good'
+			);
+		}
+		$this->goToNextPage();
+	}
 
-  /**
-   * Find a product based on current request - maybe shoul dbe deprecated?
-   * 
-   * @see SS_HTTPRequest
-   * @return DataObject 
-   */
-  private function getProduct() {
-    $request = $this->getRequest();
-    return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
-  }
+	/**
+	 * Find a product based on current request - maybe shoul dbe deprecated?
+	 * 
+	 * @see SS_HTTPRequest
+	 * @return DataObject 
+	 */
+	private function getProduct() {
+		$request = $this->getRequest();
+		return DataObject::get_by_id($request->requestVar('ProductClass'), $request->requestVar('ProductID'));
+	}
 
-  private function getVariation() {
+	private function getVariation() {
 
-    $productVariation = new Variation();
-    $request = $this->getRequest();
-    $options = $request->requestVar('Options');
-    $product = $this->product;
-    $variations = $product->Variations();
+		$productVariation = new Variation();
+		$request = $this->getRequest();
+		$options = $request->requestVar('Options');
+		$product = $this->product;
+		$variations = $product->Variations();
 
-    if ($variations && $variations->exists()) foreach ($variations as $variation) {
+		if ($variations && $variations->exists()) foreach ($variations as $variation) {
 
-      $variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
-      if ($options == $variationOptions && $variation->isEnabled()) {
-        $productVariation = $variation;
-      }
-    }
+			$variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
+			if ($options == $variationOptions && $variation->isEnabled()) {
+				$productVariation = $variation;
+			}
+		}
 
-    return $productVariation;
-  }
+		return $productVariation;
+	}
 
-  /**
-   * Find the quantity based on current request
-   * 
-   * @return Int
-   */
-  private function getQuantity() {
-    $quantity = $this->getRequest()->requestVar('Quantity');
-    return (isset($quantity)) ? $quantity : 1;
-  }
+	/**
+	 * Find the quantity based on current request
+	 * 
+	 * @return Int
+	 */
+	private function getQuantity() {
+		$quantity = $this->getRequest()->requestVar('Quantity');
+		return (isset($quantity)) ? $quantity : 1;
+	}
 
-  private function getOptions() {
+	private function getOptions() {
 
-    $options = new ArrayList();
-    $this->extend('updateOptions', $options);
-    return $options;
-  }
-  
-  /**
-   * Send user to next page based on current request vars,
-   * if no redirect is specified redirect back.
-   * 
-   * TODO make this work with AJAX
-   */
-  private function goToNextPage() {
+		$options = new ArrayList();
+		$this->extend('updateOptions', $options);
+		return $options;
+	}
+	
+	/**
+	 * Send user to next page based on current request vars,
+	 * if no redirect is specified redirect back.
+	 * 
+	 * TODO make this work with AJAX
+	 */
+	private function goToNextPage() {
 
-    $redirectURL = $this->getRequest()->requestVar('Redirect');
+		$redirectURL = $this->getRequest()->requestVar('Redirect');
 
-    //Check if on site URL, if so redirect there, else redirect back
-    if ($redirectURL && Director::is_site_url($redirectURL)) {
-    	$this->controller->redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
-    } 
-    else {
-    	$this->controller->redirectBack();
-    }
-  }
+		//Check if on site URL, if so redirect there, else redirect back
+		if ($redirectURL && Director::is_site_url($redirectURL)) {
+			$this->controller->redirect(Director::absoluteURL(Director::baseURL() . $redirectURL));
+		} 
+		else {
+			$this->controller->redirectBack();
+		}
+	}
 
 }
 
@@ -272,7 +276,7 @@ class ProductForm_Validator extends RequiredFields {
 	 * @param Array $data Submitted data
 	 * @return Boolean Returns TRUE if the submitted data is valid, otherwise FALSE.
 	 */
-	function php($data) {
+	public function php($data) {
 
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();
@@ -282,46 +286,46 @@ class ProductForm_Validator extends RequiredFields {
 		$request = $this->form->getRequest();
 
 		//Get product variations from options sent
-    //TODO refactor this
-    
-	  $productVariations = new ArrayList();
+		//TODO refactor this
+		
+		$productVariations = new ArrayList();
 
-    $options = $request->postVar('Options');
-    $product = DataObject::get_by_id($data['ProductClass'], $data['ProductID']);
-    $variations = ($product) ? $product->Variations() : new ArrayList();
+		$options = $request->postVar('Options');
+		$product = DataObject::get_by_id($data['ProductClass'], $data['ProductID']);
+		$variations = ($product) ? $product->Variations() : new ArrayList();
 
-    if ($variations && $variations->exists()) foreach ($variations as $variation) {
-      
-      $variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
-      if ($options == $variationOptions && $variation->isEnabled()) {
-        $productVariations->push($variation);
-      }
-    }
-    
-	  if ((!$productVariations || !$productVariations->exists()) && $product && $product->requiresVariation()) {
-	    $this->form->sessionMessage(
-  		  _t('Form.VARIATIONS_REQUIRED', 'This product requires options before it can be added to the cart.'),
-  		  'bad'
-  		);
-  		
-  		//Have to set an error for Form::validate()
-  		$this->errors[] = true;
-  		$valid = false;
-  		return $valid;
-	  }
+		if ($variations && $variations->exists()) foreach ($variations as $variation) {
+			
+			$variationOptions = $variation->Options()->map('AttributeID', 'ID')->toArray();
+			if ($options == $variationOptions && $variation->isEnabled()) {
+				$productVariations->push($variation);
+			}
+		}
+		
+		if ((!$productVariations || !$productVariations->exists()) && $product && $product->requiresVariation()) {
+			$this->form->sessionMessage(
+				_t('Form.VARIATIONS_REQUIRED', 'This product requires options before it can be added to the cart.'),
+				'bad'
+			);
+			
+			//Have to set an error for Form::validate()
+			$this->errors[] = true;
+			$valid = false;
+			return $valid;
+		}
 
-	  //Validate that base currency is set for this cart
-	  $config = ShopConfig::current_shop_config();
-	  if (!$config->BaseCurrency) {
-	  	$this->form->sessionMessage(
-  		  _t('Form.BASE_CURRENCY_NOT_SET', 'The currency is not set.'),
-  		  'bad'
-  		);
-  		
-  		//Have to set an error for Form::validate()
-  		$this->errors[] = true;
-  		$valid = false;
-	  }
+		//Validate that base currency is set for this cart
+		$config = ShopConfig::current_shop_config();
+		if (!$config->BaseCurrency) {
+			$this->form->sessionMessage(
+				_t('Form.BASE_CURRENCY_NOT_SET', 'The currency is not set.'),
+				'bad'
+			);
+			
+			//Have to set an error for Form::validate()
+			$this->errors[] = true;
+			$valid = false;
+		}
 
 		return $valid;
 	}
@@ -332,7 +336,7 @@ class ProductForm_Validator extends RequiredFields {
 	 * @return Form The current form
 	 */
 	public function getForm() {
-	  return $this->form;
+		return $this->form;
 	}
 }
 
@@ -345,19 +349,19 @@ class ProductForm_QuantityField extends TextField {
 		return 'quantity';	
 	}
 	
-  /**
-   * Validate the quantity is above 0.
-   * 
-   * @see FormField::validate()
-   * @return Boolean
-   */
-  function validate($validator) {
+	/**
+	 * Validate the quantity is above 0.
+	 * 
+	 * @see FormField::validate()
+	 * @return Boolean
+	 */
+	public function validate($validator) {
 
-	  $valid = true;
+		$valid = true;
 		$quantity = $this->Value();
 		
-    if ($quantity == null || !is_numeric($quantity)) {
-	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
+		if ($quantity == null || !is_numeric($quantity)) {
+			$errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
@@ -367,10 +371,10 @@ class ProductForm_QuantityField extends TextField {
 				$errorMessage,
 				"error"
 			);
-	    $valid = false;
-	  }
-	  else if ($quantity <= 0) {
-	    $errorMessage = _t('Form.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 1');
+			$valid = false;
+		}
+		else if ($quantity <= 0) {
+			$errorMessage = _t('Form.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 1');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
@@ -380,10 +384,10 @@ class ProductForm_QuantityField extends TextField {
 				$errorMessage,
 				"error"
 			);
-	    $valid = false;
-	  }
-	  else if ($quantity > 2147483647) {
-	    $errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
+			$valid = false;
+		}
+		else if ($quantity > 2147483647) {
+			$errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
@@ -393,11 +397,11 @@ class ProductForm_QuantityField extends TextField {
 				$errorMessage,
 				"error"
 			);
-	    $valid = false;
-	  }
+			$valid = false;
+		}
 
 
-	  return $valid;
+		return $valid;
 	}
 	
 }
