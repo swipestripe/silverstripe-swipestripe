@@ -1,20 +1,20 @@
 <div class="product sws">
 
-  <div class="product-image">
-	  $Product.FirstImage.CroppedImage(250,250)
-  </div>
+	<div class="product-image">
+		$Product.FirstImage.CroppedImage(250,250)
+	</div>
 
-  <div class="product-meta">
-	  <h1>$Product.Title</h1>
-	  <h3 class="product-price-js">$Product.Price.Nice</h3>
+	<div class="product-meta">
+		<h1>$Product.Title</h1>
+		<h3 class="product-price-js">$Product.Price.Nice</h3>
 	
-	  <div class="add-to-cart">
-	    $ProductForm(1)
-	  </div>
-  </div>
+		<div class="add-to-cart">
+			$ProductForm(1)
+		</div>
+	</div>
 
-  <div class="product-description">
-    $Product.Content
-  </div>
+	<div class="product-description">
+		$Product.Content
+	</div>
 
 </div>

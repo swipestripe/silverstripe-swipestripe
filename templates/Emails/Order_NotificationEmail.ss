@@ -9,35 +9,35 @@
 		<h3>Hi,</h3>
 		$Message
 	
-	  <% with Order %>
-	    <div class="order sws">
-		    <table class="table table-bordered">
-	        <tr>
-	          <th>
-	            <% _t('Order_NotificationEmail.ORDER','Order') %> #$ID - $Status<br />
-              <a href="$Top.AdminLink" id="OrderLink">
-                <% _t('Order_NotificationEmail.LOGIN','Log in to the CMS to manage this order') %>
-              </a> 
-	          </th>
-	        </tr>
-	        <tr>
-	          <td>
-	            $OrderedOn.Format(j M Y - g:i a)<br />
-	            ($PaymentStatus)
-	          </td>
-	        </tr>
-	      </table>
+		<% with Order %>
+			<div class="order sws">
+				<table class="table table-bordered">
+					<tr>
+						<th>
+							<% _t('Order_NotificationEmail.ORDER','Order') %> #$ID - $Status<br />
+							<a href="$Top.AdminLink" id="OrderLink">
+								<% _t('Order_NotificationEmail.LOGIN','Log in to the CMS to manage this order') %>
+							</a> 
+						</th>
+					</tr>
+					<tr>
+						<td>
+							$OrderedOn.Format(j M Y - g:i a)<br />
+							($PaymentStatus)
+						</td>
+					</tr>
+				</table>
 
-        <% include Order %>
-         
-        <% if Payments %>
-          <% include OrderPayments %>
-        <% end_if %>
-       
-        <% if CustomerUpdates %>
-          <% include OrderNotes %>
-        <% end_if %>
-      </div>
-	  <% end_with %>
+				<% include Order %>
+				 
+				<% if Payments %>
+					<% include OrderPayments %>
+				<% end_if %>
+			 
+				<% if CustomerUpdates %>
+					<% include OrderNotes %>
+				<% end_if %>
+			</div>
+		<% end_with %>
 	</body>
 </html>
