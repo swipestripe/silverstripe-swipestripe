@@ -2,7 +2,7 @@
   <div class="order">
   
 	<% if Order %>
-    <% control Order %>
+    <% with Order %>
     
       <table class="table table-bordered">
 			  <tr>
@@ -22,7 +22,7 @@
 		    <% include OrderPayments %>
 		  <% end_if %>
 
-    <% end_control %>
+    <% end_with %>
 
 		$RepayForm
     

@@ -57,9 +57,9 @@
 	  <% if Cart.Items %>
 			<% if Actions %>
 
-				<% control Actions %>
+				<% loop Actions %>
 					$Field
-				<% end_control %>
+				<% end_loop %>
 			
 			<% end_if %>
 		<% end_if %>

@@ -8,18 +8,18 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <% control Items %>
+	    <% loop Items %>
 	    
 	      <tr  class="itemRow $EvenOdd $FirstLast">
 
 		      <td>
-		      	<% control Product %>  
+		      	<% with Product %>  
 			        <% if Link %>
 			          <a href="$Link" target="_blank">$Title</a>
 			        <% else %>
 			          $Title
 			        <% end_if %>
-		        <% end_control %>
+		        <% end_with %>
 
 		        <br />
   					$SummaryOfOptions
@@ -36,15 +36,15 @@
 		      <td class="totals-column">$TotalPrice.Nice</td>
 		    
 		    </tr>
-	    <% end_control %>
+	    <% end_loop %>
 	    
 	    <% if SubTotalModifications %>
-        <% control SubTotalModifications %>
+        <% loop SubTotalModifications %>
           <tr>
             <td class="row-header mod-title">$Description</td>
             <td class="totals-column" colspan="3">$Price.Nice</td>
           </tr>
-        <% end_control %>
+        <% end_loop %>
       <% end_if %>
 	    
 	    <tr>
@@ -53,12 +53,12 @@
       </tr>
 	    
 	    <% if TotalModifications %>
-	      <% control TotalModifications %>
+	      <% loop TotalModifications %>
 	        <tr>
 		        <td class="row-header mod-title">$Description</td>
 		        <td class="totals-column" colspan="3">$Price.Nice</td>
 		      </tr>
-	      <% end_control %>
+	      <% end_loop %>
 	    <% end_if %>
 	
 	    <tr>

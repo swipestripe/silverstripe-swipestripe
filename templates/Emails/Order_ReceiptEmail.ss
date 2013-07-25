@@ -9,7 +9,7 @@
 	  <h3><% _t('Order_ReceiptEmail.GREETING', 'Hi') %> $Customer.Name,</h3>
     $Message
 	
-	  <% control Order %>
+	  <% with Order %>
       <div class="order sws">
         <table class="table table-bordered">
           <tr>
@@ -36,7 +36,7 @@
           <% include OrderNotes %>
         <% end_if %>
       </div>
-    <% end_control %>
+    <% end_with %>
     
     <p>
       <% _t('Order_ReceiptEmail.PAYMENTNOTICE', 'Please note that orders will not be shipped until payment has been successfully processed.') %>

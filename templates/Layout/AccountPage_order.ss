@@ -2,7 +2,7 @@
   <div class="order">
   
 	<% if Order %>
-    <% control Order %>
+    <% with Order %>
     
       <table class="table table-bordered">
 			  <tr>
@@ -33,7 +33,7 @@
 		    <% include OrderNotes %>
 		  <% end_if %>
       
-    <% end_control %>
+    <% end_with %>
   <% else %>
     <p class="alert alert-error">
 		  <strong class="alert-heading"><% _t('AccountPage_order.WARNING','Warning!') %></strong>

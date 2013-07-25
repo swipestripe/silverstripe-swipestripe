@@ -1,4 +1,4 @@
-<% control Cart %>
+<% with Cart %>
 <table id="checkout-order-table" class="table table-bordered">
   <thead>
     <tr>
@@ -12,9 +12,9 @@
   
     <% if Items %>
     
-      <% control Top.ItemsFields %>
+      <% loop Top.ItemsFields %>
 	      $FieldHolder
-	    <% end_control %>
+	    <% end_loop %>
 	    
     <% else %>
       <tr>
@@ -24,18 +24,18 @@
       </tr>
     <% end_if %>
 
-    <% control Top.SubTotalModificationsFields %>
+    <% loop Top.SubTotalModificationsFields %>
       $FieldHolder
-    <% end_control %>
+    <% end_loop %>
     
     <tr>
       <td class="row-header"><% _t('CheckoutFormOrder.SUB_TOTAL','Sub Total') %></td>
       <td class="totals-column" colspan="3">$SubTotalPrice.Nice</td>
     </tr>
     
-    <% control Top.TotalModificationsFields %>
+    <% loop Top.TotalModificationsFields %>
       $FieldHolder
-    <% end_control %>
+    <% end_loop %>
 
     <tr>
       <td class="row-header"><% _t('CheckoutFormOrder.TOTAL','Total') %></td>
@@ -44,4 +44,4 @@
 
   </tbody>
 </table>
-<% end_control %>
+<% end_with %>

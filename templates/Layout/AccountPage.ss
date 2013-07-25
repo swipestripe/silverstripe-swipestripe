@@ -15,7 +15,7 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	      <% control Orders %>
+	      <% loop Orders %>
 	      <tr>
 	        <td>$ID</td>
 	        <td>$OrderedOn.Format(j M y)</td>
@@ -23,7 +23,7 @@
 	        <td>$Status ($PaymentStatus)</td>
 	        <td><a href="$Link"><% _t('AccountPage.VIEW_THIS_ORDER','View this order') %></a></td>
 	      </tr>
-	      <% end_control %>
+	      <% end_loop %>
 	    </tbody>
 	  </table>
 	<% else %> 

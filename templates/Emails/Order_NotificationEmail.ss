@@ -9,7 +9,7 @@
 		<h3>Hi,</h3>
 		$Message
 	
-	  <% control Order %>
+	  <% with Order %>
 	    <div class="order sws">
 		    <table class="table table-bordered">
 	        <tr>
@@ -38,6 +38,6 @@
           <% include OrderNotes %>
         <% end_if %>
       </div>
-	  <% end_control %>
+	  <% end_with %>
 	</body>
 </html>
