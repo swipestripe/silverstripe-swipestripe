@@ -226,11 +226,11 @@ class ProductImageUploadField_ItemHandler extends UploadField_ItemHandler {
 		//Get join object for populating caption
 		$controller = Controller::curr();
 		$parentID = $controller->currentPageID();
-  	$record = Page::get()
-  		->where("\"SiteTree\".\"ID\" = '$parentID'")
-  		->first();
+		$record = Page::get()
+			->where("\"SiteTree\".\"ID\" = '$parentID'")
+			->first();
 
-  	list($parentClass, $componentClass, $parentField, $componentField, $table) = $record->many_many('Images');
+		list($parentClass, $componentClass, $parentField, $componentField, $table) = $record->many_many('Images');
 
 		$joinObj = $table::get()
 				->where("\"$parentField\" = '{$parentID}' AND \"ImageID\" = '{$file->ID}'")

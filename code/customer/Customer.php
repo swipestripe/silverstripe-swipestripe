@@ -19,7 +19,7 @@ class Customer extends Member {
 	 * @var Array
 	 */
 	static $has_many = array(
-	  'Orders' => 'Order'
+		'Orders' => 'Order'
 	);
 
 	public static $searchable_fields = array(
@@ -32,35 +32,35 @@ class Customer extends Member {
 	 * 
 	 * @see Member::canDelete()
 	 */
-  public function canDelete($member = null) {
+	public function canDelete($member = null) {
 
-  	$orders = $this->Orders();
-    if ($orders && $orders->exists()) {
-    	return false;
-    }
-    return Permission::check('ADMIN', 'any', $member);
+		$orders = $this->Orders();
+		if ($orders && $orders->exists()) {
+			return false;
+		}
+		return Permission::check('ADMIN', 'any', $member);
 	}
 
 	public function delete() {
-    if ($this->canDelete(Member::currentUser())) {
-      parent::delete();
-    }
-  }
+		if ($this->canDelete(Member::currentUser())) {
+			parent::delete();
+		}
+	}
 
-  function requireDefaultRecords() {
+	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
 		//Create a new group for customers
 		$allGroups = DataObject::get('Group');
 		$existingCustomerGroup = $allGroups->find('Title', 'Customers');
 		if (!$existingCustomerGroup) {
-		  
-		  $customerGroup = new Group();
-		  $customerGroup->Title = 'Customers';
-		  $customerGroup->setCode($customerGroup->Title);
-		  $customerGroup->write();
+			
+			$customerGroup = new Group();
+			$customerGroup->Title = 'Customers';
+			$customerGroup->setCode($customerGroup->Title);
+			$customerGroup->write();
 
-		  Permission::grant($customerGroup->ID, 'VIEW_ORDER');
+			Permission::grant($customerGroup->ID, 'VIEW_ORDER');
 		}
 	}
 
@@ -73,11 +73,11 @@ class Customer extends Member {
 
 		$fields = new FieldList();
 
-    $fields->push(new TabSet('Root', 
-      Tab::create('Customer')
-    ));
+		$fields->push(new TabSet('Root', 
+			Tab::create('Customer')
+		));
 
-    $password = new ConfirmedPasswordField(
+		$password = new ConfirmedPasswordField(
 			'Password', 
 			null, 
 			null, 
@@ -87,17 +87,17 @@ class Customer extends Member {
 		$password->setCanBeEmpty(true);
 		if(!$this->ID) $password->showOnClick = false;
 
-    $fields->addFieldsToTab('Root.Customer', array(
-    	new TextField('FirstName'),
-    	new TextField('Surname'),
-    	new EmailField('Email'),
-    	new ConfirmedPasswordField('Password'),
-    	$password
-    ));
+		$fields->addFieldsToTab('Root.Customer', array(
+			new TextField('FirstName'),
+			new TextField('Surname'),
+			new EmailField('Email'),
+			new ConfirmedPasswordField('Password'),
+			$password
+		));
 
-    $this->extend('updateCMSFields', $fields);
+		$this->extend('updateCMSFields', $fields);
 
-    return $fields;
+		return $fields;
 	}
 	
 	/**
@@ -107,8 +107,8 @@ class Customer extends Member {
 	 */
 	public function Orders() {
 		return Order::get()
-	  	->where("\"MemberID\" = " . $this->ID . " AND \"Order\".\"Status\" != 'Cart'")
-	  	->sort("\"Created\" DESC");
+			->where("\"MemberID\" = " . $this->ID . " AND \"Order\".\"Status\" != 'Cart'")
+			->sort("\"Created\" DESC");
 	}
 	
 	/**
@@ -117,7 +117,7 @@ class Customer extends Member {
 	 * @return bool|Member Returns the member object of the current logged in
 	 *                     user or FALSE.
 	 */
-  static function currentUser() {
+	static function currentUser() {
 		$id = Member::currentUserID();
 		if($id) {
 			return DataObject::get_one("Customer", "\"Member\".\"ID\" = $id");

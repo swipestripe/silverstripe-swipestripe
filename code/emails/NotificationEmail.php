@@ -24,39 +24,39 @@ class NotificationEmail extends ProcessedEmail {
 	 * @param String $bcc
 	 */
 	public function __construct(Member $customer, Order $order, $from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
-	  
-	  $siteConfig = ShopConfig::get()->first();
-	  if ($siteConfig->NotificationTo) $this->to = $siteConfig->NotificationTo; 
-	  if ($siteConfig->NotificationSubject) $this->subject = $siteConfig->NotificationSubject . ' - Order #'.$order->ID;
-	  if ($siteConfig->NotificationBody) $this->body = $siteConfig->NotificationBody;
-	  
-	  if ($customer->Email) $this->from = $customer->Email; 
-	  elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
-	  else $this->from = 'no-reply@' . $_SERVER['HTTP_HOST'];
-	  
-	  $this->signature = '';
-	  $adminLink = Director::absoluteURL('/admin/shop/');
+		
+		$siteConfig = ShopConfig::get()->first();
+		if ($siteConfig->NotificationTo) $this->to = $siteConfig->NotificationTo; 
+		if ($siteConfig->NotificationSubject) $this->subject = $siteConfig->NotificationSubject . ' - Order #'.$order->ID;
+		if ($siteConfig->NotificationBody) $this->body = $siteConfig->NotificationBody;
+		
+		if ($customer->Email) $this->from = $customer->Email; 
+		elseif (Email::getAdminEmail()) $this->from = Email::getAdminEmail();
+		else $this->from = 'no-reply@' . $_SERVER['HTTP_HOST'];
+		
+		$this->signature = '';
+		$adminLink = Director::absoluteURL('/admin/shop/');
 
-	  //Get css for Email by reading css file and put css inline for emogrification
-	  $this->setTemplate('Order_NotificationEmail');
-	  
-	  if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'))) {
-	    $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'));
-	  }
-	  else {
-	    $css = file_get_contents(Director::getAbsFile('swipestripe/css/ShopEmail.css'));
-	  }
+		//Get css for Email by reading css file and put css inline for emogrification
+		$this->setTemplate('Order_NotificationEmail');
+		
+		if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'))) {
+			$css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'));
+		}
+		else {
+			$css = file_get_contents(Director::getAbsFile('swipestripe/css/ShopEmail.css'));
+		}
 
-    $this->populateTemplate(
-    	array(
-    		'Message' => $this->Body(),
-    		'Order' => $order,
-    	  'Customer' => $customer,
-    	  'InlineCSS' => "<style>$css</style>",
-    	  'Signature' => $this->signature,
-    	  'AdminLink' => $adminLink
-    	)
-    );
+		$this->populateTemplate(
+			array(
+				'Message' => $this->Body(),
+				'Order' => $order,
+				'Customer' => $customer,
+				'InlineCSS' => "<style>$css</style>",
+				'Signature' => $this->signature,
+				'AdminLink' => $adminLink
+			)
+		);
 		parent::__construct($from, null, $subject, $body, $bounceHandlerURL, $cc, $bcc);
 	}
 }

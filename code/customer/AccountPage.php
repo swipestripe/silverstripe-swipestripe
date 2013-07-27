@@ -37,8 +37,8 @@ class AccountPage extends Page {
 	 * @see SiteTree::canCreate()
 	 * @return Boolean Always returns false
 	 */
-  function canCreate($member = null) {
-	  return false;
+	function canCreate($member = null) {
+		return false;
 	}
 	
 	/**
@@ -48,14 +48,14 @@ class AccountPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canDelete($member = null) {
-	  return false;
+		return false;
 	}
 
 	public function delete() {
-    if ($this->canDelete(Member::currentUser())) {
-      parent::delete();
-    }
-  }
+		if ($this->canDelete(Member::currentUser())) {
+			parent::delete();
+		}
+	}
 	
 	/**
 	 * Prevent CMS users from unpublishing the account page.
@@ -64,8 +64,8 @@ class AccountPage extends Page {
 	 * @see AccountPage::getCMSActions()
 	 * @return Boolean Always returns false
 	 */
-  function canDeleteFromLive($member = null) {
-	  return false;
+	function canDeleteFromLive($member = null) {
+		return false;
 	}
 	
 	/**
@@ -76,9 +76,9 @@ class AccountPage extends Page {
 	 * @return FieldList Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
-	  $actions = parent::getCMSActions();
-	  $actions->removeByName('action_unpublish');
-	  return $actions;
+		$actions = parent::getCMSActions();
+		$actions->removeByName('action_unpublish');
+		return $actions;
 	}
 	
 	/**
@@ -87,10 +87,10 @@ class AccountPage extends Page {
 	 * @see Page::getCMSFields()
 	 * @return FieldList
 	 */
-  function getCMSFields() {
-    $fields = parent::getCMSFields();
-    $fields->removeByName('ClassName');
-    return $fields;
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->removeByName('ClassName');
+		return $fields;
 	}
 }
 
@@ -103,72 +103,72 @@ class AccountPage extends Page {
  * @subpackage customer
  */
 class AccountPage_Controller extends Page_Controller {
-  
-  /**
-   * Allowed actions that can be invoked.
-   * 
-   * @var Array Set of actions
-   */
-  static $allowed_actions = array (
-    'index',
-    'order',
-    'repay',
-    'RepayForm'
-  );
-  
-  public function init() {
-    parent::init();
+	
+	/**
+	 * Allowed actions that can be invoked.
+	 * 
+	 * @var Array Set of actions
+	 */
+	static $allowed_actions = array (
+		'index',
+		'order',
+		'repay',
+		'RepayForm'
+	);
+	
+	public function init() {
+		parent::init();
 
-    if(!Permission::check('VIEW_ORDER')) {
-    	return $this->redirect(Director::absoluteBaseURL() . 'Security/login?BackURL=' . urlencode($this->getRequest()->getVar('url')));
-    }
-  }
-  
-  /**
-   * Check access permissions for account page and return content for displaying the 
-   * default page.
-   * 
-   * @return Array Content data for displaying the page.
-   */
-  function index() {
-    
-    Requirements::css('swipestripe/css/Shop.css');
+		if(!Permission::check('VIEW_ORDER')) {
+			return $this->redirect(Director::absoluteBaseURL() . 'Security/login?BackURL=' . urlencode($this->getRequest()->getVar('url')));
+		}
+	}
+	
+	/**
+	 * Check access permissions for account page and return content for displaying the 
+	 * default page.
+	 * 
+	 * @return Array Content data for displaying the page.
+	 */
+	function index() {
+		
+		Requirements::css('swipestripe/css/Shop.css');
 
-    return array( 
-      'Content' => $this->Content, 
-      'Form' => $this->Form,
-      'Orders' => Order::get()
-      	->where("MemberID = " . Convert::raw2sql(Member::currentUserID()))
-      	->sort('Created DESC'),
-      'Customer' => Customer::currentUser()
-    );
-  }
+		return array( 
+			'Content' => $this->Content, 
+			'Form' => $this->Form,
+			'Orders' => Order::get()
+				->where("MemberID = " . Convert::raw2sql(Member::currentUserID()))
+				->sort('Created DESC'),
+			'Customer' => Customer::currentUser()
+		);
+	}
 
 	/**
 	 * Return the {@link Order} details for the current Order ID that we're viewing (ID parameter in URL).
 	 * 
 	 * @return Array Content for displaying the page
 	 */
-  function order($request) {
+	function order($request) {
 
-	  Requirements::css('swipestripe/css/Shop.css');
+		Requirements::css('swipestripe/css/Shop.css');
 
 		if ($orderID = $request->param('ID')) {
-		  
-		  $member = Customer::currentUser();
-		  $order = Order::get()
-		  	->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
-		  	->First();
+			
+			$member = Customer::currentUser();
+			$order = Order::get()
+				->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
+				->First();
 
-		  if (!$order || !$order->exists()) {
-		  	return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
-		  }
+			if (!$order || !$order->exists()) {
+				return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
+			}
 
-		  if (!$order->canView($member)) {
-		  	return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
-		  }
+			if (!$order->canView($member)) {
+				return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
+			}
 
-      return array(
+			return array(
 				'Order' => $order
 			);
 		}
@@ -179,29 +179,29 @@ class AccountPage_Controller extends Page_Controller {
 	
 	function repay($request) {
 
-	  Requirements::css('swipestripe/css/Shop.css');
+		Requirements::css('swipestripe/css/Shop.css');
 
 		if ($orderID = $request->param('ID')) {
-		  
-		  $member = Customer::currentUser();
-		  $order = Order::get()
-		  	->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
-		  	->First();
+			
+			$member = Customer::currentUser();
+			$order = Order::get()
+				->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
+				->First();
 
-		  if (!$order || !$order->exists()) {
-		  	return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
-		  }
+			if (!$order || !$order->exists()) {
+				return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
+			}
 
-		  if (!$order->canView($member)) {
-		  	return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
-		  }
-		  
-		  Session::set('Repay', array(
-        'OrderID' => $order->ID
-      ));
-      Session::save();
-		  
-      return array(
+			if (!$order->canView($member)) {
+				return $this->httpError(403, _t('AccountPage.CANNOT_VIEW_ORDER', 'You cannot view orders that do not belong to you.'));
+			}
+			
+			Session::set('Repay', array(
+				'OrderID' => $order->ID
+			));
+			Session::save();
+			
+			return array(
 				'Order' => $order,
 				'RepayForm' => $this->RepayForm()
 			);
@@ -213,15 +213,15 @@ class AccountPage_Controller extends Page_Controller {
 
 	function RepayForm() {
 
-    $form = RepayForm::create(
-    	$this, 
-    	'RepayForm'
-    )->disableSecurityToken();
+		$form = RepayForm::create(
+			$this, 
+			'RepayForm'
+		)->disableSecurityToken();
 
-    //Populate fields the first time form is loaded
-    $form->populateFields();
+		//Populate fields the first time form is loaded
+		$form->populateFields();
 
-    return $form;
-  }
+		return $form;
+	}
 	
 }

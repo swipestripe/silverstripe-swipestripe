@@ -9,12 +9,12 @@
  */
 class ShopSearchFilter_OptionSet extends SearchFilter {
 
-  /**
-   * Apply filter query SQL to a search query
-   * 
-   * @see SearchFilter::apply()
-   * @return SQLQuery
-   */
+	/**
+	 * Apply filter query SQL to a search query
+	 * 
+	 * @see SearchFilter::apply()
+	 * @return SQLQuery
+	 */
 	public function apply(DataQuery $query) {
 		
 		$this->model = $query->applyRelation($this->relation);
@@ -69,11 +69,11 @@ class ShopSearchFilter_OptionSet extends SearchFilter {
  */
 class ShopSearchFilter_Payment extends SearchFilter {
 
-  /**
-   * Apply filter query SQL to a search query
-   * 
-   * @see SearchFilter::apply()
-   */
+	/**
+	 * Apply filter query SQL to a search query
+	 * 
+	 * @see SearchFilter::apply()
+	 */
 	public function apply(DataQuery $query) {
 
 		$this->model = $query->applyRelation($this->relation);
@@ -124,21 +124,21 @@ class ShopSearchFilter_Payment extends SearchFilter {
  */
 class ShopSearchFilter_PublishedStatus extends SearchFilter {
 
-  /**
-   * Apply filter query SQL to a search query
-   * 
-   * @see SearchFilter::apply()
-   */
+	/**
+	 * Apply filter query SQL to a search query
+	 * 
+	 * @see SearchFilter::apply()
+	 */
 	public function apply(DataQuery $query) {
 
 		return $query;
-	  
-	  $query = $this->applyRelation($query);
+		
+		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 
-	  if ($value) {
-	    if ($value == 1) return $query->where("Status = 'Published'");
-	    if ($value == 2) return $query->where("Status != 'Published'");
+		if ($value) {
+			if ($value == 1) return $query->where("Status = 'Published'");
+			if ($value == 2) return $query->where("Status != 'Published'");
 		}
 	}
 

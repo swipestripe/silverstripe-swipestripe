@@ -15,17 +15,17 @@ class ItemOption extends DataObject {
 	 * @var Array
 	 */
 	public static $has_one = array(
-	  'Item' => 'Item'
+		'Item' => 'Item'
 	);
 
-  /**
-   * DB fields for this class
-   * 
-   * @var Array
-   */
+	/**
+	 * DB fields for this class
+	 * 
+	 * @var Array
+	 */
 	public static $db = array(
-	  'Description' => 'Varchar',
-	  'Price' => 'Decimal(19,4)'
+		'Description' => 'Varchar',
+		'Price' => 'Decimal(19,4)'
 	);
 
 	public function Amount() {
@@ -34,30 +34,30 @@ class ItemOption extends DataObject {
 
 		$order = $this->Order();
 
-    $amount = new Price();
-    $amount->setAmount($this->Price);
-    $amount->setCurrency($order->BaseCurrency);
-    $amount->setSymbol($order->BaseCurrencySymbol);
-    return $amount;
-  }
+		$amount = new Price();
+		$amount->setAmount($this->Price);
+		$amount->setCurrency($order->BaseCurrency);
+		$amount->setSymbol($order->BaseCurrencySymbol);
+		return $amount;
+	}
 
-  /**
-   * Display price, can decorate for multiple currency etc.
-   * 
-   * @return Price
-   */
-  public function Price() {
-    
-    $amount = $this->Amount();
+	/**
+	 * Display price, can decorate for multiple currency etc.
+	 * 
+	 * @return Price
+	 */
+	public function Price() {
+		
+		$amount = $this->Amount();
 
-    //Transform price here for display in different currencies etc.
-    $this->extend('updatePrice', $amount);
+		//Transform price here for display in different currencies etc.
+		$this->extend('updatePrice', $amount);
 
-    return $amount;
-  }
+		return $amount;
+	}
 
-  public function Order() {
-  	return $this->Item()->Order();
-  }
+	public function Order() {
+		return $this->Item()->Order();
+	}
 
 }

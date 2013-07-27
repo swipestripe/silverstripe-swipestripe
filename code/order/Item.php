@@ -4,18 +4,18 @@
  */
 class Item extends DataObject {
 
-  /**
-   * DB fields for an Item, the object this Item represents (e.g. {@link Product}
-   * has a version ID saved as well, so if price is changed or something then 
-   * a record of the price at time of ordering exists and can be retrieved.
-   * 
-   * @var Array
-   */
+	/**
+	 * DB fields for an Item, the object this Item represents (e.g. {@link Product}
+	 * has a version ID saved as well, so if price is changed or something then 
+	 * a record of the price at time of ordering exists and can be retrieved.
+	 * 
+	 * @var Array
+	 */
 	public static $db = array(
-	  'Price' => 'Decimal(19,4)',
-	  'Quantity' => 'Int',
-	  'ProductVersion' => 'Int',
-	  'VariationVersion' => 'Int'
+		'Price' => 'Decimal(19,4)',
+		'Quantity' => 'Int',
+		'ProductVersion' => 'Int',
+		'VariationVersion' => 'Int'
 	);
 
 	public function Amount() {
@@ -24,27 +24,27 @@ class Item extends DataObject {
 
 		$order = $this->Order();
 
-    $amount = new Price();
-    $amount->setAmount($this->Price);
-    $amount->setCurrency($order->BaseCurrency);
-    $amount->setSymbol($order->BaseCurrencySymbol);
-    return $amount;
-  }
+		$amount = new Price();
+		$amount->setAmount($this->Price);
+		$amount->setCurrency($order->BaseCurrency);
+		$amount->setSymbol($order->BaseCurrencySymbol);
+		return $amount;
+	}
 
-  /**
-   * Display price, can decorate for multiple currency etc.
-   * 
-   * @return Price
-   */
-  public function Price() {
-    
-    $amount = $this->Amount();
+	/**
+	 * Display price, can decorate for multiple currency etc.
+	 * 
+	 * @return Price
+	 */
+	public function Price() {
+		
+		$amount = $this->Amount();
 
-    //Transform price here for display in different currencies etc.
-    $this->extend('updatePrice', $amount);
+		//Transform price here for display in different currencies etc.
+		$this->extend('updatePrice', $amount);
 
-    return $amount;
-  }
+		return $amount;
+	}
 
 	/**
 	 * Relations for this class
@@ -63,7 +63,7 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	public static $has_many = array(
-	  'ItemOptions' => 'ItemOption'
+		'ItemOptions' => 'ItemOption'
 	);
 	
 	/**
@@ -72,7 +72,7 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	public static $defaults = array(
-	  'Quantity' => 1
+		'Quantity' => 1
 	);
 	
 	/**
@@ -81,13 +81,13 @@ class Item extends DataObject {
 	 * @see DataObject::onBeforeDelete()
 	 */
 	public function onBeforeDelete() {
-	  parent::onBeforeDelete();
-	  
-	  $itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
-	  if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
-	    $itemOption->delete();
-	    $itemOption->destroy();
-	  }
+		parent::onBeforeDelete();
+		
+		$itemOptions = DataObject::get('ItemOption', 'ItemID = '.$this->ID);
+		if ($itemOptions && $itemOptions->exists()) foreach ($itemOptions as $itemOption) {
+			$itemOption->delete();
+			$itemOption->destroy();
+		}
 	}
 
 	public function UnitAmount() {
@@ -96,13 +96,13 @@ class Item extends DataObject {
 
 		$amount = $itemAmount->getAmount();
 
-	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amount += $itemOption->Amount()->getAmount();
-	  } 
+		foreach ($this->ItemOptions() as $itemOption) {
+			$amount += $itemOption->Amount()->getAmount();
+		} 
 
-	  $unitAmount = clone $itemAmount;
-	  $unitAmount->setAmount($amount);
-	  return $unitAmount;
+		$unitAmount = clone $itemAmount;
+		$unitAmount->setAmount($amount);
+		return $unitAmount;
 	}
 	
 	/**
@@ -113,17 +113,17 @@ class Item extends DataObject {
 	public function UnitPrice() {
 
 		$itemPrice = $this->Price();
-	  $amount = $itemPrice->getAmount();
+		$amount = $itemPrice->getAmount();
 
-	  foreach ($this->ItemOptions() as $itemOption) {
-	    $amount += $itemOption->Price()->getAmount();
-	  } 
+		foreach ($this->ItemOptions() as $itemOption) {
+			$amount += $itemOption->Price()->getAmount();
+		} 
 
-	  // TODO: Multi currency
+		// TODO: Multi currency
 
-	  $unitPrice = clone $itemPrice;
-	  $unitPrice->setAmount($amount);
-	  return $unitPrice;
+		$unitPrice = clone $itemPrice;
+		$unitPrice->setAmount($amount);
+		return $unitPrice;
 	}
 	
 	/**
@@ -170,7 +170,7 @@ class Item extends DataObject {
 	 * @return ValidationResult
 	 */
 	function validateForCart() {
-	  return $this->validate();
+		return $this->validate();
 	}
 	
 	/**
@@ -182,43 +182,43 @@ class Item extends DataObject {
 	 */
 	function validate() {
 
-	  $result = new ValidationResult(); 
-	  
-	  $product = $this->Product();
-	  $variation = $this->Variation();
-	  $quantity = $this->Quantity;
+		$result = new ValidationResult(); 
+		
+		$product = $this->Product();
+		$variation = $this->Variation();
+		$quantity = $this->Quantity;
 
-	  //Check that product is published and exists
-	  if (!$product || !$product->exists() || !$product->isPublished()) {
-	    $result->error(
-	      'Sorry this product is no longer available',
-	      'ProductExistsError'
-	    );
-	  }
+		//Check that product is published and exists
+		if (!$product || !$product->exists() || !$product->isPublished()) {
+			$result->error(
+				'Sorry this product is no longer available',
+				'ProductExistsError'
+			);
+		}
 
-	  //Check that variation exists if required, not on first write when ItemOption hasn't had a chance to be written
-	  if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid())) {
-      $result->error(
-	      'Sorry, these product options are no longer available.',
-	      'VariationExistsError'
-	    );
-	  }
-	  //If a variation does exist, check that it is valid
-	  else if ($variation && !$variation->validateForCart()->valid()) {
-	    $result->error(
-	      'Sorry, these product options are no longer available',
-	      'VariationIncorrectError'
-	    );
-	  }
-	  
-	  //Check that quantity is correct
-	  if (!$quantity || !is_numeric($quantity) || $quantity <= 0 || $quantity > 2147483647) {
-	    $result->error(
-	      'Quantity for this product needs to be between 1 - 2,147,483,647',
-	      'QuantityError'
-	    );
-	  }
-	  return $result;
+		//Check that variation exists if required, not on first write when ItemOption hasn't had a chance to be written
+		if ($product && $product->requiresVariation() && (!$variation || !$variation->validateForCart()->valid())) {
+			$result->error(
+				'Sorry, these product options are no longer available.',
+				'VariationExistsError'
+			);
+		}
+		//If a variation does exist, check that it is valid
+		else if ($variation && !$variation->validateForCart()->valid()) {
+			$result->error(
+				'Sorry, these product options are no longer available',
+				'VariationIncorrectError'
+			);
+		}
+		
+		//Check that quantity is correct
+		if (!$quantity || !is_numeric($quantity) || $quantity <= 0 || $quantity > 2147483647) {
+			$result->error(
+				'Quantity for this product needs to be between 1 - 2,147,483,647',
+				'QuantityError'
+			);
+		}
+		return $result;
 	}
 
 	public function SummaryOfOptions() {

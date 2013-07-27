@@ -12,59 +12,59 @@
  */
 class Option extends DataObject {
 
-  public static $singular_name = 'Option';
-  public static $plural_name = 'Options';
+	public static $singular_name = 'Option';
+	public static $plural_name = 'Options';
 
-  /**
-   * DB fields for this Option
-   * 
-   * @var Array
-   */
-  public static $db = array(
-    'Title' => 'Varchar(255)',
-    'Description' => 'Text',
-    'SortOrder' => 'Int'
-  );
+	/**
+	 * DB fields for this Option
+	 * 
+	 * @var Array
+	 */
+	public static $db = array(
+		'Title' => 'Varchar(255)',
+		'Description' => 'Text',
+		'SortOrder' => 'Int'
+	);
 
-  /**
-   * Has one relations for an Option
-   * 
-   * @var Array
-   */
-  public static $has_one = array(
-    'Attribute' => 'Attribute',
-    'Product' => 'Product'
-  );
-  
-  /**
-   * Belongs many many relations for an Option
-   * 
-   * @var Array
-   */
-  static $belongs_many_many = array(    
-    'Variations' => 'Variation'
-  );
+	/**
+	 * Has one relations for an Option
+	 * 
+	 * @var Array
+	 */
+	public static $has_one = array(
+		'Attribute' => 'Attribute',
+		'Product' => 'Product'
+	);
+	
+	/**
+	 * Belongs many many relations for an Option
+	 * 
+	 * @var Array
+	 */
+	static $belongs_many_many = array(    
+		'Variations' => 'Variation'
+	);
 
-  public static $default_sort = 'SortOrder';
+	public static $default_sort = 'SortOrder';
 
-  public function getCMSFields() {
-    $fields = parent::getCMSFields();
-    $fields->removeByName('Variations');
-    $fields->removeByName('ProductID');
-    $fields->removeByName('AttributeID');
-    $fields->removeByName('SortOrder');
-    return $fields;
-  }
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->removeByName('Variations');
+		$fields->removeByName('ProductID');
+		$fields->removeByName('AttributeID');
+		$fields->removeByName('SortOrder');
+		return $fields;
+	}
 
 }
 
 class Option_Default extends Option {
 
-  public static $singular_name = 'Option';
-  public static $plural_name = 'Options';
+	public static $singular_name = 'Option';
+	public static $plural_name = 'Options';
 
-  public function onBeforeWrite() {
-    parent::onBeforeWrite();
-    $this->ProductID = 0;
-  }
+	public function onBeforeWrite() {
+		parent::onBeforeWrite();
+		$this->ProductID = 0;
+	}
 }

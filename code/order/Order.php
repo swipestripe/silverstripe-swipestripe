@@ -5,110 +5,110 @@
  * which might represent a {@link Modifier} like shipping, tax, coupon codes.
  */
 class Order extends DataObject implements PermissionProvider {
-  
-  /**
-   * Order status once Order has been made, waiting for payment to clear/be approved
-   * 
-   * @var String
-   */
-  const STATUS_PENDING = 'Pending';
-  
-  /**
-   * Order status once payment approved, order being processed before being dispatched
-   * 
-   * @var String
-   */
-  const STATUS_PROCESSING = 'Processing';
-  
-  /**
-   * Order status once Order has been sent
-   * 
-   * @var String
-   */
-  const STATUS_DISPATCHED = 'Dispatched';
+	
+	/**
+	 * Order status once Order has been made, waiting for payment to clear/be approved
+	 * 
+	 * @var String
+	 */
+	const STATUS_PENDING = 'Pending';
+	
+	/**
+	 * Order status once payment approved, order being processed before being dispatched
+	 * 
+	 * @var String
+	 */
+	const STATUS_PROCESSING = 'Processing';
+	
+	/**
+	 * Order status once Order has been sent
+	 * 
+	 * @var String
+	 */
+	const STATUS_DISPATCHED = 'Dispatched';
 
-  /**
-   * DB fields for Order, such as Stauts, Payment Status etc.
-   * 
-   * @var Array
-   */
+	/**
+	 * DB fields for Order, such as Stauts, Payment Status etc.
+	 * 
+	 * @var Array
+	 */
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
-	  'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
+		'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 
-	  'TotalPrice' => 'Decimal(19,4)',
-    'SubTotalPrice' => 'Decimal(19,4)',
+		'TotalPrice' => 'Decimal(19,4)',
+		'SubTotalPrice' => 'Decimal(19,4)',
 
-    'BaseCurrency' => 'Varchar(3)',
-    'BaseCurrencySymbol' => 'Varchar(10)',
+		'BaseCurrency' => 'Varchar(3)',
+		'BaseCurrencySymbol' => 'Varchar(10)',
 
-	  'OrderedOn' => 'SS_Datetime',
-	  'LastActive' => 'SS_Datetime',
-	  'Env' => 'Varchar(10)',
+		'OrderedOn' => 'SS_Datetime',
+		'LastActive' => 'SS_Datetime',
+		'Env' => 'Varchar(10)',
 	);
 
 	public function Total() {
 
 		// TODO: Multi currency
 
-    $amount = new Price();
-    $amount->setAmount($this->TotalPrice);
-    $amount->setCurrency($this->BaseCurrency);
-    $amount->setSymbol($this->BaseCurrencySymbol);
-    return $amount;
-  }
+		$amount = new Price();
+		$amount->setAmount($this->TotalPrice);
+		$amount->setCurrency($this->BaseCurrency);
+		$amount->setSymbol($this->BaseCurrencySymbol);
+		return $amount;
+	}
 
-  /**
-   * Display price, can decorate for multiple currency etc.
-   * 
-   * @return Price
-   */
-  public function TotalPrice() {
-    
-    $amount = $this->Total();
-    $this->extend('updatePrice', $amount);
-    return $amount;
-  }
+	/**
+	 * Display price, can decorate for multiple currency etc.
+	 * 
+	 * @return Price
+	 */
+	public function TotalPrice() {
+		
+		$amount = $this->Total();
+		$this->extend('updatePrice', $amount);
+		return $amount;
+	}
 
-  public function SubTotal() {
+	public function SubTotal() {
 
-  	// TODO: Multi currency
+		// TODO: Multi currency
 
-    $amount = new Price();
-    $amount->setAmount($this->SubTotalPrice);
-    $amount->setCurrency($this->BaseCurrency);
-    $amount->setSymbol($this->BaseCurrencySymbol);
-    return $amount;
-  }
+		$amount = new Price();
+		$amount->setAmount($this->SubTotalPrice);
+		$amount->setCurrency($this->BaseCurrency);
+		$amount->setSymbol($this->BaseCurrencySymbol);
+		return $amount;
+	}
 
-  /**
-   * Display price, can decorate for multiple currency etc.
-   * 
-   * @return Price
-   */
-  public function SubTotalPrice() {
-    
-    $amount = $this->SubTotal();
-    $this->extend('updatePrice', $amount);
-    return $amount;
-  }
+	/**
+	 * Display price, can decorate for multiple currency etc.
+	 * 
+	 * @return Price
+	 */
+	public function SubTotalPrice() {
+		
+		$amount = $this->SubTotal();
+		$this->extend('updatePrice', $amount);
+		return $amount;
+	}
 
-  public function CartTotalPrice() {
+	public function CartTotalPrice() {
 
-  	$total = $this->SubTotal();
-  	$amount = $total->getAmount();
+		$total = $this->SubTotal();
+		$amount = $total->getAmount();
 
-  	//Remove cost of modifications for displaying on the cart
-  	$mods = $this->SubTotalModifications();
+		//Remove cost of modifications for displaying on the cart
+		$mods = $this->SubTotalModifications();
 
-  	if ($mods && $mods->exists()) foreach ($mods as $mod) {
-  		$amount -= $mod->Amount()->getAmount();
-  	}
+		if ($mods && $mods->exists()) foreach ($mods as $mod) {
+			$amount -= $mod->Amount()->getAmount();
+		}
 
-  	$total->setAmount($amount);
-    $this->extend('updatePrice', $total);
-    return $total;
-  }
+		$total->setAmount($amount);
+		$this->extend('updatePrice', $total);
+		return $total;
+	}
 
 	/**
 	 * Relations for this Order
@@ -116,7 +116,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	public static $has_one = array(
-	  'Member' => 'Customer'
+		'Member' => 'Customer'
 	);
 
 	/*
@@ -125,10 +125,10 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	public static $has_many = array(
-	  'Items' => 'Item',
+		'Items' => 'Item',
 		'Payments' => 'Payment',
-	  'Modifications' => 'Modification',
-	  'Updates' => 'Order_Update'
+		'Modifications' => 'Modification',
+		'Updates' => 'Order_Update'
 	);
 	
 	/**
@@ -137,7 +137,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	public static $summary_fields = array(
-	  'ID' => 'Order No',
+		'ID' => 'Order No',
 		'OrderedOn' => 'Ordered On',
 		'Member.Name' => 'Customer',
 		'Member.Email' => 'Email',
@@ -151,7 +151,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	public static $searchable_fields = array(
-	  'ID' => array(
+		'ID' => array(
 			'field' => 'TextField',
 			'filter' => 'PartialMatchFilter',
 			'title' => 'Order Number'
@@ -167,10 +167,10 @@ class Order extends DataObject implements PermissionProvider {
 		// 'HasPayment' => array(
 		// 	'filter' => 'ShopSearchFilter_Payment',
 		// ),
-  	'Status' => array(
-  	  'title' => 'Status',
-  		'filter' => 'ShopSearchFilter_OptionSet',
-  	)
+		'Status' => array(
+			'title' => 'Status',
+			'filter' => 'ShopSearchFilter_OptionSet',
+		)
 	);
 
 	/**
@@ -199,19 +199,19 @@ class Order extends DataObject implements PermissionProvider {
 	public static $first_id = null;
 
 	public function providePermissions() {
-    return array(
-      'VIEW_ORDER' => 'View orders'
-    );
-  }
+		return array(
+			'VIEW_ORDER' => 'View orders'
+		);
+	}
 
-  public function canView($member = null) {
+	public function canView($member = null) {
 
 		if ($member == null && !$member = Member::currentUser()) return false;
 
-    $administratorPerm = Permission::check('ADMIN', 'any', $member);
-    $customerPerm = Permission::check('VIEW_ORDER', 'any', $member) && $member->ID == $this->MemberID;
+		$administratorPerm = Permission::check('ADMIN', 'any', $member);
+		$customerPerm = Permission::check('VIEW_ORDER', 'any', $member) && $member->ID == $this->MemberID;
 
-    return $administratorPerm || $customerPerm;
+		return $administratorPerm || $customerPerm;
 	}
 	
 	/**
@@ -220,8 +220,8 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::canCreate()
 	 * @return Boolean False always
 	 */
-  public function canCreate($member = null) {
-    return false;
+	public function canCreate($member = null) {
+		return false;
 	}
 	
 	/**
@@ -230,54 +230,54 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::canDelete()
 	 * @return Boolean False always
 	 */
-  public function canDelete($member = null) {
-    return true;
+	public function canDelete($member = null) {
+		return true;
 	}
 
-  /**
+	/**
 	 * Clean up Order Items (ItemOptions by extension) and Modifications.
 	 * All wrapped in a transaction.
 	 */
 	public function delete() {
 
 		if ($this->canDelete(Member::currentUser())) {
-		  try {
+			try {
 
-		  	DB::getConn()->transactionStart();
-		  	
-		  	$payments = $this->Payments();
-		    if ($payments && $payments->exists()) foreach ($payments as $payment) {
-	        $payment->delete();
-	        $payment->destroy();
-		    }
+				DB::getConn()->transactionStart();
+				
+				$payments = $this->Payments();
+				if ($payments && $payments->exists()) foreach ($payments as $payment) {
+					$payment->delete();
+					$payment->destroy();
+				}
 
-		    $items = $this->Items();
-		    if ($items && $items->exists()) foreach ($items as $item) {
-	        $item->delete();
-	        $item->destroy();
-		    }
-		    
-		    $modifications = $this->Modifications();
-		    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
-		      $modification->delete();
-		      $modification->destroy();
-		    }
-		    
-		    $updates = $this->Updates();
-		    if ($updates && $updates->exists()) foreach ($updates as $update) {
-	        $update->delete();
-	        $update->destroy();
-		    }
-		    
-		    parent::delete();
-		    DB::getConn()->transactionEnd();
-		    
-		  }
-		  catch (Exception $e) {
-		    DB::getConn()->transactionRollback();
-		    SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
-		    user_error("$this->class could not be deleted.", E_USER_ERROR);
-		  }
+				$items = $this->Items();
+				if ($items && $items->exists()) foreach ($items as $item) {
+					$item->delete();
+					$item->destroy();
+				}
+				
+				$modifications = $this->Modifications();
+				if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
+					$modification->delete();
+					$modification->destroy();
+				}
+				
+				$updates = $this->Updates();
+				if ($updates && $updates->exists()) foreach ($updates as $update) {
+					$update->delete();
+					$update->destroy();
+				}
+				
+				parent::delete();
+				DB::getConn()->transactionEnd();
+				
+			}
+			catch (Exception $e) {
+				DB::getConn()->transactionRollback();
+				SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+				user_error("$this->class could not be deleted.", E_USER_ERROR);
+			}
 		}
 	}
 
@@ -287,7 +287,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::scaffoldSearchFields()
 	 * @return FieldSet
 	 */
-  public function scaffoldSearchFields($params = array()){
+	public function scaffoldSearchFields($params = array()){
 
 		$fields = parent::scaffoldSearchFields();
 
@@ -298,9 +298,9 @@ class Order extends DataObject implements PermissionProvider {
 		$statusVal = isset($query['Status']) ? $query['Status'] : array();
 
 		$fields->push(CheckboxSetField::create('Status', 'Status', array(
-		  'Pending' => 'Pending',
-		  'Processing' => 'Processing',
-		  'Dispatched' => 'Dispatched'
+			'Pending' => 'Pending',
+			'Processing' => 'Processing',
+			'Dispatched' => 'Dispatched'
 		))->setValue($statusVal));
 
 		return $fields;
@@ -313,13 +313,13 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::getDefaultSearchContext()
 	 * @return ShopSearchContext
 	 */
-  public function getDefaultSearchContext() {
-  	return new ShopSearchContext_Order(
-  		$this->class,
-  		$this->scaffoldSearchFields(),
-  		$this->defaultSearchFilters()
-  	);
-  }
+	public function getDefaultSearchContext() {
+		return new ShopSearchContext_Order(
+			$this->class,
+			$this->scaffoldSearchFields(),
+			$this->defaultSearchFilters()
+		);
+	}
 
 	/**
 	 * Set the LastActive time when {@link Order} first created.
@@ -328,37 +328,37 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::onBeforeWrite()
 	 */
 	public function onBeforeWrite() {
-    parent::onBeforeWrite();
-    if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
+		parent::onBeforeWrite();
+		if (!$this->ID) $this->LastActive = SS_Datetime::now()->getValue();
 
-    //Set the base currency
-    if (!$this->BaseCurrency || !$this->BaseCurrencySymbol) {
-    	$shopConfig = ShopConfig::current_shop_config();
-    	$this->BaseCurrency = $shopConfig->BaseCurrency;
-    	$this->BaseCurrencySymbol = $shopConfig->BaseCurrencySymbol;
-    }
+		//Set the base currency
+		if (!$this->BaseCurrency || !$this->BaseCurrencySymbol) {
+			$shopConfig = ShopConfig::current_shop_config();
+			$this->BaseCurrency = $shopConfig->BaseCurrency;
+			$this->BaseCurrencySymbol = $shopConfig->BaseCurrencySymbol;
+		}
 
-    //If orders do not exist set the first ID
-    if ((!Order::get()->count() && true) && is_numeric(self::$first_id) && self::$first_id > 0) {
-    	$this->ID = self::$first_id;
-    }
+		//If orders do not exist set the first ID
+		if ((!Order::get()->count() && true) && is_numeric(self::$first_id) && self::$first_id > 0) {
+			$this->ID = self::$first_id;
+		}
 
-    //Set environment order was placed in
-    $this->Env = Director::get_environment_type();
+		//Set environment order was placed in
+		$this->Env = Director::get_environment_type();
 
-    //Update paid status
-    $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
-  }
+		//Update paid status
+		$this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
+	}
 
-  public function onAfterWrite() {
-  	parent::onAfterWrite();
-  }
+	public function onAfterWrite() {
+		parent::onAfterWrite();
+	}
 
-  public function onBeforePayment() {
-  	$this->extend('onBeforePayment');
-  }
+	public function onBeforePayment() {
+		$this->extend('onBeforePayment');
+	}
 
-  /**
+	/**
 	 * Processed if payment is successfully written, send a receipt to the customer
 	 * and notification to the admin
 	 * 
@@ -367,7 +367,7 @@ class Order extends DataObject implements PermissionProvider {
 	public function onAfterPayment() {
 
 		$this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING :  self::STATUS_PENDING;
-	  $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
+		$this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
 		$this->write();
 
 		ReceiptEmail::create($this->Member(), $this)
@@ -375,7 +375,7 @@ class Order extends DataObject implements PermissionProvider {
 		NotificationEmail::create($this->Member(), $this)
 			->send();
 
-	  $this->extend('onAfterPayment');
+		$this->extend('onAfterPayment');
 	}
 	
 	/**
@@ -388,29 +388,29 @@ class Order extends DataObject implements PermissionProvider {
 
 		$fields = new FieldList();
 
-    $fields->push(new TabSet('Root', 
-      Tab::create('Order')
-    ));
+		$fields->push(new TabSet('Root', 
+			Tab::create('Order')
+		));
 
-    //Override this in updateOrderCMSFields to change the order template in the CMS
-    $htmlSummary = $this->customise(array(
+		//Override this in updateOrderCMSFields to change the order template in the CMS
+		$htmlSummary = $this->customise(array(
 			'MemberEmail' => $this->Member()->Email
 		))->renderWith('OrderAdmin');
 		$fields->addFieldToTab('Root.Order', new LiteralField('MainDetails', $htmlSummary));
 
 		//Updates
 		$listField = new GridField(
-      'Updates',
-      'Updates',
-      $this->Updates(),
-      GridFieldConfig_Basic::create()
-    );
-    $fields->addFieldToTab('Root.Updates', $listField);
+			'Updates',
+			'Updates',
+			$this->Updates(),
+			GridFieldConfig_Basic::create()
+		);
+		$fields->addFieldToTab('Root.Updates', $listField);
 
-    //Ability to edit fields added to CMS here
+		//Ability to edit fields added to CMS here
 		$this->extend('updateOrderCMSFields', $fields);
 
-    return $fields;
+		return $fields;
 	}
 	
 	/**
@@ -421,8 +421,8 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return FieldList
 	 */
 	public function getCMSActions() {
-	  $actions = parent::getCMSActions();
-	  return $actions;
+		$actions = parent::getCMSActions();
+		return $actions;
 	}
 	
 	/**
@@ -431,7 +431,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return String Order total formatted with Nice()
 	 */
 	public function SummaryOfTotal() {
-	  return $this->Total()->Nice();
+		return $this->Total()->Nice();
 	}
 	
 	/**
@@ -441,8 +441,8 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return String URL for viewing this order
 	 */
 	public function Link() {
-	  //get the account page and go to it
-	  $account = DataObject::get_one('AccountPage');
+		//get the account page and go to it
+		$account = DataObject::get_one('AccountPage');
 		return $account->Link()."order/$this->ID";
 	}
 
@@ -463,25 +463,25 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Money With value and currency of total outstanding
 	 */
 	public function TotalOutstanding() {
-	  $total = $this->Total()->getAmount();
+		$total = $this->Total()->getAmount();
 
-	  foreach ($this->Payments() as $payment) {
-	    if ($payment->Status == 'Success') {
-	      $total -= $payment->Amount->getAmount();
-	    }
-	  }
-	  
-	  //Total outstanding cannot be negative 
-	  if ($total < 0) $total = 0;
+		foreach ($this->Payments() as $payment) {
+			if ($payment->Status == 'Success') {
+				$total -= $payment->Amount->getAmount();
+			}
+		}
+		
+		//Total outstanding cannot be negative 
+		if ($total < 0) $total = 0;
 
-	  // TODO: Multi currency
-	  
-	  $outstanding = new Price();
-	  $outstanding->setAmount($total);
-	  $outstanding->setCurrency($this->BaseCurrency);
-	  $outstanding->setSymbol($this->BaseCurrencySymbol);
-	  
-	  return $outstanding;
+		// TODO: Multi currency
+		
+		$outstanding = new Price();
+		$outstanding->setAmount($total);
+		$outstanding->setCurrency($this->BaseCurrency);
+		$outstanding->setSymbol($this->BaseCurrencySymbol);
+		
+		return $outstanding;
 	}
 	
 	/**
@@ -491,20 +491,20 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Price With value and currency of total paid
 	 */
 	public function TotalPaid() {
-	   $paid = 0;
-	   
-	  if ($this->Payments()) foreach ($this->Payments() as $payment) {
-	    if ($payment->Status == 'Success') {
-	      $paid += $payment->Amount->getAmount();
-	    }
-	  }
-	  
-	  $totalPaid = new Price();
-	  $totalPaid->setAmount($paid);
-	  $totalPaid->setCurrency($this->BaseCurrency);
-	  $totalPaid->setSymbol($this->BaseCurrencySymbol);
-	  
-	  return $totalPaid;
+		 $paid = 0;
+		 
+		if ($this->Payments()) foreach ($this->Payments() as $payment) {
+			if ($payment->Status == 'Success') {
+				$paid += $payment->Amount->getAmount();
+			}
+		}
+		
+		$totalPaid = new Price();
+		$totalPaid->setAmount($paid);
+		$totalPaid->setCurrency($this->BaseCurrency);
+		$totalPaid->setSymbol($this->BaseCurrencySymbol);
+		
+		return $totalPaid;
 	}
 	
 	/**
@@ -513,7 +513,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean
 	 */
 	public function getPaid() {
-	  return ($this->Total()->getAmount() - $this->TotalPaid()->getAmount()) <= 0;
+		return ($this->Total()->getAmount() - $this->TotalPaid()->getAmount()) <= 0;
 	}
 	
 	/**
@@ -525,57 +525,57 @@ class Order extends DataObject implements PermissionProvider {
 	 */
 	public function addItem(Product $product, Variation $variation, $quantity = 1, ArrayList $options = null) {
 
-    //Increment the quantity if this item exists already
-    $item = $this->findIdenticalItem($product, $variation, $options);
+		//Increment the quantity if this item exists already
+		$item = $this->findIdenticalItem($product, $variation, $options);
 
-    if ($item && $item->exists()) {
-      $item->Quantity = $item->Quantity + $quantity;
-      $item->write();
-    }
-    else {
+		if ($item && $item->exists()) {
+			$item->Quantity = $item->Quantity + $quantity;
+			$item->write();
+		}
+		else {
 
-    	DB::getConn()->transactionStart();
-      try {
+			DB::getConn()->transactionStart();
+			try {
 
-        $item = new Item();
-	      $item->ProductID = $product->ID;
-	      $item->ProductVersion = $product->Version;
+				$item = new Item();
+				$item->ProductID = $product->ID;
+				$item->ProductVersion = $product->Version;
 
-	      //TODO: Think about percentage discounts and stuff like that, needs to apply to variation as well for total price to be correct
-	      //TODO: Do not use Amount() here, need another accessor to support price discounts and changes though
-	      $item->Price = $product->Amount()->getAmount();
-	      $item->Currency = $product->Amount()->getCurrency();
+				//TODO: Think about percentage discounts and stuff like that, needs to apply to variation as well for total price to be correct
+				//TODO: Do not use Amount() here, need another accessor to support price discounts and changes though
+				$item->Price = $product->Amount()->getAmount();
+				$item->Currency = $product->Amount()->getCurrency();
 
-	      if ($variation && $variation->exists()) {
-	      	$item->VariationID = $variation->ID;
-	      	$item->VariationVersion = $variation->Version;
+				if ($variation && $variation->exists()) {
+					$item->VariationID = $variation->ID;
+					$item->VariationVersion = $variation->Version;
 
-	      	//TODO: Do not use Amount() here, need another accessor to support price discounts and changes though
-		      $item->Price += $variation->Amount()->getAmount();
-	      }
+					//TODO: Do not use Amount() here, need another accessor to support price discounts and changes though
+					$item->Price += $variation->Amount()->getAmount();
+				}
 
-	      $item->Quantity = $quantity;
-	      $item->OrderID = $this->ID;
-	      $item->write();
+				$item->Quantity = $quantity;
+				$item->OrderID = $this->ID;
+				$item->write();
 
-	      if ($options->exists()) foreach ($options as $option) {
-	      	$option->ItemID = $item->ID;
-	      	$option->write();
-	      }
-      }
-      catch (Exception $e) {
+				if ($options->exists()) foreach ($options as $option) {
+					$option->ItemID = $item->ID;
+					$option->write();
+				}
+			}
+			catch (Exception $e) {
 
-        DB::getConn()->transactionRollback();
-        SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
-        throw $e;
-      }
-      DB::getConn()->transactionEnd();
+				DB::getConn()->transactionRollback();
+				SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+				throw $e;
+			}
+			DB::getConn()->transactionEnd();
 
-    }
-    
-    $this->updateTotal();
-    
-    return $item;
+		}
+		
+		$this->updateTotal();
+		
+		return $item;
 	}
 	
 	/**
@@ -609,12 +609,12 @@ class Order extends DataObject implements PermissionProvider {
 		$existingItems = clone $filtered;
 		foreach ($existingItems as $existingItem) {
 
-	    $existingOptionsMap = $existingItem->ItemOptions()->map('Description', 'Price')->toArray();
+			$existingOptionsMap = $existingItem->ItemOptions()->map('Description', 'Price')->toArray();
 
-  	  if ($optionsMap != $existingOptionsMap) {
-  	    $filtered = $filtered->exclude('ID', $existingItem->ID);
-  	  }
-	  }
+			if ($optionsMap != $existingOptionsMap) {
+				$filtered = $filtered->exclude('ID', $existingItem->ID);
+			}
+		}
 		return $filtered->first();
 	}
 	
@@ -626,34 +626,34 @@ class Order extends DataObject implements PermissionProvider {
 	 * to $this->addItem().
 	 */
 	public function updateTotal() {
-	  
-	  $total = 0;
-	  $subTotal = 0;
-	  $items = $this->Items();
-	  $modifications = $this->Modifications();
-	  $shopConfig = ShopConfig::current_shop_config();
-	  
-	  if ($items) foreach ($items as $item) {
-	    $total += $item->Total()->Amount;
-	    $subTotal += $item->Total()->Amount;
-	  }
+		
+		$total = 0;
+		$subTotal = 0;
+		$items = $this->Items();
+		$modifications = $this->Modifications();
+		$shopConfig = ShopConfig::current_shop_config();
+		
+		if ($items) foreach ($items as $item) {
+			$total += $item->Total()->Amount;
+			$subTotal += $item->Total()->Amount;
+		}
 
-	  if ($modifications) foreach ($modifications as $modification) {
-	    
-	    if ($modification->SubTotalModifier) {
-	      $total += $modification->Amount()->getAmount();
-	      $subTotal += $modification->Amount()->getAmount();
-	    }
-	    else {
-	      $total += $modification->Amount()->getAmount();
-	    }
-	  }
+		if ($modifications) foreach ($modifications as $modification) {
+			
+			if ($modification->SubTotalModifier) {
+				$total += $modification->Amount()->getAmount();
+				$subTotal += $modification->Amount()->getAmount();
+			}
+			else {
+				$total += $modification->Amount()->getAmount();
+			}
+		}
 
-    $this->SubTotalPrice = $subTotal;
-	  $this->TotalPrice = $total;
+		$this->SubTotalPrice = $subTotal;
+		$this->TotalPrice = $total;
 
-	  //TODO: change this so doesn't write() in here
-    $this->write();
+		//TODO: change this so doesn't write() in here
+		$this->write();
 	}
 
 	/**
@@ -662,12 +662,12 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return ArrayList Set of {@link Product}s
 	 */
 	public function Products() {
-	  $items = $this->Items();
-	  $products = new ArrayList();
-	  foreach ($items as $item) {
-	    $products->push($item->Product());
-	  }
-	  return $products;
+		$items = $this->Items();
+		$products = new ArrayList();
+		foreach ($items as $item) {
+			$products->push($item->Product());
+		}
+		return $products;
 	}
 	
 	/**
@@ -676,22 +676,22 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return String List of payments and their status
 	 */
 	public function SummaryOfPaymentStatus() {
-	  $payments = $this->Payments();
-	  $status = null;
+		$payments = $this->Payments();
+		$status = null;
 
-	  if ($payments instanceof DataList) {
-  	  if ($payments->Count() == 1) {
-  	    $status = 'Payment ' . $payments->First()->Status;
-  	  }
-  	  else {
-  	    $statii = array();
-    	  foreach ($payments as $payment) {
-    	    $statii[] = "Payment #$payment->ID $payment->Status";
-    	  }
-    	  $status = implode(', ', $statii);
-  	  }
-	  }
-	  return $status;
+		if ($payments instanceof DataList) {
+			if ($payments->Count() == 1) {
+				$status = 'Payment ' . $payments->First()->Status;
+			}
+			else {
+				$statii = array();
+				foreach ($payments as $payment) {
+					$statii[] = "Payment #$payment->ID $payment->Status";
+				}
+				$status = implode(', ', $statii);
+			}
+		}
+		return $status;
 	}
 
 	/**
@@ -701,14 +701,14 @@ class Order extends DataObject implements PermissionProvider {
 	 */
 	public function updateModifications(Array $data) {
 
-	  //Remove existing Modifications
-    $existingModifications = $this->Modifications();
-    foreach ($existingModifications as $modification) {
-      $modification->delete();
-    }
-    $this->updateTotal();
+		//Remove existing Modifications
+		$existingModifications = $this->Modifications();
+		foreach ($existingModifications as $modification) {
+			$modification->delete();
+		}
+		$this->updateTotal();
 
-    $mods = Modification::get_all();
+		$mods = Modification::get_all();
 
 		foreach ($mods as $modification) {
 
@@ -729,37 +729,37 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return ValidationResult
 	 */
 	public function validateForCart() {
-	  
-	  $result = new ValidationResult(); 
-	  $items = $this->Items();
+		
+		$result = new ValidationResult(); 
+		$items = $this->Items();
 
-	  if (!$this->BaseCurrency) {
-	  	$result->error(
-	      'Base currency is not set for this order',
-	      'BaseCurrencyError'
-	    );
-	  }
-	  
-	  if (!$items || !$items->exists()) {
-	    $result->error(
-	      'There are no items in this order',
-	      'ItemExistsError'
-	    );
-	  }
-	  
-	  if ($items) foreach ($items as $item) {
-	    
-	    $validation = $item->validateForCart();
-	    if (!$validation->valid()) {
+		if (!$this->BaseCurrency) {
+			$result->error(
+				'Base currency is not set for this order',
+				'BaseCurrencyError'
+			);
+		}
+		
+		if (!$items || !$items->exists()) {
+			$result->error(
+				'There are no items in this order',
+				'ItemExistsError'
+			);
+		}
+		
+		if ($items) foreach ($items as $item) {
+			
+			$validation = $item->validateForCart();
+			if (!$validation->valid()) {
 
-	      $result->error(
-  	      'Some of the items in this order are no longer available, please go to the cart and remove them.',
-  	      'ItemValidationError'
-  	    );
-	    }
-	  }
-	  
-	  return $result;
+				$result->error(
+					'Some of the items in this order are no longer available, please go to the cart and remove them.',
+					'ItemValidationError'
+				);
+			}
+		}
+		
+		return $result;
 	}
 	
 	/**
@@ -768,8 +768,8 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see DataObject::validate()
 	 */
 	public function validate() {
-	  $result = parent::validate();
-	  return $result;
+		$result = parent::validate();
+		return $result;
 	}
 	
 	/**
@@ -787,15 +787,15 @@ class Order extends DataObject implements PermissionProvider {
 		$ago = new DateTime();
 		$ago->sub($timeout);
 
-	  //Get orders that were last active over x ago according to shop config cart lifetime
-	  $orders = Order::get()
-	  	->where("\"Order\".\"LastActive\" < '" . $ago->format('Y-m-d H:i:s') . "' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL")
-	  	->leftJoin('Payment', "\"Payment\".\"OrderID\" = \"Order\".\"ID\"");
+		//Get orders that were last active over x ago according to shop config cart lifetime
+		$orders = Order::get()
+			->where("\"Order\".\"LastActive\" < '" . $ago->format('Y-m-d H:i:s') . "' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL")
+			->leftJoin('Payment', "\"Payment\".\"OrderID\" = \"Order\".\"ID\"");
 
-	  if ($orders && $orders->exists()) foreach ($orders as $order) {
-      $order->delete();
-      $order->destroy();      
-	  }
+		if ($orders && $orders->exists()) foreach ($orders as $order) {
+			$order->delete();
+			$order->destroy();      
+		}
 	}
 	
 	/**
@@ -833,12 +833,12 @@ class Order extends DataObject implements PermissionProvider {
 class Order_Update extends DataObject {
 
 	public static $singular_name = 'Update';
-  public static $plural_name = 'Updates';
+	public static $plural_name = 'Updates';
 
 	public static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled')",
-	  'Note' => 'Text',
-	  'Visible' => 'Boolean'
+		'Note' => 'Text',
+		'Visible' => 'Boolean'
 	);
 
 	/**
@@ -860,30 +860,30 @@ class Order_Update extends DataObject {
 	);
 
 	public function canDelete($member = null) {
-    return false;
+		return false;
 	}
 
 	public function delete() {
-	  if ($this->canDelete(Member::currentUser())) {
-      parent::delete();
-    }
+		if ($this->canDelete(Member::currentUser())) {
+			parent::delete();
+		}
 	}
 
-  /**
-   * Update stock levels for {@link Item}.
-   * 
-   * @see DataObject::onAfterWrite()
-   */
+	/**
+	 * Update stock levels for {@link Item}.
+	 * 
+	 * @see DataObject::onAfterWrite()
+	 */
 	public function onAfterWrite() {
 
-	  parent::onAfterWrite();
-	  
-	  //Update the Order, setting the same status
-	  if ($this->Status) {
-	  	$order = $this->Order();
-		  $order->Status = $this->Status;
-		  $order->write();
-	  }
+		parent::onAfterWrite();
+		
+		//Update the Order, setting the same status
+		if ($this->Status) {
+			$order = $this->Order();
+			$order->Status = $this->Status;
+			$order->write();
+		}
 	}
 
 	public function getCMSFields() {

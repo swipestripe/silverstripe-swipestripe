@@ -34,8 +34,8 @@ class ModificationField_Hidden extends HiddenField {
 	 */
 	function __construct($modifier, $title = null, $value = "", $maxLength = null, $form = null) {
 		
-	  $name = "Modifiers[" . get_class($modifier) . "]";
-	  $this->modifier = $modifier;
+		$name = "Modifiers[" . get_class($modifier) . "]";
+		$this->modifier = $modifier;
 
 		parent::__construct($name, $title, $value, $maxLength, $form);
 	}
@@ -46,7 +46,7 @@ class ModificationField_Hidden extends HiddenField {
 	 * @see FormField::FieldHolder()
 	 * @return String
 	 */
-  function FieldHolder($properties = array()) {
+	function FieldHolder($properties = array()) {
 		return $this->renderWith($this->template);
 	}
 	
@@ -56,7 +56,7 @@ class ModificationField_Hidden extends HiddenField {
 	 * @see FormField::validate()
 	 */
 	function validate($validator) {
-	  return true;
+		return true;
 	}
 	
 	/**
@@ -65,7 +65,7 @@ class ModificationField_Hidden extends HiddenField {
 	 * @return Object Mixed object
 	 */
 	function getModifier() {
-	  return $this->modifier;
+		return $this->modifier;
 	}
 	
 	/**
@@ -75,7 +75,7 @@ class ModificationField_Hidden extends HiddenField {
 	 * @return String Description of the modifier e.g: a calculated value of tax
 	 */
 	function Description() {
-	  return;
+		return;
 	}
 	
 	/**
@@ -83,8 +83,8 @@ class ModificationField_Hidden extends HiddenField {
 	 * 
 	 * @return Boolean False
 	 */
-  function modifiesSubTotal() {
-	  return false;
+	function modifiesSubTotal() {
+		return false;
 	}
 	
 }
@@ -128,8 +128,8 @@ class ModificationField_Dropdown extends DropdownField {
 	function __construct($modifier, $title = "", $source = array(), $value = "", $form = null) {
 
 		$className = get_class($modifier);
-	  $name = "Modifiers[$className]";
-	  $this->modifier = $modifier;
+		$name = "Modifiers[$className]";
+		$this->modifier = $modifier;
 
 		parent::__construct($name, $title, $source, $value, $form);
 	}
@@ -140,7 +140,7 @@ class ModificationField_Dropdown extends DropdownField {
 	 * @see FormField::FieldHolder()
 	 * @return String
 	 */
-  function FieldHolder($properties = array()) {
+	function FieldHolder($properties = array()) {
 		return $this->renderWith($this->template);
 	}
 	
@@ -150,7 +150,7 @@ class ModificationField_Dropdown extends DropdownField {
 	 * @see FormField::validate()
 	 */
 	function validate($validator) {
-	  return true;
+		return true;
 	}
 	
 	/**
@@ -159,7 +159,7 @@ class ModificationField_Dropdown extends DropdownField {
 	 * @return Object Mixed object
 	 */
 	function getModifier() {
-	  return $this->modifier;
+		return $this->modifier;
 	}
 	
 	/**
@@ -168,7 +168,7 @@ class ModificationField_Dropdown extends DropdownField {
 	 * @return Boolean False
 	 */
 	function modifiesSubTotal() {
-	  return false;
+		return false;
 	}
 	
 }

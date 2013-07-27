@@ -13,19 +13,19 @@
  */
 class Modification extends DataObject {
 
-  /**
-   * DB fields for the order Modification, the actual {@link Modifier} data is saved into
-   * this class so if a modifier is deleted the order still has the necessary 
-   * details.
-   * 
-   * @var Array
-   */
+	/**
+	 * DB fields for the order Modification, the actual {@link Modifier} data is saved into
+	 * this class so if a modifier is deleted the order still has the necessary 
+	 * details.
+	 * 
+	 * @var Array
+	 */
 	public static $db = array(
 		'Value' => 'Int',
-	  'Price' => 'Decimal(19,4)',
-	  'Description' => 'Text',
-	  'SubTotalModifier' => 'Boolean',
-	  'SortOrder' => 'Int'
+		'Price' => 'Decimal(19,4)',
+		'Description' => 'Text',
+		'SubTotalModifier' => 'Boolean',
+		'SortOrder' => 'Int'
 	);
 
 	/**
@@ -34,7 +34,7 @@ class Modification extends DataObject {
 	 * @var Array
 	 */
 	public static $has_one = array(
-	  'Order' => 'Order'
+		'Order' => 'Order'
 	);
 
 	public static $default_sort = 'SortOrder ASC';
@@ -67,23 +67,23 @@ class Modification extends DataObject {
 		$order = $this->Order();
 
 		$amount = new Price();
-    $amount->setAmount($this->Price);
-    $amount->setCurrency($order->BaseCurrency);
-    $amount->setSymbol($order->BaseCurrencySymbol);
-    return $amount;
-  }
+		$amount->setAmount($this->Price);
+		$amount->setCurrency($order->BaseCurrency);
+		$amount->setSymbol($order->BaseCurrencySymbol);
+		return $amount;
+	}
 
-  /**
-   * Display price, can decorate for multiple currency etc.
-   * 
-   * @return Price
-   */
-  public function Price() {
-    
-    $amount = $this->Amount();
-    $this->extend('updatePrice', $amount);
-    return $amount;
-  }
+	/**
+	 * Display price, can decorate for multiple currency etc.
+	 * 
+	 * @return Price
+	 */
+	public function Price() {
+		
+		$amount = $this->Amount();
+		$this->extend('updatePrice', $amount);
+		return $amount;
+	}
 
 	public function add($order, $value = null) {
 		return;

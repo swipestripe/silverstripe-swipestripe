@@ -8,20 +8,20 @@
  * @subpackage emails
  */
 class ProcessedEmail extends Email {
-  
-  /**
-   * Email signature
-   * 
-   * @var String HTML content from central config for signature
-   * @see ShopConfig
-   */
-  public $signature;
+	
+	/**
+	 * Email signature
+	 * 
+	 * @var String HTML content from central config for signature
+	 * @see ShopConfig
+	 */
+	public $signature;
 
-  /**
-   * Runs the content through Emogrifier to merge css style inline before sending
-   * 
-   * @see Email::parseVariables()
-   */
+	/**
+	 * Runs the content through Emogrifier to merge css style inline before sending
+	 * 
+	 * @see Email::parseVariables()
+	 */
 	protected function parseVariables($isPlain = false) {
 		parent::parseVariables($isPlain);
 

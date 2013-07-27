@@ -10,7 +10,7 @@
  * @subpackage customer
  */
 class CartPage extends Page {
-  
+	
 	/**
 	 * Automatically create a CheckoutPage if one is not found
 	 * on the site at the time the database is built (dev/build).
@@ -37,8 +37,8 @@ class CartPage extends Page {
 	 * @see SiteTree::canCreate()
 	 * @return Boolean Always returns false
 	 */
-  function canCreate($member = null) {
-	  return false;
+	function canCreate($member = null) {
+		return false;
 	}
 	
 	/**
@@ -48,14 +48,14 @@ class CartPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canDelete($member = null) {
-	  return false;
+		return false;
 	}
 
 	public function delete() {
-    if ($this->canDelete(Member::currentUser())) {
-      parent::delete();
-    }
-  }
+		if ($this->canDelete(Member::currentUser())) {
+			parent::delete();
+		}
+	}
 	
 	/**
 	 * Prevent CMS users from unpublishing the cart page.
@@ -64,8 +64,8 @@ class CartPage extends Page {
 	 * @see CartPage::getCMSActions()
 	 * @return Boolean Always returns false
 	 */
-  function canDeleteFromLive($member = null) {
-	  return false;
+	function canDeleteFromLive($member = null) {
+		return false;
 	}
 	
 	/**
@@ -76,9 +76,9 @@ class CartPage extends Page {
 	 * @return FieldList Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
-	  $actions = parent::getCMSActions();
-	  $actions->removeByName('action_unpublish');
-	  return $actions;
+		$actions = parent::getCMSActions();
+		$actions->removeByName('action_unpublish');
+		return $actions;
 	}
 	
 	/**
@@ -87,10 +87,10 @@ class CartPage extends Page {
 	 * @see Page::getCMSFields()
 	 * @return FieldList
 	 */
-  function getCMSFields() {
-    $fields = parent::getCMSFields();
-    $fields->removeByName('ClassName');
-    return $fields;
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->removeByName('ClassName');
+		return $fields;
 	}
 }
 
@@ -105,27 +105,27 @@ class CartPage extends Page {
 class CartPage_Controller extends Page_Controller {
 
 	static $allowed_actions = array (
-    'index',
-    'CartForm'
-  );
-  
-  /**
-   * Include some CSS for the cart page.
-   * 
-   * @return Array Contents for page rendering
-   */
-  function index() {
-    
-    //Update stock levels
-    //Order::delete_abandoned();
+		'index',
+		'CartForm'
+	);
+	
+	/**
+	 * Include some CSS for the cart page.
+	 * 
+	 * @return Array Contents for page rendering
+	 */
+	function index() {
+		
+		//Update stock levels
+		//Order::delete_abandoned();
 
-    Requirements::css('swipestripe/css/Shop.css');
+		Requirements::css('swipestripe/css/Shop.css');
 
-    return array( 
-       'Content' => $this->Content, 
-       'Form' => $this->Form 
-    );
-  }
+		return array( 
+			 'Content' => $this->Content, 
+			 'Form' => $this->Form 
+		);
+	}
 	
 	/**
 	 * Form including quantities for items for displaying on the cart page.

@@ -16,9 +16,9 @@ class Payment_Extension extends DataExtension {
 
 	static $summary_fields = array(
 		'Status' => 'Status',
-	  'SummaryOfAmount' => 'Amount',
-	  'Method' => 'Method',
-	  'PaidBy.Name' => 'Customer'
+		'SummaryOfAmount' => 'Amount',
+		'Method' => 'Method',
+		'PaidBy.Name' => 'Customer'
 	);
 
 	/**
@@ -47,7 +47,7 @@ class Payment_Extension extends DataExtension {
 	 * @return String Payment amount formatted with Nice()
 	 */
 	function SummaryOfAmount() {
-	  return $this->owner->dbObject('Amount')->Nice();
+		return $this->owner->dbObject('Amount')->Nice();
 	}
 	
 	/**
@@ -57,16 +57,16 @@ class Payment_Extension extends DataExtension {
 	 * @see DataObjectDecorator::updateCMSFields()
 	 * @return FieldList
 	 */
-  function updateCMSFields(FieldList $fields) {
+	function updateCMSFields(FieldList $fields) {
 
-  	$fields->removeByName('OrderID');
-  	$fields->removeByName('HTTPStatus');
-  	$fields->removeByName('Amount');
+		$fields->removeByName('OrderID');
+		$fields->removeByName('HTTPStatus');
+		$fields->removeByName('Amount');
 
-  	$str = $this->owner->dbObject('Amount')->Nice();
-  	$fields->insertBefore(TextField::create('Amount_', 'Amount', $str), 'Method');
+		$str = $this->owner->dbObject('Amount')->Nice();
+		$fields->insertBefore(TextField::create('Amount_', 'Amount', $str), 'Method');
 
-    return $fields;
+		return $fields;
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Payment_Extension extends DataExtension {
 	 */
 	function onAfterWrite() {
 
-	  $order = $this->owner->Order();
+		$order = $this->owner->Order();
 
 		if ($order && $order->exists()) {
 			$order->PaymentStatus = ($order->getPaid()) ? 'Paid' : 'Unpaid';

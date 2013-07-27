@@ -10,7 +10,7 @@
  * @subpackage customer
  */
 class CheckoutPage extends Page {
-  
+	
 	/**
 	 * Automatically create a CheckoutPage if one is not found
 	 * on the site at the time the database is built (dev/build).
@@ -38,7 +38,7 @@ class CheckoutPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canCreate($member = null) {
-	  return false;
+		return false;
 	}
 	
 	/**
@@ -48,14 +48,14 @@ class CheckoutPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canDelete($member = null) {
-	  return false;
+		return false;
 	}
 
 	public function delete() {
-    if ($this->canDelete(Member::currentUser())) {
-      parent::delete();
-    }
-  }
+		if ($this->canDelete(Member::currentUser())) {
+			parent::delete();
+		}
+	}
 	
 	/**
 	 * Prevent CMS users from unpublishing the checkout page.
@@ -65,7 +65,7 @@ class CheckoutPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canDeleteFromLive($member = null) {
-	  return false;
+		return false;
 	}
 	
 	/**
@@ -76,9 +76,9 @@ class CheckoutPage extends Page {
 	 * @return FieldList Actions fieldset with unpublish action removed
 	 */
 	function getCMSActions() {
-	  $actions = parent::getCMSActions();
-	  $actions->removeByName('action_unpublish');
-	  return $actions;
+		$actions = parent::getCMSActions();
+		$actions->removeByName('action_unpublish');
+		return $actions;
 	}
 	
 	/**
@@ -87,10 +87,10 @@ class CheckoutPage extends Page {
 	 * @see Page::getCMSFields()
 	 * @return FieldList
 	 */
-  function getCMSFields() {
-    $fields = parent::getCMSFields();
-    $fields->removeByName('ClassName');
-    return $fields;
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->removeByName('ClassName');
+		return $fields;
 	}
 }
 
@@ -108,44 +108,44 @@ class CheckoutPage_Controller extends Page_Controller {
 	protected $orderProcessed = false;
 
 	static $allowed_actions = array (
-    'index',
-    'OrderForm'
-  );
-  
-  /**
-   * Include some CSS and javascript for the checkout page
-   * 
-   * TODO why didn't I use init() here?
-   * 
-   * @return Array Contents for page rendering
-   */
-  function index() {
-    
-    //Update stock levels
-    //Order::delete_abandoned();
+		'index',
+		'OrderForm'
+	);
+	
+	/**
+	 * Include some CSS and javascript for the checkout page
+	 * 
+	 * TODO why didn't I use init() here?
+	 * 
+	 * @return Array Contents for page rendering
+	 */
+	function index() {
+		
+		//Update stock levels
+		//Order::delete_abandoned();
 
-    Requirements::css('swipestripe/css/Shop.css');
+		Requirements::css('swipestripe/css/Shop.css');
 
-    return array( 
-       'Content' => $this->Content, 
-       'Form' => $this->OrderForm()
-    );
-  }
+		return array( 
+			 'Content' => $this->Content, 
+			 'Form' => $this->OrderForm()
+		);
+	}
 
-  function OrderForm() {
+	function OrderForm() {
 
-  	$order = Cart::get_current_order();
-    $member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+		$order = Cart::get_current_order();
+		$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
 
-    $form = OrderForm::create(
-    	$this, 
-    	'OrderForm'
-    )->disableSecurityToken();
+		$form = OrderForm::create(
+			$this, 
+			'OrderForm'
+		)->disableSecurityToken();
 
-    //Populate fields the first time form is loaded
-    $form->populateFields();
+		//Populate fields the first time form is loaded
+		$form->populateFields();
 
-    return $form;
-  }
+		return $form;
+	}
 
 }
