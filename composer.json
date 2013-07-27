@@ -1,13 +1,14 @@
 {
 	"name": "swipestripe/swipestripe",
 	"description": "Ecommerce module to create online shops using SilverStripe.",
+	"homepage": "http://swipestripe.com",
 	"type": "silverstripe-module",
 	"keywords": ["silverstripe", "ecommerce", "e-commerce", "shop", "swipestripe", "swipe stripe"],
 	"authors": [
-	{
-		"name": "Frank Mullenger",
-		"email": "frankmullenger@gmail.com"
-	}
+		{
+			"name": "Frank Mullenger",
+			"email": "frankmullenger@gmail.com"
+		}
 	],
 	"require":
 	{
@@ -15,7 +16,18 @@
 		"silverstripe/cms": ">=3.1.x-dev,<4.0",
 		"frankmullenger/payment": "1.0.*"
 	},
-	"require-dev": {
+	"require-dev": 
+	{
 		"silverstripe/sqlite3": "*"
 	},
+	"suggest": {
+		"frankmullenger/payment-cheque": "Simple payment method for testing"
+	},
+	"support": 
+	{
+		"email": "info@swipestripe.com",
+		"irc": "irc://irc.freenode.org/silverstripe",
+		"forum": "http://www.silverstripe.org/e-commerce-modules/",
+		"issues": "https://github.com/frankmullenger/silverstripe-swipestripe/issues"
+	}
 }
