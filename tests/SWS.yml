@@ -25,35 +25,42 @@ Product:
     Price: 500
     Currency: NZD
     Date: 2011-02-17 18:45:00
+    ParentID: 0
   productB:
     Title: Product B
     URLSegment: product-b
     Price: 19.95
     Currency: NZD 
     Date: 2011-01-31 20:48:00
+    ParentID: 0
   teeshirtA:
     Title: Striped Tee
     URLSegment: striped-tee
     Price: 14.99
     Currency: NZD 
     Date: 2011-01-31 20:49:00
+    ParentID: 0
   shortsA:
     Title: Checked Shorts
     URLSegment: checked-shorts
     Price: 24.95
     Currency: NZD 
     Date: 2011-01-31 20:49:00
+    ParentID: 0
   jeans:
     Title: Jeans
     URLSegment: jeans
     Price: 34.99
-    Currency: NZD 
+    Currency: NZD
+    Date: 2011-01-31 20:49:00
+    ParentID: 0
   brokenProduct:
     Title: Broken Product
     URLSegment: broken-product
     Price: 22.09
     Currency: NZD 
     Date: 2011-01-31 20:49:00
+    ParentID: 0
 
 # ------------------------------------------
 # Attributes
@@ -579,62 +586,4 @@ Payment:
     PaidBy: =>Customer.buyer
     Order: =>Order.orderOne
 
-# ------------------------------------------
-# Shipping Countries
-# ------------------------------------------ 
-Country_Shipping:
-  newZealand:
-    Code: NZ
-    Title: New Zealand
-  australia:
-    Code: AU
-    Title: Australia
-  unitedKingdom:
-    Code: GB
-    Title: United Kingdom
-
-# ------------------------------------------
-# Billing Countries
-# ------------------------------------------ 
-Country_Billing:
-  newZealand:
-    Code: NZ
-    Title: New Zealand
-  australia:
-    Code: AU
-    Title: Australia
-  unitedKingdom:
-    Code: GB
-    Title: United Kingdom
-
-# ------------------------------------------
-# Addresses
-# ------------------------------------------   
-Address:
-  orderOneBillingAddress:
-    OrderID: =>Order.orderOne     
-    MemberID: =>Customer.buyer
-    Type: Billing
-    FirstName: Test
-    Surname: Buyer
-    Company: Silver Stripes
-    Address: 4 Leafy Lane
-    AddressLine2: Sydenham
-    City: Christchurch
-    PostalCode: 8014
-    State: Canterbury
-    CountryID: =>Country_Shipping.newZealand
-  orderOneShippingAddress:
-    OrderID: =>Order.orderOne     
-    MemberID: =>Customer.buyer
-    Type: Shipping
-    FirstName: Jane
-    Surname: Doe
-    Company: 
-    Address: 91 Shortland St
-    AddressLine2: North Shore
-    City: Auckland
-    PostalCode: 1111
-    State: Auckland
-    CountryID: =>Country_Shipping.newZealand
 

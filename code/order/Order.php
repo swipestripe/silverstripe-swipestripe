@@ -240,47 +240,45 @@ class Order extends DataObject implements PermissionProvider {
 	 */
 	public function delete() {
 
-	  try {
+		if ($this->canDelete(Member::currentUser())) {
+		  try {
 
-	  	DB::getConn()->transactionStart();
-	  	
-	  	$payments = $this->Payments();
-	    if ($payments && $payments->exists()) foreach ($payments as $payment) {
-        $payment->delete();
-        $payment->destroy();
-	    }
+		  	DB::getConn()->transactionStart();
+		  	
+		  	$payments = $this->Payments();
+		    if ($payments && $payments->exists()) foreach ($payments as $payment) {
+	        $payment->delete();
+	        $payment->destroy();
+		    }
 
-	    $items = $this->Items();
-	    if ($items && $items->exists()) foreach ($items as $item) {
-        $item->delete();
-        $item->destroy();
-	    }
-	    
-	    $modifications = $this->Modifications();
-	    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
-	      $modification->delete();
-	      $modification->destroy();
-	    }
-	    
-	    $updates = $this->Updates();
-	    if ($updates && $updates->exists()) foreach ($updates as $update) {
-        $update->delete();
-        $update->destroy();
-	    }
-	    
-	    parent::delete();
-	    DB::getConn()->transactionEnd();
-
-	  }
-	  catch (Exception $e) {
-	    DB::getConn()->transactionRollback();
-	    SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
-	    //TODO: Show an error to the customer here?
-	  }
-
-	  if ($this->canDelete(Member::currentUser())) {
-      parent::delete();
-    }
+		    $items = $this->Items();
+		    if ($items && $items->exists()) foreach ($items as $item) {
+	        $item->delete();
+	        $item->destroy();
+		    }
+		    
+		    $modifications = $this->Modifications();
+		    if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
+		      $modification->delete();
+		      $modification->destroy();
+		    }
+		    
+		    $updates = $this->Updates();
+		    if ($updates && $updates->exists()) foreach ($updates as $update) {
+	        $update->delete();
+	        $update->destroy();
+		    }
+		    
+		    parent::delete();
+		    DB::getConn()->transactionEnd();
+		    
+		  }
+		  catch (Exception $e) {
+		    DB::getConn()->transactionRollback();
+		    SS_Log::log(new Exception(print_r($e->getMessage(), true)), SS_Log::NOTICE);
+		    user_error("$this->class could not be deleted.", E_USER_ERROR);
+		  }
+		}
 	}
 
 	/**

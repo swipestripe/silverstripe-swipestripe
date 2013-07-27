@@ -16,12 +16,12 @@
  */
 class SWS_AccountTest extends SWS_Test {
 	
-  public function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->loginAs('admin');
-	  $this->objFromFixture('AccountPage', 'account')->doPublish();
-	  $this->logOut();
+		$this->objFromFixture('AccountPage', 'account')->doPublish();
+		$this->logOut();
 	}
 
 	public function testCustomerCanViewAccount() {
@@ -29,35 +29,34 @@ class SWS_AccountTest extends SWS_Test {
 		$buyer = $this->objFromFixture('Customer', 'buyer');
 		$accountPage = $this->objFromFixture('AccountPage', 'account');
 
-	  $this->loginAs($buyer);
-	  $this->get(Director::makeRelative($accountPage->Link()));
-	  $this->assertPartialMatchBySelector('h2', array(
-      'Account Page'
-    ));
-	  $this->logOut();
+		$this->loginAs($buyer);
+		$this->get(Director::makeRelative($accountPage->Link()));
+		$this->assertPartialMatchBySelector('h2', array(
+			'Account Page'
+		));
+		$this->logOut();
 	}
 
 	public function testAdminCanViewAccount() {
 
 		$accountPage = $this->objFromFixture('AccountPage', 'account');
 
-	  $this->loginAs('admin');
-	  $this->get(Director::makeRelative($accountPage->Link()));
-	  $this->assertPartialMatchBySelector('h2', array(
-      'Account Page'
-    ));
-	  $this->logOut();
+		$this->loginAs('admin');
+		$this->get(Director::makeRelative($accountPage->Link()));
+		$this->assertPartialMatchBySelector('h2', array(
+			'Account Page'
+		));
+		$this->logOut();
 	}
 
 	public function testAnonCannotViewAccount() {
 
 		$accountPage = $this->objFromFixture('AccountPage', 'account');
 
-	  $this->get(Director::makeRelative($accountPage->Link()));
-	  $this->assertEquals(
-	  	$this->Content(),
-	  	"Action 'index' isn't allowed on class AccountPage_Controller"
-	  );
+		$this->get(Director::makeRelative($accountPage->Link()));
+		$this->assertPartialMatchBySelector('h1', array(
+			'Log in'
+		));
 	}
 
 	public function testCustomerCanViewOrder() {
@@ -66,9 +65,9 @@ class SWS_AccountTest extends SWS_Test {
 		$order = $this->objFromFixture('Order', 'orderOne');
 
 		$this->loginAs($buyer);
-	  $this->get(Director::makeRelative($order->Link()));
-	  $this->assertTrue($this->Content() != "Action 'order' isn't allowed on class AccountPage_Controller");
-	  $this->logOut();
+		$this->get(Director::makeRelative($order->Link()));
+		$this->assertTrue($this->Content() != "Action 'order' isn't allowed on class AccountPage_Controller");
+		$this->logOut();
 	}
 
 	public function testAdminCanViewOrder() {
@@ -76,17 +75,19 @@ class SWS_AccountTest extends SWS_Test {
 		$order = $this->objFromFixture('Order', 'orderOne');
 
 		$this->loginAs('admin');
-	  $this->get(Director::makeRelative($order->Link()));
-	  $this->assertTrue($this->Content() != "Action 'order' isn't allowed on class AccountPage_Controller");
-	  $this->logOut();
+		$this->get(Director::makeRelative($order->Link()));
+		$this->assertTrue($this->Content() != "Action 'order' isn't allowed on class AccountPage_Controller");
+		$this->logOut();
 	}
 
 	public function testAnonCannotViewOrder() {
 
 		$order = $this->objFromFixture('Order', 'orderOne');
 
-	  $this->get(Director::makeRelative($order->Link()));
-	  $this->assertTrue($this->Content() == "Action 'order' isn't allowed on class AccountPage_Controller");
+		$this->get(Director::makeRelative($order->Link()));
+		$this->assertPartialMatchBySelector('h1', array(
+			'Log in'
+		));
 	}
 	
 }

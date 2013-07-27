@@ -257,7 +257,6 @@ class Product extends Page {
 	public function Link($action = null) {
 		
 		if ($this->ParentID > -1) {
-			//return Controller::join_links(Director::baseURL() . 'product/', $this->URLSegment .'/');
 			return parent::Link($action);
 		}
 		return Controller::join_links(Director::baseURL() . 'product/', $this->RelativeLink($action));

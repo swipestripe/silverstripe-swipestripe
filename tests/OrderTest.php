@@ -8,7 +8,7 @@
  */
 class SWS_OrderTest extends SWS_Test {
 	
-  function setUp() {
+	function setUp() {
 		parent::setUp();
 
 		//Check that payment module is installed
@@ -17,15 +17,15 @@ class SWS_OrderTest extends SWS_Test {
 		
 		//Need to publish a few pages because not using the draft site
 		$this->loginAs('admin');
-	  $this->objFromFixture('CheckoutPage', 'checkout')->doPublish();
-	  $this->objFromFixture('AccountPage', 'account')->doPublish();
-	  $this->objFromFixture('CartPage', 'cart')->doPublish();
-	  $this->logOut();
+		$this->objFromFixture('CheckoutPage', 'checkout')->doPublish();
+		$this->objFromFixture('AccountPage', 'account')->doPublish();
+		$this->objFromFixture('CartPage', 'cart')->doPublish();
+		$this->logOut();
 
-    Config::inst()->remove('PaymentProcessor', 'supported_methods');
-    Config::inst()->update('PaymentProcessor', 'supported_methods', array('test' => array('Cheque')));
-    Config::inst()->remove('PaymentGateway', 'environment');
-    Config::inst()->update('PaymentGateway', 'environment', 'test');
+		Config::inst()->remove('PaymentProcessor', 'supported_methods');
+		Config::inst()->update('PaymentProcessor', 'supported_methods', array('test' => array('Cheque')));
+		Config::inst()->remove('PaymentGateway', 'environment');
+		Config::inst()->update('PaymentGateway', 'environment', 'test');
 	}
 
 	function testOrderStatusAfterCheckout() {
@@ -34,29 +34,29 @@ class SWS_OrderTest extends SWS_Test {
 		$productA = $this->objFromFixture('Product', 'productA');
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 
-	  $this->loginAs('admin');
-	  $productA->doPublish();
-	  $this->logOut();
+		$this->loginAs('admin');
+		$productA->doPublish();
+		$this->logOut();
 
-	  $this->loginAs($buyer);
+		$this->loginAs($buyer);
 
-	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('ProductForm_ProductForm', null, array(
-	    'Quantity' => 1
-	  ));
+		$this->get(Director::makeRelative($productA->Link())); 
+		$this->submitForm('ProductForm_ProductForm', null, array(
+			'Quantity' => 1
+		));
 
-	  $this->get(Director::makeRelative($checkoutPage->Link()));
+		$this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('OrderForm_OrderForm', null, array(
-	    'Notes' => 'New order for test buyer.'
-	  ));
+		$this->submitForm('OrderForm_OrderForm', null, array(
+			'Notes' => 'New order for test buyer.'
+		));
 
-	  DataObject::flush_and_destroy_cache();
+		DataObject::flush_and_destroy_cache();
 
-	  $order = $buyer->Orders()->First();
+		$order = $buyer->Orders()->First();
 
-	  $this->assertEquals(Order::STATUS_PROCESSING, $order->Status);
-	  $this->assertEquals('Paid', $order->PaymentStatus);
+		$this->assertEquals(Order::STATUS_PROCESSING, $order->Status);
+		$this->assertEquals('Paid', $order->PaymentStatus);
 	}
 
 	function testOrderPaymentStatusUpdated() {
@@ -67,22 +67,22 @@ class SWS_OrderTest extends SWS_Test {
 		$this->assertEquals('Paid', $order->PaymentStatus);
 
 		$this->loginAs('admin');
-	  $payment->Status = 'Pending';
-	  $payment->write();
-	  $this->logOut();
+		$payment->Status = 'Pending';
+		$payment->write();
+		$this->logOut();
 
-	  $order = $this->objFromFixture('Order', 'orderOne');
-	  $this->assertEquals('Unpaid', $order->PaymentStatus);
+		$order = $this->objFromFixture('Order', 'orderOne');
+		$this->assertEquals('Unpaid', $order->PaymentStatus);
 
-	  $this->loginAs('admin');
-	  $payment->Status = 'Success';
-	  $payment->write();
-	  $this->logOut();
+		$this->loginAs('admin');
+		$payment->Status = 'Success';
+		$payment->write();
+		$this->logOut();
 
-	  DataObject::flush_and_destroy_cache();
+		DataObject::flush_and_destroy_cache();
 
-	  $order = $this->objFromFixture('Order', 'orderOne');
-	  $this->assertEquals('Paid', $order->PaymentStatus);
+		$order = $this->objFromFixture('Order', 'orderOne');
+		$this->assertEquals('Paid', $order->PaymentStatus);
 	}
 
 	function testOrderEmailsSentAfterCheckout() {
@@ -92,25 +92,25 @@ class SWS_OrderTest extends SWS_Test {
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 		$shopConfig = $this->objFromFixture('ShopConfig', 'config'); 
 
-	  $this->loginAs('admin');
-	  $productA->doPublish();
-	  $this->logOut();
+		$this->loginAs('admin');
+		$productA->doPublish();
+		$this->logOut();
 
-	  $this->loginAs($buyer);
+		$this->loginAs($buyer);
 
-	  $this->get(Director::makeRelative($productA->Link())); 
-	  $this->submitForm('ProductForm_ProductForm', null, array(
-	    'Quantity' => 1
-	  ));
+		$this->get(Director::makeRelative($productA->Link())); 
+		$this->submitForm('ProductForm_ProductForm', null, array(
+			'Quantity' => 1
+		));
 
-	  $this->get(Director::makeRelative($checkoutPage->Link()));
+		$this->get(Director::makeRelative($checkoutPage->Link()));
 
-	  $this->submitForm('OrderForm_OrderForm', null, array(
-	    'Notes' => 'New order for test buyer.'
-	  ));
+		$this->submitForm('OrderForm_OrderForm', null, array(
+			'Notes' => 'New order for test buyer.'
+		));
 
-	  $this->assertEmailSent($buyer->Email, $shopConfig->ReceiptFrom, '/Receipt for order.*/');
-	  $this->assertEmailSent($shopConfig->NotificationTo, $buyer->Email, '/Notification for order.*/');
+		$this->assertEmailSent($buyer->Email, $shopConfig->ReceiptFrom, '/Receipt for order.*/');
+		$this->assertEmailSent($shopConfig->NotificationTo, $buyer->Email, '/Notification for order.*/');
 	}
 
 }
