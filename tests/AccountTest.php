@@ -2,13 +2,6 @@
 /**
  * Testing {@link Product} attributes and options on product pages.
  * 
- * Summary of tests:
- * -----------------
- * 
- * TODO
- * ----
- * check that getting a product category gets the products within it
- * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
