@@ -16,15 +16,15 @@
  */
 class RemoveAbandonedCartsTask extends QuarterHourlyTask {
 	
-  /**
-   * Remove {@link Order}s that have not been active for a certain period of time,
-   * do not have a {@link Payment} attached and have the status of 'Cart'.
-   * 
-   * @see Order::delete_abandoned()
-   * @see CliController::process()
-   */
+	/**
+	 * Remove {@link Order}s that have not been active for a certain period of time,
+	 * do not have a {@link Payment} attached and have the status of 'Cart'.
+	 * 
+	 * @see Order::delete_abandoned()
+	 * @see CliController::process()
+	 */
 	function process() {
-	  date_default_timezone_set('Pacific/Auckland');
-	  Order::delete_abandoned();
+		date_default_timezone_set('Pacific/Auckland');
+		Order::delete_abandoned();
 	} 
 }

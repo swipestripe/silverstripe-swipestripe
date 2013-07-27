@@ -32,12 +32,12 @@
 				var variations = form.data('map');
 				for (var i = 0; i < variations.length; i++){
 
-				  var variationOptions = variations[i]['options'];
+					var variationOptions = variations[i]['options'];
 
-				  //If options arrays match update price
-				  if ($(variationOptions).not(options).length == 0 && $(options).not(variationOptions).length == 0) {
-				  	$('.product-price-js').html(variations[i]['price']);
-				  }
+					//If options arrays match update price
+					if ($(variationOptions).not(options).length == 0 && $(options).not(variationOptions).length == 0) {
+						$('.product-price-js').html(variations[i]['price']);
+					}
 				}
 			}
 		});

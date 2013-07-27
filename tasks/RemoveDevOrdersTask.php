@@ -17,11 +17,11 @@ class RemoveDevOrdersTask extends BuildTask {
 
 	function run($request) {
 		$orders = Order::get()
-	  	->where("\"Order\".\"Env\" = 'dev'");
+			->where("\"Order\".\"Env\" = 'dev'");
 
-	  if ($orders && $orders->exists()) foreach ($orders as $order) {
-      $order->delete();
-      $order->destroy();      
-	  }
+		if ($orders && $orders->exists()) foreach ($orders as $order) {
+			$order->delete();
+			$order->destroy();
+		}
 	}
 }

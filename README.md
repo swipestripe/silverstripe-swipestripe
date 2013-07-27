@@ -45,6 +45,3 @@ Big thanks to:
 * [Emogrifier](http://www.pelagodesign.com/sidecar/emogrifier/)
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap/) [Licence](http://www.apache.org/licenses/LICENSE-2.0)
 * [jQuery](http://jquery.com)
-
-
-

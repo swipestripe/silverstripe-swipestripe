@@ -21,29 +21,29 @@
 			updateCart: function() {
 				var self = this;
 				var values = this.serialize();
-    		
-    		$.ajax({
-				  url: window.location.pathname + '/OrderForm/update',
-				  type: 'POST',
-				  data: values,
-				  beforeSend: function() {
-				  	$('#cart-loading-js').show();
-				  	$('#checkout-order-table').addClass('loading-currently');
-				  },
-				  success: function(data){
-				    $('#checkout-order-table').replaceWith(data);
-				  },
-				  complete: function() {
-				  	$('#cart-loading-js').hide();
-				  	$('#checkout-order-table').removeClass('loading-currently');
-				  }
+				
+				$.ajax({
+					url: window.location.pathname + '/OrderForm/update',
+					type: 'POST',
+					data: values,
+					beforeSend: function() {
+						$('#cart-loading-js').show();
+						$('#checkout-order-table').addClass('loading-currently');
+					},
+					success: function(data){
+						$('#checkout-order-table').replaceWith(data);
+					},
+					complete: function() {
+						$('#cart-loading-js').hide();
+						$('#checkout-order-table').removeClass('loading-currently');
+					}
 				});
 			},
 
 			_indicateProcessing: function(e) {
 
 				$('input[name="action_process"]', this).attr('value', 'Processing...');
-    		$('.Actions .loading', this).show();
+				$('.Actions .loading', this).show();
 			}
 		});
 
