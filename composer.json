@@ -14,7 +14,7 @@
 	{
 		"silverstripe/framework": ">=3.1.x-dev,<4.0",
 		"silverstripe/cms": ">=3.1.x-dev,<4.0",
-		"frankmullenger/payment": "1.0.*"
+		"silverstripe/payment": "1.0.*"
 	},
 	"require-dev": 
 	{
@@ -29,5 +29,11 @@
 		"irc": "irc://irc.freenode.org/silverstripe",
 		"forum": "http://www.silverstripe.org/e-commerce-modules/",
 		"issues": "https://github.com/frankmullenger/silverstripe-swipestripe/issues"
-	}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "git@github.com:silverstripe-labs/silverstripe-payment.git"
+		}
+	]
 }
