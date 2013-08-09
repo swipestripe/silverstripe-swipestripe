@@ -2,6 +2,7 @@
 	"name": "swipestripe/swipestripe",
 	"description": "Ecommerce module to create online shops using SilverStripe.",
 	"homepage": "http://swipestripe.com",
+	"license": "BSD-3-Clause",
 	"type": "silverstripe-module",
 	"keywords": ["silverstripe", "ecommerce", "e-commerce", "shop", "swipestripe", "swipe stripe"],
 	"authors": [

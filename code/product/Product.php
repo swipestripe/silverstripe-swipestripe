@@ -222,12 +222,6 @@ class Product extends Page {
 		//Ability to edit fields added to CMS here
 		$this->extend('updateProductCMSFields', $fields);
 
-		if ($warning = ShopConfig::licence_key_warning()) {
-			$fields->addFieldToTab('Root.Main', new LiteralField('SwipeStripeLicenseWarning', 
-				'<p class="message warning">'.$warning.'</p>'
-			), 'Title');
-		}
-
 		if ($warning = ShopConfig::base_currency_warning()) {
 			$fields->addFieldToTab('Root.Main', new LiteralField('BaseCurrencyWarning', 
 				'<p class="message warning">'.$warning.'</p>'
