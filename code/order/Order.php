@@ -713,7 +713,7 @@ class Order extends DataObject implements PermissionProvider {
 		foreach ($mods as $modification) {
 
 			$class = get_class($modification);
-			$value = isset($data['Modifiers'][$class]) ? $data['Modifiers'][$class] : null;
+			$value = isset($data['Modifiers'][$class]) ? Convert::raw2sql($data['Modifiers'][$class]) : null;
 
 			$modification->add($this, $value);
 			$this->updateTotal();

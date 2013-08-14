@@ -248,7 +248,7 @@ class OrderForm extends Form {
 
 		//Check payment type
 		try {
-			$paymentMethod = $data['PaymentMethod'];
+			$paymentMethod = Convert::raw2sql($data['PaymentMethod']);
 			$paymentProcessor = PaymentFactory::factory($paymentMethod);
 		}
 		catch (Exception $e) {
@@ -264,7 +264,7 @@ class OrderForm extends Form {
 		$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
 		if (!$member->exists()) {
 
-			$existingCustomer = Customer::get()->where("\"Email\" = '".$data['Email']."'");
+			$existingCustomer = Customer::get()->filter('Email', $data['Email']);
 			if ($existingCustomer && $existingCustomer->exists()) {
 				$form->sessionMessage(
 					_t('CheckoutPage.MEMBER_ALREADY_EXISTS', 'Sorry, a member already exists with that email address. If this is your email address, please log in first before placing your order.'),
