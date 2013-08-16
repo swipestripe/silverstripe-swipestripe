@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Search context for orders.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopSearchContext_Order extends SearchContext {
 
 	public function getResults($searchParams, $sort = false, $limit = false) {

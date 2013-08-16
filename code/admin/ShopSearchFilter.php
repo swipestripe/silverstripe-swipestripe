@@ -5,7 +5,7 @@
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
- * @subpackage search
+ * @subpackage admin
  */
 class ShopSearchFilter_OptionSet extends SearchFilter {
 
@@ -65,7 +65,7 @@ class ShopSearchFilter_OptionSet extends SearchFilter {
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
- * @subpackage search
+ * @subpackage admin
  */
 class ShopSearchFilter_Payment extends SearchFilter {
 
@@ -120,7 +120,7 @@ class ShopSearchFilter_Payment extends SearchFilter {
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
- * @subpackage search
+ * @subpackage admin
  */
 class ShopSearchFilter_PublishedStatus extends SearchFilter {
 

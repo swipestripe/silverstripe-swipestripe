@@ -1,4 +1,14 @@
 <?php
+/**
+ * Grid field detail form
+ *
+ * @todo Review the configs
+ *
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class GridFieldDetailForm_HasManyItemRequest extends GridFieldDetailForm_ItemRequest {
 	
 	private static $allowed_actions = array(

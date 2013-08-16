@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Shop admin area for managing orders, customers and shop settings.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopAdmin extends ModelAdmin {
 
 	private static $url_segment = 'shop';
@@ -216,6 +223,14 @@ class ShopAdmin extends ModelAdmin {
 
 }
 
+/**
+ * Shop admin area for managing email settings
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopAdmin_EmailAdmin extends ShopAdmin {
 	
 	private static $tree_class = 'ShopConfig';
@@ -388,6 +403,14 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 
 }
 
+/**
+ * Shop admin area for managing base currency
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopAdmin_BaseCurrency extends ShopAdmin {
 	
 	private static $tree_class = 'ShopConfig';
@@ -555,6 +578,14 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 
 }
 
+/**
+ * Shop admin area for managing product attributes.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopAdmin_Attribute extends ShopAdmin {
 	
 	private static $tree_class = 'ShopConfig';
@@ -715,6 +746,14 @@ class ShopAdmin_Attribute extends ShopAdmin {
 
 }
 
+/**
+ * Extension for admin area to apply shop admin CSS etc.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopAdmin_LeftAndMainExtension extends Extension {
 
 	public function onAfterInit() {

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Shop configuration object for containing all the shop settings.
+ * 
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ShopConfig extends DataObject {
 
 	public static $singular_name = 'Settings';

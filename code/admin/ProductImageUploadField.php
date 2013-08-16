@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Field for managing product image uploads
+ *
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ProductImageUploadField extends UploadField {
 	
 	protected $templateFileEdit = 'ProductImageUploadField_FileEdit';
@@ -184,6 +192,14 @@ class ProductImageUploadField extends UploadField {
 
 }
 
+/**
+ * Item handler for the product image upload field
+ *
+ * @author Frank Mullenger <frankmullenger@gmail.com>
+ * @copyright Copyright (c) 2011, Frank Mullenger
+ * @package swipestripe
+ * @subpackage admin
+ */
 class ProductImageUploadField_ItemHandler extends UploadField_ItemHandler {
 	
 	public function EditForm() {
