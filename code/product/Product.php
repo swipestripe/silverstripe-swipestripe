@@ -182,6 +182,7 @@ class Product extends Page {
 
 			//Gallery
 			$fields->addFieldToTab('Root.Gallery', ProductImageUploadField::create('Images', ''));
+			// $fields->addFieldToTab('Root.Gallery', UploadField::create('Images', ''));
 
 			//Product attributes
 			$listField = new GridField(
