@@ -36,5 +36,6 @@
 			"type": "vcs",
 			"url": "git@github.com:silverstripe-labs/silverstripe-payment.git"
 		}
-	]
+	],
+	"minimum-stability": "dev"
 }
