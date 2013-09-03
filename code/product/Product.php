@@ -72,10 +72,6 @@ class Product extends Page {
 		'Variations' => 'Variation'
 	);
 	
-	private static $many_many = array(
-		'Images' => 'Image'	
-	);
-	
 	/**
 	 * Defaults for Product
 	 * 
@@ -91,7 +87,6 @@ class Product extends Page {
 	 * @var Array
 	 */
 	private static $summary_fields = array(
-		'FirstImage.CMSThumbnail' => 'Image',
 		'Amount.Nice' => 'Price',
 		'Title' => 'Title'
 	);
@@ -120,29 +115,6 @@ class Product extends Page {
 	}
 	
 	/**
-	 * Copy the original product options or generate the default product 
-	 * options
-	 * 
-	 * @see SiteTree::onAfterWrite()
-	 */
-	public function onAfterWrite() {
-		parent::onAfterWrite();
-
-		if ($this->firstWrite) {
-
-			//Copy product images across when duplicating product
-			$original = DataObject::get_by_id($this->class, $this->original['ID']);
-			if ($original) {
-				foreach ($original->Images() as $productImage) {
-					$newImage = $productImage->duplicate(false);
-					$newImage->ProductID = $this->ID;
-					$newImage->write();
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Unpublish products if they get deleted, such as in product admin area
 	 * 
 	 * @see SiteTree::onAfterDelete()
@@ -156,7 +128,7 @@ class Product extends Page {
 	}
 		
 	/**
-	 * Set some CMS fields for managing Product images, Variations, Options, Attributes etc.
+	 * Set some CMS fields for managing Products
 	 * 
 	 * @see Page::getCMSFields()
 	 * @return FieldList
@@ -179,10 +151,6 @@ class Product extends Page {
 		}
 
 		if ($this->isInDB()) {
-
-			//Gallery
-			$fields->addFieldToTab('Root.Gallery', ProductImageUploadField::create('Images', ''));
-			// $fields->addFieldToTab('Root.Gallery', UploadField::create('Images', ''));
 
 			//Product attributes
 			$listField = new GridField(
@@ -230,15 +198,6 @@ class Product extends Page {
 		}
 		
 		return $fields;
-	}
-	
-	/**
-	 * Get the first Image of all Images attached to this Product.
-	 * 
-	 * @return Image
-	 */
-	public function FirstImage() {
-		return $this->Images()->First();
 	}
 	
 	/**
@@ -317,14 +276,7 @@ class Product extends Page {
 		}
 		return $result;
 	}
-	
-	public function Images() {
-		return $this->getManyManyComponents(
-			'Images',
-			'',
-			"\"Product_Images\".\"SortOrder\" ASC"
-		);
-	}
+
 }
 
 /**
@@ -403,53 +355,4 @@ class Product_Controller extends Page_Controller {
 	}
 }
 
-class Product_ImageExtension extends DataExtension {
-
-	private static $belongs_many_many = array(
-		'Products' => 'Product'
-	);
-
-	public function getUploadFields() {
-		
-		$fields = $this->owner->getCMSFields();
-
-		$fileAttributes = $fields->fieldByName('Root.Main.FilePreview')->fieldByName('FilePreviewData');
-		$fileAttributes->push(TextareaField::create('Caption', 'Caption:')->setRows(4));
-
-		$fields->removeFieldsFromTab('Root.Main', array(
-			'Title',
-			'Name',
-			'OwnerID',
-			'ParentID',
-			'Created',
-			'LastEdited',
-			'BackLinkCount',
-			'Dimensions'
-		));
-		return $fields;
-	}
-	
-	public function Caption() {
-
-		//TODO: Make this more generic and not require a db query each time
-		$controller = Controller::curr();
-		$page = $controller->data();
-
-		$joinObj = Product_Images::get()
-			->where("\"ProductID\" = '{$page->ID}' AND \"ImageID\" = '{$this->owner->ID}'")
-			->first();
-			
-		return $joinObj->Caption;
-	}
-}
-
-class Product_Images extends DataObject {
-	
-	private static $db = array (
-		'ProductID' => 'Int',
-		'ImageID' => 'Int',
-		'Caption' => 'Text',
-		'SortOrder' => 'Int'
-	);
-}
 

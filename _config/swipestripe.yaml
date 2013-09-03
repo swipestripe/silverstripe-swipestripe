@@ -28,6 +28,3 @@ LeftAndMain:
 Page_Controller:
   extensions: 
     - 'Cart'
-Image:
-  extensions: 
-    - 'Product_ImageExtension'

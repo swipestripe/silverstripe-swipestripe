@@ -1,9 +1,5 @@
 <div class="product sws">
 
-	<div class="product-image">
-		$Product.FirstImage.CroppedImage(250,250)
-	</div>
-
 	<div class="product-meta">
 		<h1>$Product.Title</h1>
 		<h3 class="product-price-js">$Product.Price.Nice</h3>
