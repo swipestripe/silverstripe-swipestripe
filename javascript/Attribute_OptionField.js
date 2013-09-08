@@ -28,7 +28,7 @@
 				$('option', this).remove();
 				if (options != null) {
 					$.each(options, function(val, text) {
-						self.append(new Option(text, val));
+						$("<option/>").attr("value", val).html(text).appendTo(self);
 					});
 				}
 				this.change();
