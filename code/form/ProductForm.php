@@ -202,8 +202,8 @@ class ProductForm extends Form {
 	 * Usage:
 	 * 
 	 * class WineProductForm extends DataExtension {	 
-	 * 	public function getQuantityFieldTitle(array &$titles) {    
-	 *		$titles[] = "No of cases";
+	 * 	public function getQuantityFieldTitle(&$title) {    
+	 *		return $title = "No of cases";
 	 * 	}
 	 * }
 	 * 
@@ -212,9 +212,9 @@ class ProductForm extends Form {
 	 * @return string The title of the quantity field
 	 */
 	public function getQuantityFieldTitle() {
-		$results = array();
-		$this->extend("getQuantityFieldTitle", $results);		
-		return (empty($results) ? "Quantity" : $results[0]);
+		$title = "Quantity";
+		$this->extend("getQuantityFieldTitle", $title);		
+		return $title;
 	}
 
 
