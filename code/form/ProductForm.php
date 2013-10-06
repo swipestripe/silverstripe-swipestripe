@@ -90,7 +90,7 @@ class ProductForm extends Form {
 			$prev = $attribute;
 		}
 
-		$fields->push(ProductForm_QuantityField::create('Quantity', 'Quantity', $this->quantity));
+		$fields->push(ProductForm_QuantityField::create('Quantity', $this->getQuantityFieldTitle(), $this->quantity));
 
 		$this->extend('updateFields', $fields);
 		$fields->setForm($this);
@@ -195,6 +195,28 @@ class ProductForm extends Form {
 		}
 		$this->goToNextPage();
 	}
+
+	/**
+	 * Gets the name of the quantity field. Intended to be overridden if necessary in a Data Extension.	
+	 * 
+	 * Usage:
+	 * 
+	 * class WineProductForm extends DataExtension {	 
+	 * 	public function getQuantityFieldTitle(array &$titles) {    
+	 *		$titles[] = "No of cases";
+	 * 	}
+	 * }
+	 * 
+	 * ProductForm::add_extension('WineProductForm');
+	 * 
+	 * @return string The title of the quantity field
+	 */
+	public function getQuantityFieldTitle() {
+		$results = array();
+		$this->extend("getQuantityFieldTitle", $results);		
+		return (empty($results) ? "Quantity" : $results[0]);
+	}
+
 
 	/**
 	 * Find a product based on current request - maybe shoul dbe deprecated?
