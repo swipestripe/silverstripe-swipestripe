@@ -20,7 +20,7 @@ class Modification extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Value' => 'Int',
 		'Price' => 'Decimal(19,4)',
 		'Description' => 'Text',
@@ -33,11 +33,11 @@ class Modification extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Order' => 'Order'
 	);
 
-	public static $default_sort = 'SortOrder ASC';
+	private static $default_sort = 'SortOrder ASC';
 
 	public static function get_all() {
 		$mods = new ArrayList();

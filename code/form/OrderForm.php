@@ -7,6 +7,11 @@ class OrderForm extends Form {
 
 	protected $order;
 	protected $customer;
+
+	private static $allowed_actions = array(
+		'process',
+		'update'
+	);
 	
 	/**
 	 * Construct the form, get the grouped fields and set the fields for this form appropriately,
@@ -218,7 +223,7 @@ class OrderForm extends Form {
 	 * 
 	 * @return Order
 	 */
-	function Cart() {
+	public function Cart() {
 		return $this->order;
 	}
 
@@ -228,7 +233,7 @@ class OrderForm extends Form {
 	 * @see OrderFormValidator::php()
 	 * @see Form::validate()
 	 */
-	function validate(){
+	public function validate(){
 		$valid = true;
 		if($this->validator){
 			$errors = $this->validator->validate();
@@ -335,7 +340,7 @@ class OrderForm extends Form {
 		}
 	}
 
-	function update(SS_HTTPRequest $request) {
+	public function update(SS_HTTPRequest $request) {
 
 		if ($request->isPOST()) {
 
@@ -359,7 +364,7 @@ class OrderForm extends Form {
 		}
 	}
 
-	function populateFields() {
+	public function populateFields() {
 
 		//Populate values in the form the first time
 		if (!Session::get("FormInfo.{$this->FormName()}.errors")) {
@@ -386,7 +391,7 @@ class OrderForm_Validator extends RequiredFields {
 	 * @param Array $data Submitted data
 	 * @return Boolean Returns TRUE if the submitted data is valid, otherwise FALSE.
 	 */
-	function php($data) {
+	public function php($data) {
 
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();
@@ -456,7 +461,7 @@ class OrderForm_ItemField extends FormField {
 	 * @param Item $item
 	 * @param Form $form
 	 */
-	function __construct($item, $form = null){
+	public function __construct($item, $form = null){
 
 		$this->item = $item;
 		$name = 'OrderItem' . $item->ID;
@@ -469,7 +474,7 @@ class OrderForm_ItemField extends FormField {
 	 * @see FormField::FieldHolder()
 	 * @return String
 	 */
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		return $this->renderWith($this->template);
 	}
 	
@@ -478,7 +483,7 @@ class OrderForm_ItemField extends FormField {
 	 * 
 	 * @return Item
 	 */
-	function Item() {
+	public function Item() {
 		return $this->item;
 	}
 	
@@ -487,7 +492,7 @@ class OrderForm_ItemField extends FormField {
 	 * 
 	 * @param Item $item
 	 */
-	function setItem(Item $item) {
+	public function setItem(Item $item) {
 		$this->item = $item;
 	}
 	
@@ -498,7 +503,7 @@ class OrderForm_ItemField extends FormField {
 	 * @see FormField::validate()
 	 * @return Boolean
 	 */
-	function validate($validator) {
+	public function validate($validator) {
 
 		$valid = true;
 		$item = $this->Item();
