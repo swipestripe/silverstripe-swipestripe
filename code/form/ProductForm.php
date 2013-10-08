@@ -189,7 +189,7 @@ class ProductForm extends Form {
 				? 'The product was added to <a href="' . $cartPage->Link() . '">your cart</a>.'
 				: "The product was added to your cart.";
 			$form->sessionMessage(
-				$message,
+				DBField::create_field("HTMLText", $message),
 				'good'
 			);
 		}
