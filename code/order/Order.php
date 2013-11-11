@@ -200,7 +200,8 @@ class Order extends DataObject implements PermissionProvider {
 
 	public function providePermissions() {
 		return array(
-			'VIEW_ORDER' => 'View orders'
+			'VIEW_ORDER' => 'View orders',
+			'EDIT_ORDER' => 'Edit orders'
 		);
 	}
 
@@ -208,10 +209,22 @@ class Order extends DataObject implements PermissionProvider {
 
 		if ($member == null && !$member = Member::currentUser()) return false;
 
-		$administratorPerm = Permission::check('ADMIN', 'any', $member);
+		$administratorPerm = Permission::check('VIEW_ORDER', 'any', $member);
 		$customerPerm = Permission::check('VIEW_ORDER', 'any', $member) && $member->ID == $this->MemberID;
 
 		return $administratorPerm || $customerPerm;
+	}
+	
+	/**
+	 * Prevent orders from being edited in the CMS
+	 * 
+	 * @see DataObject::canEdit()
+	 * @return Boolean False always
+	 */
+	public function canEdit($member = null) {
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);
+		
+		return $administratorPerm;
 	}
 	
 	/**
