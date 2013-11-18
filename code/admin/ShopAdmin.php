@@ -199,8 +199,7 @@ class ShopAdmin extends ModelAdmin {
 
 		$classes = array();
 		foreach ($subClasses as $className) {
-			$classes[$className] = $className::$url_priority;
-
+			$classes[$className] = Config::inst()->get($className, 'url_priority');
 		}
 		asort($classes);
 
