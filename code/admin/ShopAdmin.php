@@ -84,7 +84,7 @@ class ShopAdmin extends ModelAdmin {
 		if(!count($models)) {
 			user_error(
 				'ModelAdmin::getManagedModels(): 
-				You need to specify at least one DataObject subclass in public static $managed_models.
+				You need to specify at least one DataObject subclass in private static $managed_models.
 				Make sure that this property is defined, and that its visibility is set to "public"', 
 				E_USER_ERROR
 			);
@@ -242,7 +242,7 @@ class ShopAdmin_EmailAdmin extends ShopAdmin {
 	);
 
 	private static $url_rule = 'ShopConfig/EmailSettings';
-	protected static $url_priority = 60;
+	private static $url_priority = 60;
 	private static $menu_title = 'Shop Emails';
 
 	private static $url_handlers = array(
@@ -422,7 +422,7 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 	);
 
 	private static $url_rule = 'ShopConfig/BaseCurrency';
-	protected static $url_priority = 65;
+	private static $url_priority = 65;
 	private static $menu_title = 'Shop Base Currency';
 
 	private static $url_handlers = array(
@@ -597,7 +597,7 @@ class ShopAdmin_Attribute extends ShopAdmin {
 	);
 
 	private static $url_rule = 'ShopConfig/Attribute';
-	protected static $url_priority = 75;
+	private static $url_priority = 75;
 	private static $menu_title = 'Shop Product Attributes';
 
 	private static $url_handlers = array(

@@ -109,7 +109,7 @@ class AccountPage_Controller extends Page_Controller {
 	 * 
 	 * @var Array Set of actions
 	 */
-	static $allowed_actions = array (
+	private static $allowed_actions = array (
 		'index',
 		'order',
 		'repay',

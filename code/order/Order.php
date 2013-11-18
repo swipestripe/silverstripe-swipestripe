@@ -32,7 +32,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 		'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 
@@ -115,7 +115,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Member' => 'Customer'
 	);
 
@@ -124,7 +124,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @var Array
 	 */
-	public static $has_many = array(
+	private static $has_many = array(
 		'Items' => 'Item',
 		'Payments' => 'Payment',
 		'Modifications' => 'Modification',
@@ -136,7 +136,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'ID' => 'Order No',
 		'OrderedOn' => 'Ordered On',
 		'Member.Name' => 'Customer',
@@ -150,7 +150,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'ID' => array(
 			'field' => 'TextField',
 			'filter' => 'PartialMatchFilter',
@@ -178,7 +178,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * 
 	 * @var Array
 	 */
-	// public static $casting = array(
+	// private static $casting = array(
 	// 	'HasPayment' => 'Varchar'
 	// );
 	
@@ -189,7 +189,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @see ShopAdmin
 	 * @var String
 	 */
-	public static $default_sort = 'ID DESC';
+	private static $default_sort = 'ID DESC';
 
 	/**
 	 * The starting number for Order IDs. If none set starts at 1.
@@ -845,10 +845,10 @@ class Order extends DataObject implements PermissionProvider {
 
 class Order_Update extends DataObject {
 
-	public static $singular_name = 'Update';
-	public static $plural_name = 'Updates';
+	private static $singular_name = 'Update';
+	private static $plural_name = 'Updates';
 
-	public static $db = array(
+	private static $db = array(
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled')",
 		'Note' => 'Text',
 		'Visible' => 'Boolean'
@@ -859,12 +859,12 @@ class Order_Update extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Order' => 'Order',
 		'Member' => 'Member'
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Created.Nice' => 'Created',
 		'Status' => 'Order Status',
 		'Note' => 'Note',

@@ -17,7 +17,7 @@ class Variation extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Price' => 'Decimal(19,4)',
 		'Currency' => 'Varchar(3)',
 		'Status' => "Enum('Enabled,Disabled','Enabled')",
@@ -52,7 +52,7 @@ class Variation extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Product' => 'Product',
 		'Image' => 'Product_Image'
 	);
@@ -62,7 +62,7 @@ class Variation extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $many_many = array(
+	private static $many_many = array(
 		'Options' => 'Option'
 	);
 	
@@ -72,7 +72,7 @@ class Variation extends DataObject {
 	 * @see Product::getCMSFields()
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'SummaryOfPrice' => 'Added Price',
 		'Status' => 'Status',
 	);
@@ -83,15 +83,15 @@ class Variation extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Live')",
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'Status' => 'Enabled'
 	);
 
-	public static $default_sort = 'SortOrder';
+	private static $default_sort = 'SortOrder';
 	
 	/**
 	 * Overloaded magic method so that attribute values can be retrieved for display 
@@ -444,7 +444,7 @@ class Variation extends DataObject {
 
 class Variation_Options extends DataObject {
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'Variation' => 'Variation',
 		'Option' => 'Option'
 	);

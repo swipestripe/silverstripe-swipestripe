@@ -14,8 +14,8 @@
  */
 class Attribute extends DataObject {
 
-	public static $singular_name = 'Attribute';
-	public static $plural_name = 'Attributes';
+	private static $singular_name = 'Attribute';
+	private static $plural_name = 'Attributes';
 
 	public $firstWrite = false;
 
@@ -25,7 +25,7 @@ class Attribute extends DataObject {
 	 * @see Product_Controller::AddToCartForm()
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(100)',
 		'Description' => 'Text',
 		'SortOrder' => 'Int'
@@ -36,11 +36,11 @@ class Attribute extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_many = array(
+	private static $has_many = array(
 		'Options' => 'Option'
 	);
 
-	public static $has_one = array(    
+	private static $has_one = array(
 		'Product' => 'Product',
 		'DefaultAttribute' => 'Attribute_Default'
 	);
@@ -50,7 +50,7 @@ class Attribute extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title'
 	);
 	
@@ -59,13 +59,13 @@ class Attribute extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title' => 'Title',
 		'Description' => 'Description',
 		'OptionSummary' => 'Options'
 	);
 
-	public static $default_sort = 'SortOrder';
+	private static $default_sort = 'SortOrder';
 	
 	/**
 	 * Add some fields to the CMS for managing Attributes.
@@ -245,10 +245,10 @@ class Attribute_OptionField extends DropdownField {
 
 class Attribute_Default extends Attribute {
 
-	public static $singular_name = 'Attribute';
-	public static $plural_name = 'Attributes';
+	private static $singular_name = 'Attribute';
+	private static $plural_name = 'Attributes';
 
-	public static $has_one = array(    
+	private static $has_one = array(
 		'ShopConfig' => 'ShopConfig'
 	);
 
