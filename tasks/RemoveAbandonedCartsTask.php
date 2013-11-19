@@ -14,7 +14,7 @@
  * @package swipestripe
  * @subpackage tasks
  */
-class RemoveAbandonedCartsTask extends QuarterHourlyTask {
+class RemoveAbandonedCartsTask extends CliController {
 	
   /**
    * Remove {@link Order}s that have not been active for a certain period of time,
