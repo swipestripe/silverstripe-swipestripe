@@ -12,15 +12,15 @@
  */
 class Option extends DataObject {
 
-	public static $singular_name = 'Option';
-	public static $plural_name = 'Options';
+	private static $singular_name = 'Option';
+	private static $plural_name = 'Options';
 
 	/**
 	 * DB fields for this Option
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(255)',
 		'Description' => 'Text',
 		'SortOrder' => 'Int'
@@ -31,7 +31,7 @@ class Option extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Attribute' => 'Attribute',
 		'Product' => 'Product'
 	);
@@ -41,11 +41,11 @@ class Option extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	static $belongs_many_many = array(    
+	private static $belongs_many_many = array(
 		'Variations' => 'Variation'
 	);
 
-	public static $default_sort = 'SortOrder';
+	private static $default_sort = 'SortOrder';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -60,8 +60,8 @@ class Option extends DataObject {
 
 class Option_Default extends Option {
 
-	public static $singular_name = 'Option';
-	public static $plural_name = 'Options';
+	private static $singular_name = 'Option';
+	private static $plural_name = 'Options';
 
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();

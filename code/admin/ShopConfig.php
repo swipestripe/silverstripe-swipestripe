@@ -9,10 +9,10 @@
  */
 class ShopConfig extends DataObject {
 
-	public static $singular_name = 'Settings';
-	public static $plural_name = 'Settings';
+	private static $singular_name = 'Settings';
+	private static $plural_name = 'Settings';
 
-	public static $db = array(
+	private static $db = array(
 		'LicenceKey' => 'Varchar',
 
 		'BaseCurrency' => 'Varchar(3)',
@@ -32,11 +32,11 @@ class ShopConfig extends DataObject {
 		'NotificationTo' => 'Varchar'
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'Attributes' => 'Attribute_Default'
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'CartTimeout' => 1,
 		'CartTimeoutUnit' => 'hour',
 		'StockCheck' => false,

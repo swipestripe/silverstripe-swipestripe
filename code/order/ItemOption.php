@@ -14,7 +14,7 @@ class ItemOption extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Item' => 'Item'
 	);
 
@@ -23,7 +23,7 @@ class ItemOption extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Description' => 'Varchar',
 		'Price' => 'Decimal(19,4)'
 	);

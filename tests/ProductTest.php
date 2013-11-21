@@ -31,7 +31,7 @@
  */
 class SWS_ProductTest extends SWS_Test {
 
-	static $use_draft_site = true;
+	protected static $use_draft_site = true;
 	
 	function setUp() {
 		parent::setUp();

@@ -104,7 +104,7 @@ class CartPage extends Page {
  */
 class CartPage_Controller extends Page_Controller {
 
-	static $allowed_actions = array (
+	private static $allowed_actions = array (
 		'index',
 		'CartForm'
 	);

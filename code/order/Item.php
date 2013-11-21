@@ -11,7 +11,7 @@ class Item extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Price' => 'Decimal(19,4)',
 		'Quantity' => 'Int',
 		'ProductVersion' => 'Int',
@@ -51,7 +51,7 @@ class Item extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Order' => 'Order',
 		'Product' => 'Product',
 		'Variation' => 'Variation'
@@ -62,7 +62,7 @@ class Item extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $has_many = array(
+	private static $has_many = array(
 		'ItemOptions' => 'ItemOption'
 	);
 	
@@ -71,7 +71,7 @@ class Item extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		'Quantity' => 1
 	);
 	

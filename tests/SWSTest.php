@@ -8,10 +8,10 @@
  * @subpackage tests
  */
 class SWS_Test extends FunctionalTest {
-	
-	static $fixture_file = 'swipestripe/tests/SWS.yml';
-	static $disable_themes = true;
-	static $use_draft_site = false;
+
+	protected static $fixture_file = 'swipestripe/tests/SWS.yml';
+	protected static $disable_themes = true;
+	protected static $use_draft_site = false;
 
 	public function setUp() {
 		parent::setUp();

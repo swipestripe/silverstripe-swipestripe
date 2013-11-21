@@ -9,7 +9,7 @@
  */
 class Customer extends Member {
 
-	static $db = array(
+	private static $db = array(
 		'Code' => 'Int' //Just to trigger creating a Customer table
 	);
 	
@@ -18,11 +18,11 @@ class Customer extends Member {
 	 * 
 	 * @var Array
 	 */
-	static $has_many = array(
+	private static $has_many = array(
 		'Orders' => 'Order'
 	);
 
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Surname',
 		'Email'
 	);

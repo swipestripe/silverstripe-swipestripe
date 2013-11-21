@@ -56,7 +56,7 @@ class Cart extends Extension {
 	 * 
 	 * @return Order The current order (cart)
 	 */
-	static function get_current_order($persist = false) {
+	public static function get_current_order($persist = false) {
 
 		$orderID = Session::get('Cart.OrderID');
 		$order = null;

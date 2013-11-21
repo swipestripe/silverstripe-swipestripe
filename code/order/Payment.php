@@ -10,11 +10,11 @@
  */
 class Payment_Extension extends DataExtension {
 
-	static $has_one = array(
+	private static $has_one = array(
 		'Order' => 'Order' //Need to add Order here for ModelAdmin
 	);
 
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Status' => 'Status',
 		'SummaryOfAmount' => 'Amount',
 		'Method' => 'Method',

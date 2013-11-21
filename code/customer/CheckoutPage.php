@@ -107,7 +107,7 @@ class CheckoutPage_Controller extends Page_Controller {
 
 	protected $orderProcessed = false;
 
-	static $allowed_actions = array (
+	private static $allowed_actions = array (
 		'index',
 		'OrderForm'
 	);
