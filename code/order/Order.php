@@ -894,8 +894,10 @@ class Order_Update extends DataObject {
 		//Update the Order, setting the same status
 		if ($this->Status) {
 			$order = $this->Order();
-			$order->Status = $this->Status;
-			$order->write();
+			if ($order->exists()) {
+				$order->Status = $this->Status;
+				$order->write();
+			}
 		}
 	}
 
