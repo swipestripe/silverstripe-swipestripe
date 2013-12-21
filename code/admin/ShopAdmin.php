@@ -29,7 +29,7 @@ class ShopAdmin extends ModelAdmin {
 		'$ModelClass/$Action/$ID' => 'handleAction',
 	);
 
-	protected static $hidden_sections = array();
+	public static $hidden_sections = array();
 	
 	private static $allowed_actions = array(
 		'EditForm',
