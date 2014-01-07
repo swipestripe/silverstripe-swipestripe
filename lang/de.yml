@@ -32,6 +32,7 @@ de:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CartForm:
+    GO_TO_CHECKOUT: 'Go To Checkout'
     NOTE: 'Note:'
     NO_ITEMS_IN_CART: 'There are no items in your cart.'
     POWERED_BY: 'powered by'
@@ -39,23 +40,20 @@ de:
     PRODUCT: Product
     QUANTITY: Quantity
     TOTAL: Total
-    GO_TO_CHECKOUT: 'Go To Checkout'
     UPDATE_CART: 'Update Cart'
   CartPage:
     DESCRIPTION: 'Generic content page'
-    GO_TO_CHECKOUT: 'Go To Checkout'
     PLURALNAME: 'Cart Pags'
     SINGULARNAME: 'Cart Page'
-    UPDATE_CART: 'Update Cart'
-  CheckoutForm:
-    YOUR_ORDER: 'Your Order'
   CheckoutFormOrder:
+    LOADING: Loading...
     NO_ITEMS_IN_CART: 'There are no items in your cart.'
     PRICE: Price
     PRODUCT: Product
     QUANTITY: Quantity
     SUB_TOTAL: 'Sub Total'
     TOTAL: Total
+    YOUR_ORDER: 'Your Order'
   CheckoutPage:
     ACCOUNT: Account
     ALREADY_MEMBER: 'If you are already a member please %s log in. %s'
@@ -70,7 +68,7 @@ de:
     PLEASE_CHOOSE_PASSWORD: 'Please choose a password, so you can login and check your order history in the future.'
     PLEASE_ENTER_EMAIL_ADDRESS: 'Please enter your email address.'
     PLURALNAME: 'Checkout Pags'
-    PROCEED_TO_PAY: 'Proceed to pay'
+    PROCEED_TO_PAY: 'Proceed fdfd to pay'
     SELECT_PAYMENT_METHOD: 'Please select a payment method.'
     SINGULARNAME: 'Checkout Page'
     TRY_AGAIN: 'Please go back and try again.'

@@ -21,11 +21,11 @@
 		<% end_if %>
 		
 		<section class="order-details">
-			<h3><% _t('CheckoutForm.YOUR_ORDER', 'Your Order') %></h3>
+			<h3><%t CheckoutFormOrder.YOUR_ORDER 'Your Order' %></h3>
 
 			<div id="cart-loading-js" class="cart-loading">
 				<div>
-					<h4>Loading...</h4>
+					<h4><%t CheckoutFormOrder.LOADING 'Loading...' %></h4>
 				</div>
 			</div>
 			

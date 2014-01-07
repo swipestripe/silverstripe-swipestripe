@@ -170,7 +170,7 @@ class OrderForm extends Form {
 
 	public function createActions() {
 		$actions = FieldList::create(
-			new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY',"Proceed to pay"))
+			new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY', 'Proceed to pay'))
 		);
 
 		$this->extend('updateActions', $actions);

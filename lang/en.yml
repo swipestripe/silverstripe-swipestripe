@@ -32,6 +32,7 @@ en:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CartForm:
+    GO_TO_CHECKOUT: 'Go To Checkout'
     NOTE: 'Note:'
     NO_ITEMS_IN_CART: 'There are no items in your cart.'
     POWERED_BY: 'powered by'
@@ -39,21 +40,20 @@ en:
     PRODUCT: Product
     QUANTITY: Quantity
     TOTAL: Total
+    UPDATE_CART: 'Update Cart'
   CartPage:
     DESCRIPTION: 'Generic content page'
-    GO_TO_CHECKOUT: 'Go To Checkout'
     PLURALNAME: 'Cart Pags'
     SINGULARNAME: 'Cart Page'
-    UPDATE_CART: 'Update Cart'
-  CheckoutForm:
-    YOUR_ORDER: 'Your Order'
   CheckoutFormOrder:
+    LOADING: Loading...
     NO_ITEMS_IN_CART: 'There are no items in your cart.'
     PRICE: Price
     PRODUCT: Product
     QUANTITY: Quantity
     SUB_TOTAL: 'Sub Total'
     TOTAL: Total
+    YOUR_ORDER: 'Your Order'
   CheckoutPage:
     ACCOUNT: Account
     ALREADY_MEMBER: 'If you are already a member please %s log in. %s'
