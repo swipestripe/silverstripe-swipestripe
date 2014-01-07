@@ -19,7 +19,7 @@ class ShopSearchFilter_OptionSet extends SearchFilter {
 		
 		$this->model = $query->applyRelation($this->relation);
 		$values = $this->getValue();
-		
+
 		if (count($values)) {
 			foreach ($values as $value) {
 				$matches[] = sprintf("%s LIKE '%s%%'",
@@ -48,60 +48,6 @@ class ShopSearchFilter_OptionSet extends SearchFilter {
 		else {
 			return $this->getValue() == null || $this->getValue() == '';
 		}
-	}
-
-	protected function applyOne(DataQuery $query) {
-		return;
-	}
-
-	protected function excludeOne(DataQuery $query) {
-		return;
-	}
-}
-
-/**
- * Search filter for determining whether an {@link Order} has a {@link Payment} attached.
- * 
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage admin
- */
-class ShopSearchFilter_Payment extends SearchFilter {
-
-	/**
-	 * Apply filter query SQL to a search query
-	 * 
-	 * @see SearchFilter::apply()
-	 */
-	public function apply(DataQuery $query) {
-
-		$this->model = $query->applyRelation($this->relation);
-		$values = $this->getValue();
-		$value = array_pop($values);
-
-		if ($value == 2 || $value == 1) {
-			$query->leftJoin(
-				$table = "Payment", // framework already applies quotes to table names here!
-				$onPredicate = "\"Payment\".\"OrderID\" = \"Order\".\"ID\"",
-				$tableAlias = 'Payment'
-			);
-			
-			if ($value == 2) $query->where('"Payment"."ID" IS NULL');
-			if ($value == 1) $query->where('"Payment"."ID" IS NOT NULL');
-		}
-		return $query;
-	}
-
-	/**
-	 * Determine whether the filter should be applied, depending on the 
-	 * value of the field being passed
-	 * 
-	 * @see SearchFilter::isEmpty()
-	 * @return Boolean
-	 */
-	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == ''; //|| $this->getValue() == 0;
 	}
 
 	protected function applyOne(DataQuery $query) {

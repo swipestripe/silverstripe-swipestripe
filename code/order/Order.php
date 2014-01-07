@@ -164,23 +164,11 @@ class Order extends DataObject implements PermissionProvider {
 			'title' => 'Customer Email',
 			'filter' => 'PartialMatchFilter'
 		),
-		// 'HasPayment' => array(
-		// 	'filter' => 'ShopSearchFilter_Payment',
-		// ),
 		'Status' => array(
 			'title' => 'Status',
-			'filter' => 'ShopSearchFilter_OptionSet',
+			'filter' => 'ShopSearchFilter_OptionSet'
 		)
 	);
-
-	/**
-	 * Castings for the searchable fields
-	 * 
-	 * @var Array
-	 */
-	// private static $casting = array(
-	// 	'HasPayment' => 'Varchar'
-	// );
 	
 	/**
 	 * The default sort expression. This will be inserted in the ORDER BY
@@ -303,8 +291,6 @@ class Order extends DataObject implements PermissionProvider {
 	public function scaffoldSearchFields($params = array()){
 
 		$fields = parent::scaffoldSearchFields();
-
-		// $fields->removeByName('HasPayment');
 
 		$request = Controller::curr()->getRequest();
 		$query = $request->requestVar('q');
