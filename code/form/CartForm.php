@@ -80,8 +80,8 @@ class CartForm extends Form {
 	public function createActions() {
 
 		$actions = FieldList::create(
-			FormAction::create('updateCart', _t('CartPage.UPDATE_CART',"Update Cart")),
-			FormAction::create('goToCheckout', _t('CartPage.GO_TO_CHECKOUT',"Go To Checkout"))
+			FormAction::create('updateCart', _t('CartForm.UPDATE_CART', 'Update Cart')),
+			FormAction::create('goToCheckout', _t('CartForm.GO_TO_CHECKOUT', 'Go To Checkout'))
 		);
 		$this->extend('updateActions', $actions);
 		$actions->setForm($this);

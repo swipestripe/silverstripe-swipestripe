@@ -39,6 +39,8 @@ de:
     PRODUCT: Product
     QUANTITY: Quantity
     TOTAL: Total
+    GO_TO_CHECKOUT: 'Go To Checkout'
+    UPDATE_CART: 'Update Cart'
   CartPage:
     DESCRIPTION: 'Generic content page'
     GO_TO_CHECKOUT: 'Go To Checkout'

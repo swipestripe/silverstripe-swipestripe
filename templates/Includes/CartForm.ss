@@ -12,10 +12,10 @@
 		<thead>
 			<tr>
 				<th>&nbsp;</th>
-				<th><% _t('CartForm.PRODUCT', 'Product') %></th>
-				<th><% _t('CartForm.PRICE', 'Price') %> ($Cart.TotalPrice.Currency)</th>
-				<th><% _t('CartForm.QUANTITY', 'Quantity') %></th>
-				<th><% _t('CartForm.TOTAL', 'Total') %> ($Cart.TotalPrice.Currency)</th>
+				<th><%t CartForm.PRODUCT 'Product' %></th>
+				<th><%t CartForm.PRICE 'Price' %> ($Cart.TotalPrice.Currency)</th>
+				<th><%t CartForm.QUANTITY 'Quantity' %></th>
+				<th><%t CartForm.TOTAL 'Total' %> ($Cart.TotalPrice.Currency)</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,8 +38,8 @@
 			
 					<td colspan="6">
 						<p class="alert alert-info">
-							<strong class="alert-heading"><% _t('CartForm.NOTE', 'Note:') %></strong>
-							<% _t('CartForm.NO_ITEMS_IN_CART', 'There are no items in your cart.') %>
+							<strong class="alert-heading"><%t CartForm.NOTE 'Note:' %></strong>
+							<%t CartForm.NO_ITEMS_IN_CART 'There are no items in your cart.' %>
 						</p>
 					</td>
 	
@@ -51,7 +51,7 @@
 
 	<div class="Actions">
 		<p class="attribution">
-			<% _t('CartForm.POWERED_BY','powered by') %> <a target="_blank" href="http://swipestripe.com">SwipeStripe Ecommerce</a>
+			<%t CartForm.POWERED_BY 'powered by' %> <a target="_blank" href="http://swipestripe.com">SwipeStripe Ecommerce</a>
 		</p>
 		 
 		<% if Cart.Items %>
