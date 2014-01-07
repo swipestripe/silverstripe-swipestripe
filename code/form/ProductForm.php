@@ -90,7 +90,7 @@ class ProductForm extends Form {
 			$prev = $attribute;
 		}
 
-		$fields->push(ProductForm_QuantityField::create('Quantity', 'Quantity', $this->quantity));
+		$fields->push(ProductForm_QuantityField::create('Quantity', _t('ProductForm.QUANTITY', 'Quantity'), $this->quantity));
 
 		$this->extend('updateFields', $fields);
 		$fields->setForm($this);
@@ -99,7 +99,7 @@ class ProductForm extends Form {
 
 	public function createActions() {
 		$actions = new FieldList(
-			new FormAction('add', 'Add To Cart')
+			new FormAction('add', _t('ProductForm.ADD_TO_CART', 'Add To Cart'))
 		);
 
 		$this->extend('updateActions', $actions);
@@ -185,9 +185,17 @@ class ProductForm extends Form {
 		//Show feedback if redirecting back to the Product page
 		if (!$this->getRequest()->requestVar('Redirect')) {
 			$cartPage = DataObject::get_one('CartPage');
-			$message = ($cartPage) 
-				? 'The product was added to <a href="' . $cartPage->Link() . '">your cart</a>.'
-				: "The product was added to your cart.";
+			$message = _t('ProductForm.PRODUCT_ADDED', 'The product was added to your cart.');
+			if ($cartPage->exists()) {
+				$message = _t(
+					'ProductForm.PRODUCT_ADDED_LINK', 
+					'The product was added to {openanchor}your cart{closeanchor}.',
+					array(
+						'openanchor' => "<a href=\"{$cartPage->Link()}\">",
+						'closeanchor' => "</a>"
+					)
+				);
+			}
 			$form->sessionMessage(
 				DBField::create_field("HTMLText", $message),
 				'good'
@@ -304,7 +312,7 @@ class ProductForm_Validator extends RequiredFields {
 		
 		if ((!$productVariations || !$productVariations->exists()) && $product && $product->requiresVariation()) {
 			$this->form->sessionMessage(
-				_t('Form.VARIATIONS_REQUIRED', 'This product requires options before it can be added to the cart.'),
+				_t('ProductForm.VARIATIONS_REQUIRED', 'This product requires options before it can be added to the cart.'),
 				'bad'
 			);
 			
@@ -318,7 +326,7 @@ class ProductForm_Validator extends RequiredFields {
 		$config = ShopConfig::current_shop_config();
 		if (!$config->BaseCurrency) {
 			$this->form->sessionMessage(
-				_t('Form.BASE_CURRENCY_NOT_SET', 'The currency is not set.'),
+				_t('ProductForm.BASE_CURRENCY_NOT_SET', 'The currency is not set.'),
 				'bad'
 			);
 			
@@ -361,7 +369,7 @@ class ProductForm_QuantityField extends TextField {
 		$quantity = $this->Value();
 		
 		if ($quantity == null || !is_numeric($quantity)) {
-			$errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
+			$errorMessage = _t('ProductForm.ITEM_QUANTITY_INCORRECT', 'The quantity must be a number');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
@@ -374,7 +382,7 @@ class ProductForm_QuantityField extends TextField {
 			$valid = false;
 		}
 		else if ($quantity <= 0) {
-			$errorMessage = _t('Form.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 1');
+			$errorMessage = _t('ProductForm.ITEM_QUANTITY_LESS_ONE', 'The quantity must be at least 1');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
@@ -387,7 +395,7 @@ class ProductForm_QuantityField extends TextField {
 			$valid = false;
 		}
 		else if ($quantity > 2147483647) {
-			$errorMessage = _t('Form.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
+			$errorMessage = _t('ProductForm.ITEM_QUANTITY_INCORRECT', 'The quantity must be less than 2,147,483,647');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}

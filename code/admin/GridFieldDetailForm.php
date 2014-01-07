@@ -50,9 +50,10 @@ class GridFieldDetailForm_HasManyItemRequest extends GridFieldDetailForm_ItemReq
 			$curmbs = $this->Breadcrumbs();
 			if($curmbs && $curmbs->count()>=2){
 				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
+				$cancelText = _t('GridFieldDetailForm.CancelBtn', 'Cancel');
 				$text = "
 				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
-					Cancel
+					$cancelText
 				</a>";
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}

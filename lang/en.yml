@@ -1,0 +1,171 @@
+en:
+  ShopAdmin:
+    MENUTITLE: Shop
+  ShopAdmin_Attribute:
+    MENUTITLE: 'Shop Product Attributes'
+  ShopAdmin_BaseCurrency:
+    MENUTITLE: 'Shop Base Currency'
+  ShopAdmin_EmailAdmin:
+    MENUTITLE: 'Shop Emails'
+  AccountPage:
+    CANNOT_VIEW_ORDER: 'You cannot view orders that do not belong to you.'
+    DATE: Date
+    DESCRIPTION: 'Generic content page'
+    NO_ORDERS: 'You do not currently have any orders. In future you will be able to view your recent orders from here.'
+    NO_ORDER_EXISTS: 'Order does not exist.'
+    PLURALNAME: 'Account Pags'
+    SINGULARNAME: 'Account Page'
+    STATUS: Status
+    TOTAL: Total
+    VIEW_THIS_ORDER: 'View this order'
+  AccountPage_order:
+    WARNING: Warning!
+  Attribute:
+    PLURALNAME: Attributes
+    SINGULARNAME: Attribute
+  Attribute_Default:
+    PLURALNAME: Attributes
+    SINGULARNAME: Attribute
+  BackLink_Button_ss:
+    Back: Back
+  CMSLoadingScreen_ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+  CartForm:
+    NOTE: 'Note:'
+    NO_ITEMS_IN_CART: 'There are no items in your cart.'
+    POWERED_BY: 'powered by'
+    PRICE: Price
+    PRODUCT: Product
+    QUANTITY: Quantity
+    TOTAL: Total
+  CartPage:
+    DESCRIPTION: 'Generic content page'
+    GO_TO_CHECKOUT: 'Go To Checkout'
+    PLURALNAME: 'Cart Pags'
+    SINGULARNAME: 'Cart Page'
+    UPDATE_CART: 'Update Cart'
+  CheckoutForm:
+    YOUR_ORDER: 'Your Order'
+  CheckoutFormOrder:
+    NO_ITEMS_IN_CART: 'There are no items in your cart.'
+    PRICE: Price
+    PRODUCT: Product
+    QUANTITY: Quantity
+    SUB_TOTAL: 'Sub Total'
+    TOTAL: Total
+  CheckoutPage:
+    ACCOUNT: Account
+    ALREADY_MEMBER: 'If you are already a member please %s log in. %s'
+    DESCRIPTION: 'Generic content page'
+    EMAIL: Email
+    MEMBER_ALREADY_EXISTS: 'Sorry, a member already exists with that email address. If this is your email address, please log in first before placing your order.'
+    NOTE: 'NOTE:'
+    NOTES_ABOUT_ORDER: 'Notes about this order'
+    NOT_VALID_METHOD: 'Sorry, that is not a valid payment method.'
+    PASSWORD: Password
+    PAYMENT: Payment
+    PLEASE_CHOOSE_PASSWORD: 'Please choose a password, so you can login and check your order history in the future.'
+    PLEASE_ENTER_EMAIL_ADDRESS: 'Please enter your email address.'
+    PLURALNAME: 'Checkout Pags'
+    PROCEED_TO_PAY: 'Proceed to pay'
+    SELECT_PAYMENT_METHOD: 'Please select a payment method.'
+    SINGULARNAME: 'Checkout Page'
+    TRY_AGAIN: 'Please go back and try again.'
+  Customer:
+    PLURALNAME: Customers
+    SINGULARNAME: Customer
+  Form:
+    ITEM_IS_NOT_IN_ORDER: 'This product is not in the Order.'
+    ITEM_QUANTITY_INCORRECT: 'The quantity must be less than 2,147,483,647'
+    ITEM_QUANTITY_LESS_ONE: 'The quantity must be at least 0'
+    ORDER_IS_NOT_VALID: 'Your cart seems to be empty, please add an item from the shop'
+    VALIDATIONFAILED: 'Validation failed'
+  GridFieldDetailForm:
+    CancelBtn: Cancel
+    Create: Create
+    Delete: Delete
+    Save: Save
+  Item:
+    PLURALNAME: Items
+    SINGULARNAME: Item
+  ItemOption:
+    PLURALNAME: 'Item Options'
+    SINGULARNAME: 'Item Option'
+  LeftAndMain:
+    PreviewButton: Preview
+  Modification:
+    PLURALNAME: Modifications
+    SINGULARNAME: Modification
+  Option:
+    PLURALNAME: Options
+    SINGULARNAME: Option
+  Option_Default:
+    PLURALNAME: Options
+    SINGULARNAME: Option
+  Order:
+    PLURALNAME: Orders
+    PRICE: Price
+    PRODUCT: Product
+    QUANTITY: Quantity
+    SINGULARNAME: Order
+    SUB_TOTAL: 'Sub Total'
+    TOTAL: Total
+  OrderAdmin:
+    ORDER: Order
+  OrderNotes:
+    NOTES: Notes
+  OrderPayments:
+    AMOUNT: Amount
+    DATE: Date
+    PAYMENT: Payment
+    PAYMENT_STATUS: 'Payment Status'
+    TOTAL_OUTSTANDING: 'Total outstanding'
+  Order_NotificationEmail:
+    LOGIN: 'Log in to the CMS to manage this order'
+    ORDER: Order
+  Order_ReceiptEmail:
+    GREETING: Hi
+    ORDER: Order
+    PAYMENTNOTICE: 'Please note that orders will not be shipped until payment has been successfully processed.'
+    VIEW_ORDER: 'View this order'
+  Order_Update:
+    PLURALNAME: Updates
+    SINGULARNAME: Update
+  Product:
+    DESCRIPTION: 'Generic content page'
+    FREE: Free
+    PLURALNAME: Products
+    SINGULARNAME: Product
+  ProductForm:
+    ADD_TO_CART: 'Add To Cart'
+    BASE_CURRENCY_NOT_SET: 'The currency is not set.'
+    ITEM_QUANTITY_INCORRECT: 'The quantity must be less than 2,147,483,647'
+    ITEM_QUANTITY_LESS_ONE: 'The quantity must be at least 1'
+    PRODUCT_ADDED: 'The product was added to your cart.'
+    PRODUCT_ADDED_LINK: 'The product was added to {openanchor}your cart{closeanchor}.'
+    QUANTITY: Quantity
+    VARIATIONS_REQUIRED: 'This product requires options before it can be added to the cart.'
+  ShopConfig:
+    BASE_CURRENCY: 'Base Currency'
+    BASE_CURRENCY_SYMBOL: 'Base Currency Symbol'
+    BASE_CURRENCY_WARNING: "\n				 Warning: Base currency is not set, please set base currency in the shop settings area before proceeding\n		 "
+    FROM: From
+    MESSAGE: Message
+    MESSAGE_DETAILS: 'Order details are included in the email below this message'
+    NOTIFICATION_FROM: 'Customer email address'
+    PLURALNAME: Settings
+    RECEIPT_TO: 'Sent to customer'
+    SIGNATURE: Signature
+    SINGULARNAME: Settings
+    SUBJECT_LINE: 'Subject line'
+    TO: To
+  SiteTree:
+    PLURALNAME: Pages
+    SINGULARNAME: Page
+  Variation:
+    PLURALNAME: Variations
+    SINGULARNAME: Variation
+  Variation_Options:
+    PLURALNAME: 'Variation Optionss'
+    SINGULARNAME: 'Variation Options'
