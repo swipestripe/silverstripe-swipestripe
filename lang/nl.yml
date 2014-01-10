@@ -1,3 +1,171 @@
 nl:
   ShopAdmin:
     MENUTITLE: Winkel
+  ShopAdmin_Attribute:
+    MENUTITLE: 'Winkel productattributen'
+  ShopAdmin_BaseCurrency:
+    MENUTITLE: 'Winkel standaard valuta'
+  ShopAdmin_EmailAdmin:
+    MENUTITLE: 'Winkel e-mails'
+  AccountPage:
+    CANNOT_VIEW_ORDER: 'Je kan geen bestellingen bekijken die niet bij jou horen.'
+    DATE: Datum
+    DESCRIPTION: 'Algemene contentpagina'
+    NO_ORDERS: 'Je hebt momenteel geen bestellingen. In de toekomst kun je je recente bestellingen hier zien.'
+    NO_ORDER_EXISTS: 'Bestelling bestaat niet in het systeem.'
+    PLURALNAME: 'Account pagina''s'
+    SINGULARNAME: 'Accountpagina'
+    STATUS: Status
+    TOTAL: Totaal
+    VIEW_THIS_ORDER: 'Bekijk deze order'
+  AccountPage_order:
+    WARNING: Waarschuwing!
+  Attribute:
+    PLURALNAME: Attributen
+    SINGULARNAME: Attribuut
+  Attribute_Default:
+    PLURALNAME: Attributen
+    SINGULARNAME: Attribuut
+  BackLink_Button_ss:
+    Back: Terug
+  CMSLoadingScreen_ss:
+    LOADING: Laden...
+    REQUIREJS: 'Het CMS vereist dat Javascript is ingeschakeld.'
+  CartForm:
+    GO_TO_CHECKOUT: 'Afronden'
+    NOTE: 'Opmerking:'
+    NO_ITEMS_IN_CART: 'Er zijn geen items in je winkelwagentje.'
+    POWERED_BY: 'Dit draait op'
+    PRICE: Prijs
+    PRODUCT: Product
+    QUANTITY: Aantal
+    TOTAL: Totaal
+    UPDATE_CART: 'Winkelwagen bijwerken'
+  CartPage:
+    DESCRIPTION: 'Algemene contentpagina'
+    PLURALNAME: 'Winkelwagenpagina''s'
+    SINGULARNAME: 'Winkelwagenpagina'
+  CheckoutFormOrder:
+    LOADING: Laden...
+    NO_ITEMS_IN_CART: 'Er zijn geen items in je winkelwagentje.'
+    PRICE: Prijs
+    PRODUCT: Product
+    QUANTITY: Aantal
+    SUB_TOTAL: 'Subtotaal'
+    TOTAL: Totaal
+    YOUR_ORDER: 'Je bestelling'
+  CheckoutPage:
+    ACCOUNT: Account
+    ALREADY_MEMBER: 'Als je al een account hebt, gelieve %s in te loggen. %s'
+    DESCRIPTION: 'Algemene contentpagina'
+    EMAIL: E-mail
+    MEMBER_ALREADY_EXISTS: 'Sorry, een gebruiker met dit e-mailadres bestaat al. Als dit je e-mailadres is, log eerst in voordat je je bestelling plaatst.'
+    NOTE: 'OPMERKING:'
+    NOTES_ABOUT_ORDER: 'Opmerkingen over deze bestelling'
+    NOT_VALID_METHOD: 'Sorry, dat is geen valide betaalmethode.'
+    PASSWORD: Wachtwoord
+    PAYMENT: Betaling
+    PLEASE_CHOOSE_PASSWORD: 'Gelieve een wachtwoord te kiezen, zodat je in kan loggen en je bestelgeschiedenis bekijken in de toekomst.'
+    PLEASE_ENTER_EMAIL_ADDRESS: 'Gelieve een e-mailadres in te voeren.'
+    PLURALNAME: 'Afrondpagina''s'
+    PROCEED_TO_PAY: 'Doorgaan naar betaling'
+    SELECT_PAYMENT_METHOD: 'Gelieve een betaalmethode te selecteren.'
+    SINGULARNAME: 'Afrondpagina'
+    TRY_AGAIN: 'Gelieve terug te gaan en opnieuw te proberen.'
+  Customer:
+    PLURALNAME: Klanten
+    SINGULARNAME: Klant
+  Form:
+    ITEM_IS_NOT_IN_ORDER: 'Dit product is niet in de bestelling.'
+    ITEM_QUANTITY_INCORRECT: 'Het aantal mag niet meer dan 2.147.483.647 zijn'
+    ITEM_QUANTITY_LESS_ONE: 'Het aantal moet minstens 0 zijn'
+    ORDER_IS_NOT_VALID: 'Je winkelwagen lijkt leeg te zijn. Gelieve iets uit de winkel toe te voegen'
+    VALIDATIONFAILED: 'Validatie is mislukt'
+  GridFieldDetailForm:
+    CancelBtn: Annuleren
+    Create: Aanmaken
+    Delete: Verwijderen
+    Save: Opslaan
+  Item:
+    PLURALNAME: Items
+    SINGULARNAME: Item
+  ItemOption:
+    PLURALNAME: 'Item opties'
+    SINGULARNAME: 'Item optie'
+  LeftAndMain:
+    PreviewButton: Voorbeeld
+  Modification:
+    PLURALNAME: Wijzigingen
+    SINGULARNAME: Wijziging
+  Option:
+    PLURALNAME: Opties
+    SINGULARNAME: Optie
+  Option_Default:
+    PLURALNAME: Opties
+    SINGULARNAME: Optie
+  Order:
+    PLURALNAME: Bestellingen
+    PRICE: Prijs
+    PRODUCT: Product
+    QUANTITY: Aantal
+    SINGULARNAME: Bestelling
+    SUB_TOTAL: 'Subtotaal'
+    TOTAL: Totaal
+  OrderAdmin:
+    ORDER: Bestelling
+  OrderNotes:
+    NOTES: Opmerkingen
+  OrderPayments:
+    AMOUNT: Aantal
+    DATE: Datum
+    PAYMENT: Betaling
+    PAYMENT_STATUS: 'Betaalstatus'
+    TOTAL_OUTSTANDING: 'Totaal te betalen'
+  Order_NotificationEmail:
+    LOGIN: 'Log in op het CMS om deze bestelling te bewerken'
+    ORDER: Bestelling
+  Order_ReceiptEmail:
+    GREETING: Hallo
+    ORDER: Bestelling
+    PAYMENTNOTICE: 'Let op, bestellingen worden niet verstuurd totdat er een succesvolle betaling is verwerkt.'
+    VIEW_ORDER: 'Bekijk deze bestelling'
+  Order_Update:
+    PLURALNAME: Updates
+    SINGULARNAME: Update
+  Product:
+    DESCRIPTION: 'Algemene contentpagina'
+    FREE: Gratis
+    PLURALNAME: Producten
+    SINGULARNAME: Product
+  ProductForm:
+    ADD_TO_CART: 'In winkelwagen'
+    BASE_CURRENCY_NOT_SET: 'De valuta is niet ingesteld.'
+    ITEM_QUANTITY_INCORRECT: 'Het aantal mag niet meer dan 2.147.483.647 zijn'
+    ITEM_QUANTITY_LESS_ONE: 'Het aantal moet minstens 1 zijn'
+    PRODUCT_ADDED: 'Het product is toegevoegd aan je winkelwagen.'
+    PRODUCT_ADDED_LINK: 'Het product is toegevoegd aan {openanchor}je winkelwagen{closeanchor}.'
+    QUANTITY: Aantal
+    VARIATIONS_REQUIRED: 'Dit product vereist een aantal opties voor het kan worden toegevoegd aan je winkelwagen.'
+  ShopConfig:
+    BASE_CURRENCY: 'Standaard valuta'
+    BASE_CURRENCY_SYMBOL: 'Standaard valuta symbool'
+    BASE_CURRENCY_WARNING: "\n\t\t\t\t Waarschuwing: Basis valuta is niet ingesteld. Gelieve een basisvaluta in de winkelinstellingen in te stellen voor je verder gaat\n\t\t "
+    FROM: Van
+    MESSAGE: Bericht
+    MESSAGE_DETAILS: 'Besteldetails staat hier onder dit bericht.'
+    NOTIFICATION_FROM: 'Klant e-mailadres'
+    PLURALNAME: Instellingen
+    RECEIPT_TO: 'Verstuurd naar klant'
+    SIGNATURE: Handtekening
+    SINGULARNAME: Instellingen
+    SUBJECT_LINE: 'Onderwerp'
+    TO: Naar
+  SiteTree:
+    PLURALNAME: Pagina's
+    SINGULARNAME: Pagina
+  Variation:
+    PLURALNAME: Variaties
+    SINGULARNAME: Variatie
+  Variation_Options:
+    PLURALNAME: 'Variatieopties'
+    SINGULARNAME: 'Variatieoptie'
