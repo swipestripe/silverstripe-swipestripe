@@ -124,3 +124,10 @@ class Customer extends Member {
 		}
 	}
 }
+
+class Customer_Extension extends DataExtension {
+
+	private static $has_many = array(
+		'Orders' => 'Order'
+	);
+}

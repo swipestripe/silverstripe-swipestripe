@@ -28,3 +28,6 @@ LeftAndMain:
 Page_Controller:
   extensions: 
     - 'Cart'
+Member:
+  extensions: 
+    - 'Customer_Extension'

@@ -20,7 +20,7 @@ class ShopAdmin extends ModelAdmin {
 	private static $managed_models = array(
 		//'Product',
 		'Order',
-		'Customer',
+		'Member',
 		'ShopConfig'
 	);
 
