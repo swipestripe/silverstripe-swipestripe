@@ -1,3 +1,171 @@
 fi:
   ShopAdmin:
-    MENUTITLE: Myymälä
+    MENUTITLE: Kauppa
+  ShopAdmin_Attribute:
+    MENUTITLE: 'Kaupan tuoteominaisuudet'
+  ShopAdmin_BaseCurrency:
+    MENUTITLE: 'Kaupan oletusvalutta'
+  ShopAdmin_EmailAdmin:
+    MENUTITLE: 'Kaupan sähköposti'
+  AccountPage:
+    CANNOT_VIEW_ORDER: 'Et voi katsella tilauksia, jotka eivät kuulu sinulle.'
+    DATE: Date
+    DESCRIPTION: 'Yleinen sisältösivu'
+    NO_ORDERS: 'Sinulla ei ole yhtään tilausta. Myöhemmin näet tältä sivulta ostoshistoriasi.'
+    NO_ORDER_EXISTS: 'Tilausta ei ole.'
+    PLURALNAME: 'Tilisivut'
+    SINGULARNAME: 'Tilisivu'
+    STATUS: Tila
+    TOTAL: Yhteensä
+    VIEW_THIS_ORDER: 'Katso tilaustasi'
+  AccountPage_order:
+    WARNING: Varoitus!
+  Attribute:
+    PLURALNAME: Ominaisuudet
+    SINGULARNAME: Ominaisuus
+  Attribute_Default:
+    PLURALNAME: Ominaisuudet
+    SINGULARNAME: Ominaisuus
+  BackLink_Button_ss:
+    Back: Takaisin
+  CMSLoadingScreen_ss:
+    LOADING: Ladataan...
+    REQUIREJS: 'Järjestelmä tarvitsee JavaSkriptit päälle selaimestasi.'
+  CartForm:
+    GO_TO_CHECKOUT: 'Siirry maksamaan'
+    NOTE: 'HUOM:'
+    NO_ITEMS_IN_CART: 'Ostoskorisi on tyhjä.'
+    POWERED_BY: 'moottorina'
+    PRICE: Hinta
+    PRODUCT: Tuote
+    QUANTITY: Määrä
+    TOTAL: Yhteensä
+    UPDATE_CART: 'Päivitä korisi'
+  CartPage:
+    DESCRIPTION: 'Yleinen sisältösivu'
+    PLURALNAME: 'Ostoskorisivut'
+    SINGULARNAME: 'Ostoskorisivu'
+  CheckoutFormOrder:
+    LOADING: Ladataan...
+    NO_ITEMS_IN_CART: 'Ostoskorisi on tyhjä.'
+    PRICE: Hinta
+    PRODUCT: Tuote
+    QUANTITY: Määrä
+    SUB_TOTAL: 'Välisumma'
+    TOTAL: Yhteensä
+    YOUR_ORDER: 'Tilauksesi'
+  CheckoutPage:
+    ACCOUNT: Account
+    ALREADY_MEMBER: 'Mikäli olet jo jäsen, %s kirjaudu sisään. %s'
+    DESCRIPTION: 'Yleinen sisältösivu'
+    EMAIL: Email
+    MEMBER_ALREADY_EXISTS: 'Pahoittelut, tämä sähköpostiosoite on jo jollakin jäsenellämme käytössä. Mikäli tämä on sinun sähköpostiosoitteesi, ole hyvä ja kirjaudu ennen ostamistasi.'
+    NOTE: 'HUOM:'
+    NOTES_ABOUT_ORDER: 'Tilauksen lisätiedot'
+    NOT_VALID_METHOD: 'Pahoittelut, tämä maksumuoto ei kelpaa.'
+    PASSWORD: Salasana
+    PAYMENT: Maksu
+    PLEASE_CHOOSE_PASSWORD: 'Ole hyvä ja valitse salasana, jotta voit kirjautua selaamaan ostoshistoriaasi.'
+    PLEASE_ENTER_EMAIL_ADDRESS: 'Ole hyvä ja anna sähköpostiosoitteesi.'
+    PLURALNAME: 'Maksusivut'
+    PROCEED_TO_PAY: 'Jatka maksuun'
+    SELECT_PAYMENT_METHOD: 'Valitse maksutapa.'
+    SINGULARNAME: 'Maksusivu'
+    TRY_AGAIN: 'Palaa ja yritä uudelleen.'
+  Customer:
+    PLURALNAME: Asiakkaat
+    SINGULARNAME: Asiakas
+  Form:
+    ITEM_IS_NOT_IN_ORDER: 'Tämä tuote ei ole tilauksessa.'
+    ITEM_QUANTITY_INCORRECT: 'Määrän on oltava pienempi kuin 2,147,483,647'
+    ITEM_QUANTITY_LESS_ONE: 'Määrä on oltava suurempi kuin 0'
+    ORDER_IS_NOT_VALID: 'Ostoskorisi näyttää olevan tyhjä, ole hyvä ja lisää tuote verkkokaupasta'
+    VALIDATIONFAILED: 'Vahvistus epäonnistui'
+  GridFieldDetailForm:
+    CancelBtn: Peruuta
+    Create: Luo
+    Delete: Poista
+    Save: Tallenna
+  Item:
+    PLURALNAME: Artikkelit
+    SINGULARNAME: Artikkeli
+  ItemOption:
+    PLURALNAME: 'Artikkelin vaihtoehdot'
+    SINGULARNAME: 'Artikkelin vaihtoehto'
+  LeftAndMain:
+    PreviewButton: Esikatsele
+  Modification:
+    PLURALNAME: Muutokset
+    SINGULARNAME: Muutos
+  Option:
+    PLURALNAME: Vaihtoehdot
+    SINGULARNAME: Vaihtoehto
+  Option_Default:
+    PLURALNAME: Vaihtoehdot
+    SINGULARNAME: Vaihtoehto
+  Order:
+    PLURALNAME: Tilaukset
+    PRICE: Hinta
+    PRODUCT: Tuote
+    QUANTITY: Määrä
+    SINGULARNAME: Tilaus
+    SUB_TOTAL: 'Välisumma'
+    TOTAL: Yhteensä
+  OrderAdmin:
+    ORDER: Tilaus
+  OrderNotes:
+    NOTES: Muistiinpanot
+  OrderPayments:
+    AMOUNT: Märä
+    DATE: Päivämäärä
+    PAYMENT: Maksu
+    PAYMENT_STATUS: 'Maksun tila'
+    TOTAL_OUTSTANDING: 'Loppusumma'
+  Order_NotificationEmail:
+    LOGIN: 'Kirjaudu järjestelmään hallitaksesi tilausta'
+    ORDER: Tilaus
+  Order_ReceiptEmail:
+    GREETING: Hei
+    ORDER: Tilaus
+    PAYMENTNOTICE: 'Huomaathan, ettei tilausta toimiteta, ennen kuin maksu on käsitelty onnistuneesti.'
+    VIEW_ORDER: 'Katso tilausta'
+  Order_Update:
+    PLURALNAME: Päivitykset
+    SINGULARNAME: Päivitys
+  Product:
+    DESCRIPTION: 'Yleinen sisältösivu'
+    FREE: Ilmainen
+    PLURALNAME: Tuotteet
+    SINGULARNAME: Tuote
+  ProductForm:
+    ADD_TO_CART: 'Lisää ostoskoriin'
+    BASE_CURRENCY_NOT_SET: 'Valuuttaa ei ole asetettu.'
+    ITEM_QUANTITY_INCORRECT: 'Määrän on oltava vähemmän kuin 2,147,483,647'
+    ITEM_QUANTITY_LESS_ONE: 'Määrä on oltava vähintään 1'
+    PRODUCT_ADDED: 'Tuote lisättiin ostoskoriin.'
+    PRODUCT_ADDED_LINK: 'Tuote lisättiin {openanchor}ostoskoriisi{closeanchor}.'
+    QUANTITY: Määrä
+    VARIATIONS_REQUIRED: 'Tuotteesta on valittava haluamasi vaihtoehto, ennen kuin se voidaan lisätä koriin.'
+  ShopConfig:
+    BASE_CURRENCY: 'Oletusvaluutta'
+    BASE_CURRENCY_SYMBOL: 'Oletusvaluutan symboli'
+    BASE_CURRENCY_WARNING: "\n				 Varoitus: Oletusvaluuttaa ei ole asetettu, ole hyvä ja määritä se kauppasovelluksen asetuksista ennen kuin jatkat\n		 "
+    FROM: Lähettäjä
+    MESSAGE: Viesti
+    MESSAGE_DETAILS: 'Tilauksen tiedot eriteltynä tämän viestin alla'
+    NOTIFICATION_FROM: 'Asiakkaan sähköpostiosoite'
+    PLURALNAME: Asetukset
+    RECEIPT_TO: 'Lähettetty asiakkaalle'
+    SIGNATURE: Allekirjoitus
+    SINGULARNAME: Asetukset
+    SUBJECT_LINE: 'Aihe'
+    TO: Vastaanottaja
+  SiteTree:
+    PLURALNAME: Sivut
+    SINGULARNAME: Sivu
+  Variation:
+    PLURALNAME: Variaatiot
+    SINGULARNAME: Variaatio
+  Variation_Options:
+    PLURALNAME: 'Variaation vaihtoehto'
+    SINGULARNAME: 'Variaation vaihtoehdot'
