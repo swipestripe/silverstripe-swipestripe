@@ -535,6 +535,18 @@ Customer:
     PostalCode: 8014
     Country: NZ
     Groups: =>Group.customers
+  buyer2:
+    FirstName: Test 2
+    Surname: Buyer 2
+    Email: test_buyer_2@example.com
+    Password: password
+    HomePhone: 64 3 3546 216
+    Address: 123 Shortland St
+    AddressLine2: CBD
+    City: Auckland
+    PostalCode: 1010
+    Country: NZ
+    Groups: =>Group.customers
 
 # ------------------------------------------
 # Permissions
@@ -561,6 +573,16 @@ Order:
     SubTotalPrice: 500
     MemberID: =>Customer.buyer
     Notes: Some notes about order one.
+  orderTwo:
+    Status: Processing
+    PaymentStatus: Paid
+    ReceiptSent: 1
+    TotalCurrency: NZD
+    TotalPrice: 500
+    SubTotalCurrency: NZD
+    SubTotalPrice: 500
+    MemberID: =>Customer.buyer2
+    Notes: Some notes about order two.
 
 # ------------------------------------------
 # Order items
@@ -568,6 +590,13 @@ Order:
 Item:
   orderOneItemOne:
     OrderID: =>Order.orderOne
+    ProductID: =>Product.productA
+    ProductVersion: 2
+    Quantity: 1
+    Currency: NZD
+    Price: 500
+  orderTwoItemOne:
+    OrderID: =>Order.orderTwo
     ProductID: =>Product.productA
     ProductVersion: 2
     Quantity: 1
@@ -585,5 +614,12 @@ Payment:
     AmountAmount: 500
     PaidBy: =>Customer.buyer
     Order: =>Order.orderOne
+  orderTwoPayment:
+    Status: Success
+    Method: Cheque
+    AmountCurrency: NZD
+    AmountAmount: 500
+    PaidBy: =>Customer.buyer2
+    Order: =>Order.orderTwo
 
 

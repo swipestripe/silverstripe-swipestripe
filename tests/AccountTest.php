@@ -62,6 +62,17 @@ class SWS_AccountTest extends SWS_Test {
 		$this->assertTrue($this->Content() != "Action 'order' isn't allowed on class AccountPage_Controller");
 		$this->logOut();
 	}
+	
+	public function testCustomerCannotViewOrder() {
+		
+		$buyer = $this->objFromFixture('Customer', 'buyer2');
+		$order = $this->objFromFixture('Order', 'orderOne');
+
+		$this->loginAs($buyer);
+		$this->get(Director::makeRelative($order->Link()));
+		$this->assertTrue($this->Content() == "You cannot view orders that do not belong to you.");
+		$this->logOut();
+	}
 
 	public function testAdminCanViewOrder() {
 
