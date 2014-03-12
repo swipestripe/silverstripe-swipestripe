@@ -53,8 +53,7 @@ class Variation extends DataObject {
 	 * @var Array
 	 */
 	private static $has_one = array(
-		'Product' => 'Product',
-		'Image' => 'Product_Image'
+		'Product' => 'Product'
 	);
 	
 	/**
