@@ -250,6 +250,7 @@ class OrderForm extends Form {
 	}
 
 	public function process($data, $form) {
+		$this->extend('onBeforeProcess', $data);
 
 		//Check payment type
 		try {
