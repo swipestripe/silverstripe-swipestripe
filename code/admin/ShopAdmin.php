@@ -494,7 +494,9 @@ class ShopAdmin_BaseCurrency extends ShopAdmin {
 					TextField::create('BaseCurrency', _t('ShopConfig.BASE_CURRENCY', 'Base Currency'))
 						->setRightTitle('3 letter code for base currency - <a href="http://en.wikipedia.org/wiki/ISO_4217#Active_codes" target="_blank">available codes</a>'),
 					TextField::create('BaseCurrencySymbol', _t('ShopConfig.BASE_CURRENCY_SYMBOL', 'Base Currency Symbol'))
-						->setRightTitle('Symbol to be used for the base currency e.g: $')
+						->setRightTitle('Symbol to be used for the base currency e.g: $'),
+					NumericField::create('BaseCurrencyPrecision', _t('ShopConfig.BASE_CURRENCY_PRECISION', 'Base Currency Precision'))
+						->setRightTitle('Most currencies use two digits after the decimal place. If using digital currencies like Bitcoin, precision should be at least eight digits after the decimal.')
 				)
 			)
 		);

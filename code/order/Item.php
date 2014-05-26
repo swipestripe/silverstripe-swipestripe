@@ -12,7 +12,7 @@ class Item extends DataObject {
 	 * @var Array
 	 */
 	private static $db = array(
-		'Price' => 'Decimal(19,4)',
+		'Price' => 'Decimal(19,8)',
 		'Quantity' => 'Int',
 		'ProductVersion' => 'Int',
 		'VariationVersion' => 'Int'

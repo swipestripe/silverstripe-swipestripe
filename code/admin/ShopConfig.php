@@ -16,6 +16,7 @@ class ShopConfig extends DataObject {
 		'LicenceKey' => 'Varchar',
 
 		'BaseCurrency' => 'Varchar(3)',
+		'BaseCurrencyPrecision' => 'Int',	//number of digits after the decimal place
 		'BaseCurrencySymbol' => 'Varchar(10)',
 
 		'CartTimeout' => 'Int',
@@ -37,6 +38,7 @@ class ShopConfig extends DataObject {
 	);
 
 	private static $defaults = array(
+		'BaseCurrencyPrecision' => 2,
 		'CartTimeout' => 1,
 		'CartTimeoutUnit' => 'hour',
 		'StockCheck' => false,
