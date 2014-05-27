@@ -161,6 +161,8 @@ class Variation extends DataObject {
 			$this->dbObject('Status')->enumValues()
 		)->setRightTitle('You can disable a variation to prevent it being sold'));
 
+		$this->extend('updateCMSFields', $fields);
+
 		return $fields;
 	}
 	
