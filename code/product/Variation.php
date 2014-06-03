@@ -18,7 +18,7 @@ class Variation extends DataObject {
 	 * @var Array
 	 */
 	private static $db = array(
-		'Price' => 'Decimal(19,4)',
+		'Price' => 'Decimal(19,8)',
 		'Currency' => 'Varchar(3)',
 		'Status' => "Enum('Enabled,Disabled','Enabled')",
 		'SortOrder' => 'Int'
@@ -160,6 +160,8 @@ class Variation extends DataObject {
 			'Status', 
 			$this->dbObject('Status')->enumValues()
 		)->setRightTitle('You can disable a variation to prevent it being sold'));
+
+		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}

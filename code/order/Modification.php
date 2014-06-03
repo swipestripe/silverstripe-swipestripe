@@ -22,7 +22,7 @@ class Modification extends DataObject {
 	 */
 	private static $db = array(
 		'Value' => 'Int',
-		'Price' => 'Decimal(19,4)',
+		'Price' => 'Decimal(19,8)',
 		'Description' => 'Text',
 		'SubTotalModifier' => 'Boolean',
 		'SortOrder' => 'Int'
