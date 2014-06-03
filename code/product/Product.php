@@ -224,6 +224,9 @@ class Product extends Page {
 	 */
 	public function requiresVariation() {
 		$attributes = $this->Attributes();
+		
+		$this->extend('updaterequiresVariation', $attributes);
+		
 		return $attributes && $attributes->exists();
 	}
 	
