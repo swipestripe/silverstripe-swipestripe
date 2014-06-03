@@ -36,8 +36,8 @@ class Order extends DataObject implements PermissionProvider {
 		'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
 		'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 
-		'TotalPrice' => 'Decimal(19,4)',
-		'SubTotalPrice' => 'Decimal(19,4)',
+		'TotalPrice' => 'Decimal(19,8)',
+		'SubTotalPrice' => 'Decimal(19,8)',
 
 		'BaseCurrency' => 'Varchar(3)',
 		'BaseCurrencySymbol' => 'Varchar(10)',

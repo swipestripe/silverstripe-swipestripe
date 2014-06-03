@@ -25,7 +25,7 @@ class ItemOption extends DataObject {
 	 */
 	private static $db = array(
 		'Description' => 'Varchar',
-		'Price' => 'Decimal(19,4)'
+		'Price' => 'Decimal(19,8)'
 	);
 
 	public function Amount() {
