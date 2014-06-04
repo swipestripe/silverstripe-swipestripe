@@ -66,7 +66,7 @@ class Cart extends Extension {
 		}
 		
 		if (!$orderID || !$order || !$order->exists()) {
-			$order = new Order();
+			$order = Order::create();
 
 			if ($persist) {
 				$order->write();
