@@ -28,6 +28,9 @@ class Item extends DataObject {
 		$amount->setAmount($this->Price);
 		$amount->setCurrency($order->BaseCurrency);
 		$amount->setSymbol($order->BaseCurrencySymbol);
+		
+		$this->extend('updateAmount', $amount);
+		
 		return $amount;
 	}
 
