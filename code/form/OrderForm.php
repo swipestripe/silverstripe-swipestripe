@@ -315,9 +315,14 @@ class OrderForm extends Form {
 		$order->onBeforePayment();
 
 		try {
+			$shopConfig = ShopConfig::current_shop_config();
+			$precision = 2;		//precision should always be two decimals, and only more if specified in ShopConfig
+			if($shopConfig && $shopConfig->BaseCurrencyPrecision > 2) {
+				$precision = $shopConfig->BaseCurrencyPrecision;
+			}
 
 			$paymentData = array(
-				'Amount' => number_format($order->Total()->getAmount(), 2, '.', ''),
+				'Amount' => number_format($order->Total()->getAmount(), $precision, '.', ''),
 				'Currency' => $order->Total()->getCurrency(),
 				'Reference' => $order->ID
 			);
