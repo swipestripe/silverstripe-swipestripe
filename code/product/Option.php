@@ -10,7 +10,7 @@
  * @package swipestripe
  * @subpackage product
  */
-class Option extends DataObject {
+class Option extends DataObject implements PermissionProvider {
 
 	private static $singular_name = 'Option';
 	private static $plural_name = 'Options';
@@ -46,6 +46,28 @@ class Option extends DataObject {
 	);
 
 	private static $default_sort = 'SortOrder';
+
+	public function providePermissions() {
+		return array(
+			'EDIT_OPTIONS' => 'Edit Options',
+		);
+	}
+
+	public function canEdit($member = null) {
+		return Permission::check('EDIT_OPTIONS');
+	}
+
+	public function canView($member = null) {
+		return true;
+	}
+
+	public function canDelete($member = null) {
+		return Permission::check('EDIT_OPTIONS');
+	}
+
+	public function canCreate($member = null) {
+		return Permission::check('EDIT_OPTIONS');
+	}
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
