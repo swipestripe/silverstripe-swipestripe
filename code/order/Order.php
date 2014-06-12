@@ -861,6 +861,31 @@ class Order_Update extends DataObject {
 	public function canDelete($member = null) {
 		return false;
 	}
+	
+	public function canPublish($member = null) {
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);    
+		return $administratorPerm;
+	}
+
+	public function canView($member = null) {
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);    
+		return $administratorPerm;
+	}
+
+	public function canEdit($member = null) {
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);    
+		return $administratorPerm;
+	}
+
+	public function canCreate($member = null) {
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);    
+		return $administratorPerm;
+	}
+
+	public function delete($member = null) {
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);    
+		return $administratorPerm;
+	}
 
 	public function delete() {
 		if ($this->canDelete(Member::currentUser())) {
