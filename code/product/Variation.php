@@ -10,7 +10,7 @@
  * @package swipestripe
  * @subpackage product
  */
-class Variation extends DataObject {
+class Variation extends DataObject implements PermissionProvider {
 
 	/**
 	 * DB fields for a Variation
@@ -91,6 +91,28 @@ class Variation extends DataObject {
 	);
 
 	private static $default_sort = 'SortOrder';
+
+	public function providePermissions() {
+		return array(
+			'EDIT_VARIATIONS' => 'Edit Variations',
+		);
+	}
+
+	public function canEdit($member = null) {
+		return Permission::check('EDIT_VARIATIONS');
+	}
+
+	public function canView($member = null) {
+		return true;
+	}
+
+	public function canDelete($member = null) {
+		return Permission::check('EDIT_VARIATIONS');
+	}
+
+	public function canCreate($member = null) {
+		return Permission::check('EDIT_VARIATIONS');
+	}
 	
 	/**
 	 * Overloaded magic method so that attribute values can be retrieved for display 
