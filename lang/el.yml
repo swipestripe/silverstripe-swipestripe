@@ -1,0 +1,79 @@
+el:
+  ShopAdmin:
+    MENUTITLE: Κατάστημα
+  AccountPage:
+    DATE: Ημερομηνία
+  Attribute:
+    SINGULARNAME: Ιδιότητα
+  Attribute_Default:
+    PLURALNAME: Ιδιότητες
+    SINGULARNAME: Ιδιότητα
+  BackLink_Button_ss:
+    Back: Πίσω
+  CartForm:
+    PRICE: Τιμή
+    PRODUCT: Προϊόν
+    QUANTITY: Ποσότητα
+    TOTAL: Σύνολο
+    UPDATE_CART: 'Ενημέρωση Καλαθιού'
+  CheckoutFormOrder:
+    PRICE: Τιμή
+    PRODUCT: Προϊόν
+    QUANTITY: Ποσότητα
+    SUB_TOTAL: 'Υποσύνολο'
+    TOTAL: Σύνολο
+    YOUR_ORDER: 'Η παραγγελία σας'
+  CheckoutPage:
+    ACCOUNT: Λογαριασμός
+    EMAIL: Email
+    PASSWORD: Κωδικός
+    PAYMENT: Πληρωμή
+  Customer:
+    PLURALNAME: Πελάτες
+    SINGULARNAME: Πελάτης
+  GridFieldDetailForm:
+    Create: Δημιουργία
+    Delete: Διαγραφή
+    Save: Αποθήκευση
+  LeftAndMain:
+    PreviewButton: Προεπισκόπιση
+  Option:
+    PLURALNAME: Επιλογές
+    SINGULARNAME: Επιλογή
+  Option_Default:
+    PLURALNAME: Επιλογές
+    SINGULARNAME: Επιλογή
+  OrderAdmin:
+    ORDER: Παραγγελία
+  OrderPayments:
+    AMOUNT: Ποσό
+    DATE: Ημερομηνία
+    PAYMENT: Πληρωμή
+    PAYMENT_STATUS: 'Κατάσταση Πληρωμής'
+  Order_NotificationEmail:
+    ORDER: Παραγγελία
+  Order_ReceiptEmail:
+    GREETING: Γειά
+    ORDER: Παραγγελία
+  Order_Update:
+    PLURALNAME: Ενημερώσεις
+    SINGULARNAME: Ενημέρωση
+  Product:
+    FREE: Δωρεάν
+    PLURALNAME: Προϊόντα
+    SINGULARNAME: Προϊόν
+  ProductForm:
+    ADD_TO_CART: 'Προσθήκη στο Καλάθι'
+    QUANTITY: Ποσότητα
+  ShopConfig:
+    MESSAGE: Μήνυμα
+    PLURALNAME: Ρυθμίσεις
+    SINGULARNAME: Ρυθμίσεις
+  SiteTree:
+    PLURALNAME: Σελίδες
+    SINGULARNAME: Σελίδα
+  Variation:
+    PLURALNAME: Παραλλαγές
+    SINGULARNAME: Παραλλαγή
+  Variation_Options:
+    SINGULARNAME: 'Επιλογές Παραλλαγής'
