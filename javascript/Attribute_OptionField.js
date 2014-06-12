@@ -44,10 +44,15 @@
 								if(variations.hasOwnProperty(key)){
 
 									var variationOptions = variations[key]['options'];
+
+									// Check if variation matches currently selected options
 									if (variationOptions.filter(function(elem) {
 										return partial.indexOf(elem) > -1;
 									}).length == partial.length) {
-										$("<option/>").attr("value", val).html(text).appendTo(self);
+										// Check if option in dropdown already to avoid duplicates
+										if ($("option[value='" + val + "']", self).length == 0) {
+											$("<option/>").attr("value", val).html(text).appendTo(self);
+										}
 									}
 								}
 							}
