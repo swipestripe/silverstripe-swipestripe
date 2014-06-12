@@ -310,8 +310,6 @@ class OrderForm extends Form {
 		//Add modifiers to order
 		$order->updateModifications($data)->write();
 
-		Session::clear('Cart.OrderID');
-
 		$order->onBeforePayment();
 
 		try {

@@ -365,14 +365,20 @@ class Order extends DataObject implements PermissionProvider {
 	 */
 	public function onAfterPayment() {
 
-		$this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING :  self::STATUS_PENDING;
+		$this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING : self::STATUS_PENDING;
 		$this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
 		$this->write();
 
-		ReceiptEmail::create($this->Member(), $this)
-			->send();
-		NotificationEmail::create($this->Member(), $this)
-			->send();
+		if (Session::get('Cart.OrderID')) {
+			Session::clear('Cart.OrderID');
+		}
+
+		if ($this->getPaid()) {
+			ReceiptEmail::create($this->Member(), $this)
+				->send();
+			NotificationEmail::create($this->Member(), $this)
+				->send();
+		}
 
 		$this->extend('onAfterPayment');
 	}
