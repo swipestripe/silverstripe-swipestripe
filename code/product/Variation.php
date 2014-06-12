@@ -340,8 +340,8 @@ class Variation extends DataObject {
 
 		$latestVersion = Versioned::get_latest_version('Variation', $this->ID);
 		$enabled = $latestVersion->Status == 'Enabled';
-        $this->extend('isEnabled', $enabled);
-        return $enabled;
+		$this->extend('isEnabled', $enabled);
+		return $enabled;
 	}
 	
 	/**
