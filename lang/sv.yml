@@ -1,0 +1,171 @@
+sv:
+  ShopAdmin:
+    MENUTITLE: Butik
+  ShopAdmin_Attribute:
+    MENUTITLE: 'Butik Produktattribut'
+  ShopAdmin_BaseCurrency:
+    MENUTITLE: 'Butik Basvaluta'
+  ShopAdmin_EmailAdmin:
+    MENUTITLE: 'Butik E-post'
+  AccountPage:
+    CANNOT_VIEW_ORDER: 'Du kan inte se ordrar som inte är dina egna.'
+    DATE: Datum
+    DESCRIPTION: 'Generell innehållssida'
+    NO_ORDERS: 'Du har för närvarande inte några ordrar. När du har ordrar att visa kommer du kunna se de senaste här.'
+    NO_ORDER_EXISTS: 'Order existerar inte.'
+    PLURALNAME: 'Kontosidor'
+    SINGULARNAME: 'Kontosida'
+    STATUS: Status
+    TOTAL: Totalt
+    VIEW_THIS_ORDER: 'Visa order'
+  AccountPage_order:
+    WARNING: Varning!
+  Attribute:
+    PLURALNAME: Egenskaper
+    SINGULARNAME: Egenskap
+  Attribute_Default:
+    PLURALNAME: Egenskaper
+    SINGULARNAME: Egenskap
+  BackLink_Button_ss:
+    Back: Tillbaka
+  CMSLoadingScreen_ss:
+    LOADING: Laddar...
+    REQUIREJS: 'Systemet kräver att du har JavaScript aktiverat.'
+  CartForm:
+    GO_TO_CHECKOUT: 'Gå till kassan'
+    NOTE: 'Anteckning:'
+    NO_ITEMS_IN_CART: 'Du har inga produkter i din varukorg.'
+    POWERED_BY: 'byggt med'
+    PRICE: Pris
+    PRODUCT: Produkt
+    QUANTITY: Antal
+    TOTAL: Summa
+    UPDATE_CART: 'Uppdatera varukorg'
+  CartPage:
+    DESCRIPTION: 'Generell innehållssida'
+    PLURALNAME: 'Varukorgssidor'
+    SINGULARNAME: 'Varukorgssida'
+  CheckoutFormOrder:
+    LOADING: Laddar...
+    NO_ITEMS_IN_CART: 'Du har inga produkter i din varukorg.'
+    PRICE: Pris
+    PRODUCT: Produkt
+    QUANTITY: Antal
+    SUB_TOTAL: 'Delsumma'
+    TOTAL: Summa
+    YOUR_ORDER: 'Din order'
+  CheckoutPage:
+    ACCOUNT: Konto
+    ALREADY_MEMBER: 'Vänligen %s logga in %s om du redan är medlem.'
+    DESCRIPTION: 'Generell innehållssida'
+    EMAIL: E-post
+    MEMBER_ALREADY_EXISTS: 'Tyvärr finns redan en medlem med den angivna e-postadressen. Om detta är din e-postadress, vänligen logga in först innan du lägger din beställning.'
+    NOTE: 'Anteckning:'
+    NOTES_ABOUT_ORDER: 'Orderanteckningar'
+    NOT_VALID_METHOD: 'Tyvärr, det är inte en giltig betalningsmetod.'
+    PASSWORD: Lösenord
+    PAYMENT: Betalning
+    PLEASE_CHOOSE_PASSWORD: 'Vänligen välj ett lösenord, så att du kan logga in och se din orderhistorik i framtiden.'
+    PLEASE_ENTER_EMAIL_ADDRESS: 'Vänligen ange din e-postadress.'
+    PLURALNAME: 'Kassasidor'
+    PROCEED_TO_PAY: 'Fortsätt till betalning'
+    SELECT_PAYMENT_METHOD: 'Vänligen välj en betalningsmetod.'
+    SINGULARNAME: 'Kassasida'
+    TRY_AGAIN: 'Vänligen gå tillbaka och försök igen.'
+  Customer:
+    PLURALNAME: Kunder
+    SINGULARNAME: Kund
+  Form:
+    ITEM_IS_NOT_IN_ORDER: 'Den här produkten finns inte med i ordern.'
+    ITEM_QUANTITY_INCORRECT: 'Antalet måste vara mindre än 2,147,483,647'
+    ITEM_QUANTITY_LESS_ONE: 'Antalet måste vara minst 0'
+    ORDER_IS_NOT_VALID: 'Din varukorg verkar vara tom, vänligen lägg till en produkt'
+    VALIDATIONFAILED: 'Valideringsfel'
+  GridFieldDetailForm:
+    CancelBtn: Avbryt
+    Create: Skapa
+    Delete: Ta bort
+    Save: Spara
+  Item:
+    PLURALNAME: Artiklar
+    SINGULARNAME: Artikel
+  ItemOption:
+    PLURALNAME: 'Artikelalternativ'
+    SINGULARNAME: 'Artikelalternativ'
+  LeftAndMain:
+    PreviewButton: Förhandsvisning
+  Modification:
+    PLURALNAME: Modifieringar
+    SINGULARNAME: Modifiering
+  Option:
+    PLURALNAME: Alternativ
+    SINGULARNAME: Alternativ
+  Option_Default:
+    PLURALNAME: Alternativ
+    SINGULARNAME: Alternativ
+  Order:
+    PLURALNAME: Ordrar
+    PRICE: Pris
+    PRODUCT: Produkt
+    QUANTITY: Antal
+    SINGULARNAME: Order
+    SUB_TOTAL: 'Delsumma'
+    TOTAL: Summa
+  OrderAdmin:
+    ORDER: Order
+  OrderNotes:
+    NOTES: Anteckningar
+  OrderPayments:
+    AMOUNT: Summa
+    DATE: Datum
+    PAYMENT: Betalning
+    PAYMENT_STATUS: 'Betalningsstatus'
+    TOTAL_OUTSTANDING: 'Totalt utestående'
+  Order_NotificationEmail:
+    LOGIN: 'Logga in för att hantera ordern'
+    ORDER: Order
+  Order_ReceiptEmail:
+    GREETING: Hej
+    ORDER: Order
+    PAYMENTNOTICE: 'Observera att beställningen inte kommer att skickas innan betalningen blivit godkänd.'
+    VIEW_ORDER: 'Granska order'
+  Order_Update:
+    PLURALNAME: Uppdateringar
+    SINGULARNAME: Uppdatering
+  Product:
+    DESCRIPTION: 'Generell innehållssida'
+    FREE: Gratis
+    PLURALNAME: Produkter
+    SINGULARNAME: Produkt
+  ProductForm:
+    ADD_TO_CART: 'Lägg till i varukorg'
+    BASE_CURRENCY_NOT_SET: 'Basvaluta är inte inställd.'
+    ITEM_QUANTITY_INCORRECT: 'Antalet måste vara mindre än 2,147,483,647'
+    ITEM_QUANTITY_LESS_ONE: 'Antalet måste vara minst 1'
+    PRODUCT_ADDED: 'Produkten lades till i din varukorg.'
+    PRODUCT_ADDED_LINK: 'Produkten lades till i {openanchor}din varukorg{closeanchor}.'
+    QUANTITY: Antal
+    VARIATIONS_REQUIRED: 'Denna produkt kräver att extra val görs innan den kan läggas i varukorgen.'
+  ShopConfig:
+    BASE_CURRENCY: 'Basvaluta'
+    BASE_CURRENCY_SYMBOL: 'Symbol för basvaluta'
+    BASE_CURRENCY_WARNING: "\nVarning: basvaluta är inte inställd, ställ in basvalutan i butiksinställningar innan du fortsätter"
+    FROM: Från
+    MESSAGE: Meddelande
+    MESSAGE_DETAILS: 'Orderuppgifterna är inkluderade nedanför detta meddelande'
+    NOTIFICATION_FROM: 'Kunds e-postadress'
+    PLURALNAME: Inställningar
+    RECEIPT_TO: 'Skickat till kund'
+    SIGNATURE: Signatur
+    SINGULARNAME: Inställning
+    SUBJECT_LINE: 'Ämnesrad'
+    TO: Till
+  SiteTree:
+    PLURALNAME: Sidor
+    SINGULARNAME: Sida
+  Variation:
+    PLURALNAME: Variationer
+    SINGULARNAME: Variation
+  Variation_Options:
+    PLURALNAME: 'Variationsalternativ'
+    SINGULARNAME: 'Variationsalternativ'
