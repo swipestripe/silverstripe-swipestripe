@@ -361,7 +361,9 @@ class Variation extends DataObject implements PermissionProvider {
 	public function isEnabled() {
 
 		$latestVersion = Versioned::get_latest_version('Variation', $this->ID);
-		return $latestVersion->Status == 'Enabled';
+		$enabled = $latestVersion->Status == 'Enabled';
+		$this->extend('isEnabled', $enabled);
+		return $enabled;
 	}
 	
 	/**
