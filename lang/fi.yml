@@ -149,7 +149,7 @@ fi:
   ShopConfig:
     BASE_CURRENCY: 'Oletusvaluutta'
     BASE_CURRENCY_SYMBOL: 'Oletusvaluutan symboli'
-    BASE_CURRENCY_WARNING: "\n				 Varoitus: Oletusvaluuttaa ei ole asetettu, ole hyvä ja määritä se kauppasovelluksen asetuksista ennen kuin jatkat\n		 "
+    BASE_CURRENCY_WARNING: "\n\t\t\t\t Varoitus: Oletusvaluuttaa ei ole asetettu, ole hyvä ja määritä se kauppasovelluksen asetuksista ennen kuin jatkat\n\t\t "
     FROM: Lähettäjä
     MESSAGE: Viesti
     MESSAGE_DETAILS: 'Tilauksen tiedot eriteltynä tämän viestin alla'

@@ -12,7 +12,7 @@
  * @package swipestripe
  * @subpackage product
  */
-class Attribute extends DataObject {
+class Attribute extends DataObject implements PermissionProvider {
 
 	private static $singular_name = 'Attribute';
 	private static $plural_name = 'Attributes';
@@ -66,7 +66,29 @@ class Attribute extends DataObject {
 	);
 
 	private static $default_sort = 'SortOrder';
-	
+
+	public function providePermissions() {
+		return array(
+			'EDIT_ATTRIBUTES' => 'Edit Attributes',
+		);
+	}
+
+	public function canEdit($member = null) {
+		return Permission::check('EDIT_ATTRIBUTES');
+	}
+
+	public function canView($member = null) {
+		return true;
+	}
+
+	public function canDelete($member = null) {
+		return Permission::check('EDIT_ATTRIBUTES');
+	}
+
+	public function canCreate($member = null) {
+		return Permission::check('EDIT_ATTRIBUTES');
+	}
+
 	/**
 	 * Add some fields to the CMS for managing Attributes.
 	 * 
