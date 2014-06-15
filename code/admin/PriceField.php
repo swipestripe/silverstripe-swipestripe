@@ -34,7 +34,7 @@ class PriceField extends CurrencyField {
 		if(!$val) $val = 0.00;
 		$shopConfig = ShopConfig::current_shop_config();
 		$precision = 2;		//precision should always be two decimals, and only more if specified in ShopConfig
-		if($shopConfig && $shopConfig->BaseCurrencyPrecision > 2) {
+		if($shopConfig && (int) $shopConfig->BaseCurrencyPrecision) {
 			$precision = $shopConfig->BaseCurrencyPrecision;
 		}
 
