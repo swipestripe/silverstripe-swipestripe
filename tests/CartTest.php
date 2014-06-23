@@ -314,7 +314,7 @@ class SWS_CartTest extends SWS_Test {
 		$this->assertEquals(1, $order->Items()->Count());
 		$this->assertEquals($productA->Price, $firstItem->Price);
 		
-		$newAmount = new Price();
+		$newAmount = Price::create();
 		$newAmount->setAmount(72.34);
 		$newAmount->setCurrency('NZD');
 

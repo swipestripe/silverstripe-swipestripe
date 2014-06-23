@@ -34,7 +34,7 @@ class ItemOption extends DataObject {
 
 		$order = $this->Order();
 
-		$amount = new Price();
+		$amount = Price::create();
 		$amount->setAmount($this->Price);
 		$amount->setCurrency($order->BaseCurrency);
 		$amount->setSymbol($order->BaseCurrencySymbol);

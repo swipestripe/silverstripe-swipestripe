@@ -26,7 +26,7 @@ class Variation extends DataObject implements PermissionProvider {
 
 	public function Amount() {
 
-		$amount = new Price();
+		$amount = Price::create();
 		$amount->setCurrency($this->Currency);
 		$amount->setAmount($this->Price);
 		$amount->setSymbol(ShopConfig::current_shop_config()->BaseCurrencySymbol);
