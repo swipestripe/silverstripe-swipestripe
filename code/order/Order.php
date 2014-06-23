@@ -51,7 +51,7 @@ class Order extends DataObject implements PermissionProvider {
 
 		// TODO: Multi currency
 
-		$amount = new Price();
+		$amount = Price::create();
 		$amount->setAmount($this->TotalPrice);
 		$amount->setCurrency($this->BaseCurrency);
 		$amount->setSymbol($this->BaseCurrencySymbol);
@@ -74,7 +74,7 @@ class Order extends DataObject implements PermissionProvider {
 
 		// TODO: Multi currency
 
-		$amount = new Price();
+		$amount = Price::create();
 		$amount->setAmount($this->SubTotalPrice);
 		$amount->setCurrency($this->BaseCurrency);
 		$amount->setSymbol($this->BaseCurrencySymbol);
@@ -475,7 +475,7 @@ class Order extends DataObject implements PermissionProvider {
 
 		// TODO: Multi currency
 		
-		$outstanding = new Price();
+		$outstanding = Price::create();
 		$outstanding->setAmount($total);
 		$outstanding->setCurrency($this->BaseCurrency);
 		$outstanding->setSymbol($this->BaseCurrencySymbol);
@@ -498,7 +498,7 @@ class Order extends DataObject implements PermissionProvider {
 			}
 		}
 		
-		$totalPaid = new Price();
+		$totalPaid = Price::create();
 		$totalPaid->setAmount($paid);
 		$totalPaid->setCurrency($this->BaseCurrency);
 		$totalPaid->setSymbol($this->BaseCurrencySymbol);
