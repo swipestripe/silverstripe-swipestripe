@@ -301,6 +301,8 @@ class Attribute_Default extends Attribute {
 				GridFieldConfig_Basic::create()
 			));
 		}
+		
+		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}
