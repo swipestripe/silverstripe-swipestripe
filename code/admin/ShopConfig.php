@@ -76,16 +76,19 @@ class ShopConfig extends DataObject {
 		}
 
 		//Create a new group for customers
-		$allGroups = DataObject::get('Group');
-		$existingCustomerGroup = $allGroups->find('Title', 'Customers');
-		if (!$existingCustomerGroup) {
+		$existingCustomerGroup = Group::get()
+			->filter(array('Code' => 'customers'))
+			->first();
+
+		if (!$existingCustomerGroup || !$existingCustomerGroup->exists()) {
 			
-			$customerGroup = new Group();
+			$customerGroup = Group::create();
 			$customerGroup->Title = 'Customers';
 			$customerGroup->setCode($customerGroup->Title);
 			$customerGroup->write();
 
 			Permission::grant($customerGroup->ID, 'VIEW_ORDER');
+			DB::alteration_message('Added default customer group', 'created');
 		}
 	}
 }

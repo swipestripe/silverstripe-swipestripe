@@ -140,7 +140,7 @@ class AccountPage_Controller extends Page_Controller {
 			'Orders' => Order::get()
 				->where("MemberID = " . Convert::raw2sql(Member::currentUserID()))
 				->sort('Created DESC'),
-			'Customer' => Customer::currentUser()
+			'Customer' => Member::currentUser()
 		);
 	}
 
