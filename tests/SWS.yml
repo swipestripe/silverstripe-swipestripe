@@ -518,11 +518,6 @@ Member:
     Email: admin@test.com
     Password: password
     Groups: =>Group.admin
-
-# ------------------------------------------
-# Customers
-# ------------------------------------------ 
-Customer:
   buyer:
     FirstName: Test
     Surname: Buyer
@@ -559,7 +554,7 @@ Order:
     TotalPrice: 500
     SubTotalCurrency: NZD
     SubTotalPrice: 500
-    MemberID: =>Customer.buyer
+    MemberID: =>Member.buyer
     Notes: Some notes about order one.
 
 # ------------------------------------------
@@ -583,7 +578,7 @@ Payment:
     Method: Cheque
     AmountCurrency: NZD
     AmountAmount: 500
-    PaidBy: =>Customer.buyer
+    PaidBy: =>Member.buyer
     Order: =>Order.orderOne
 
 

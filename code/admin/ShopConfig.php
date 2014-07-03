@@ -63,7 +63,7 @@ class ShopConfig extends DataObject {
 	}
 
 	/**
-	 * Setup a default ShopConfig record if none exists
+	 * Setup a default ShopConfig record if none exists, also set up customer groups
 	 */
 	public function requireDefaultRecords() {
 
@@ -73,6 +73,19 @@ class ShopConfig extends DataObject {
 			$shopConfig = new ShopConfig();
 			$shopConfig->write();
 			DB::alteration_message('Added default shop config', 'created');
+		}
+
+		//Create a new group for customers
+		$allGroups = DataObject::get('Group');
+		$existingCustomerGroup = $allGroups->find('Title', 'Customers');
+		if (!$existingCustomerGroup) {
+			
+			$customerGroup = new Group();
+			$customerGroup->Title = 'Customers';
+			$customerGroup->setCode($customerGroup->Title);
+			$customerGroup->write();
+
+			Permission::grant($customerGroup->ID, 'VIEW_ORDER');
 		}
 	}
 }
