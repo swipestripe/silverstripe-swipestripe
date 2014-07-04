@@ -197,7 +197,7 @@ class Order extends DataObject implements PermissionProvider {
 
 		if ($member == null && !$member = Member::currentUser()) return false;
 
-		$administratorPerm = Permission::check('ADMIN') && Permission::check('VIEW_ORDER', 'any', $member);
+		$administratorPerm = Permission::check('VIEW_ORDER', 'any', $member);
 		$customerPerm = Permission::check('VIEW_ORDER', 'any', $member) && $member->ID == $this->MemberID;
 
 		return $administratorPerm || $customerPerm;
@@ -210,7 +210,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean False always
 	 */
 	public function canEdit($member = null) {
-		$administratorPerm = Permission::check('ADMIN') && Permission::check('EDIT_ORDER', 'any', $member);
+		$administratorPerm = Permission::check('EDIT_ORDER', 'any', $member);
 		
 		return $administratorPerm;
 	}
@@ -232,7 +232,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean False always
 	 */
 	public function canDelete($member = null) {
-		return Permission::check('ADMIN');
+		return true;
 	}
 
 	/**
@@ -442,7 +442,7 @@ class Order extends DataObject implements PermissionProvider {
 	public function Link() {
 		//get the account page and go to it
 		$account = DataObject::get_one('AccountPage');
-		return $account->Link()."order/$this->ID";
+		return Controller::join_links($account->Link("order"), $this->ID);
 	}
 
 	/**
