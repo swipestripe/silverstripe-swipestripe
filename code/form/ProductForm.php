@@ -186,7 +186,7 @@ class ProductForm extends Form {
 		if (!$this->getRequest()->requestVar('Redirect')) {
 			$cartPage = DataObject::get_one('CartPage');
 			$message = _t('ProductForm.PRODUCT_ADDED', 'The product was added to your cart.');
-			if ($cartPage->exists()) {
+			if ($cartPage && $cartPage->exists()) {
 				$message = _t(
 					'ProductForm.PRODUCT_ADDED_LINK', 
 					'The product was added to {openanchor}your cart{closeanchor}.',

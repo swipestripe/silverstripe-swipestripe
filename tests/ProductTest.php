@@ -176,7 +176,7 @@ class SWS_ProductTest extends SWS_Test {
 		$teeshirtA->doPublish();	  
 		$this->logOut();
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture('Member', 'buyer'));
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 
 		//Check that options fields exist for each attribute

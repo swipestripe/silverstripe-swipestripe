@@ -30,7 +30,7 @@ class SWS_OrderTest extends SWS_Test {
 
 	function testOrderStatusAfterCheckout() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture('Member', 'buyer');
 		$productA = $this->objFromFixture('Product', 'productA');
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 
@@ -87,7 +87,7 @@ class SWS_OrderTest extends SWS_Test {
 
 	function testOrderEmailsSentAfterCheckout() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture('Member', 'buyer');
 		$productA = $this->objFromFixture('Product', 'productA');
 		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
 		$shopConfig = $this->objFromFixture('ShopConfig', 'config'); 
