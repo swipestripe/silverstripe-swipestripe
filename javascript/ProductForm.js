@@ -36,7 +36,7 @@
 
 					//If options arrays match update price
 					if ($(variationOptions).not(options).length == 0 && $(options).not(variationOptions).length == 0) {
-						$('.product-price-js').html(variations[i]['price']);
+						$(this).parents('.product.sws').find('.product-price-js').html(variations[i]['price']);
 					}
 				}
 			}
