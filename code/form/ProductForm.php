@@ -92,7 +92,7 @@ class ProductForm extends Form {
 			$prev = $attribute;
 		}
 
-		$fields->push(ProductForm_QuantityField::create('Quantity', _t('ProductForm.QUANTITY', 'Quantity'), $this->quantity));
+		$fields->push(ProductForm_QuantityField::create('Quantity', _t('ProductForm.QUANTITY', 'Quantity'), $this->quantity)->setAttribute('type', 'number'));
 
 		$this->extend('updateFields', $fields);
 		$fields->setForm($this);
