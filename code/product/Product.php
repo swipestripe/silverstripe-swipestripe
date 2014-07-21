@@ -112,6 +112,7 @@ class Product extends Page {
 		//Save in base currency
 		$shopConfig = ShopConfig::current_shop_config();
 		$this->Currency = $shopConfig->BaseCurrency;
+		$this->Price = Zend_Locale_Math::normalize($this->Price);
 	}
 	
 	/**
