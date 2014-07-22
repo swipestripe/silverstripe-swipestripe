@@ -31,6 +31,9 @@ class PriceField extends CurrencyField {
 	 * @param mixed $val
 	 */
 	public function setValue($val) {
+		// Use default English numaric notation to be able to correctly store decimals when non-english locales are used.
+		setlocale(LC_NUMERIC, 'en_US');
+
 		if(!$val) $val = 0.00;
 		$shopConfig = ShopConfig::current_shop_config();
 		$precision = 2;		//precision should always be two decimals, and only more if specified in ShopConfig
