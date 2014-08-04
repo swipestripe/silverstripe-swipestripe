@@ -353,7 +353,7 @@ class ProductForm_Validator extends RequiredFields {
 /**
  * Represent each {@link Item} in the {@link Order} on the {@link Product} {@link AddToCartForm}.
  */
-class ProductForm_QuantityField extends TextField {
+class ProductForm_QuantityField extends NumericField {
 
 	public function Type() {
 		return 'quantity';	
