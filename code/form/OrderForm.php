@@ -83,6 +83,10 @@ class OrderForm extends Form {
 						->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', "Please enter your email address."))
 				),
 				new CompositeField(
+					TextField::create('Phone', _t('CheckoutPage.PHONE', 'Phone'))
+						->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_PHONE_NUMBER', "Please enter your phone number."))
+				),
+				new CompositeField(
 					new FieldGroup(
 						new ConfirmedPasswordField('Password', _t('CheckoutPage.PASSWORD', "Password"))
 					)
@@ -187,6 +191,7 @@ class OrderForm extends Form {
 		if (!$this->customer->ID || $this->customer->Password == '') {
 			$validator->addRequiredField('Password');
 			$validator->addRequiredField('Email');
+			$validator->addRequiredField('Phone');
 		}
 
 		$this->extend('updateValidator', $validator);
