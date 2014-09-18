@@ -10,6 +10,7 @@
 class Customer extends Member {
 
 	private static $db = array(
+		'Phone' => 'Text',
 		'Code' => 'Int' //Just to trigger creating a Customer table
 	);
 	
@@ -91,6 +92,7 @@ class Customer extends Member {
 			new TextField('FirstName'),
 			new TextField('Surname'),
 			new EmailField('Email'),
+			new TextField('Phone'),
 			new ConfirmedPasswordField('Password'),
 			$password
 		));
