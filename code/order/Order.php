@@ -116,7 +116,7 @@ class Order extends DataObject implements PermissionProvider {
 	 * @var Array
 	 */
 	private static $has_one = array(
-		'Member' => 'Customer'
+		'Member' => 'Member'
 	);
 
 	/*

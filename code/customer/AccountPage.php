@@ -140,7 +140,7 @@ class AccountPage_Controller extends Page_Controller {
 			'Orders' => Order::get()
 				->where("MemberID = " . Convert::raw2sql(Member::currentUserID()))
 				->sort('Created DESC'),
-			'Customer' => Customer::currentUser()
+			'Customer' => Member::currentUser()
 		);
 	}
 
@@ -155,7 +155,7 @@ class AccountPage_Controller extends Page_Controller {
 
 		if ($orderID = $request->param('ID')) {
 			
-			$member = Customer::currentUser();
+			$member = Member::currentUser();
 			$order = Order::get()
 				->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
 				->First();
@@ -183,7 +183,7 @@ class AccountPage_Controller extends Page_Controller {
 
 		if ($orderID = $request->param('ID')) {
 			
-			$member = Customer::currentUser();
+			$member = Member::currentUser();
 			$order = Order::get()
 				->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
 				->First();

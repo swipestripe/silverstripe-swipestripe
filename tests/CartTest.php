@@ -273,12 +273,12 @@ class SWS_CartTest extends SWS_Test {
 		$productA->doPublish();
 		$this->logOut();
 		
-		$this->logInAs($this->objFromFixture('Customer', 'buyer'));
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$this->logInAs($this->objFromFixture('Member', 'buyer'));
+		$buyer = $this->objFromFixture('Member', 'buyer');
 		$loggedInAs = $this->session()->get('loggedInAs');
 		$this->assertEquals($buyer->ID, $loggedInAs);
 		
-		$member = Customer::currentUser();
+		$member = Member::currentUser();
 		$this->assertEquals(true, $member->inGroup('customers'));
 
 		$productALink = $productA->Link();

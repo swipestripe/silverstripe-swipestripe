@@ -34,7 +34,7 @@ class OrderForm extends Form {
 		Requirements::javascript('swipestripe/javascript/OrderForm.js');
 
 		$this->order = Cart::get_current_order();
-		$this->customer = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+		$this->customer = Member::currentUser() ? Member::currentUser() : singleton('Member');
 
 		$this->fields = $this->createFields();
 		$this->actions = $this->createActions();
@@ -267,10 +267,10 @@ class OrderForm extends Form {
 		}
 
 		//Save or create a new customer/member
-		$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+		$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
 		if (!$member->exists()) {
 
-			$existingCustomer = Customer::get()->filter('Email', $data['Email']);
+			$existingCustomer = Member::get()->filter('Email', $data['Email']);
 			if ($existingCustomer && $existingCustomer->exists()) {
 				$form->sessionMessage(
 					_t('CheckoutPage.MEMBER_ALREADY_EXISTS', 'Sorry, a member already exists with that email address. If this is your email address, please log in first before placing your order.'),
@@ -280,7 +280,7 @@ class OrderForm extends Form {
 				return false;
 			}
 
-			$member = Customer::create();
+			$member = Member::create();
 			$form->saveInto($member);
 			$member->write();
 			$member->addToGroupByCode('customers');
@@ -350,7 +350,7 @@ class OrderForm extends Form {
 
 		if ($request->isPOST()) {
 
-			$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+			$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
 			$order = Cart::get_current_order();
 
 			//Update the Order 
@@ -375,7 +375,7 @@ class OrderForm extends Form {
 		//Populate values in the form the first time
 		if (!Session::get("FormInfo.{$this->FormName()}.errors")) {
 
-			$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+			$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
 			$data = array_merge(
 				$member->toMap()
 			);

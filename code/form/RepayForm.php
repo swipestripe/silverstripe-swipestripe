@@ -31,7 +31,7 @@ class RepayForm extends Form {
 		if ($orderID) {
 			$this->order = DataObject::get_by_id('Order', $orderID);
 		}
-		$this->customer = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+		$this->customer = Member::currentUser() ? Member::currentUser() : singleton('Member');
 
 		$this->fields = $this->createFields();
 		$this->actions = $this->createActions();
@@ -163,7 +163,7 @@ class RepayForm extends Form {
 			return;
 		}
 
-		$member = Customer::currentUser();
+		$member = Member::currentUser();
 
 		$orderID = Session::get('Repay.OrderID');
 		if ($orderID) {
@@ -205,7 +205,7 @@ class RepayForm extends Form {
 		//Populate values in the form the first time
 		if (!Session::get("FormInfo.{$this->FormName()}.errors")) {
 
-			$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
+			$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
 			$data = array_merge(
 				$member->toMap()
 			);

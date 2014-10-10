@@ -19,7 +19,7 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testCustomerCanViewAccount() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture('Member', 'buyer');
 		$accountPage = $this->objFromFixture('AccountPage', 'account');
 
 		$this->loginAs($buyer);
@@ -54,7 +54,7 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testCustomerCanViewOrder() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture('Member', 'buyer');
 		$order = $this->objFromFixture('Order', 'orderOne');
 
 		$this->loginAs($buyer);

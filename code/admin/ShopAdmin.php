@@ -18,9 +18,8 @@ class ShopAdmin extends ModelAdmin {
 	public $showImportForm = false;
 
 	private static $managed_models = array(
-		//'Product',
 		'Order',
-		'Customer',
+		'Member',
 		'ShopConfig'
 	);
 
@@ -93,7 +92,12 @@ class ShopAdmin extends ModelAdmin {
 		// Normalize models to have their model class in array key
 		foreach($models as $k => $v) {
 			if(is_numeric($k)) {
-				$models[$v] = array('title' => singleton($v)->i18n_plural_name());
+				if ($v == 'Member') {
+					$models[$v] = array('title' => _t('ShopAdmin.CUSTOMER_PLURAL', 'Customers'));
+				}
+				else {
+					$models[$v] = array('title' => singleton($v)->i18n_plural_name());
+				}
 				unset($models[$k]);
 			}
 		}
@@ -145,6 +149,16 @@ class ShopAdmin extends ModelAdmin {
 		
 		$list = $this->getList();
 
+		// Filter members to only display customers
+		if ($this->modelClass == 'Member') {
+			$group = Group::get()
+				->filter(array('Code' => 'customers'))
+				->first();
+			if ($group && $group->exists()) {
+				$list = $group->Members();
+			}
+		}
+
 		$buttonAfter = new GridFieldButtonRow('after');
 		$exportButton = new GridFieldExportButton('buttons-after-left');
 		$exportButton->setExportColumns($this->getExportFields());
@@ -153,7 +167,7 @@ class ShopAdmin extends ModelAdmin {
 				->addComponent($buttonAfter)
 				->addComponent($exportButton);
 
-		if ($this->modelClass == 'Order' || $this->modelClass == 'Customer') {
+		if ($this->modelClass == 'Order' || $this->modelClass == 'Member') {
 			$fieldConfig->removeComponentsByType('GridFieldAddNewButton');
 		}
 
