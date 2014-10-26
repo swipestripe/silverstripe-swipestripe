@@ -200,7 +200,8 @@ class ProductForm extends Form {
 			}
 			$form->sessionMessage(
 				DBField::create_field("HTMLText", $message),
-				'good'
+				'good',
+				false
 			);
 		}
 		$this->goToNextPage();
