@@ -392,7 +392,7 @@ class Variation extends DataObject implements PermissionProvider {
 	 * @see DataObject::validate()
 	 * @return ValidationResult
 	 */
-	protected function validate() {
+	public function validate() {
 		
 		$result = new ValidationResult(); 
 
