@@ -334,7 +334,7 @@ class Variation extends DataObject implements PermissionProvider {
 		if ($variationAttributeOptions) {
 
 			$product = $this->Product();
-			$variations = DataObject::get('Variation', "Variation.ProductID = " . $product->ID . " AND Variation.ID != " . $this->ID);
+			$variations = DataObject::get('Variation', "\"Variation\".\"ProductID\" = " . $product->ID . " AND \"Variation\".\"ID\" != " . $this->ID);
 			
 			if ($variations) foreach ($variations as $variation) {
 	
