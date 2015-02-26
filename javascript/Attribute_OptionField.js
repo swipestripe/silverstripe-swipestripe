@@ -44,9 +44,11 @@
 								if(variations.hasOwnProperty(key)){
 
 									var variationOptions = variations[key]['options'];
-									if (variationOptions.filter(function(elem) {
-										return partial.indexOf(elem) > -1;
-									}).length == partial.length) {
+									// Remove so will work on IE8 and all other browsers
+									// if (variationOptions.filter(function(elem) {
+									// 	return partial.indexOf(elem) > -1;
+									// }).length == partial.length) {
+									if (variationOptions.length == partial.length) {
 									
 										//check if the option getting added does not already exist in the dropdown (to avoid duplicate options)
 										if ($('option[value='+val+']',self).length == 0) {
