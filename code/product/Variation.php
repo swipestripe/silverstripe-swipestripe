@@ -321,9 +321,9 @@ class Variation extends DataObject implements PermissionProvider {
 
 		//Hacky way to get new option IDs from $this->record because $this->Options() returns existing options
 		//not the new ones passed in POST data    
-		$attributeIDs = $this->Product()->Attributes()->map()->toArray();
+		$attributeIDs = $this->Product()->Attributes()->getIDList();
 		$variationAttributeOptions = array();
-		if ($attributeIDs) foreach ($attributeIDs as $attributeID => $title) {
+		if ($attributeIDs) foreach ($attributeIDs as $attributeID) {
 			
 			$attributeOptionID = (isset($this->record['Options[' . $attributeID .']'])) ? $this->record['Options[' . $attributeID .']'] : null;
 			if ($attributeOptionID) {
