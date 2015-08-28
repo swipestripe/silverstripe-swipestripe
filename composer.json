@@ -15,7 +15,8 @@
 	{
 		"silverstripe/framework": "~3.1",
 		"silverstripe/cms": "~3.1",
-		"silverstripe/payment": "1.0.*"
+		"silverstripe/payment": "1.0.*",
+		"pelago/emogrifier": "0.1.1"
 	},
 	"require-dev": 
 	{

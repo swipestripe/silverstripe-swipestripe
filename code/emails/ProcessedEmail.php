@@ -44,7 +44,7 @@ class ProcessedEmail extends Email {
 				$this->body
 			);
 
-			$emog = new Emogrifier($html, $css);
+			$emog = new \Pelago\Emogrifier($html, $css);
 			$this->body = $emog->emogrify();
 		}
 	}
