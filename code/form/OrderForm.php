@@ -83,6 +83,9 @@ class OrderForm extends Form {
 						->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', "Please enter your email address."))
 				),
 				new CompositeField(
+					TextField::create('Phone', _t('CheckoutPage.PHONE', 'Phone'))
+				),
+				new CompositeField(
 					new FieldGroup(
 						new ConfirmedPasswordField('Password', _t('CheckoutPage.PASSWORD', "Password"))
 					)
