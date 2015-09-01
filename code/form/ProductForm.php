@@ -92,7 +92,8 @@ class ProductForm extends Form {
 			$prev = $attribute;
 		}
 
-		$fields->push(ProductForm_QuantityField::create('Quantity', _t('ProductForm.QUANTITY', 'Quantity'), $this->quantity));
+		$fields->push(ProductForm_QuantityField::create(
+			'Quantity', _t('ProductForm.QUANTITY', 'Quantity'), is_numeric($this->quantity) ? $this->quantity : 1));
 
 		$this->extend('updateFields', $fields);
 		$fields->setForm($this);
@@ -244,7 +245,7 @@ class ProductForm extends Form {
 	 */
 	private function getQuantity() {
 		$quantity = $this->getRequest()->requestVar('Quantity');
-		return (isset($quantity)) ? $quantity : 1;
+		return (isset($quantity) && is_numeric($quantity)) ? $quantity : 1;
 	}
 
 	private function getOptions() {
