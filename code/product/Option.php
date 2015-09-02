@@ -54,18 +54,34 @@ class Option extends DataObject implements PermissionProvider {
 	}
 
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('EDIT_OPTIONS');
 	}
 
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return true;
 	}
 
 	public function canDelete($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('EDIT_OPTIONS');
 	}
 
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('EDIT_OPTIONS');
 	}
 
