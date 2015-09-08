@@ -1,35 +1,35 @@
 <?php
 /**
- * Order, created as soon as a user adds a {@link Product} to their cart, the cart is 
+ * Order, created as soon as a user adds a {@link Product} to their cart, the cart is
  * actually an Order with status of 'Cart'. Has many {@link Item}s and can have {@link Modification}s
  * which might represent a {@link Modifier} like shipping, tax, coupon codes.
  */
 class Order extends DataObject implements PermissionProvider {
-	
+
 	/**
 	 * Order status once Order has been made, waiting for payment to clear/be approved
-	 * 
+	 *
 	 * @var String
 	 */
 	const STATUS_PENDING = 'Pending';
-	
+
 	/**
 	 * Order status once payment approved, order being processed before being dispatched
-	 * 
+	 *
 	 * @var String
 	 */
 	const STATUS_PROCESSING = 'Processing';
-	
+
 	/**
 	 * Order status once Order has been sent
-	 * 
+	 *
 	 * @var String
 	 */
 	const STATUS_DISPATCHED = 'Dispatched';
 
 	/**
 	 * DB fields for Order, such as Stauts, Payment Status etc.
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $db = array(
@@ -47,6 +47,15 @@ class Order extends DataObject implements PermissionProvider {
 		'Env' => 'Varchar(10)',
 	);
 
+	/**
+	 * Provides all Member properties, for use in summary_fields etc
+	 *
+	 * @param SQLQuery $query
+	*/
+	public function augmentSQL(SQLQuery &$query) {
+		$query->addLeftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"", "Member");
+	}
+
 	public function Total() {
 
 		// TODO: Multi currency
@@ -60,11 +69,11 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Display price, can decorate for multiple currency etc.
-	 * 
+	 *
 	 * @return Price
 	 */
 	public function TotalPrice() {
-		
+
 		$amount = $this->Total();
 		$this->extend('updatePrice', $amount);
 		return $amount;
@@ -83,11 +92,11 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Display price, can decorate for multiple currency etc.
-	 * 
+	 *
 	 * @return Price
 	 */
 	public function SubTotalPrice() {
-		
+
 		$amount = $this->SubTotal();
 		$this->extend('updatePrice', $amount);
 		return $amount;
@@ -112,7 +121,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Relations for this Order
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $has_one = array(
@@ -121,7 +130,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	/*
 	 * Relations for this Order
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $has_many = array(
@@ -130,10 +139,10 @@ class Order extends DataObject implements PermissionProvider {
 		'Modifications' => 'Modification',
 		'Updates' => 'Order_Update'
 	);
-	
+
 	/**
 	 * Summary fields for displaying Orders in the admin area
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $summary_fields = array(
@@ -144,10 +153,10 @@ class Order extends DataObject implements PermissionProvider {
 		'SummaryOfTotal' => 'Total',
 		'Status' => 'Status'
 	);
-	
+
 	/**
 	 * Searchable fields with search filters
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $searchable_fields = array(
@@ -169,11 +178,11 @@ class Order extends DataObject implements PermissionProvider {
 			'filter' => 'ShopSearchFilter_OptionSet'
 		)
 	);
-	
+
 	/**
 	 * The default sort expression. This will be inserted in the ORDER BY
 	 * clause of a SQL query if no other sort expression is provided.
-	 * 
+	 *
 	 * @see ShopAdmin
 	 * @var String
 	 */
@@ -181,7 +190,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * The starting number for Order IDs. If none set starts at 1.
-	 * 
+	 *
 	 * @var Int
 	 */
 	public static $first_id = null;
@@ -202,32 +211,32 @@ class Order extends DataObject implements PermissionProvider {
 
 		return $administratorPerm || $customerPerm;
 	}
-	
+
 	/**
 	 * Prevent orders from being edited in the CMS
-	 * 
+	 *
 	 * @see DataObject::canEdit()
 	 * @return Boolean False always
 	 */
 	public function canEdit($member = null) {
 		$administratorPerm = Permission::check('ADMIN') && Permission::check('EDIT_ORDER', 'any', $member);
-		
+
 		return $administratorPerm;
 	}
-	
+
 	/**
 	 * Prevent orders from being created in the CMS
-	 * 
+	 *
 	 * @see DataObject::canCreate()
 	 * @return Boolean False always
 	 */
 	public function canCreate($member = null) {
 		return false;
 	}
-	
+
 	/**
 	 * Prevent orders from being deleted in the CMS
-	 * 
+	 *
 	 * @see DataObject::canDelete()
 	 * @return Boolean False always
 	 */
@@ -245,7 +254,7 @@ class Order extends DataObject implements PermissionProvider {
 			try {
 
 				DB::getConn()->transactionStart();
-				
+
 				$payments = $this->Payments();
 				if ($payments && $payments->exists()) foreach ($payments as $payment) {
 					$payment->delete();
@@ -257,22 +266,22 @@ class Order extends DataObject implements PermissionProvider {
 					$item->delete();
 					$item->destroy();
 				}
-				
+
 				$modifications = $this->Modifications();
 				if ($modifications && $modifications->exists()) foreach ($modifications as $modification) {
 					$modification->delete();
 					$modification->destroy();
 				}
-				
+
 				$updates = $this->Updates();
 				if ($updates && $updates->exists()) foreach ($updates as $update) {
 					$update->delete();
 					$update->destroy();
 				}
-				
+
 				parent::delete();
 				DB::getConn()->transactionEnd();
-				
+
 			}
 			catch (Exception $e) {
 				DB::getConn()->transactionRollback();
@@ -284,7 +293,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Filters for order admin area search.
-	 * 
+	 *
 	 * @see DataObject::scaffoldSearchFields()
 	 * @return FieldSet
 	 */
@@ -308,7 +317,7 @@ class Order extends DataObject implements PermissionProvider {
 	/**
 	 * Get a new search context for filtering
 	 * the search results in OrderAdmin
-	 * 
+	 *
 	 * @see DataObject::getDefaultSearchContext()
 	 * @return ShopSearchContext
 	 */
@@ -322,7 +331,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Set the LastActive time when {@link Order} first created.
-	 * 
+	 *
 	 * (non-PHPdoc)
 	 * @see DataObject::onBeforeWrite()
 	 */
@@ -360,7 +369,7 @@ class Order extends DataObject implements PermissionProvider {
 	/**
 	 * Processed if payment is successfully written, send a receipt to the customer
 	 * and notification to the admin
-	 * 
+	 *
 	 * @see Payment_Extension::onAfterWrite()
 	 */
 	public function onAfterPayment() {
@@ -376,18 +385,18 @@ class Order extends DataObject implements PermissionProvider {
 
 		$this->extend('onAfterPayment');
 	}
-	
+
 	/**
 	 * Set CMS fields for viewing this Order in the CMS
 	 * Cannot change status of an order in the CMS
-	 * 
+	 *
 	 * @see DataObject::getCMSFields()
 	 */
 	public function getCMSFields() {
 
 		$fields = new FieldList();
 
-		$fields->push(new TabSet('Root', 
+		$fields->push(new TabSet('Root',
 			Tab::create('Order')
 		));
 
@@ -411,11 +420,11 @@ class Order extends DataObject implements PermissionProvider {
 
 		return $fields;
 	}
-	
+
 	/**
-	 * Set custom CMS actions which call 
+	 * Set custom CMS actions which call
 	 * OrderAdmin_RecordController actions of the same name
-	 * 
+	 *
 	 * @see DataObject::getCMSActions()
 	 * @return FieldList
 	 */
@@ -423,19 +432,19 @@ class Order extends DataObject implements PermissionProvider {
 		$actions = parent::getCMSActions();
 		return $actions;
 	}
-	
+
 	/**
 	 * Helper to get a nicely formatted total of the order
-	 * 
+	 *
 	 * @return String Order total formatted with Nice()
 	 */
 	public function SummaryOfTotal() {
 		return $this->Total()->Nice();
 	}
-	
+
 	/**
 	 * Generate the URL for viewing this order on the frontend
-	 * 
+	 *
 	 * @see PaypalExpressCheckoutaPayment_Handler::doRedirect()
 	 * @return String URL for viewing this order
 	 */
@@ -447,18 +456,18 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Helper to get {@link Payment}s that are made against this Order
-	 * 
+	 *
 	 * @return ArrayList Set of Payment objects
 	 */
 	public function Payments() {
 		return Payment::get()
 			->where("\"OrderID\" = {$this->ID}");
 	}
-	
+
 	/**
 	 * Calculate the total outstanding for this order that remains to be paid,
 	 * all payments except 'Failure', 'Pending' and 'Incomplete' payments are considered - so only 'Success' payments.
-	 * 
+	 *
 	 * @return Money With value and currency of total outstanding
 	 */
 	public function TotalOutstanding() {
@@ -469,56 +478,56 @@ class Order extends DataObject implements PermissionProvider {
 				$total -= $payment->Amount->getAmount();
 			}
 		}
-		
-		//Total outstanding cannot be negative 
+
+		//Total outstanding cannot be negative
 		if ($total < 0) $total = 0;
 
 		// TODO: Multi currency
-		
+
 		$outstanding = Price::create();
 		$outstanding->setAmount($total);
 		$outstanding->setCurrency($this->BaseCurrency);
 		$outstanding->setSymbol($this->BaseCurrencySymbol);
-		
+
 		return $outstanding;
 	}
-	
+
 	/**
 	 * Calculate the total paid for this order, only 'Success' payments
 	 * are considered.
-	 * 
+	 *
 	 * @return Price With value and currency of total paid
 	 */
 	public function TotalPaid() {
 		 $paid = 0;
-		 
+
 		if ($this->Payments()) foreach ($this->Payments() as $payment) {
 			if ($payment->Status == 'Success') {
 				$paid += $payment->Amount->getAmount();
 			}
 		}
-		
+
 		$totalPaid = Price::create();
 		$totalPaid->setAmount($paid);
 		$totalPaid->setCurrency($this->BaseCurrency);
 		$totalPaid->setSymbol($this->BaseCurrencySymbol);
-		
+
 		return $totalPaid;
 	}
-	
+
 	/**
 	 * If the order has been totally paid.
-	 * 
+	 *
 	 * @return Boolean
 	 */
 	public function getPaid() {
 		return ($this->Total()->getAmount() - $this->TotalPaid()->getAmount()) <= 0;
 	}
-	
+
 	/**
-	 * Add an item to the order representing the product, 
+	 * Add an item to the order representing the product,
 	 * if an item for this product exists increase the quantity. Update the Order total afterward.
-	 * 
+	 *
 	 * @param DataObject $product The product to be represented by this order item
 	 * @param ArrayList $productOptions The product variations to be added, usually just one
 	 */
@@ -571,17 +580,17 @@ class Order extends DataObject implements PermissionProvider {
 			DB::getConn()->transactionEnd();
 
 		}
-		
+
 		$this->updateTotal();
-		
+
 		return $item;
 	}
-	
+
 	/**
-	 * Find an identical item in the order/cart, item is identical if the 
-	 * productID, version and the options for the item are the same. Used to increase 
+	 * Find an identical item in the order/cart, item is identical if the
+	 * productID, version and the options for the item are the same. Used to increase
 	 * quantity of items that already exist in the cart/Order.
-	 * 
+	 *
 	 * @see Order::addItem()
 	 * @param DatObject $product
 	 * @param ArrayList $options
@@ -592,13 +601,13 @@ class Order extends DataObject implements PermissionProvider {
 		$items = $this->Items();
 
 		$filtered = $items->filter(array(
-			'ProductID' => $product->ID, 
+			'ProductID' => $product->ID,
 			'ProductVersion' => $product->Version
 		));
 
 		if ($variation && $variation->exists()) {
 			$filtered = $filtered->filter(array(
-				'VariationID' => $variation->ID, 
+				'VariationID' => $variation->ID,
 				'VariationVersion' => $variation->Version
 			));
 		}
@@ -616,29 +625,29 @@ class Order extends DataObject implements PermissionProvider {
 		}
 		return $filtered->first();
 	}
-	
+
 	/**
 	 * Go through items and modifiers and update cart total
-	 * 
+	 *
 	 * Had to use DataObject::get() to retrieve Items because
 	 * $this->Items() was not returning any items after first call
 	 * to $this->addItem().
 	 */
 	public function updateTotal() {
-		
+
 		$total = 0;
 		$subTotal = 0;
 		$items = $this->Items();
 		$modifications = $this->Modifications();
 		$shopConfig = ShopConfig::current_shop_config();
-		
+
 		if ($items) foreach ($items as $item) {
 			$total += $item->Total()->Amount;
 			$subTotal += $item->Total()->Amount;
 		}
 
 		if ($modifications) foreach ($modifications as $modification) {
-			
+
 			if ($modification->SubTotalModifier) {
 				$total += $modification->Amount()->getAmount();
 				$subTotal += $modification->Amount()->getAmount();
@@ -657,7 +666,7 @@ class Order extends DataObject implements PermissionProvider {
 
 	/**
 	 * Retreive products for this order from the order {@link Item}s.
-	 * 
+	 *
 	 * @return ArrayList Set of {@link Product}s
 	 */
 	public function Products() {
@@ -668,10 +677,10 @@ class Order extends DataObject implements PermissionProvider {
 		}
 		return $products;
 	}
-	
+
 	/**
 	 * Helper to summarize payment status for an order.
-	 * 
+	 *
 	 * @return String List of payments and their status
 	 */
 	public function SummaryOfPaymentStatus() {
@@ -694,8 +703,8 @@ class Order extends DataObject implements PermissionProvider {
 	}
 
 	/**
-	 * Save modifiers for this Order at the checkout process. 
-	 * 
+	 * Save modifiers for this Order at the checkout process.
+	 *
 	 * @param Array $data
 	 */
 	public function updateModifications(Array $data) {
@@ -720,16 +729,16 @@ class Order extends DataObject implements PermissionProvider {
 
 		return $this;
 	}
-	
+
 	/**
 	 * Valdiate this Order for use in Validators at checkout. Makes sure
 	 * Items exist and each Item is valid.
-	 * 
+	 *
 	 * @return ValidationResult
 	 */
 	public function validateForCart() {
-		
-		$result = new ValidationResult(); 
+
+		$result = new ValidationResult();
 		$items = $this->Items();
 
 		if (!$this->BaseCurrency) {
@@ -738,16 +747,16 @@ class Order extends DataObject implements PermissionProvider {
 				'BaseCurrencyError'
 			);
 		}
-		
+
 		if (!$items || !$items->exists()) {
 			$result->error(
 				'There are no items in this order',
 				'ItemExistsError'
 			);
 		}
-		
+
 		if ($items) foreach ($items as $item) {
-			
+
 			$validation = $item->validateForCart();
 			if (!$validation->valid()) {
 
@@ -757,25 +766,25 @@ class Order extends DataObject implements PermissionProvider {
 				);
 			}
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * By default Orders are always valid
-	 * 
+	 *
 	 * @see DataObject::validate()
 	 */
 	public function validate() {
 		$result = parent::validate();
 		return $result;
 	}
-	
+
 	/**
-	 * Delete abandoned carts according to the Order timeout. This will release the stock 
+	 * Delete abandoned carts according to the Order timeout. This will release the stock
 	 * in the carts back to the shop. Can be run from a cron job task, also run on Product, Cart and
 	 * Checkout pages so that cron job is not necessary.
-	 * 
+	 *
 	 * @return Void
 	 */
 	public static function delete_abandoned() {
@@ -793,13 +802,13 @@ class Order extends DataObject implements PermissionProvider {
 
 		if ($orders && $orders->exists()) foreach ($orders as $order) {
 			$order->delete();
-			$order->destroy();      
+			$order->destroy();
 		}
 	}
-	
+
 	/**
 	 * Get modifications that apply changes to the Order sub total.
-	 * 
+	 *
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function SubTotalModifications() {
@@ -809,10 +818,10 @@ class Order extends DataObject implements PermissionProvider {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get modifications that apply changes to the Order total (not the order sub total).
-	 * 
+	 *
 	 * @return DataList Set of Modification DataObjects
 	 */
 	public function TotalModifications() {
@@ -842,7 +851,7 @@ class Order_Update extends DataObject {
 
 	/**
 	 * Relations for this class
-	 * 
+	 *
 	 * @var Array
 	 */
 	private static $has_one = array(
@@ -870,13 +879,13 @@ class Order_Update extends DataObject {
 
 	/**
 	 * Update stock levels for {@link Item}.
-	 * 
+	 *
 	 * @see DataObject::onAfterWrite()
 	 */
 	public function onAfterWrite() {
 
 		parent::onAfterWrite();
-		
+
 		//Update the Order, setting the same status
 		if ($this->Status) {
 			$order = $this->Order();
