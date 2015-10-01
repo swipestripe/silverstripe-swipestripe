@@ -34,7 +34,10 @@ class Customer extends Member {
 	 * @see Member::canDelete()
 	 */
 	public function canDelete($member = null) {
-
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		$orders = $this->Orders();
 		if ($orders && $orders->exists()) {
 			return false;

@@ -38,6 +38,10 @@ class CartPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 	
@@ -48,6 +52,10 @@ class CartPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canDelete($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 
@@ -65,6 +73,10 @@ class CartPage extends Page {
 	 * @return Boolean Always returns false
 	 */
 	function canDeleteFromLive($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 	

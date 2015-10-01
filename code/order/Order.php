@@ -203,6 +203,10 @@ class Order extends DataObject implements PermissionProvider {
 	}
 
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 
 		if ($member == null && !$member = Member::currentUser()) return false;
 
@@ -219,6 +223,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean False always
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+
 		$administratorPerm = Permission::check('ADMIN') && Permission::check('EDIT_ORDER', 'any', $member);
 
 		return $administratorPerm;
@@ -231,6 +240,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean False always
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+
 		return false;
 	}
 
@@ -241,6 +255,11 @@ class Order extends DataObject implements PermissionProvider {
 	 * @return Boolean False always
 	 */
 	public function canDelete($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+
 		return Permission::check('ADMIN');
 	}
 
