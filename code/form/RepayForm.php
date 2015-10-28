@@ -76,7 +76,7 @@ class RepayForm extends Form {
 			LiteralField::create('RepayLit', "<p>Process a payment for the oustanding amount: $outstanding</p>"),
 			DropDownField::create(
 				'PaymentMethod',
-				'Select Payment Method',
+				_t('CheckoutPage.SELECTPAYMENT',"Select Payment Method"),
 				$source
 			)->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD',"Please select a payment method."))
 		)->setName('PaymentFields');
