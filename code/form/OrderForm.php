@@ -146,7 +146,7 @@ class OrderForm extends Form {
 			new HeaderField(_t('CheckoutPage.PAYMENT',"Payment"), 3),
 			DropDownField::create(
 				'PaymentMethod',
-				'Select Payment Method',
+				_t('CheckoutPage.SELECTPAYMENT',"Select Payment Method"),
 				$source
 			)->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD',"Please select a payment method."))
 		)->setName('PaymentFields');
