@@ -470,7 +470,9 @@ class Order extends DataObject implements PermissionProvider {
 	public function Link() {
 		//get the account page and go to it
 		$account = DataObject::get_one('AccountPage');
-		return $account->Link()."order/$this->ID";
+		$link = $account->Link()."order/$this->ID";
+		$this->extend('updateLink', $link);
+		return $link;
 	}
 
 	/**
