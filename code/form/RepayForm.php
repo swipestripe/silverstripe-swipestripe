@@ -73,7 +73,7 @@ class RepayForm extends Form {
 
 		$paymentFields = CompositeField::create(
 			new HeaderField(_t('CheckoutPage.PAYMENT',"Payment"), 3),
-			LiteralField::create('RepayLit', "<p>Process a payment for the oustanding amount: $outstanding</p>"),
+			LiteralField::create('RepayLit', "<p>"._t('AccountPage.OUTSTANDINGAMOUNTPROCESS',"Process a payment for the oustanding amount").": $outstanding</p>"),
 			DropDownField::create(
 				'PaymentMethod',
 				_t('CheckoutPage.SELECTPAYMENT',"Select Payment Method"),
