@@ -187,7 +187,7 @@ class Item extends DataObject {
 
 		$result = new ValidationResult(); 
 		
-		$product = $this->Product();
+		$product = Product::get()->byId($this->ProductID); //$this->Product();
 		$variation = $this->Variation();
 		$quantity = $this->Quantity;
 
