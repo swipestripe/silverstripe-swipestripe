@@ -1,3 +1,118 @@
 sk:
   ShopAdmin:
     MENUTITLE: Obchod
+
+  AccountPage:
+    DATE: Dátum
+    SHIP_TO: 'Odoslať do'
+    TOTAL: Celkovo
+    STATUS: Stav
+    VIEW_THIS_ORDER: 'Zobraziť túto objednávku'
+    NO_ORDERS: 'Žiadne objednávky'
+    PLURALNAME: 'Stránka účtu'
+    SINGULARNAME: 'Stránky účtu'
+    OUTSTANDINGAMOUNTPROCESS: 'Spôsob platby za nezaplatenú sumu'
+
+  AccountPage_order:
+    WARNING: Pozor!
+
+  CartForm:
+    GO_TO_CHECKOUT: 'Dokončenie nákupu'
+    NOTE: 'Poznámka:'
+    NO_ITEMS_IN_CART: 'V košíku nie sú žiadne produkty.'
+    PRICE: Cena
+    PRODUCT: Produkt
+    QUANTITY: Množstvo
+    TOTAL: Celkovo
+    UPDATE_CART: 'Aktualizovať košík'
+
+  Country:
+    CODE: Kód
+    TITLE: Názov
+
+  CheckoutForm:
+    YOUR_ORDER: 'Vaša objednávka'
+
+  CheckoutFormOrder:
+    LOADING: Nahrávam...
+    NO_ITEMS_IN_CART: 'V košíku nie sú žiadne produkty.'
+    PRICE: Cena
+    PRODUCT: Produkt
+    QUANTITY: Množstvo
+    SUB_TOTAL: Medzisúčet
+    TOTAL: Celkovo
+    YOUR_ORDER: 'Vaša objednávka'
+
+  CheckoutPage:
+    ACCOUNT: Účet
+    ALREADY_MEMBER: 'Ak už máte účet, prosím prihláste sa %stu%s!'
+    EMAIL: E-mail
+    MEMBER_ALREADY_EXISTS: 'Je nám ľúto, ale už existuje člen so zadanou e-mailovou adresou. Ak je to vaša e-mailová adresa, prosím, prihláste sa pred potvrdením vašej objednávky.'
+    NOTE: 'Poznámka:'
+    NOTES_ABOUT_ORDER: 'Poznámky k tejto objednávke'
+    NOT_VALID_METHOD: 'Je nám ľúto, ale tento spôsob platby nie je platný.'
+    PASSWORD: Heslo
+    PAYMENT: Platba
+    PHONE: Telefón
+    SELECTPAYMENT: "Vyberte spôsob platby"
+    PLEASE_CHOOSE_PASSWORD: 'Prosím, zvoľte si heslo, aby ste sa mohli prihlásiť a skontrolovať si históriu svojich objednávok v budúcnosti.'
+    PLEASE_ENTER_EMAIL_ADDRESS: 'Prosím, zadajte svoju e-mailovú adresu.'
+    PROCEED_TO_PAY: 'Potvrdenie objednávky'
+    SELECT_PAYMENT_METHOD: 'Prosím, vyberte si spôsob platby.'
+    TRY_AGAIN: 'Prosím, vráťte sa späť a skúste to znovu.'
+
+    SHIPPING_ADDRESS: "Dodacia adresa"
+    FIRSTNAME: "Krstné meno"
+    PLEASE_ENTER_FIRSTNAME: "Prosím, zadajte krstné meno."
+    SURNAME: "Priezvisko"
+    PLEASE_ENTER_SURNAME: "Prosím, zadajte priezvisko."
+    COMPANY: "Spoločnosť"
+    ADDRESS: "Adresa"
+    PLEASE_ENTER_ADDRESS: "Prosím, zadajte adresu."
+    CITY: "Mesto"
+    PLEASE_ENTER_CITY: "Prosím, zadajte mesto."
+    POSTAL_CODE: "PSČ"
+    STATE: "Štát / Oblasť"
+    COUNTRY: "Krajina"
+    PLEASE_ENTER_COUNTRY: "Prosím, zvoľte krajinu."
+    BILLINGADDRESS: "Fakturačná adresa"
+    SAME_ADDRESS: "rovnaká ako dodacia adresa?"
+    PLEASEENTERYOURADDRESS: "Prosím zadajte vašu adresu."
+    PLEASEENTERYOURCITY: "Prosím, zadajte vaše mesto."
+    PLEASEENTERYOURCOUNTRY: "Prosím zadajte vašu krajinu."
+    PLEASEENTERYOURFIRSTNAME: "Prosím zadajte vaše meno."
+    PLEASEENTERYOURSURNAME: "Prosím zadajte vaše priezvisko."
+    POSTALCODE: "PSČ"
+
+  ProductForm:
+    ADD_TO_CART: 'Pridať do košíka'
+    BASE_CURRENCY_NOT_SET: 'Mena nie je nastavená.'
+    ITEM_QUANTITY_INCORRECT: 'Počet musí byť číslo menšie ako 2,147,483,648!'
+    ITEM_QUANTITY_LESS_ONE: 'Počet musí byť minimálne 1!'
+    PRODUCT_ADDED: 'Produkt bol pridaný do košíka.'
+    PRODUCT_ADDED_LINK: 'Produkt bol pridaný do {openanchor}košíka{closeanchor}.'
+    QUANTITY: Počet
+    VARIATIONS_REQUIRED: 'Tento produkt vyžaduje výber možností, aby mohol byť pridaný do košíka.'
+
+  Products:
+    NONE_TO_DISPLAY: "Prepáčte, v tejto kategórií nie sú na zobrazenie žiadne produkty."
+
+  Order:
+    PLURALNAME: Objednávky
+    PRICE: Cena
+    PRODUCT: Produkt
+    QUANTITY: Množstvo
+    SINGULARNAME: Objednávka
+    SUB_TOTAL: Medzisúčet
+    TOTAL: Celkovo
+
+  OrderAdmin:
+    ORDER: Objednávka
+  OrderNotes:
+    NOTES: Poznámky
+  OrderPayments:
+    AMOUNT: Suma
+    DATE: Dátum
+    PAYMENT: Platba
+    PAYMENT_STATUS: 'Stav platby'
+    TOTAL_OUTSTANDING: 'Celkovo nezaplatené'
