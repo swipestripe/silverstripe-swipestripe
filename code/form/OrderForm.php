@@ -353,8 +353,25 @@ class OrderForm extends Form {
 			$member = Customer::currentUser() ? Customer::currentUser() : singleton('Customer');
 			$order = Cart::get_current_order();
 
-			//Update the Order 
-			$order->update($request->postVars());
+			//Update the Order fields
+			$updatedFields = [];
+			$postVars = $request->postVars();
+			foreach ($this->Fields() as $field) {
+			    $fieldName = $field->getName();
+			    if ($field instanceof CompositeField) {
+			        foreach ($field->getChildren() as $childField) {
+			            $fieldName = $childField->getName();
+			            if (isset($postVars[$fieldName])) {
+			                $updatedFields[$fieldName] = $postVars[$fieldName];
+			            }
+			        }
+			    } else {
+			        if (isset($postVars[$fieldName])) {
+			            $updatedFields[$fieldName] = $postVars[$fieldName];
+			        }
+			    }
+			}
+			$order->update($updatedFields);
 
 			$order->updateModifications($request->postVars())
 				->write();
