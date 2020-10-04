@@ -5,14 +5,12 @@ namespace SwipeStripe\Core\Form;
 use PaymentProcessor;
 use PaymentFactory;
 use DropDownField;
-
 use Exception;
 use SS_Log;
-
 use SilverStripe\Forms\FieldList;
 use SilverStripe\View\Requirements;
-use SwipeStripe\Core\code\Customer\Cart;
-use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\Customer\Cart;
+use SwipeStripe\Core\Customer\Customer;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Forms\EmailField;
@@ -26,16 +24,15 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Debug;
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SwipeStripe\Core\code\Order\Order_Update;
-use SwipeStripe\Core\code\Admin\ShopConfig;
+use SwipeStripe\Core\Order\Order_Update;
+use SwipeStripe\Core\Admin\ShopConfig;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
-use SwipeStripe\Core\code\Form\OrderForm_ItemField;
-use SwipeStripe\Core\code\Order\Item;
-use SilverStripe\Forms\FormField;
+use SwipeStripe\Core\Form\OrderForm_ItemField;
+use SwipeStripe\Core\Order\Item;
 
 /**
  * Form for displaying on the {@link CheckoutPage} with all the necessary details
@@ -46,11 +43,11 @@ class OrderForm extends Form
     protected $order;
     protected $customer;
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'process',
         'update'
-    );
-    
+    ];
+
     /**
      * Construct the form, get the grouped fields and set the fields for this form appropriately,
      * the fields are passed in an associative array so that the fields can be grouped into sets
@@ -90,7 +87,6 @@ class OrderForm extends Form
      */
     public function setupFormErrors()
     {
-
         //Only run when fields exist
         if ($this->fields->exists()) {
             parent::setupFormErrors();
@@ -105,7 +101,7 @@ class OrderForm extends Form
         //Personal details fields
         if (!$member->ID || $member->Password == '') {
             $link = $this->controller->Link();
-            
+
             $note = _t('CheckoutPage.NOTE', 'NOTE:');
             $passwd = _t('CheckoutPage.PLEASE_CHOOSE_PASSWORD', 'Please choose a password, so you can login and check your order history in the future.');
             $mber = sprintf(
@@ -115,17 +111,17 @@ class OrderForm extends Form
             );
 
             $personalFields = CompositeField::create(
-                new HeaderField(_t('CheckoutPage.ACCOUNT', "Account"), 3),
+                new HeaderField(_t('CheckoutPage.ACCOUNT', 'Account'), 3),
                 new CompositeField(
                     EmailField::create(Email::class, _t('CheckoutPage.EMAIL', Email::class))
-                        ->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', "Please enter your email address."))
+                        ->setCustomValidationMessage(_t('CheckoutPage.PLEASE_ENTER_EMAIL_ADDRESS', 'Please enter your email address.'))
                 ),
                 new CompositeField(
                     TextField::create('Phone', _t('CheckoutPage.PHONE', 'Phone'))
                 ),
                 new CompositeField(
                     new FieldGroup(
-                        new ConfirmedPasswordField('Password', _t('CheckoutPage.PASSWORD', "Password"))
+                        new ConfirmedPasswordField('Password', _t('CheckoutPage.PASSWORD', 'Password'))
                     )
                 ),
                 new CompositeField(
@@ -180,28 +176,27 @@ class OrderForm extends Form
         //Payment fields
         $supported_methods = PaymentProcessor::get_supported_methods();
 
-        $source = array();
+        $source = [];
         foreach ($supported_methods as $methodName) {
             $methodConfig = PaymentFactory::get_factory_config($methodName);
             $source[$methodName] = $methodConfig['title'];
         }
 
         $paymentFields = CompositeField::create(
-            new HeaderField(_t('CheckoutPage.PAYMENT', "Payment"), 3),
+            new HeaderField(_t('CheckoutPage.PAYMENT', 'Payment'), 3),
             DropDownField::create(
                 'PaymentMethod',
-                _t('CheckoutPage.SELECTPAYMENT', "Select Payment Method"),
+                _t('CheckoutPage.SELECTPAYMENT', 'Select Payment Method'),
                 $source
-            )->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD', "Please select a payment method."))
+            )->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD', 'Please select a payment method.'))
         )->setName('PaymentFields');
-
 
         $fields = FieldList::create(
             $itemFields,
             $subTotalModsFields,
             $totalModsFields,
             $notesFields = CompositeField::create(
-                TextareaField::create('Notes', _t('CheckoutPage.NOTES_ABOUT_ORDER', "Notes about this order"))
+                TextareaField::create('Notes', _t('CheckoutPage.NOTES_ABOUT_ORDER', 'Notes about this order'))
             )->setName('NotesFields'),
             $paymentFields
         );
@@ -271,7 +266,7 @@ class OrderForm extends Form
     {
         return $this->Fields()->fieldByName('PaymentFields');
     }
-    
+
     /**
      * Helper function to return the current {@link Order}, used in the template for this form
      *
@@ -316,8 +311,8 @@ class OrderForm extends Form
         } catch (Exception $e) {
             Debug::friendlyError(
                 403,
-                _t('CheckoutPage.NOT_VALID_METHOD', "Sorry, that is not a valid payment method."),
-                _t('CheckoutPage.TRY_AGAIN', "Please go back and try again.")
+                _t('CheckoutPage.NOT_VALID_METHOD', 'Sorry, that is not a valid payment method.'),
+                _t('CheckoutPage.TRY_AGAIN', 'Please go back and try again.')
             );
             return;
         }
@@ -341,7 +336,7 @@ class OrderForm extends Form
             $member->addToGroupByCode('customers');
             $member->logIn();
         }
-        
+
         //Save the order
         $order = Cart::get_current_order();
         $items = $order->Items();
@@ -373,18 +368,17 @@ class OrderForm extends Form
             $shopConfig = ShopConfig::current_shop_config();
             $precision = $shopConfig->BaseCurrencyPrecision;
 
-            $paymentData = array(
+            $paymentData = [
                 'Amount' => number_format($order->Total()->getAmount(), $precision, '.', ''),
                 'Currency' => $order->Total()->getCurrency(),
                 'Reference' => $order->ID
-            );
+            ];
             $paymentProcessor->payment->OrderID = $order->ID;
             $paymentProcessor->payment->PaidByID = $member->ID;
 
             $paymentProcessor->setRedirectURL($order->Link());
             $paymentProcessor->capture($paymentData);
         } catch (Exception $e) {
-
             //This is where we catch gateway validation or gateway unreachable errors
             $result = $paymentProcessor->gateway->getValidationResult();
             $payment = $paymentProcessor->payment;
@@ -422,7 +416,6 @@ class OrderForm extends Form
 
     public function populateFields()
     {
-
         //Populate values in the form the first time
         if (!Session::get("FormInfo.{$this->FormName()}.errors")) {
             $member = Customer::currentUser() ? Customer::currentUser() : singleton(Customer::class);
@@ -433,174 +426,5 @@ class OrderForm extends Form
             $this->extend('updatePopulateFields', $data);
             $this->loadDataFrom($data);
         }
-    }
-}
-
-/**
- * Validate the {@link OrderForm}, check that the current {@link Order} is valid.
- */
-class OrderForm_Validator extends RequiredFields
-{
-
-    /**
-     * Check that current order is valid
-     *
-     * @param Array $data Submitted data
-     * @return Boolean Returns TRUE if the submitted data is valid, otherwise FALSE.
-     */
-    public function php($data)
-    {
-        $valid = parent::php($data);
-        $fields = $this->form->Fields();
-        
-        //Check the order is valid
-        $currentOrder = Cart::get_current_order();
-        if (!$currentOrder) {
-            $this->form->sessionMessage(
-                _t('Form.ORDER_IS_NOT_VALID', 'Your cart seems to be empty, please add an item from the shop'),
-                'bad'
-            );
-            
-            //Have to set an error for Form::validate()
-            $this->errors[] = true;
-            $valid = false;
-        } else {
-            $validation = $currentOrder->validateForCart();
-            
-            if (!$validation->valid()) {
-                $this->form->sessionMessage(
-                    _t('Form.ORDER_IS_NOT_VALID', 'There seems to be a problem with your order. ' . $validation->message()),
-                    'bad'
-                );
-                
-                //Have to set an error for Form::validate()
-                $this->errors[] = true;
-                $valid = false;
-            }
-        }
-        return $valid;
-    }
-    
-    /**
-     * Helper so that form fields can access the form and current form data
-     *
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->form;
-    }
-}
-
-/**
- * Represent each {@link Item} in the {@link Order} on the {@link OrderForm}.
- */
-class OrderForm_ItemField extends FormField
-{
-
-    /**
-     * Template for rendering
-     *
-     * @var String
-     */
-    protected $template = OrderForm_ItemField::class;
-    
-    /**
-     * Current {@link Item} this field represents.
-     *
-     * @var Item
-     */
-    protected $item;
-    
-    /**
-     * Construct the form field and set the {@link Item} it represents.
-     *
-     * @param Item $item
-     * @param Form $form
-     */
-    public function __construct($item, $form = null)
-    {
-        $this->item = $item;
-        $name = 'OrderItem' . $item->ID;
-        parent::__construct($name, null, '', null, $form);
-    }
-    
-    /**
-     * Render the form field with the correct template.
-     *
-     * @see FormField::FieldHolder()
-     * @return String
-     */
-    public function FieldHolder($properties = array())
-    {
-        return $this->renderWith($this->template);
-    }
-    
-    /**
-     * Retrieve the {@link Item} this field represents.
-     *
-     * @return Item
-     */
-    public function Item()
-    {
-        return $this->item;
-    }
-    
-    /**
-     * Set the {@link Item} this field represents.
-     *
-     * @param Item $item
-     */
-    public function setItem(Item $item)
-    {
-        $this->item = $item;
-    }
-    
-    /**
-     * Validate this form field, make sure the {@link Item} exists, is in the current
-     * {@link Order} and the item is valid for adding to the cart.
-     *
-     * @see FormField::validate()
-     * @return Boolean
-     */
-    public function validate($validator)
-    {
-        $valid = true;
-        $item = $this->Item();
-        $currentOrder = Cart::get_current_order();
-        $items = $currentOrder->Items();
-        
-        //Check that item exists and is in the current order
-        if (!$item || !$item->exists() || !$items->find('ID', $item->ID)) {
-            $errorMessage = _t('Form.ITEM_IS_NOT_IN_ORDER', 'This product is not in the Order.');
-            if ($msg = $this->getCustomValidationMessage()) {
-                $errorMessage = $msg;
-            }
-            
-            $validator->validationError(
-                $this->getName(),
-                $errorMessage,
-                "error"
-            );
-            $valid = false;
-        } elseif ($item) {
-            $validation = $item->validateForCart();
-            
-            if (!$validation->valid()) {
-                $errorMessage = $validation->message();
-                if ($msg = $this->getCustomValidationMessage()) {
-                    $errorMessage = $msg;
-                }
-                
-                $validator->validationError(
-                    $this->getName(),
-                    $errorMessage,
-                    "error"
-                );
-                $valid = false;
-            }
-        }
-        
-        return $valid;
     }
 }

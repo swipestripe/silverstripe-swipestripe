@@ -3,8 +3,8 @@
 namespace SwipeStripe\Core\Mails;
 
 use SilverStripe\Security\Member;
-use SwipeStripe\Core\code\Order\Order;
-use SwipeStripe\Core\code\Admin\ShopConfig;
+use SwipeStripe\Core\Order\Order;
+use SwipeStripe\Core\Admin\ShopConfig;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Director;
 
@@ -18,7 +18,6 @@ use SilverStripe\Control\Director;
  */
 class ReceiptEmail extends ProcessedEmail
 {
-
     /**
      * Create the new receipt email.
      *
@@ -39,12 +38,12 @@ class ReceiptEmail extends ProcessedEmail
             $this->to = $customer->Email;
         }
         if ($siteConfig->ReceiptSubject) {
-            $this->subject = $siteConfig->ReceiptSubject . ' - Order #'.$order->ID;
+            $this->subject = $siteConfig->ReceiptSubject . ' - Order #' . $order->ID;
         }
         if ($siteConfig->ReceiptBody) {
             $this->body = $siteConfig->ReceiptBody;
         }
-        
+
         if ($siteConfig->ReceiptFrom) {
             $this->from = $siteConfig->ReceiptFrom;
         } elseif (Email::getAdminEmail()) {
@@ -52,28 +51,28 @@ class ReceiptEmail extends ProcessedEmail
         } else {
             $this->from = 'no-reply@' . $_SERVER['HTTP_HOST'];
         }
-        
+
         if ($siteConfig->EmailSignature) {
             $this->signature = $siteConfig->EmailSignature;
         }
 
         //Get css for Email by reading css file and put css inline for emogrification
         $this->setTemplate('Order_ReceiptEmail');
-        
-        if (file_exists(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'))) {
-            $css = file_get_contents(Director::getAbsFile($this->ThemeDir().'/css/ShopEmail.css'));
+
+        if (file_exists(Director::getAbsFile($this->ThemeDir() . '/css/ShopEmail.css'))) {
+            $css = file_get_contents(Director::getAbsFile($this->ThemeDir() . '/css/ShopEmail.css'));
         } else {
             $css = file_get_contents(Director::getAbsFile('swipestripe/css/ShopEmail.css'));
         }
 
         $this->populateTemplate(
-            array(
+            [
                 'Message' => $this->Body(),
                 'Order' => $order,
                 'Customer' => $customer,
                 'InlineCSS' => "<style>$css</style>",
                 'Signature' => $this->signature
-            )
+            ]
         );
 
         parent::__construct($from, null, $subject, $body, $bounceHandlerURL, $cc, $bcc);

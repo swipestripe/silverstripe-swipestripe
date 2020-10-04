@@ -4,18 +4,15 @@ namespace SwipeStripe\Core\Form;
 
 use PaymentProcessor;
 use PaymentFactory;
-
 use DropDownField;
-
 use Exception;
-
 use SS_Log;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Session;
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\Customer\Customer;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CompositeField;
@@ -32,7 +29,7 @@ class RepayForm extends Form
 {
     protected $order;
     protected $customer;
-    
+
     /**
      * Construct the form, get the grouped fields and set the fields for this form appropriately,
      * the fields are passed in an associative array so that the fields can be grouped into sets
@@ -74,7 +71,6 @@ class RepayForm extends Form
      */
     public function setupFormErrors()
     {
-
         //Only run when fields exist
         if ($this->fields->exists()) {
             parent::setupFormErrors();
@@ -89,24 +85,23 @@ class RepayForm extends Form
         //Payment fields
         $supported_methods = PaymentProcessor::get_supported_methods();
 
-        $source = array();
+        $source = [];
         foreach ($supported_methods as $methodName) {
             $methodConfig = PaymentFactory::get_factory_config($methodName);
             $source[$methodName] = $methodConfig['title'];
         }
-        
+
         $outstanding = $order->TotalOutstanding()->Nice();
 
         $paymentFields = CompositeField::create(
-            new HeaderField(_t('CheckoutPage.PAYMENT', "Payment"), 3),
+            new HeaderField(_t('CheckoutPage.PAYMENT', 'Payment'), 3),
             LiteralField::create('RepayLit', "<p>Process a payment for the oustanding amount: $outstanding</p>"),
             DropDownField::create(
                 'PaymentMethod',
-                _t('CheckoutPage.SELECTPAYMENT', "Select Payment Method"),
+                _t('CheckoutPage.SELECTPAYMENT', 'Select Payment Method'),
                 $source
-            )->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD', "Please select a payment method."))
+            )->setCustomValidationMessage(_t('CheckoutPage.SELECT_PAYMENT_METHOD', 'Please select a payment method.'))
         )->setName('PaymentFields');
-
 
         $fields = FieldList::create(
             $paymentFields
@@ -120,7 +115,7 @@ class RepayForm extends Form
     public function createActions()
     {
         $actions = FieldList::create(
-            new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY', "Proceed to pay"))
+            new FormAction('process', _t('CheckoutPage.PROCEED_TO_PAY', 'Proceed to pay'))
         );
 
         $this->extend('updateActions', $actions);
@@ -143,7 +138,7 @@ class RepayForm extends Form
     {
         return $this->Fields()->fieldByName('PaymentFields');
     }
-    
+
     /**
      * Helper function to return the current {@link Order}, used in the template for this form
      *
@@ -179,7 +174,6 @@ class RepayForm extends Form
 
     public function process($data, $form)
     {
-
         //Check payment type
         try {
             $paymentMethod = $data['PaymentMethod'];
@@ -187,8 +181,8 @@ class RepayForm extends Form
         } catch (Exception $e) {
             Debug::friendlyError(
                 403,
-                _t('CheckoutPage.NOT_VALID_METHOD', "Sorry, that is not a valid payment method."),
-                _t('CheckoutPage.TRY_AGAIN', "Please go back and try again.")
+                _t('CheckoutPage.NOT_VALID_METHOD', 'Sorry, that is not a valid payment method.'),
+                _t('CheckoutPage.TRY_AGAIN', 'Please go back and try again.')
             );
             return;
         }
@@ -204,18 +198,17 @@ class RepayForm extends Form
         $order->onBeforePayment();
 
         try {
-            $paymentData = array(
+            $paymentData = [
                 'Amount' => number_format($order->TotalOutstanding()->getAmount(), 2, '.', ''),
                 'Currency' => $order->TotalOutstanding()->getCurrency(),
                 'Reference' => $order->ID
-            );
+            ];
             $paymentProcessor->payment->OrderID = $order->ID;
             $paymentProcessor->payment->PaidByID = $member->ID;
 
             $paymentProcessor->setRedirectURL($order->Link());
             $paymentProcessor->capture($paymentData);
         } catch (Exception $e) {
-
             //This is where we catch gateway validation or gateway unreachable errors
             $result = $paymentProcessor->gateway->getValidationResult();
             $payment = $paymentProcessor->payment;
@@ -230,7 +223,6 @@ class RepayForm extends Form
 
     public function populateFields()
     {
-
         //Populate values in the form the first time
         if (!Session::get("FormInfo.{$this->FormName()}.errors")) {
             $member = Customer::currentUser() ? Customer::currentUser() : singleton(Customer::class);

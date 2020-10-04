@@ -14,7 +14,6 @@ use SilverStripe\Control\Email\Email;
  */
 class ProcessedEmail extends Email
 {
-    
     /**
      * Email signature
      *
@@ -36,18 +35,18 @@ class ProcessedEmail extends Email
         if (!$isPlain && preg_match('/<style[^>]*>(?:<\!--)?(.*)(?:-->)?<\/style>/ims', $this->body, $match)) {
             $css = $match[1];
             $html = str_replace(
-                array(
+                [
                     "<p>\n<table>",
                     "</table>\n</p>",
                     '&copy ',
                     $match[0],
-                ),
-                array(
-                    "<table>",
-                    "</table>",
+                ],
+                [
+                    '<table>',
+                    '</table>',
                     '',
                     '',
-                ),
+                ],
                 $this->body
             );
 
