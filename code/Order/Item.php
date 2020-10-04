@@ -16,7 +16,6 @@ use SilverStripe\ORM\ValidationResult;
  */
 class Item extends DataObject
 {
-
     /**
      * DB fields for an Item, the object this Item represents (e.g. {@link Product}
      * has a version ID saved as well, so if price is changed or something then
@@ -24,16 +23,15 @@ class Item extends DataObject
      *
      * @var Array
      */
-    private static $db = array(
+    private static $db = [
         'Price' => 'Decimal(19,8)',
         'Quantity' => 'Int',
         'ProductVersion' => 'Int',
         'VariationVersion' => 'Int'
-    );
+    ];
 
     public function Amount()
     {
-
         // TODO: Multi currency
 
         $order = $this->Order();
@@ -42,9 +40,9 @@ class Item extends DataObject
         $amount->setAmount($this->Price);
         $amount->setCurrency($order->BaseCurrency);
         $amount->setSymbol($order->BaseCurrencySymbol);
-        
+
         $this->extend('updateAmount', $amount);
-        
+
         return $amount;
     }
 
@@ -68,30 +66,30 @@ class Item extends DataObject
      *
      * @var Array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Order' => Order::class,
         'Product' => Product::class,
         'Variation' => Variation::class
-    );
-    
+    ];
+
     /**
      * Relations for this class
      *
      * @var Array
      */
-    private static $has_many = array(
+    private static $has_many = [
         'ItemOptions' => ItemOption::class
-    );
-    
+    ];
+
     /**
      * Default values for this class
      *
      * @var Array
      */
-    private static $defaults = array(
+    private static $defaults = [
         'Quantity' => 1
-    );
-    
+    ];
+
     /**
      * Find item options and delete them to clean up DB.
      *
@@ -100,8 +98,8 @@ class Item extends DataObject
     public function onBeforeDelete()
     {
         parent::onBeforeDelete();
-        
-        $itemOptions = DataObject::get(ItemOption::class, 'ItemID = '.$this->ID);
+
+        $itemOptions = DataObject::get(ItemOption::class, 'ItemID = ' . $this->ID);
         if ($itemOptions && $itemOptions->exists()) {
             foreach ($itemOptions as $itemOption) {
                 $itemOption->delete();
@@ -124,7 +122,7 @@ class Item extends DataObject
         $unitAmount->setAmount($amount);
         return $unitAmount;
     }
-    
+
     /**
      * Get unit price for this Item including price of any {@link ItemOption}s.
      *
@@ -145,7 +143,7 @@ class Item extends DataObject
         $unitPrice->setAmount($amount);
         return $unitPrice;
     }
-    
+
     /**
      * Get unit price for this item including item options price and quantity.
      *
@@ -175,7 +173,7 @@ class Item extends DataObject
     {
         return ($this->VariationID) ? Versioned::get_version(Variation::class, $this->VariationID, $this->VariationVersion) : null;
     }
-    
+
     /**
      * Get the product for the item
      *
@@ -185,7 +183,7 @@ class Item extends DataObject
     {
         return Versioned::get_version(Product::class, $this->ProductID, $this->ProductVersion);
     }
-    
+
     /**
      * Validate this Item to make sure it can be added to a cart.
      *
@@ -195,7 +193,7 @@ class Item extends DataObject
     {
         return $this->validate();
     }
-    
+
     /**
      * Validate that product exists and is published, variation exists for product if necessary
      * and quantity is greater than 0
@@ -206,7 +204,7 @@ class Item extends DataObject
     public function validate()
     {
         $result = new ValidationResult();
-        
+
         $product = $this->Product();
         $variation = $this->Variation();
         $quantity = $this->Quantity;
@@ -233,7 +231,7 @@ class Item extends DataObject
                 'VariationIncorrectError'
             );
         }
-        
+
         //Check that quantity is correct
         if (!$quantity || !is_numeric($quantity) || $quantity <= 0 || $quantity > 2147483647) {
             $result->error(
@@ -246,12 +244,11 @@ class Item extends DataObject
 
     public function SummaryOfOptions()
     {
-
         //TODO: Make this more flexible for formatting
 
         $summary = '';
 
-        $options = array();
+        $options = [];
         if ($variation = $this->Variation()) {
             $options[] = $variation->SummaryOfOptions();
         }

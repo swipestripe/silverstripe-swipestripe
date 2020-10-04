@@ -4,7 +4,6 @@ namespace SwipeStripe\Core\Order;
 
 use SwipeStripe\Core\code\Order\Order;
 use SilverStripe\ORM\ArrayList;
-use SwipeStripe\Core\code\Order\Modification;
 use SilverStripe\Core\ClassInfo;
 use SwipeStripe\Core\code\Product\Price;
 use SilverStripe\Forms\FieldList;
@@ -24,7 +23,6 @@ use SilverStripe\ORM\DataObject;
  */
 class Modification extends DataObject
 {
-
     /**
      * DB fields for the order Modification, the actual {@link Modifier} data is saved into
      * this class so if a modifier is deleted the order still has the necessary
@@ -32,29 +30,29 @@ class Modification extends DataObject
      *
      * @var Array
      */
-    private static $db = array(
+    private static $db = [
         'Value' => 'Int',
         'Price' => 'Decimal(19,8)',
         'Description' => 'Text',
         'SubTotalModifier' => 'Boolean',
         'SortOrder' => 'Int'
-    );
+    ];
 
     /**
      * Relations for this class
      *
      * @var Array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Order' => Order::class
-    );
+    ];
 
     private static $default_sort = 'SortOrder ASC';
 
     public static function get_all()
     {
         $mods = new ArrayList();
-        $temp = array();
+        $temp = [];
 
         $classes = ClassInfo::subclassesFor(Modification::class);
         foreach ($classes as $class) {
@@ -63,7 +61,7 @@ class Modification extends DataObject
                 $temp[$mod->SortOrder] = $mod;
             }
         }
-        
+
         //Sorting the modifications so they are applied in correct order
         ksort($temp);
 
@@ -75,7 +73,6 @@ class Modification extends DataObject
 
     public function Amount()
     {
-
         // TODO: Multi currency
         $order = $this->Order();
 

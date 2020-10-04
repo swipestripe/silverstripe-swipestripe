@@ -3,15 +3,11 @@
 namespace SwipeStripe\Core\Order;
 
 use SQLQuery;
-
 use Exception;
 use SS_Log;
-
 use Payment;
-
 use DateInterval;
 use DateTime;
-
 use SilverStripe\Security\Member;
 use SwipeStripe\Core\code\Product\Price;
 use SwipeStripe\Core\code\Customer\Customer;
@@ -53,7 +49,6 @@ use SilverStripe\Forms\HiddenField;
  */
 class Order extends DataObject implements PermissionProvider
 {
-
     /**
      * Order status once Order has been made, waiting for payment to clear/be approved
      *
@@ -80,7 +75,7 @@ class Order extends DataObject implements PermissionProvider
      *
      * @var Array
      */
-    private static $db = array(
+    private static $db = [
         'Status' => "Enum('Pending,Processing,Dispatched,Cancelled,Cart','Cart')",
         'PaymentStatus' => "Enum('Unpaid,Paid','Unpaid')",
 
@@ -93,7 +88,7 @@ class Order extends DataObject implements PermissionProvider
         'OrderedOn' => 'SS_Datetime',
         'LastActive' => 'SS_Datetime',
         'Env' => 'Varchar(10)',
-    );
+    ];
 
     /**
      * Provides all Member properties, for use in summary_fields etc
@@ -102,12 +97,11 @@ class Order extends DataObject implements PermissionProvider
     */
     public function augmentSQL(SQLQuery &$query)
     {
-        $query->addLeftJoin(Member::class, "\"Member\".\"ID\" = \"Order\".\"MemberID\"", Member::class);
+        $query->addLeftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"', Member::class);
     }
 
     public function Total()
     {
-
         // TODO: Multi currency
 
         $amount = Price::create();
@@ -131,7 +125,6 @@ class Order extends DataObject implements PermissionProvider
 
     public function SubTotal()
     {
-
         // TODO: Multi currency
 
         $amount = Price::create();
@@ -177,60 +170,60 @@ class Order extends DataObject implements PermissionProvider
      *
      * @var Array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Member' => Customer::class
-    );
+    ];
 
     /*
      * Relations for this Order
      *
      * @var Array
      */
-    private static $has_many = array(
+    private static $has_many = [
         'Items' => Item::class,
         'Payments' => 'Payment',
         'Modifications' => Modification::class,
         'Updates' => Order_Update::class
-    );
+    ];
 
     /**
      * Summary fields for displaying Orders in the admin area
      *
      * @var Array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'ID' => 'Order No',
         'OrderedOn' => 'Ordered On',
         'Member.Name' => 'Customer',
         'Member.Email' => 'Email',
         'SummaryOfTotal' => 'Total',
         'Status' => 'Status'
-    );
+    ];
 
     /**
      * Searchable fields with search filters
      *
      * @var Array
      */
-    private static $searchable_fields = array(
-        'ID' => array(
+    private static $searchable_fields = [
+        'ID' => [
             'field' => 'TextField',
             'filter' => 'PartialMatchFilter',
             'title' => 'Order Number'
-        ),
-        'Member.Surname' => array(
+        ],
+        'Member.Surname' => [
             'title' => 'Customer Surname',
             'filter' => 'PartialMatchFilter'
-        ),
-        'Member.Email' => array(
+        ],
+        'Member.Email' => [
             'title' => 'Customer Email',
             'filter' => 'PartialMatchFilter'
-        ),
-        'Status' => array(
+        ],
+        'Status' => [
             'title' => 'Status',
             'filter' => 'ShopSearchFilter_OptionSet'
-        )
-    );
+        ]
+    ];
 
     /**
      * The default sort expression. This will be inserted in the ORDER BY
@@ -250,10 +243,10 @@ class Order extends DataObject implements PermissionProvider
 
     public function providePermissions()
     {
-        return array(
+        return [
             'VIEW_ORDER' => 'View orders',
             'EDIT_ORDER' => 'Edit orders'
-        );
+        ];
     }
 
     public function canView($member = null)
@@ -381,19 +374,19 @@ class Order extends DataObject implements PermissionProvider
      * @see DataObject::scaffoldSearchFields()
      * @return FieldSet
      */
-    public function scaffoldSearchFields($params = array())
+    public function scaffoldSearchFields($params = [])
     {
         $fields = parent::scaffoldSearchFields();
 
         $request = Controller::curr()->getRequest();
         $query = $request->requestVar('q');
-        $statusVal = isset($query['Status']) ? $query['Status'] : array();
+        $statusVal = isset($query['Status']) ? $query['Status'] : [];
 
-        $fields->push(CheckboxSetField::create('Status', 'Status', array(
+        $fields->push(CheckboxSetField::create('Status', 'Status', [
             'Pending' => 'Pending',
             'Processing' => 'Processing',
             'Dispatched' => 'Dispatched'
-        ))->setValue($statusVal));
+        ])->setValue($statusVal));
 
         return $fields;
     }
@@ -464,7 +457,7 @@ class Order extends DataObject implements PermissionProvider
      */
     public function onAfterPayment()
     {
-        $this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING :  self::STATUS_PENDING;
+        $this->Status = ($this->getPaid()) ? self::STATUS_PROCESSING : self::STATUS_PENDING;
         $this->PaymentStatus = ($this->getPaid()) ? 'Paid' : 'Unpaid';
         $this->write();
 
@@ -492,9 +485,9 @@ class Order extends DataObject implements PermissionProvider
         ));
 
         //Override this in updateOrderCMSFields to change the order template in the CMS
-        $htmlSummary = $this->customise(array(
+        $htmlSummary = $this->customise([
             'MemberEmail' => $this->Member()->Email
-        ))->renderWith('OrderAdmin');
+        ])->renderWith('OrderAdmin');
         $fields->addFieldToTab('Root.Order', new LiteralField('MainDetails', $htmlSummary));
 
         //Updates
@@ -545,7 +538,7 @@ class Order extends DataObject implements PermissionProvider
     {
         //get the account page and go to it
         $account = DataObject::get_one(AccountPage::class);
-        $link = $account->Link()."order/$this->ID";
+        $link = $account->Link() . "order/$this->ID";
         $this->extend('updateLink', $link);
         return $link;
     }
@@ -637,7 +630,6 @@ class Order extends DataObject implements PermissionProvider
      */
     public function addItem(Product $product, Variation $variation, $quantity = 1, ArrayList $options = null)
     {
-
         //Increment the quantity if this item exists already
         $item = $this->findIdenticalItem($product, $variation, $options);
 
@@ -701,16 +693,16 @@ class Order extends DataObject implements PermissionProvider
     {
         $items = $this->Items();
 
-        $filtered = $items->filter(array(
+        $filtered = $items->filter([
             'ProductID' => $product->ID,
             'ProductVersion' => $product->Version
-        ));
+        ]);
 
         if ($variation && $variation->exists()) {
-            $filtered = $filtered->filter(array(
+            $filtered = $filtered->filter([
                 'VariationID' => $variation->ID,
                 'VariationVersion' => $variation->Version
-            ));
+            ]);
         }
 
         //Could have many products of same variation at this point, need to check product options carefully
@@ -795,7 +787,7 @@ class Order extends DataObject implements PermissionProvider
             if ($payments->Count() == 1) {
                 $status = 'Payment ' . $payments->First()->Status;
             } else {
-                $statii = array();
+                $statii = [];
                 foreach ($payments as $payment) {
                     $statii[] = "Payment #$payment->ID $payment->Status";
                 }
@@ -812,7 +804,6 @@ class Order extends DataObject implements PermissionProvider
      */
     public function updateModifications(array $data)
     {
-
         //Remove existing Modifications
         $existingModifications = $this->Modifications();
         foreach ($existingModifications as $modification) {
@@ -902,7 +893,7 @@ class Order extends DataObject implements PermissionProvider
         //Get orders that were last active over x ago according to shop config cart lifetime
         $orders = Order::get()
             ->where("\"Order\".\"LastActive\" < '" . $ago->format('Y-m-d H:i:s') . "' AND \"Order\".\"Status\" = 'Cart' AND \"Payment\".\"ID\" IS NULL")
-            ->leftJoin('Payment', "\"Payment\".\"OrderID\" = \"Order\".\"ID\"");
+            ->leftJoin('Payment', '"Payment"."OrderID" = "Order"."ID"');
 
         if ($orders && $orders->exists()) {
             foreach ($orders as $order) {
@@ -921,7 +912,7 @@ class Order extends DataObject implements PermissionProvider
     {
         $mods = $this->Modifications();
         if ($mods && $mods->exists()) {
-            return $mods->where("\"SubTotalModifier\" = 1");
+            return $mods->where('"SubTotalModifier" = 1');
         }
         return null;
     }
@@ -935,101 +926,13 @@ class Order extends DataObject implements PermissionProvider
     {
         $mods = $this->Modifications();
         if ($mods && $mods->exists()) {
-            return $mods->where("\"SubTotalModifier\" = 0");
+            return $mods->where('"SubTotalModifier" = 0');
         }
         return null;
     }
 
     public function CustomerUpdates()
     {
-        return $this->Updates()->where("\"Visible\" = 1");
-    }
-}
-
-class Order_Update extends DataObject
-{
-    private static $singular_name = 'Update';
-    private static $plural_name = 'Updates';
-
-    private static $db = array(
-        'Status' => "Enum('Pending,Processing,Dispatched,Cancelled')",
-        'Note' => 'Text',
-        'Visible' => 'Boolean'
-    );
-
-    /**
-     * Relations for this class
-     *
-     * @var Array
-     */
-    private static $has_one = array(
-        'Order' => Order::class,
-        'Member' => Member::class
-    );
-
-    private static $summary_fields = array(
-        'Created.Nice' => 'Created',
-        'Status' => 'Order Status',
-        'Note' => 'Note',
-        'Member.Name' => 'Owner',
-        'VisibleSummary' => 'Visible'
-    );
-
-    public function canDelete($member = null)
-    {
-        return false;
-    }
-
-    public function delete()
-    {
-        if ($this->canDelete(Member::currentUser())) {
-            parent::delete();
-        }
-    }
-
-    /**
-     * Update stock levels for {@link Item}.
-     *
-     * @see DataObject::onAfterWrite()
-     */
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-
-        //Update the Order, setting the same status
-        if ($this->Status) {
-            $order = $this->Order();
-            if ($order->exists()) {
-                $order->Status = $this->Status;
-                $order->write();
-            }
-        }
-    }
-
-    public function getCMSFields()
-    {
-        $fields = parent::getCMSFields();
-
-        $visibleField = DropdownField::create('Visible', 'Visible', array(
-            1 => 'Yes',
-            0 => 'No'
-        ))->setRightTitle('Should this update be visible to the customer?');
-        $fields->replaceField('Visible', $visibleField);
-
-        $memberField = HiddenField::create('MemberID', Member::class, Member::currentUserID());
-        $fields->replaceField('MemberID', $memberField);
-        $fields->removeByName('OrderID');
-
-        return $fields;
-    }
-
-    public function Created()
-    {
-        return $this->dbObject('Created');
-    }
-
-    public function VisibleSummary()
-    {
-        return ($this->Visible) ? 'True' : '';
+        return $this->Updates()->where('"Visible" = 1');
     }
 }

@@ -19,16 +19,16 @@ use SilverStripe\Core\Extension;
  */
 class Payment_Extension extends DataExtension
 {
-    private static $has_one = array(
+    private static $has_one = [
         'Order' => Order::class //Need to add Order here for ModelAdmin
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Status' => 'Status',
         'SummaryOfAmount' => 'Amount',
         'Method' => 'Method',
         'PaidBy.Name' => 'Customer'
-    );
+    ];
 
     /**
      * Cannot create {@link Payment}s in the CMS.
@@ -51,7 +51,7 @@ class Payment_Extension extends DataExtension
     {
         return false;
     }
-    
+
     /**
      * Helper to get a nicely formatted amount for this {@link Payment}
      *
@@ -61,7 +61,7 @@ class Payment_Extension extends DataExtension
     {
         return $this->owner->dbObject('Amount')->Nice();
     }
-    
+
     /**
      * Fields to display this {@link Payment} in the CMS, removed some of the
      * unnecessary fields.
@@ -94,17 +94,6 @@ class Payment_Extension extends DataExtension
         if ($order && $order->exists()) {
             $order->PaymentStatus = ($order->getPaid()) ? 'Paid' : 'Unpaid';
             $order->write();
-        }
-    }
-}
-
-class Payment_ProcessorExtension extends Extension
-{
-    public function onBeforeRedirect()
-    {
-        $order = $this->owner->payment->Order();
-        if ($order && $order->exists()) {
-            $order->onAfterPayment();
         }
     }
 }

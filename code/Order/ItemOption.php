@@ -16,29 +16,27 @@ use SilverStripe\ORM\DataObject;
  */
 class ItemOption extends DataObject
 {
-
     /**
      * Relations for this class
      *
      * @var Array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Item' => Item::class
-    );
+    ];
 
     /**
      * DB fields for this class
      *
      * @var Array
      */
-    private static $db = array(
+    private static $db = [
         'Description' => 'Varchar',
         'Price' => 'Decimal(19,8)'
-    );
+    ];
 
     public function Amount()
     {
-
         // TODO: Multi currency
 
         $order = $this->Order();
