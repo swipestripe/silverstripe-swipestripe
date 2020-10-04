@@ -1,4 +1,13 @@
 <?php
+
+namespace SwipeStripe\Core\tests;
+
+
+use RecursiveIteratorIterator;
+use RecursiveArrayIterator;
+use SilverStripe\Dev\FunctionalTest;
+
+
 /**
  * Common functions for SwipeStripe testing.
  * 

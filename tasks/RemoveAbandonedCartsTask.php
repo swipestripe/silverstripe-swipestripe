@@ -1,4 +1,12 @@
 <?php
+
+namespace SwipeStripe\Core\tasks;
+
+use QuarterHourlyTask;
+
+use SwipeStripe\Core\code\Order\Order;
+
+
 /**
  * Remove abandoned carts that have not been active for a certain period of time
  * So that stock that is tied up in the carts can be released back if the customers

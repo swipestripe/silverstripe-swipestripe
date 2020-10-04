@@ -1,4 +1,22 @@
 <?php
+
+namespace SwipeStripe\Core\tests;
+
+
+
+
+use DOMDocument;
+use DomXPath;
+use Exception;
+use SwipeStripe\Core\code\Product\Product;
+use SilverStripe\ORM\DB;
+use SwipeStripe\Core\code\Product\Price;
+use SwipeStripe\Core\code\Product\Attribute;
+use SwipeStripe\Core\code\Customer\Customer;
+use SilverStripe\Control\Director;
+use SwipeStripe\Core\code\Product\Variation;
+
+
 /**
  * Testing {@link Product} attributes and options on product pages.
  * 
@@ -43,7 +61,7 @@ class SWS_ProductTest extends SWS_Test {
 	function testDeleteProduct() {
 		
 		$this->loginAs('admin');
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 		$productID = $productA->ID; 
 		
 		//Publish
@@ -74,7 +92,7 @@ class SWS_ProductTest extends SWS_Test {
 	function testChangeProductAmount() {
 		
 		$this->loginAs('admin');
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 		$productID = $productA->ID; 
 		
 		//Publish
@@ -97,7 +115,7 @@ class SWS_ProductTest extends SWS_Test {
 		foreach ($versions as $versionRow) $versionsAfterPriceChange[] = $versionRow;
 
 		$this->assertTrue(count($versionsAfterPublished) + 1 == count($versionsAfterPriceChange));
-		$this->assertEquals($versionsAfterPriceChange[2]['Price'], $newAmount);
+		$this->assertEquals($versionsAfterPriceChange[2][Price::class], $newAmount);
 	}
 
 	/**
@@ -105,9 +123,9 @@ class SWS_ProductTest extends SWS_Test {
 	 */
 	function testVariationsRemainEnabledAfterAttributeWrite() {
 		$this->loginAs('admin');
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
 		$variations = $teeshirtA->Variations();
-		$attribute = $this->objFromFixture('Attribute', 'attrSize');
+		$attribute = $this->objFromFixture(Attribute::class, 'attrSize');
 		
 		$this->assertTrue($variations->exists());
 		
@@ -129,7 +147,7 @@ class SWS_ProductTest extends SWS_Test {
 	function testVariationsDisabledAfterAttributeAdded() {
 		
 		$this->loginAs('admin');
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
 		$variations = $teeshirtA->Variations();
 		
 		$this->assertTrue($variations->exists());
@@ -168,7 +186,7 @@ class SWS_ProductTest extends SWS_Test {
 	 */
 	function testProductOptionsFirstSet() {
 
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
 		$attributes = $teeshirtA->Attributes();
 		$variations = $teeshirtA->Variations();
 
@@ -176,7 +194,7 @@ class SWS_ProductTest extends SWS_Test {
 		$teeshirtA->doPublish();	  
 		$this->logOut();
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 
 		//Check that options fields exist for each attribute
@@ -229,7 +247,7 @@ class SWS_ProductTest extends SWS_Test {
 	function testNegativeVariationPrice() {
 		
 		$this->loginAs('admin');
-		$smallRedShortsVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+		$smallRedShortsVariation = $this->objFromFixture(Variation::class, 'shortsSmallRedCotton');
 		
 		$originalAmount = $smallRedShortsVariation->Price;
 		$this->assertTrue($originalAmount >= 0);

@@ -1,4 +1,23 @@
 <?php
+
+namespace SwipeStripe\Core\tests;
+
+
+
+
+
+use SwipeStripe\Core\code\Customer\CheckoutPage;
+use SwipeStripe\Core\code\Customer\AccountPage;
+use SwipeStripe\Core\code\Customer\CartPage;
+use SilverStripe\Core\Config\Config;
+use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\code\Product\Product;
+use SilverStripe\Control\Director;
+use SilverStripe\ORM\DataObject;
+use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\code\Admin\ShopConfig;
+
+
 /**
  * 
  * @author Frank Mullenger <frankmullenger@gmail.com>
@@ -17,9 +36,9 @@ class SWS_OrderTest extends SWS_Test {
 		
 		//Need to publish a few pages because not using the draft site
 		$this->loginAs('admin');
-		$this->objFromFixture('CheckoutPage', 'checkout')->doPublish();
-		$this->objFromFixture('AccountPage', 'account')->doPublish();
-		$this->objFromFixture('CartPage', 'cart')->doPublish();
+		$this->objFromFixture(CheckoutPage::class, 'checkout')->doPublish();
+		$this->objFromFixture(AccountPage::class, 'account')->doPublish();
+		$this->objFromFixture(CartPage::class, 'cart')->doPublish();
 		$this->logOut();
 
 		Config::inst()->remove('PaymentProcessor', 'supported_methods');
@@ -30,9 +49,9 @@ class SWS_OrderTest extends SWS_Test {
 
 	function testOrderStatusAfterCheckout() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
-		$productA = $this->objFromFixture('Product', 'productA');
-		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
+		$productA = $this->objFromFixture(Product::class, 'productA');
+		$checkoutPage = $this->objFromFixture(CheckoutPage::class, 'checkout'); 
 
 		$this->loginAs('admin');
 		$productA->doPublish();
@@ -61,7 +80,7 @@ class SWS_OrderTest extends SWS_Test {
 
 	function testOrderPaymentStatusUpdated() {
 		
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 		$payment = $order->Payments()->First();
 
 		$this->assertEquals('Paid', $order->PaymentStatus);
@@ -71,7 +90,7 @@ class SWS_OrderTest extends SWS_Test {
 		$payment->write();
 		$this->logOut();
 
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 		$this->assertEquals('Unpaid', $order->PaymentStatus);
 
 		$this->loginAs('admin');
@@ -81,16 +100,16 @@ class SWS_OrderTest extends SWS_Test {
 
 		DataObject::flush_and_destroy_cache();
 
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 		$this->assertEquals('Paid', $order->PaymentStatus);
 	}
 
 	function testOrderEmailsSentAfterCheckout() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
-		$productA = $this->objFromFixture('Product', 'productA');
-		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
-		$shopConfig = $this->objFromFixture('ShopConfig', 'config'); 
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
+		$productA = $this->objFromFixture(Product::class, 'productA');
+		$checkoutPage = $this->objFromFixture(CheckoutPage::class, 'checkout'); 
+		$shopConfig = $this->objFromFixture(ShopConfig::class, 'config'); 
 
 		$this->loginAs('admin');
 		$productA->doPublish();

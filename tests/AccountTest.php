@@ -1,4 +1,14 @@
 <?php
+
+namespace SwipeStripe\Core\tests;
+
+
+use SwipeStripe\Core\code\Customer\AccountPage;
+use SwipeStripe\Core\code\Customer\Customer;
+use SilverStripe\Control\Director;
+use SwipeStripe\Core\code\Order\Order;
+
+
 /**
  * Testing {@link Product} attributes and options on product pages.
  * 
@@ -13,14 +23,14 @@ class SWS_AccountTest extends SWS_Test {
 		parent::setUp();
 		
 		$this->loginAs('admin');
-		$this->objFromFixture('AccountPage', 'account')->doPublish();
+		$this->objFromFixture(AccountPage::class, 'account')->doPublish();
 		$this->logOut();
 	}
 
 	public function testCustomerCanViewAccount() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
-		$accountPage = $this->objFromFixture('AccountPage', 'account');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
+		$accountPage = $this->objFromFixture(AccountPage::class, 'account');
 
 		$this->loginAs($buyer);
 		$this->get(Director::makeRelative($accountPage->Link()));
@@ -32,7 +42,7 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testAdminCanViewAccount() {
 
-		$accountPage = $this->objFromFixture('AccountPage', 'account');
+		$accountPage = $this->objFromFixture(AccountPage::class, 'account');
 
 		$this->loginAs('admin');
 		$this->get(Director::makeRelative($accountPage->Link()));
@@ -44,7 +54,7 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testAnonCannotViewAccount() {
 
-		$accountPage = $this->objFromFixture('AccountPage', 'account');
+		$accountPage = $this->objFromFixture(AccountPage::class, 'account');
 
 		$this->get(Director::makeRelative($accountPage->Link()));
 		$this->assertPartialMatchBySelector('h1', array(
@@ -54,8 +64,8 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testCustomerCanViewOrder() {
 
-		$buyer = $this->objFromFixture('Customer', 'buyer');
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 
 		$this->loginAs($buyer);
 		$this->get(Director::makeRelative($order->Link()));
@@ -65,8 +75,8 @@ class SWS_AccountTest extends SWS_Test {
 	
 	public function testCustomerCannotViewOrder() {
 		
-		$buyer = $this->objFromFixture('Customer', 'buyer2');
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer2');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 
 		$this->loginAs($buyer);
 		$this->get(Director::makeRelative($order->Link()));
@@ -76,7 +86,7 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testAdminCanViewOrder() {
 
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 
 		$this->loginAs('admin');
 		$this->get(Director::makeRelative($order->Link()));
@@ -86,7 +96,7 @@ class SWS_AccountTest extends SWS_Test {
 
 	public function testAnonCannotViewOrder() {
 
-		$order = $this->objFromFixture('Order', 'orderOne');
+		$order = $this->objFromFixture(Order::class, 'orderOne');
 
 		$this->get(Director::makeRelative($order->Link()));
 		$this->assertPartialMatchBySelector('h1', array(

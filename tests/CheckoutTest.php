@@ -1,4 +1,24 @@
 <?php
+
+namespace SwipeStripe\Core\tests;
+
+
+
+
+
+use Exception;
+use SwipeStripe\Core\code\Customer\CheckoutPage;
+use SwipeStripe\Core\code\Customer\AccountPage;
+use SwipeStripe\Core\code\Customer\CartPage;
+use SilverStripe\Core\Config\Config;
+use SwipeStripe\Core\code\Product\Product;
+use SwipeStripe\Core\code\Customer\Customer;
+use SilverStripe\Control\Director;
+use SwipeStripe\Core\code\Customer\Cart;
+use SilverStripe\ORM\DataObject;
+use SwipeStripe\Core\code\Product\Variation;
+
+
 /**
  * Testing {@link Order} modifiers at checkout.
  * 
@@ -37,9 +57,9 @@ class SWS_CheckoutTest extends SWS_Test {
 		//$this->assertTrue(class_exists('ChequePayment'), 'Cheque Payment is installed.');
 		
 		//Need to publish a few pages because not using the draft site
-		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout');  
-		$accountPage = $this->objFromFixture('AccountPage', 'account');
-		$cartPage = $this->objFromFixture('CartPage', 'cart');
+		$checkoutPage = $this->objFromFixture(CheckoutPage::class, 'checkout');  
+		$accountPage = $this->objFromFixture(AccountPage::class, 'account');
+		$cartPage = $this->objFromFixture(CartPage::class, 'cart');
 		
 		$this->loginAs('admin');
 		$checkoutPage->doPublish();
@@ -58,8 +78,8 @@ class SWS_CheckoutTest extends SWS_Test {
 	 */
 	function testCheckoutWithPublishedProduct() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
-		$checkoutPage = $this->objFromFixture('CheckoutPage', 'checkout'); 
+		$productA = $this->objFromFixture(Product::class, 'productA');
+		$checkoutPage = $this->objFromFixture(CheckoutPage::class, 'checkout'); 
 
 		$this->loginAs('admin');
 		$productA->doPublish();
@@ -67,7 +87,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		
 		$this->assertTrue($productA->isPublished());
 		
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->loginAs($buyer);
 
 		$this->get(Director::makeRelative($productA->Link())); 
@@ -99,7 +119,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	 */
 	function testCheckoutWithUnpublishedProduct() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->loginAs('admin');
 		$productA->doPublish();
@@ -108,7 +128,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertTrue($productA->isPublished());
 
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
 		$this->loginAs($buyer);
@@ -134,8 +154,8 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertEquals(false, $order->validateForCart()->valid());
 		
 		//Log in as buyer again and try to checkout
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		$this->submitForm('OrderForm_OrderForm', null, array(
@@ -151,7 +171,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	 */
 	function testCheckoutWithDeletedProduct() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->loginAs('admin');
 		$productA->doPublish();
@@ -160,7 +180,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertTrue($productA->isPublished());
 
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
 		$this->loginAs($buyer);
@@ -187,7 +207,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		
 		//Log in as buyer again and try to checkout
 		$this->loginAs($buyer);
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		$this->submitForm('OrderForm_OrderForm', null, array(
@@ -203,7 +223,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	 */
 	function testCheckoutWithDisabledVariation() {
 		
-		$shortsA = $this->objFromFixture('Product', 'shortsA');
+		$shortsA = $this->objFromFixture(Product::class, 'shortsA');
 
 		$this->loginAs('admin');
 		$shortsA->doPublish();
@@ -212,14 +232,14 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertTrue($shortsA->isPublished());
 
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 
 		$this->get(Director::makeRelative($shortsA->Link())); 
 		
-		$shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+		$shortsAVariation = $this->objFromFixture(Variation::class, 'shortsSmallRedCotton');
 		$this->assertEquals('Enabled', $shortsAVariation->Status);
 		
 		$this->submitForm('ProductForm_ProductForm', null, array(
@@ -245,8 +265,8 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertEquals(false, $order->validateForCart()->valid());
 		
 		//Log in as buyer again and try to checkout
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		$this->submitForm('OrderForm_OrderForm', null, array(
@@ -262,7 +282,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	 */
 	function testCheckoutWithDeletedVariation() {
 		
-		$shortsA = $this->objFromFixture('Product', 'shortsA');
+		$shortsA = $this->objFromFixture(Product::class, 'shortsA');
 
 		$this->loginAs('admin');
 		$shortsA->doPublish();
@@ -271,14 +291,14 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertTrue($shortsA->isPublished());
 
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 
 		$this->get(Director::makeRelative($shortsA->Link())); 
 		
-		$shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+		$shortsAVariation = $this->objFromFixture(Variation::class, 'shortsSmallRedCotton');
 		$this->assertEquals('Enabled', $shortsAVariation->Status);
 		
 		$this->submitForm('ProductForm_ProductForm', null, array(
@@ -303,8 +323,8 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertEquals(false, $order->validateForCart()->valid());
 		
 		//Log in as buyer again and try to checkout
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		$this->submitForm('OrderForm_OrderForm', null, array(
@@ -321,11 +341,11 @@ class SWS_CheckoutTest extends SWS_Test {
 	function testCheckoutWithoutProducts() {
 		
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
 		//Log in as buyer again and try to checkout
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 		
 		$order = Cart::get_current_order();
 		$items = $order->Items();
@@ -333,7 +353,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		
 		$this->assertEquals(false, $order->validateForCart()->valid());
 		
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		try {
@@ -352,7 +372,7 @@ class SWS_CheckoutTest extends SWS_Test {
 	 * Try to checkout with a product that requires a variation, without a variation in the cart
 	 */
 	function testCheckoutWithoutRequiredVariation() { 
-		$shortsA = $this->objFromFixture('Product', 'shortsA');
+		$shortsA = $this->objFromFixture(Product::class, 'shortsA');
 
 		$this->loginAs('admin');
 		$shortsA->doPublish();
@@ -362,14 +382,14 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertTrue($shortsA->requiresVariation());
 
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 
 		$this->get(Director::makeRelative($shortsA->Link())); 
 		
-		$shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+		$shortsAVariation = $this->objFromFixture(Variation::class, 'shortsSmallRedCotton');
 		$this->assertEquals('Enabled', $shortsAVariation->Status);
 		
 		$this->submitForm('ProductForm_ProductForm', null, array(
@@ -395,8 +415,8 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertEquals(false, $order->validateForCart()->valid());
 		
 		//Log in as buyer again and try to checkout
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		$this->submitForm('OrderForm_OrderForm', null, array(
@@ -412,8 +432,8 @@ class SWS_CheckoutTest extends SWS_Test {
 	 * Assumes that billing FirstName is always required
 	 */
 	function testCheckoutWithoutRequiredFields() {
-		$shortsA = $this->objFromFixture('Product', 'shortsA');
-		$shortsAVariation = $this->objFromFixture('Variation', 'shortsSmallRedCotton');
+		$shortsA = $this->objFromFixture(Product::class, 'shortsA');
+		$shortsAVariation = $this->objFromFixture(Variation::class, 'shortsSmallRedCotton');
 		
 		$this->loginAs('admin');
 		$shortsA->doPublish();
@@ -422,10 +442,10 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertTrue($shortsA->isPublished());
 		
 		//Add product to cart, buyer has one Order existing from fixture
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 
 		$this->get(Director::makeRelative($shortsA->Link()));
 		$this->submitForm('ProductForm_ProductForm', null, array(
@@ -443,7 +463,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		$this->assertEquals($shortsA->ID, $items->First()->Product()->ID);
 		$this->logOut();
 
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 
 		$this->submitForm('OrderForm_OrderForm', null, array(
@@ -459,16 +479,16 @@ class SWS_CheckoutTest extends SWS_Test {
 	 */
 	function testCheckoutWithoutPaymentGateway() {
 
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->loginAs('admin');
 		$productA->doPublish();
 		$this->logOut();
 		
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$this->assertEquals(1, $buyer->Orders()->Count());
 		
-		$this->loginAs($this->objFromFixture('Customer', 'buyer'));
+		$this->loginAs($this->objFromFixture(Customer::class, 'buyer'));
 
 		$productALink = $productA->Link();
 		$this->get(Director::makeRelative($productALink)); 
@@ -480,7 +500,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		$items = $order->Items();
 		$this->assertEquals(1, $items->Count());
 		
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$checkoutPage = DataObject::get_one(CheckoutPage::class);
 		$this->get(Director::makeRelative($checkoutPage->Link()));
 		
 		//Submit the form without restrictions on what can be POST'd

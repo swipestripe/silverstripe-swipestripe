@@ -1,4 +1,32 @@
 <?php
+
+namespace SwipeStripe\Core\tests;
+
+
+
+
+
+
+
+
+use DateTime;
+use DateInterval;
+use Exception;
+use SilverStripe\Control\Director;
+use SwipeStripe\Core\code\Product\Product;
+use SwipeStripe\Core\code\Customer\Cart;
+use SwipeStripe\Core\code\Order\Item;
+use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\code\Product\Price;
+use SilverStripe\ORM\DataObject;
+use SwipeStripe\Core\code\Product\Variation;
+use SwipeStripe\Core\code\Product\Attribute;
+use SwipeStripe\Core\code\Product\Option;
+use SilverStripe\ORM\ValidationException;
+use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\code\Admin\ShopConfig;
+
+
 /**
  * Testing {@link Product}s added and removed from {@link Order}s.
  * 
@@ -49,7 +77,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testProduct() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 		$this->assertEquals($productA->Price, 500.00, 'The price of Product A should be 500.');
 		$this->assertEquals($productA->Currency, 'NZD', 'The currency of Product A should be NZD.');
 	}
@@ -60,7 +88,7 @@ class SWS_CartTest extends SWS_Test {
 	public function testAddProductToCart() {
 
 		//Add published product to cart
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->loginAs('admin');
 		$productA->doPublish();
@@ -78,12 +106,12 @@ class SWS_CartTest extends SWS_Test {
 		
 		$firstItem = $items->First();
 		$this->assertEquals(1, $items->Count());
-		$this->assertInstanceOf('Item', $firstItem);
+		$this->assertInstanceOf(Item::class, $firstItem);
 		$this->assertEquals(1, $firstItem->Quantity);
 		
 		//Check that the correct product has been added
 		$firstProduct = $firstItem->Product();
-		$this->assertInstanceOf('Product', $firstProduct);
+		$this->assertInstanceOf(Product::class, $firstProduct);
 		$this->assertEquals($productA->Title, $firstProduct->Title);
 		$this->assertEquals($productA->Price, $firstProduct->Price);
 	}
@@ -93,7 +121,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductQuantityToCart() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
@@ -126,7 +154,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductNegativeQuantityToCart() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
@@ -160,7 +188,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductZeroQuantityToCart() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
@@ -193,7 +221,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductVersionToCart() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
@@ -243,7 +271,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductToCartLoggedOut() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
@@ -267,14 +295,14 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductToCartLoggedInCustomer() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
 		$this->logOut();
 		
-		$this->logInAs($this->objFromFixture('Customer', 'buyer'));
-		$buyer = $this->objFromFixture('Customer', 'buyer');
+		$this->logInAs($this->objFromFixture(Customer::class, 'buyer'));
+		$buyer = $this->objFromFixture(Customer::class, 'buyer');
 		$loggedInAs = $this->session()->get('loggedInAs');
 		$this->assertEquals($buyer->ID, $loggedInAs);
 		
@@ -296,7 +324,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductToCartChangePrice() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->logInAs('admin');
 		$productA->doPublish();
@@ -337,15 +365,15 @@ class SWS_CartTest extends SWS_Test {
 		$secondItem = $items->Last();
 
 		$this->assertEquals(2, $order->Items()->Count());
-		$this->assertTrue(in_array(500, $order->Items()->column('Price')));
-		$this->assertTrue(in_array(72.34, $order->Items()->column('Price')));
+		$this->assertTrue(in_array(500, $order->Items()->column(Price::class)));
+		$this->assertTrue(in_array(72.34, $order->Items()->column(Price::class)));
 	}
 
 	/**
 	 * Add a product variation to the cart
 	 */
 	public function testAddProductVariationToCart() {
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -353,17 +381,17 @@ class SWS_CartTest extends SWS_Test {
 
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 		
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton');
 		$this->assertEquals('Enabled', $teeshirtAVariation->Status);
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
 		
 		$this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
 		$this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
@@ -397,8 +425,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddDisabledProductVariationToCart() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -412,13 +440,13 @@ class SWS_CartTest extends SWS_Test {
 		$this->assertFalse($teeshirtAVariation->isEnabled());
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
 		
 		$this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
 		$this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
@@ -446,8 +474,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddInvalidProductVariationToCart() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -456,14 +484,14 @@ class SWS_CartTest extends SWS_Test {
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtAMediumOpt = $this->objFromFixture('Option', 'optMediumTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtAMediumOpt = $this->objFromFixture(Option::class, 'optMediumTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
 		
 		$this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
 		$this->assertFalse($teeshirtAMediumOpt->ID == $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
@@ -490,8 +518,8 @@ class SWS_CartTest extends SWS_Test {
 
 	public function testAddProductNoVariation() {
 
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -519,8 +547,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductVariationQuantity() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -529,13 +557,13 @@ class SWS_CartTest extends SWS_Test {
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
 		
 		$this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
 		$this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
@@ -577,8 +605,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddProductVariations() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -587,14 +615,14 @@ class SWS_CartTest extends SWS_Test {
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
-		$teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
+		$teeshirtAPolyesterOpt = $this->objFromFixture(Option::class, 'optPolyesterTeeshirt');
 
 		$this->submitForm('ProductForm_ProductForm', null, array(
 			'Quantity' => 1,
@@ -611,8 +639,8 @@ class SWS_CartTest extends SWS_Test {
 		$this->assertEquals(1, $firstItem->Quantity);
 		
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -640,8 +668,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddVariationWithVersion() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton'); 
 
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -654,13 +682,13 @@ class SWS_CartTest extends SWS_Test {
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
 		
 		$this->assertEquals($teeshirtASmallOpt->ID,  $teeshirtAVariation->getOptionForAttribute($sizeAttr->ID)->ID);
 		$this->assertEquals($teeshirtARedOpt->ID, $teeshirtAVariation->getOptionForAttribute($colorAttr->ID)->ID);
@@ -719,8 +747,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddVariationWithPriceChanged() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedPolyester'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedPolyester'); 
 		
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -731,14 +759,14 @@ class SWS_CartTest extends SWS_Test {
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
-		$teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
+		$teeshirtAPolyesterOpt = $this->objFromFixture(Option::class, 'optPolyesterTeeshirt');
 		
 		$this->submitForm('ProductForm_ProductForm', null, array(
 			'Quantity' => 1,
@@ -757,7 +785,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testProductVariationOptions() {
 		
-		$smallRedCotton = $this->objFromFixture('Variation', 'teeshirtSmallRedCotton');
+		$smallRedCotton = $this->objFromFixture(Variation::class, 'teeshirtSmallRedCotton');
 		
 		$this->assertEquals('Enabled', $smallRedCotton->Status, 'Variation should be status Enabled by default.');
 		
@@ -766,13 +794,13 @@ class SWS_CartTest extends SWS_Test {
 		$this->assertEquals(3, $options->Count());
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
 		
 		$this->assertEquals(array(
 			$teeshirtACottonOpt->ID => 'Cotton',
@@ -786,8 +814,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testSaveDuplicateProductVariation() {
 
-		$brokenSmallRed = $this->objFromFixture('Variation', 'brokenSmallRed');
-		$brokenSmallRedDuplicate = $this->objFromFixture('Variation', 'brokenSmallRedDuplicate');
+		$brokenSmallRed = $this->objFromFixture(Variation::class, 'brokenSmallRed');
+		$brokenSmallRedDuplicate = $this->objFromFixture(Variation::class, 'brokenSmallRedDuplicate');
 		
 		$firstOptions = $brokenSmallRed->Options()->map()->toArray();
 		$secondOptions = $brokenSmallRedDuplicate->Options()->map()->toArray();
@@ -806,7 +834,7 @@ class SWS_CartTest extends SWS_Test {
 		catch (ValidationException $e) {
 			$message = $e->getMessage();
 		}
-		$this->assertInstanceOf('ValidationException', $e);
+		$this->assertInstanceOf(ValidationException::class, $e);
 	}
 	
 	/**
@@ -814,8 +842,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testCartTotals() {
 		
-		$teeshirtA = $this->objFromFixture('Product', 'teeshirtA');
-		$teeshirtAVariation = $this->objFromFixture('Variation', 'teeshirtSmallRedPolyester'); 
+		$teeshirtA = $this->objFromFixture(Product::class, 'teeshirtA');
+		$teeshirtAVariation = $this->objFromFixture(Variation::class, 'teeshirtSmallRedPolyester'); 
 		
 		$this->logInAs('admin');
 		$teeshirtA->doPublish();
@@ -827,14 +855,14 @@ class SWS_CartTest extends SWS_Test {
 		$this->get(Director::makeRelative($teeshirtA->Link())); 
 		
 		//Add variation to the cart
-		$sizeAttr = $this->objFromFixture('Attribute', 'attrSize');
-		$colorAttr = $this->objFromFixture('Attribute', 'attrColor');
-		$materialAttr = $this->objFromFixture('Attribute', 'attrMaterial');
+		$sizeAttr = $this->objFromFixture(Attribute::class, 'attrSize');
+		$colorAttr = $this->objFromFixture(Attribute::class, 'attrColor');
+		$materialAttr = $this->objFromFixture(Attribute::class, 'attrMaterial');
 		
-		$teeshirtASmallOpt = $this->objFromFixture('Option', 'optSmallTeeshirt');
-		$teeshirtARedOpt = $this->objFromFixture('Option', 'optRedTeeshirt');
-		$teeshirtACottonOpt = $this->objFromFixture('Option', 'optCottonTeeshirt');
-		$teeshirtAPolyesterOpt = $this->objFromFixture('Option', 'optPolyesterTeeshirt');
+		$teeshirtASmallOpt = $this->objFromFixture(Option::class, 'optSmallTeeshirt');
+		$teeshirtARedOpt = $this->objFromFixture(Option::class, 'optRedTeeshirt');
+		$teeshirtACottonOpt = $this->objFromFixture(Option::class, 'optCottonTeeshirt');
+		$teeshirtAPolyesterOpt = $this->objFromFixture(Option::class, 'optPolyesterTeeshirt');
 		
 		$this->submitForm('ProductForm_ProductForm', null, array(
 			'Quantity' => $quantity,
@@ -874,7 +902,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testPersistOrderOnAddToCart() {
 
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 
 		$this->loginAs('admin');
 		$productA->doPublish();
@@ -901,8 +929,8 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testDeleteAbandonedCarts() {
 
-		$productA = $this->objFromFixture('Product', 'productA');
-		$shopConfig = $this->objFromFixture('ShopConfig', 'config');
+		$productA = $this->objFromFixture(Product::class, 'productA');
+		$shopConfig = $this->objFromFixture(ShopConfig::class, 'config');
 
 		$this->assertEquals(1, $shopConfig->CartTimeout);
 		$this->assertEquals('hour', $shopConfig->CartTimeoutUnit);
@@ -957,7 +985,7 @@ class SWS_CartTest extends SWS_Test {
 		return;
 		
 		//This variation only has 1 option instead of 2
-		$brokenProductVariation = $this->objFromFixture('Variation', 'brokenMedium');
+		$brokenProductVariation = $this->objFromFixture(Variation::class, 'brokenMedium');
 		$options = $brokenProductVariation->Options();
 		$this->assertEquals(1, $options->Count());
 		
@@ -968,7 +996,7 @@ class SWS_CartTest extends SWS_Test {
 		catch (ValidationException $e) {
 			$message = $e->getMessage();
 		}
-		$this->assertInstanceOf('ValidationException', $e);
+		$this->assertInstanceOf(ValidationException::class, $e);
 	}
 
 	/**
@@ -983,7 +1011,7 @@ class SWS_CartTest extends SWS_Test {
 	 */
 	public function testAddNonPublishedProductToCart() {
 		
-		$productA = $this->objFromFixture('Product', 'productA');
+		$productA = $this->objFromFixture(Product::class, 'productA');
 		
 		$this->assertEquals(false, $productA->isPublished());
 		
