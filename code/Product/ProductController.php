@@ -15,7 +15,7 @@ use SwipeStripe\Core\Form\ProductForm;
  * @package swipestripe
  * @subpackage product
  */
-class ProductController extends PageController
+class ProductController extends \PageController
 {
     /**
      * Allowed actions for this controller

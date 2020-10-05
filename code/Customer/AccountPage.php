@@ -18,7 +18,7 @@ use SilverStripe\Control\Director;
  * @package swipestripe
  * @subpackage customer
  */
-class AccountPage extends Page
+class AccountPage extends \Page
 {
     /**
      * Automatically create an AccountPage if one is not found
@@ -47,7 +47,7 @@ class AccountPage extends Page
      * @see SiteTree::canCreate()
      * @return Boolean Always returns false
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

@@ -2,6 +2,8 @@
 
 namespace SwipeStripe\Core\Form;
 
+use SilverStripe\Forms\NumericField;
+
 /**
  * Represent each {@link Item} in the {@link Order} on the {@link Product} {@link AddToCartForm}.
  */

@@ -2,7 +2,7 @@
 
 namespace SwipeStripe\Core\Customer;
 
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Group;

@@ -121,7 +121,7 @@ class Attribute extends DataObject implements PermissionProvider
         return Permission::check('EDIT_ATTRIBUTES');
     }
 
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

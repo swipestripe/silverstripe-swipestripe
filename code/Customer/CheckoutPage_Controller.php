@@ -15,7 +15,7 @@ use SwipeStripe\Core\Form\OrderForm;
  * @package swipestripe
  * @subpackage customer
  */
-class CheckoutPage_Controller extends PageController
+class CheckoutPage_Controller extends \PageController
 {
     protected $orderProcessed = false;
 

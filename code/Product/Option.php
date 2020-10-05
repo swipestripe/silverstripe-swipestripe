@@ -91,7 +91,7 @@ class Option extends DataObject implements PermissionProvider
         return Permission::check('EDIT_OPTIONS');
     }
 
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

@@ -2,13 +2,14 @@
 
 namespace SwipeStripe\Core\Product;
 
-use Money;
-use Zend_Locale_Math;
-use Zend_Currency;
+use SilverStripe\ORM\FieldType\DBMoney;
 
-require_once 'Zend/Locale/Math.php';
+// use Zend_Locale_Math;
+// use Zend_Currency;
 
-class Price extends Money
+// require_once 'Zend/Locale/Math.php';
+
+class Price extends DBMoney
 {
     protected $symbol;
 

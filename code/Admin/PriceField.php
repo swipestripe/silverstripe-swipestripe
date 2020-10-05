@@ -35,7 +35,7 @@ class PriceField extends CurrencyField
      *
      * @param mixed $val
      */
-    public function setValue($val)
+    public function setValue($value, $data = null)
     {
         if (!$val) {
             $val = 0.00;

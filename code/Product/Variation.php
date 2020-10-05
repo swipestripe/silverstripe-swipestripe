@@ -103,7 +103,7 @@ class Variation extends DataObject implements PermissionProvider
      * @var Array
      */
     private static $extensions = [
-        "Versioned('Live')",
+        Versioned::class,
     ];
 
     private static $defaults = [
@@ -146,7 +146,7 @@ class Variation extends DataObject implements PermissionProvider
         return Permission::check('EDIT_VARIATIONS');
     }
 
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

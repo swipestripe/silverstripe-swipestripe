@@ -3,6 +3,7 @@
 namespace SwipeStripe\Core\Form;
 
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\NumericField;
 
 /**
  * Quantity field for displaying each {@link Item} in an {@link Order} on the {@link CartPage}.

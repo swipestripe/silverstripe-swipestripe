@@ -26,7 +26,7 @@ use SilverStripe\ORM\ValidationResult;
  * when a Product is added to an Order, then subsequently changed, the Order can get the correct
  * details about the Product.
  */
-class Product extends Page
+class Product extends \Page
 {
     /**
      * Flag for denoting if this is the first time this Product is being written.

@@ -11,6 +11,8 @@ use SilverStripe\Control\Session;
 use SwipeStripe\Core\code\Order\Order;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Core\Extension;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Extends {@link Page_Controller} adding some functions to retrieve the current cart,
@@ -77,6 +79,11 @@ class Cart extends Extension
         }
     }
 
+    public function getSession()
+    {
+        $request = Injector::inst()->get(HTTPRequest::class);
+        return $session = $request->getSession();
+    }
     /**
      * Get the current order from the session, if order does not exist create a new one.
      *
@@ -84,7 +91,9 @@ class Cart extends Extension
      */
     public static function get_current_order($persist = false)
     {
-        $orderID = Session::get('Cart.OrderID');
+        $session = self::getSession();
+
+        $orderID = $session::get('Cart.OrderID');
         $order = null;
 
         if ($orderID) {
@@ -96,10 +105,10 @@ class Cart extends Extension
 
             if ($persist) {
                 $order->write();
-                Session::set(Cart::class, [
+                $session->set(Cart::class, [
                     'OrderID' => $order->ID
                 ]);
-                Session::save();
+                $session->save();
             }
         }
         return $order;
@@ -110,7 +119,8 @@ class Cart extends Extension
      */
     public function onBeforeInit()
     {
-        $orderID = Session::get('Cart.OrderID');
+        $session = self::getSession();
+        $orderID = $session->get('Cart.OrderID');
         if ($orderID && $order = DataObject::get_by_id(Order::class, $orderID)) {
             $order->LastActive = DBDatetime::now()->getValue();
             $order->write();

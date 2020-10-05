@@ -3,6 +3,7 @@
 namespace SwipeStripe\Core\Form;
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\RequiredFields;
 
 /**
  * Validator for {@link AddToCartForm} which validates that the product {@link Variation} is

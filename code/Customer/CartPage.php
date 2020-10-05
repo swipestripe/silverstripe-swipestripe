@@ -7,7 +7,7 @@ use SwipeStripe\Core\code\Customer\Cart;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\View\Requirements;
-use SwipeStripe\Core\code\Form\CartForm;
+use SwipeStripe\Core\Form\CartForm;
 
 /**
  * A cart page for the frontend to display contents of a cart to a visitor.
@@ -19,7 +19,7 @@ use SwipeStripe\Core\code\Form\CartForm;
  * @package swipestripe
  * @subpackage customer
  */
-class CartPage extends Page
+class CartPage extends \Page
 {
     /**
      * Automatically create a CheckoutPage if one is not found
@@ -48,7 +48,7 @@ class CartPage extends Page
      * @see SiteTree::canCreate()
      * @return Boolean Always returns false
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

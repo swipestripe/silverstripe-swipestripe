@@ -16,7 +16,7 @@ use SilverStripe\Security\Member;
  * @package swipestripe
  * @subpackage customer
  */
-class CheckoutPage extends Page
+class CheckoutPage extends \Page
 {
     /**
      * Automatically create a CheckoutPage if one is not found
@@ -45,7 +45,7 @@ class CheckoutPage extends Page
      * @see SiteTree::canCreate()
      * @return Boolean Always returns false
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

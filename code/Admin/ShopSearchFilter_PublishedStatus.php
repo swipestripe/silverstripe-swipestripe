@@ -3,6 +3,7 @@
 namespace SwipeStripe\Core\Admin;
 
 use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\DataQuery;
 
 /**
  * Search filter for {@link Product} status, whether a {@link Product} is published

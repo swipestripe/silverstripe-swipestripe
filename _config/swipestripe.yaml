@@ -3,7 +3,7 @@ name: SwipeStripe
 ---
 SilverStripe\Control\Director:
   rules:
-    product//$ID!/$Action: SwipeStripe\Core\code\Product\Product_Controller
+    product//$ID!/$Action: SwipeStripe\Core\Product\Product_Controller
 Modifier:
   Enabled:
     - null
@@ -13,13 +13,13 @@ SilverStripe\Security\Security:
   default_login_dest: account
 Payment:
   extensions:
-    - SwipeStripe\Core\code\Order\Payment_Extension
+    - SwipeStripe\Core\Order\Payment_Extension
 PaymentProcessor:
   extensions:
-    - SwipeStripe\Core\code\Order\Payment_ProcessorExtension
+    - SwipeStripe\Core\Order\Payment_ProcessorExtension
 SilverStripe\Admin\LeftAndMain:
   extensions:
-    - SwipeStripe\Core\code\Admin\ShopAdmin_LeftAndMainExtension
+    - SwipeStripe\Core\Admin\ShopAdmin_LeftAndMainExtension
 PageController:
   extensions:
-    - SwipeStripe\Core\code\Customer\Cart
+    - SwipeStripe\Core\Customer\Cart

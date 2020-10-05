@@ -85,8 +85,8 @@ class Order extends DataObject implements PermissionProvider
         'BaseCurrency' => 'Varchar(3)',
         'BaseCurrencySymbol' => 'Varchar(10)',
 
-        'OrderedOn' => 'SS_Datetime',
-        'LastActive' => 'SS_Datetime',
+        'OrderedOn' => 'Datetime',
+        'LastActive' => 'Datetime',
         'Env' => 'Varchar(10)',
     ];
 
@@ -290,7 +290,7 @@ class Order extends DataObject implements PermissionProvider
      * @see DataObject::canCreate()
      * @return Boolean False always
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
