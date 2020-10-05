@@ -14,7 +14,6 @@ use SilverStripe\Forms\DropdownField;
  */
 class OptionField extends DropdownField
 {
-
     /**
      * Create drop down field for a product option, just ensures name of field
      * is in the format Options[OptionClassName].
@@ -26,21 +25,20 @@ class OptionField extends DropdownField
      * @param Form $form
      * @param String $emptyString
      */
-    public function __construct($attributeID, $title = null, $optionSet = null, $value = "", $form = null, $emptyString = null)
+    public function __construct($attributeID, $title = null, $optionSet = null, $value = '', $form = null, $emptyString = null)
     {
-        
         //Pass in the attribute ID
         $name = "Options[$attributeID]";
-        
-        $source = array();
+
+        $source = [];
         if ($optionSet && $optionSet->exists()) {
             foreach ($optionSet as $option) {
                 $source[$option->ID] = $option->Title;
             }
         }
-        
+
         $this->addExtraClass('dropdown');
-        
+
         parent::__construct($name, $title, $source, $value, $form, $emptyString);
     }
 }

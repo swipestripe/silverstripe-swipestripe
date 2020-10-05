@@ -2,7 +2,7 @@
 
 namespace SwipeStripe\Core\Admin;
 
-use SwipeStripe\Core\code\Product\Attribute_Default;
+use SwipeStripe\Core\Product\Attribute_Default;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 
@@ -19,11 +19,11 @@ class ShopConfig extends DataObject
     private static $singular_name = 'Settings';
     private static $plural_name = 'Settings';
 
-    private static $db = array(
+    private static $db = [
         'LicenceKey' => 'Varchar',
 
         'BaseCurrency' => 'Varchar(3)',
-        'BaseCurrencyPrecision' => 'Int',	//number of digits after the decimal place
+        'BaseCurrencyPrecision' => 'Int', //number of digits after the decimal place
         'BaseCurrencySymbol' => 'Varchar(10)',
 
         'CartTimeout' => 'Int',
@@ -38,23 +38,22 @@ class ShopConfig extends DataObject
         'NotificationSubject' => 'Varchar',
         'NotificationBody' => 'HTMLText',
         'NotificationTo' => 'Varchar'
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'Attributes' => Attribute_Default::class
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'BaseCurrencyPrecision' => 2,
         'CartTimeout' => 1,
         'CartTimeoutUnit' => 'hour',
         'StockCheck' => false,
         'StockManagement' => 'strict'
-    );
+    ];
 
     public static function current_shop_config()
     {
-
         //TODO: lazy load this
 
         return ShopConfig::get()->First();
@@ -67,8 +66,8 @@ class ShopConfig extends DataObject
 
         if (!$config->BaseCurrency) {
             $warning = _t('ShopConfig.BASE_CURRENCY_WARNING', '
-				 Warning: Base currency is not set, please set base currency in the shop settings area before proceeding
-		 ');
+				Warning: Base currency is not set, please set base currency in the shop settings area before proceeding
+		');
         }
         return $warning;
     }

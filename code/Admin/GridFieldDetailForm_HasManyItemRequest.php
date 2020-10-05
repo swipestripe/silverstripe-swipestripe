@@ -22,11 +22,11 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
  */
 class GridFieldDetailForm_HasManyItemRequest extends GridFieldDetailForm_ItemRequest
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'edit',
         'view',
         'ItemEditForm'
-    );
+    ];
 
     /**
      * Builds an item edit form.  The arguments to getCMSFields() are the popupController and
@@ -57,20 +57,20 @@ class GridFieldDetailForm_HasManyItemRequest extends GridFieldDetailForm_ItemReq
             //Change the Save label to 'Create'
             $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
                 ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'add'));
-                
+
             // Add a Cancel link which is a button-like link and link back to one level up.
             $curmbs = $this->Breadcrumbs();
-            if ($curmbs && $curmbs->count()>=2) {
-                $one_level_up = $curmbs->offsetGet($curmbs->count()-2);
+            if ($curmbs && $curmbs->count() >= 2) {
+                $one_level_up = $curmbs->offsetGet($curmbs->count() - 2);
                 $cancelText = _t('GridFieldDetailForm.CancelBtn', 'Cancel');
-                $text = "
-				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
+                $text = '
+				<a class="crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all" href="' . $one_level_up->Link . "\">
 					$cancelText
 				</a>";
                 $actions->push(new LiteralField('cancelbutton', $text));
             }
         }
-        
+
         $fk = $this->gridField->getList()->foreignKey;
         $this->record->$fk = $this->gridField->getList()->foreignID;
 

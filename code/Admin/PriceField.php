@@ -14,18 +14,17 @@ use SilverStripe\Forms\CurrencyField;
  */
 class PriceField extends CurrencyField
 {
-
     /**
      * Render field with custom template
      *
      * @param array $properties
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         $shopConfig = ShopConfig::current_shop_config();
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'BaseCurrency' => $shopConfig->BaseCurrency
-        ));
+        ]);
 
         $obj = ($properties) ? $this->customise($properties) : $this;
         return $obj->renderWith('PriceField_holder');
@@ -55,8 +54,8 @@ class PriceField extends CurrencyField
                 && !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d+)?\s*$/', $this->value)) {
             $validator->validationError(
                 $this->name,
-                _t('Form.VALIDCURRENCY', "Please enter a valid currency"),
-                "validation",
+                _t('Form.VALIDCURRENCY', 'Please enter a valid currency'),
+                'validation',
                 false
             );
             return false;

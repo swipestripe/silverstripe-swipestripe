@@ -3,8 +3,8 @@
 namespace SwipeStripe\Core\Customer;
 
 use SilverStripe\View\Requirements;
-use SwipeStripe\Core\code\Customer\Customer;
-use SwipeStripe\Core\code\Form\OrderForm;
+use SwipeStripe\Core\Customer\Customer;
+use SwipeStripe\Core\Form\OrderForm;
 
 /**
  * Display the checkout page, with order form. Process the order - send the order details

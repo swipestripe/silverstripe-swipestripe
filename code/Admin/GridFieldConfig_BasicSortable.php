@@ -14,10 +14,9 @@ use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SwipeStripe\Core\Admin\GridFieldDetailForm_HasManyItemRequest;
 
 /**
- * Grid field basic configuration
+ * Grid field basic sortable configuration
  *
  * @todo Review the configs
  *
@@ -26,7 +25,7 @@ use SwipeStripe\Core\Admin\GridFieldDetailForm_HasManyItemRequest;
  * @package swipestripe
  * @subpackage admin
  */
-class GridFieldConfig_Basic extends GridFieldConfig
+class GridFieldConfig_BasicSortable extends GridFieldConfig
 {
     /**
      * Constructor
@@ -43,12 +42,17 @@ class GridFieldConfig_Basic extends GridFieldConfig
         $this->addComponent(new GridFieldDataColumns());
         $this->addComponent(new GridFieldEditButton());
         $this->addComponent(new GridFieldDeleteAction());
-        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
-        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
         $this->addComponent(new GridFieldDetailForm());
+
+        if (class_exists('GridFieldSortableRows')) {
+            $this->addComponent(new GridFieldSortableRows('SortOrder'));
+        }
+
+        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
+        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
+        $pagination->setThrowExceptionOnBadDataType(false);
 
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);
-        $pagination->setThrowExceptionOnBadDataType(false);
     }
 }

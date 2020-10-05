@@ -17,7 +17,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SwipeStripe\Core\Admin\GridFieldDetailForm_HasManyItemRequest;
 
 /**
- * Grid field basic configuration
+ * Grid field basic has many configuration
  *
  * @todo Review the configs
  *
@@ -26,7 +26,7 @@ use SwipeStripe\Core\Admin\GridFieldDetailForm_HasManyItemRequest;
  * @package swipestripe
  * @subpackage admin
  */
-class GridFieldConfig_Basic extends GridFieldConfig
+class GridFieldConfig_HasManyRelationEditor extends GridFieldConfig
 {
     /**
      * Constructor
@@ -43,9 +43,11 @@ class GridFieldConfig_Basic extends GridFieldConfig
         $this->addComponent(new GridFieldDataColumns());
         $this->addComponent(new GridFieldEditButton());
         $this->addComponent(new GridFieldDeleteAction());
-        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
         $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
-        $this->addComponent(new GridFieldDetailForm());
+
+        $detailForm = new GridFieldDetailForm();
+        $detailForm->setItemRequestClass(GridFieldDetailForm_HasManyItemRequest::class);
+        $this->addComponent($detailForm);
 
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);
