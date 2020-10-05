@@ -2,8 +2,8 @@
 
 namespace SwipeStripe\Core\Order;
 
-use SwipeStripe\Core\code\Order\Item;
-use SwipeStripe\Core\code\Product\Price;
+use SwipeStripe\Core\Order\Item;
+use SwipeStripe\Core\Product\Price;
 use SilverStripe\ORM\DataObject;
 
 /**

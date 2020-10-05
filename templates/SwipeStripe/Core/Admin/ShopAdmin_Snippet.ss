@@ -2,6 +2,6 @@
 	<h3 class="ui-widget-header">$Title</h3>
 	<div class="inner-snippet">
 		<p>$Help</p>
-		<a href="$Link" class="btn btn-primary cms-content-addpage-button tool-button font-icon-plus">$LinkTitle</a>
+		<a href="$Link" class="ss-ui-button ss-ui-action-constructive cms-panel-link ui-corner-all">$LinkTitle</a>
 	</div>
 </div>

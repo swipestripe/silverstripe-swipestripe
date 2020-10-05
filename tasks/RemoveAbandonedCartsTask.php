@@ -3,7 +3,7 @@
 namespace SwipeStripe\Core\tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 
 /**
  * Remove abandoned carts that have not been active for a certain period of time

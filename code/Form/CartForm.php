@@ -6,15 +6,15 @@ use SS_Log;
 use Exception;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\View\Requirements;
-use SwipeStripe\Core\code\Customer\Cart;
+use SwipeStripe\Core\Customer\Cart;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Form;
-use SwipeStripe\Core\code\Customer\CheckoutPage;
+use SwipeStripe\Core\Customer\CheckoutPage;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\Debug;
-use SwipeStripe\Core\code\Form\CartFormQuantityField;
-use SwipeStripe\Core\code\Order\Item;
+use SwipeStripe\Core\Form\CartFormQuantityField;
+use SwipeStripe\Core\Order\Item;
 
 /**
  * Form to display the {@link Order} contents on the {@link CartPage}.
@@ -49,7 +49,7 @@ class CartForm extends Form
 
         Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-        Requirements::javascript('swipestripe/javascript/CartForm.js');
+        Requirements::javascript('swipestripe/swipestripe: javascript/CartForm.js');
 
         $this->order = Cart::get_current_order();
 

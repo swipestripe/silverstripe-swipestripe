@@ -2,10 +2,10 @@
 
 namespace SwipeStripe\Core\Order;
 
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Core\ClassInfo;
-use SwipeStripe\Core\code\Product\Price;
+use SwipeStripe\Core\Product\Price;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
 

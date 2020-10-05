@@ -6,18 +6,18 @@ use DateTime;
 use DateInterval;
 use Exception;
 use SilverStripe\Control\Director;
-use SwipeStripe\Core\code\Product\Product;
-use SwipeStripe\Core\code\Customer\Cart;
-use SwipeStripe\Core\code\Order\Item;
-use SwipeStripe\Core\code\Customer\Customer;
-use SwipeStripe\Core\code\Product\Price;
+use SwipeStripe\Core\Product\Product;
+use SwipeStripe\Core\Customer\Cart;
+use SwipeStripe\Core\Order\Item;
+use SwipeStripe\Core\Customer\Customer;
+use SwipeStripe\Core\Product\Price;
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Product\Variation;
-use SwipeStripe\Core\code\Product\Attribute;
-use SwipeStripe\Core\code\Product\Option;
+use SwipeStripe\Core\Product\Variation;
+use SwipeStripe\Core\Product\Attribute;
+use SwipeStripe\Core\Product\Option;
 use SilverStripe\ORM\ValidationException;
-use SwipeStripe\Core\code\Order\Order;
-use SwipeStripe\Core\code\Admin\ShopConfig;
+use SwipeStripe\Core\Order\Order;
+use SwipeStripe\Core\Admin\ShopConfig;
 
 /**
  * Testing {@link Product}s added and removed from {@link Order}s.

@@ -67,7 +67,7 @@ class OrderForm extends Form
 
         Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-        Requirements::javascript('swipestripe/javascript/OrderForm.js');
+        Requirements::javascript('swipestripe/swipestripe: javascript/OrderForm.js');
 
         $this->order = Cart::get_current_order();
         $this->customer = Customer::currentUser() ? Customer::currentUser() : singleton(Customer::class);
@@ -137,7 +137,7 @@ class OrderForm extends Form
 						"
                     )
                 )
-            )->setID('PersonalDetails')->setName('PersonaDetails');
+            )->setName('PersonaDetails'); // ->setID('PersonalDetails')
         }
 
         //Order item fields

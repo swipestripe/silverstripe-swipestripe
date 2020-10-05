@@ -56,8 +56,8 @@ class ShopAdmin extends ModelAdmin
     private static $managed_models = [
         //'Product',
         Order::class,
-        // Customer::class,
-        // ShopConfig::class
+        Customer::class,
+        ShopConfig::class
     ];
 
     private static $url_handlers = [
@@ -183,7 +183,7 @@ class ShopAdmin extends ModelAdmin
     {
         //If editing the shop settings get the first back and edit that basically...
         if ($this->modelClass == ShopConfig::class) {
-            return $this->renderWith('ShopAdmin_ConfigEditForm');
+            return $this->renderWith('SwipeStripe\Core\Admin\ShopAdmin_ConfigEditForm');
         }
 
         $list = $this->getList();

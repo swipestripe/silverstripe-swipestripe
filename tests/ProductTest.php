@@ -5,13 +5,13 @@ namespace SwipeStripe\Core\tests;
 use DOMDocument;
 use DomXPath;
 use Exception;
-use SwipeStripe\Core\code\Product\Product;
+use SwipeStripe\Core\Product\Product;
 use SilverStripe\ORM\DB;
-use SwipeStripe\Core\code\Product\Price;
-use SwipeStripe\Core\code\Product\Attribute;
-use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\Product\Price;
+use SwipeStripe\Core\Product\Attribute;
+use SwipeStripe\Core\Customer\Customer;
 use SilverStripe\Control\Director;
-use SwipeStripe\Core\code\Product\Variation;
+use SwipeStripe\Core\Product\Variation;
 
 /**
  * Testing {@link Product} attributes and options on product pages.

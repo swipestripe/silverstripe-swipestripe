@@ -2,9 +2,9 @@
 
 namespace SwipeStripe\Core\Product;
 
-use SwipeStripe\Core\code\Product\Attribute;
-use SwipeStripe\Core\code\Product\Product;
-use SwipeStripe\Core\code\Product\Variation;
+use SwipeStripe\Core\Product\Attribute;
+use SwipeStripe\Core\Product\Product;
+use SwipeStripe\Core\Product\Variation;
 use SilverStripe\Security\Permission;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\PermissionProvider;

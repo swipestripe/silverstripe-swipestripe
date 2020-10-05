@@ -2,16 +2,16 @@
 
 namespace SwipeStripe\Core\tests;
 
-use SwipeStripe\Core\code\Customer\CheckoutPage;
-use SwipeStripe\Core\code\Customer\AccountPage;
-use SwipeStripe\Core\code\Customer\CartPage;
+use SwipeStripe\Core\Customer\CheckoutPage;
+use SwipeStripe\Core\Customer\AccountPage;
+use SwipeStripe\Core\Customer\CartPage;
 use SilverStripe\Core\Config\Config;
-use SwipeStripe\Core\code\Customer\Customer;
-use SwipeStripe\Core\code\Product\Product;
+use SwipeStripe\Core\Customer\Customer;
+use SwipeStripe\Core\Product\Product;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Order\Order;
-use SwipeStripe\Core\code\Admin\ShopConfig;
+use SwipeStripe\Core\Order\Order;
+use SwipeStripe\Core\Admin\ShopConfig;
 
 /**
  *

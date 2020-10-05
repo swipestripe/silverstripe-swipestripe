@@ -13,6 +13,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use SilverStripe\Forms\Form;
 
 /**
@@ -199,6 +200,6 @@ class ShopAdminBaseCurrency extends ShopAdmin
             'Help' => 'Set base currency.',
             'Link' => Controller::join_links($this->Link(ShopConfig::class), 'BaseCurrency'),
             'LinkTitle' => 'Edit base currency'
-        ])->renderWith('ShopAdmin_Snippet');
+        ])->renderWith('SwipeStripe\Core\Admin\ShopAdmin_Snippet');
     }
 }

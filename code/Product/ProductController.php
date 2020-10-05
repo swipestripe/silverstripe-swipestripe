@@ -35,7 +35,7 @@ class ProductController extends \PageController
     {
         parent::init();
 
-        Requirements::css('swipestripe/css/Shop.css');
+        Requirements::css('swipestripe/swipestripe: css/Shop.css');
 
         //Get current product page for products that are not part of the site tree
         //and do not have a ParentID set, they are accessed via this controller using

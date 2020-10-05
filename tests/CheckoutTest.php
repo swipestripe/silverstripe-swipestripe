@@ -3,16 +3,16 @@
 namespace SwipeStripe\Core\tests;
 
 use Exception;
-use SwipeStripe\Core\code\Customer\CheckoutPage;
-use SwipeStripe\Core\code\Customer\AccountPage;
-use SwipeStripe\Core\code\Customer\CartPage;
+use SwipeStripe\Core\Customer\CheckoutPage;
+use SwipeStripe\Core\Customer\AccountPage;
+use SwipeStripe\Core\Customer\CartPage;
 use SilverStripe\Core\Config\Config;
-use SwipeStripe\Core\code\Product\Product;
-use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\Product\Product;
+use SwipeStripe\Core\Customer\Customer;
 use SilverStripe\Control\Director;
-use SwipeStripe\Core\code\Customer\Cart;
+use SwipeStripe\Core\Customer\Cart;
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Product\Variation;
+use SwipeStripe\Core\Product\Variation;
 
 /**
  * Testing {@link Order} modifiers at checkout.

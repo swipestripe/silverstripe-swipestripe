@@ -206,6 +206,6 @@ class ShopAdminEmailAdmin extends ShopAdmin
             'Help' => 'Order notification and receipt details and recipeients.',
             'Link' => Controller::join_links($this->Link(ShopConfig::class), 'EmailSettings'),
             'LinkTitle' => 'Edit Email Settings'
-        ])->renderWith('ShopAdmin_Snippet');
+        ])->renderWith('SwipeStripe\Core\Admin\ShopAdmin_Snippet');
     }
 }

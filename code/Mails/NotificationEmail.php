@@ -62,7 +62,7 @@ class NotificationEmail extends ProcessedEmail
         if (file_exists(Director::getAbsFile($this->ThemeDir() . '/css/ShopEmail.css'))) {
             $css = file_get_contents(Director::getAbsFile($this->ThemeDir() . '/css/ShopEmail.css'));
         } else {
-            $css = file_get_contents(Director::getAbsFile('swipestripe/css/ShopEmail.css'));
+            $css = file_get_contents(Director::getAbsFile('swipestripe/swipestripe: css/ShopEmail.css'));
         }
 
         $this->populateTemplate(

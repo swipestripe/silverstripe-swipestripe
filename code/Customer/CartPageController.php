@@ -27,7 +27,7 @@ class CartPageController extends \PageController
         //Update stock levels
         //Order::delete_abandoned();
 
-        Requirements::css('swipestripe/css/Shop.css');
+        Requirements::css('swipestripe/swipestripe: css/Shop.css');
 
         return [
             'Content' => $this->Content,

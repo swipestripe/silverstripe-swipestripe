@@ -193,6 +193,6 @@ class ShopAdminAttribute extends ShopAdmin
             'Help' => 'Create default attributes',
             'Link' => Controller::join_links($this->Link(ShopConfig::class), Attribute::class),
             'LinkTitle' => 'Edit default attributes'
-        ])->renderWith('ShopAdmin_Snippet');
+        ])->renderWith('SwipeStripe\Core\Admin\ShopAdmin_Snippet');
     }
 }

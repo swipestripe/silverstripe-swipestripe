@@ -2,11 +2,11 @@
 
 namespace SwipeStripe\Core\Order;
 
-use SwipeStripe\Core\code\Product\Price;
-use SwipeStripe\Core\code\Order\Order;
-use SwipeStripe\Core\code\Product\Product;
-use SwipeStripe\Core\code\Product\Variation;
-use SwipeStripe\Core\code\Order\ItemOption;
+use SwipeStripe\Core\Product\Price;
+use SwipeStripe\Core\Order\Order;
+use SwipeStripe\Core\Product\Product;
+use SwipeStripe\Core\Product\Variation;
+use SwipeStripe\Core\Order\ItemOption;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\ValidationResult;

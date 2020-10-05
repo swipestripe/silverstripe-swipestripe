@@ -3,7 +3,7 @@
 namespace SwipeStripe\Core\Customer;
 
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Customer\Cart;
+use SwipeStripe\Core\Customer\Cart;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\View\Requirements;

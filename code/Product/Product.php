@@ -180,8 +180,8 @@ class Product extends \Page
             $listField = new GridField(
                 'Attributes',
                 'Attributes',
-                $this->Attributes(),
-                GridFieldConfig_BasicSortable::create()
+                $this->Attributes()
+                // GridFieldConfig_BasicSortable::create()
             );
             $fields->addFieldToTab('Root.Attributes', $listField);
 

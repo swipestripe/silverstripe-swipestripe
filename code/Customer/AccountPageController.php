@@ -3,10 +3,10 @@
 namespace SwipeStripe\Core\Customer;
 
 use SilverStripe\View\Requirements;
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Session;
-use SwipeStripe\Core\code\Form\RepayForm;
+use SwipeStripe\Core\Form\RepayForm;
 
 /**
  * Display the account page with listing of previous orders, and display an individual order.
@@ -47,7 +47,7 @@ class AccountPageController extends \PageController
      */
     public function index()
     {
-        Requirements::css('swipestripe/css/Shop.css');
+        Requirements::css('swipestripe/swipestripe: css/Shop.css');
 
         return [
             'Content' => $this->Content,
@@ -66,7 +66,7 @@ class AccountPageController extends \PageController
      */
     public function order($request)
     {
-        Requirements::css('swipestripe/css/Shop.css');
+        Requirements::css('swipestripe/swipestripe: css/Shop.css');
 
         if ($orderID = $request->param('ID')) {
             $member = Customer::currentUser();
@@ -92,7 +92,7 @@ class AccountPageController extends \PageController
 
     public function repay($request)
     {
-        Requirements::css('swipestripe/css/Shop.css');
+        Requirements::css('swipestripe/swipestripe: css/Shop.css');
 
         if ($orderID = $request->param('ID')) {
             $member = Customer::currentUser();

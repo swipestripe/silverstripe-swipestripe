@@ -2,10 +2,10 @@
 
 namespace SwipeStripe\Core\tests;
 
-use SwipeStripe\Core\code\Customer\AccountPage;
-use SwipeStripe\Core\code\Customer\Customer;
+use SwipeStripe\Core\Customer\AccountPage;
+use SwipeStripe\Core\Customer\Customer;
 use SilverStripe\Control\Director;
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 
 /**
  * Testing {@link Product} attributes and options on product pages.

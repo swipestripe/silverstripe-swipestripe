@@ -43,7 +43,7 @@ class ProductForm extends Form
 
         Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-        Requirements::javascript('swipestripe/javascript/ProductForm.js');
+        Requirements::javascript('swipestripe/swipestripe: javascript/ProductForm.js');
 
         $this->product = $controller->data();
         $this->quantity = $quantity;

@@ -2,13 +2,13 @@
 
 namespace SwipeStripe\Core\Customer;
 
-use SwipeStripe\Core\code\Customer\AccountPage;
+use SwipeStripe\Core\Customer\AccountPage;
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Customer\CheckoutPage;
+use SwipeStripe\Core\Customer\CheckoutPage;
 use SilverStripe\Control\Director;
-use SwipeStripe\Core\code\Customer\CartPage;
+use SwipeStripe\Core\Customer\CartPage;
 use SilverStripe\Control\Session;
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\HTTPRequest;
@@ -79,7 +79,7 @@ class Cart extends Extension
         }
     }
 
-    public function getSession()
+    public static function getSession()
     {
         $request = Injector::inst()->get(HTTPRequest::class);
         return $session = $request->getSession();
@@ -93,7 +93,7 @@ class Cart extends Extension
     {
         $session = self::getSession();
 
-        $orderID = $session::get('Cart.OrderID');
+        $orderID = $session->get('Cart.OrderID');
         $order = null;
 
         if ($orderID) {

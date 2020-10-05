@@ -7,7 +7,7 @@ SilverStripe\Control\Director:
 Modifier:
   Enabled:
     - null
-SwipeStripe\Core\code\Admin\ShopAdmin:
+SwipeStripe\Core\Admin\ShopAdmin:
   menu_icon: swipestripe/images/basket.png
 SilverStripe\Security\Security:
   default_login_dest: account

@@ -2,7 +2,7 @@
 
 namespace SwipeStripe\Core\tasks;
 
-use SwipeStripe\Core\code\Order\Order;
+use SwipeStripe\Core\Order\Order;
 use SilverStripe\Dev\BuildTask;
 
 /**
