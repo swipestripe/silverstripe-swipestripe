@@ -38,5 +38,13 @@
 			"url": "git@github.com:silverstripe-labs/silverstripe-payment.git"
 		}
 	],
+	"extra": {
+        "expose": [
+            "css",
+			"lang",
+			"images",
+			"javascript"
+        ]
+    },
 	"minimum-stability": "dev"
 }

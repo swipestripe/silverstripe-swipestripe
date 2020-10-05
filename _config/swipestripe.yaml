@@ -1,30 +1,30 @@
 ---
 name: SwipeStripe
 ---
-
-Director:
+SilverStripe\Control\Director:
   rules:
-    'product//$ID!/$Action': 'Product_Controller'
-
+    product//$ID!/$Action: SwipeStripe\Core\Product\Product_Controller
 Modifier:
   Enabled:
-    -
-
-ShopAdmin:
-  menu_icon: 'swipestripe/images/basket.png'
-
-Security:
-  default_login_dest: 'account'
-
+    - null
+SwipeStripe\Core\Admin\ShopAdmin:
+  menu_icon: swipestripe/images/basket.png
+SilverStripe\Security\Security:
+  default_login_dest: account
 Payment:
-  extensions: 
-    - 'Payment_Extension'
+  extensions:
+    - SwipeStripe\Core\Order\Payment_Extension
 PaymentProcessor:
-  extensions: 
-    - 'Payment_ProcessorExtension'
-LeftAndMain:
-  extensions: 
-    - 'ShopAdmin_LeftAndMainExtension'
-Page_Controller:
-  extensions: 
-    - 'Cart'
+  extensions:
+    - SwipeStripe\Core\Order\PaymentProcessorExtension
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - SwipeStripe\Core\Admin\ShopAdminLeftAndMainExtension
+PageController:
+  extensions:
+    - SwipeStripe\Core\Customer\Cart
+SilverStripe\Core\Injector\Injector:
+  DataListFilter.OptionSet:
+    class: SwipeStripe\Core\Admin\ShopSearchFilterOptionSet
+  DataListFilter.PublishedStatus:
+    class: SwipeStripe\Core\Admin\ShopSearchFilterPublishedStatus

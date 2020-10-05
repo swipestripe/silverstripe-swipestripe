@@ -1,1 +1,6 @@
 <?php
+
+namespace SwipeStripe\Core;
+
+
+
