@@ -7,14 +7,14 @@ use SilverStripe\Forms\FormField;
 /**
  * Represent each {@link Item} in the {@link Order} on the {@link OrderForm}.
  */
-class OrderForm_ItemField extends FormField
+class OrderFormItemField extends FormField
 {
     /**
      * Template for rendering
      *
      * @var String
      */
-    protected $template = OrderForm_ItemField::class;
+    protected $template = OrderFormItemField::class;
 
     /**
      * Current {@link Item} this field represents.

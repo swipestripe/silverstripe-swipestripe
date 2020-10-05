@@ -552,7 +552,7 @@ Customer:
 # Permissions
 # ------------------------------------------      
 Permission:
-   admin:
+  admin:
     Code: ADMIN
     GroupID: =>Group.admin
   viewOrder:

@@ -7,7 +7,7 @@ use SilverStripe\Forms\NumericField;
 /**
  * Represent each {@link Item} in the {@link Order} on the {@link Product} {@link AddToCartForm}.
  */
-class ProductForm_QuantityField extends NumericField
+class ProductFormQuantityField extends NumericField
 {
     public function Type()
     {

@@ -4,45 +4,45 @@ namespace SwipeStripe\Core\Admin;
 
 use SwipeStripe\Core\Admin\ShopAdmin;
 use SwipeStripe\Core\Admin\ShopConfig;
+use SwipeStripe\Core\Product\Attribute;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\TextareField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\Form;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 
 /**
- * Shop admin area for managing email settings
+ * Shop admin area for managing product attributes.
  *
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
  */
-class ShopAdmin_EmailAdmin extends ShopAdmin
+class ShopAdminAttribute extends ShopAdmin
 {
     private static $tree_class = ShopConfig::class;
 
     private static $allowed_actions = [
-        'EmailSettings',
-        'EmailSettingsForm',
-        'saveEmailSettings'
+        'AttributeSettings',
+        'AttributeSettingsForm',
+        'saveAttributeSettings'
     ];
 
-    private static $url_rule = 'ShopConfig/EmailSettings';
-    private static $url_priority = 60;
-    private static $menu_title = 'Shop Emails';
+    private static $url_rule = 'ShopConfig/Attribute';
+    private static $url_priority = 75;
+    private static $menu_title = 'Shop Product Attributes';
 
     private static $url_handlers = [
-        'ShopConfig/EmailSettings/EmailSettingsForm' => 'EmailSettingsForm',
-        'ShopConfig/EmailSettings' => 'EmailSettings'
+        'ShopConfig/Attribute/AttributeSettingsForm' => 'AttributeSettingsForm',
+        'ShopConfig/Attribute' => 'AttributeSettings'
     ];
 
     public function init()
@@ -63,8 +63,8 @@ class ShopAdmin_EmailAdmin extends ShopAdmin
         }
 
         $items->push(ArrayData::create([
-            'Title' => 'Email Settings',
-            'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'EmailSettings'))
+            'Title' => 'Attribute Settings',
+            'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), Attribute::class))
         ]));
 
         return $items;
@@ -72,17 +72,17 @@ class ShopAdmin_EmailAdmin extends ShopAdmin
 
     public function SettingsForm($request = null)
     {
-        return $this->EmailSettingsForm();
+        return $this->AttributeSettingsForm();
     }
 
-    public function EmailSettings($request)
+    public function AttributeSettings($request)
     {
         if ($request->isAjax()) {
             $controller = $this;
             $responseNegotiator = new PjaxResponseNegotiator(
                 [
                     'CurrentForm' => function () use (&$controller) {
-                        return $controller->EmailSettingsForm()->forTemplate();
+                        return $controller->AttributeSettingsForm()->forTemplate();
                     },
                     'Content' => function () use (&$controller) {
                         return $controller->renderWith('ShopAdminSettings_Content');
@@ -102,7 +102,7 @@ class ShopAdmin_EmailAdmin extends ShopAdmin
         return $this->renderWith('ShopAdminSettings');
     }
 
-    public function EmailSettingsForm()
+    public function AttributeSettingsForm()
     {
         $shopConfig = ShopConfig::get()->First();
 
@@ -110,32 +110,19 @@ class ShopAdmin_EmailAdmin extends ShopAdmin
             $rootTab = new TabSet(
                 'Root',
                 $tabMain = new Tab(
-                    'Receipt',
-                    new HiddenField('ShopConfigSection', null, 'EmailSettings'),
-                    new TextField('ReceiptFrom', _t('ShopConfig.FROM', 'From')),
-                    TextField::create('ReceiptTo', _t('ShopConfig.TO', 'To'))
-                        ->setValue(_t('ShopConfig.RECEIPT_TO', 'Sent to customer'))
-                        ->performReadonlyTransformation(),
-                    new TextField('ReceiptSubject', _t('ShopConfig.SUBJECT_LINE', 'Subject line')),
-                    TextareaField::create('ReceiptBody', _t('ShopConfig.MESSAGE', 'Message'))
-                        ->setRightTitle(_t('ShopConfig.MESSAGE_DETAILS', 'Order details are included in the email below this message')),
-                    new TextareaField('EmailSignature', _t('ShopConfig.SIGNATURE', 'Signature'))
-                ),
-                new Tab(
-                    'Notification',
-                    TextField::create('NotificationFrom', _t('ShopConfig.FROM', 'From'))
-                        ->setValue(_t('ShopConfig.NOTIFICATION_FROM', 'Customer email address'))
-                        ->performReadonlyTransformation(),
-                    new TextField('NotificationTo', _t('ShopConfig.TO', 'To')),
-                    new TextField('NotificationSubject', _t('ShopConfig.SUBJECT_LINE', 'Subject line')),
-                    TextareaField::create('NotificationBody', _t('ShopConfig.MESSAGE', 'Message'))
-                        ->setRightTitle(_t('ShopConfig.MESSAGE_DETAILS', 'Order details are included in the email below this message'))
+                    Attribute::class,
+                    GridField::create(
+                        'Attributes',
+                        'Attributes',
+                        $shopConfig->Attributes(),
+                        GridFieldConfig_RelationEditor::create()
+                    )
                 )
             )
         );
 
         $actions = new FieldList();
-        $actions->push(FormAction::create('saveEmailSettings', _t('GridFieldDetailForm.Save', 'Save'))
+        $actions->push(FormAction::create('saveAttributeSettings', _t('GridFieldDetailForm.Save', 'Save'))
             ->setUseButtonTag(true)
             ->addExtraClass('ss-ui-action-constructive')
             ->setAttribute('data-icon', 'add'));
@@ -153,29 +140,29 @@ class ShopAdmin_EmailAdmin extends ShopAdmin
         if ($form->Fields()->hasTabset()) {
             $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
         }
-        $form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EmailSettings/EmailSettingsForm'));
+        $form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'Attribute/AttributeSettingsForm'));
 
         $form->loadDataFrom($shopConfig);
 
         return $form;
     }
 
-    public function saveEmailSettings($data, $form)
+    public function saveAttributeSettings($data, $form)
     {
         //Hack for LeftAndMain::getRecord()
-        // self::$tree_class = 'ShopConfig';
+        self::$tree_class = ShopConfig::class;
 
         $config = ShopConfig::get()->First();
         $form->saveInto($config);
         $config->write();
-        $form->sessionMessage('Saved Email Settings', 'good');
+        $form->sessionMessage('Saved Attribute Settings', 'good');
 
         $controller = $this;
         $responseNegotiator = new PjaxResponseNegotiator(
             [
                 'CurrentForm' => function () use (&$controller) {
                     //return $controller->renderWith('ShopAdminSettings_Content');
-                    return $controller->EmailSettingsForm()->forTemplate();
+                    return $controller->AttributeSettingsForm()->forTemplate();
                 },
                 'Content' => function () use (&$controller) {
                     //return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
@@ -202,10 +189,10 @@ class ShopAdmin_EmailAdmin extends ShopAdmin
         }
 
         return $this->customise([
-            'Title' => 'Email Settings',
-            'Help' => 'Order notification and receipt details and recipeients.',
-            'Link' => Controller::join_links($this->Link(ShopConfig::class), 'EmailSettings'),
-            'LinkTitle' => 'Edit Email Settings'
+            'Title' => 'Attribute Management',
+            'Help' => 'Create default attributes',
+            'Link' => Controller::join_links($this->Link(ShopConfig::class), Attribute::class),
+            'LinkTitle' => 'Edit default attributes'
         ])->renderWith('ShopAdmin_Snippet');
     }
 }

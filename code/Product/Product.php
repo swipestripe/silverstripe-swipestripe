@@ -28,6 +28,7 @@ use SilverStripe\ORM\ValidationResult;
  */
 class Product extends \Page
 {
+    private static $table_name = 'Product';
     /**
      * Flag for denoting if this is the first time this Product is being written.
      *
@@ -163,7 +164,7 @@ class Product extends \Page
         $fields = parent::getCMSFields();
 
         //Product fields
-        $fields->addFieldToTab('Root.Main', new PriceField(Price::class), 'Content');
+        $fields->addFieldToTab('Root.Main', PriceField::create(Price::class), 'Content');
 
         //Replace URL Segment field
         if ($this->ParentID == -1) {

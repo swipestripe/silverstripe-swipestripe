@@ -16,6 +16,7 @@ use SilverStripe\ORM\ValidationResult;
  */
 class Item extends DataObject
 {
+    private static $table_name = 'Item';
     /**
      * DB fields for an Item, the object this Item represents (e.g. {@link Product}
      * has a version ID saved as well, so if price is changed or something then
@@ -223,9 +224,8 @@ class Item extends DataObject
                 'Sorry, these product options are no longer available.',
                 'VariationExistsError'
             );
-        }
-        //If a variation does exist, check that it is valid
-        elseif ($variation && !$variation->validateForCart()->valid()) {
+        } elseif ($variation && !$variation->validateForCart()->valid()) {
+            //If a variation does exist, check that it is valid
             $result->error(
                 'Sorry, these product options are no longer available',
                 'VariationIncorrectError'

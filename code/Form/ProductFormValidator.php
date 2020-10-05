@@ -9,7 +9,7 @@ use SilverStripe\Forms\RequiredFields;
  * Validator for {@link AddToCartForm} which validates that the product {@link Variation} is
  * correct for the {@link Product} being added to the cart.
  */
-class ProductForm_Validator extends RequiredFields
+class ProductFormValidator extends RequiredFields
 {
     /**
      * Check that current product variation is valid

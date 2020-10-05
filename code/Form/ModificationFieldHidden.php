@@ -2,7 +2,7 @@
 
 namespace SwipeStripe\Core\Form;
 
-use SwipeStripe\Core\Form\ModificationField_Dropdown;
+use SwipeStripe\Core\Form\ModificationFieldDropdown;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
 
@@ -12,14 +12,14 @@ use SilverStripe\Forms\HiddenField;
  *
  * The hidden field stores the {@link Modifier} ID.
  */
-class ModificationField_Hidden extends HiddenField
+class ModificationFieldHidden extends HiddenField
 {
     /**
      * Template for rendering
      *
      * @var String
      */
-    protected $template = ModificationField_Hidden::class;
+    protected $template = ModificationFieldHidden::class;
 
     /**
      * To hold the modifier (link FlatFeeShipping) class that will set the value for the

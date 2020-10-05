@@ -14,11 +14,11 @@ use SilverStripe\View\Requirements;
  * @package swipestripe
  * @subpackage admin
  */
-class ShopAdmin_LeftAndMainExtension extends Extension
+class ShopAdminLeftAndMainExtension extends Extension
 {
     public function onAfterInit()
     {
-        Requirements::css('swipestripe/css/ShopAdmin.css');
+        Requirements::css('swipestripe/swipestripe: css/ShopAdmin.css');
     }
 
     public function alternateMenuDisplayCheck($className)

@@ -6,8 +6,9 @@ use SwipeStripe\Core\Order\Order;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 
-class Order_Update extends DataObject
+class OrderUpdate extends DataObject
 {
+    private static $table_name = 'OrderUpdate';
     private static $singular_name = 'Update';
     private static $plural_name = 'Updates';
 

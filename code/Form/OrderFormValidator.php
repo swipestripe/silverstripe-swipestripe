@@ -7,7 +7,7 @@ use SilverStripe\Forms\RequiredFields;
 /**
  * Validate the {@link OrderForm}, check that the current {@link Order} is valid.
  */
-class OrderForm_Validator extends RequiredFields
+class OrderFormValidator extends RequiredFields
 {
     /**
      * Check that current order is valid

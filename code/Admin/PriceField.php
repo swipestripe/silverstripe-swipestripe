@@ -27,23 +27,23 @@ class PriceField extends CurrencyField
         ]);
 
         $obj = ($properties) ? $this->customise($properties) : $this;
-        return $obj->renderWith('PriceField_holder');
+        return $obj->renderWith(self::class . '_holder');
     }
 
     /**
      * Set value of the field with explicitly formatted numbers.
      *
-     * @param mixed $val
+     * @param mixed $value
      */
     public function setValue($value, $data = null)
     {
-        if (!$val) {
-            $val = 0.00;
+        if (!$value) {
+            $value = 0.00;
         }
         $shopConfig = ShopConfig::current_shop_config();
         $precision = $shopConfig->BaseCurrencyPrecision;
 
-        $this->value = number_format((double)preg_replace('/[^0-9.\-]/', '', $val), $precision);
+        $this->value = number_format((double)preg_replace('/[^0-9.\-]/', '', $value), $precision);
         return $this;
     }
 

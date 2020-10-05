@@ -13,14 +13,14 @@ use SilverStripe\Forms\DropdownField;
  * @package swipestripe
  * @subpackage form
  */
-class ModificationField_Dropdown extends DropdownField
+class ModificationFieldDropdown extends DropdownField
 {
     /**
      * Template for rendering
      *
      * @var String
      */
-    protected $template = 'ModificationField_Dropdown';
+    protected $template = 'ModificationFieldDropdown';
 
     /**
      * To hold the modifier (link FlatFeeShipping) class that will set the value for the

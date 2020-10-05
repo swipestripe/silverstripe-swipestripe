@@ -12,6 +12,8 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Session;
 use SilverStripe\Forms\Form;
+use SwipeStripe\Core\Form\ProductFormValidator;
+use SwipeStripe\Core\Form\ProductFormQuantityField;
 use SwipeStripe\Core\Customer\Cart;
 use SwipeStripe\Core\Customer\CartPage;
 use SilverStripe\ORM\DataObject;
@@ -116,7 +118,7 @@ class ProductForm extends Form
             }
         }
 
-        $fields->push(ProductForm_QuantityField::create(
+        $fields->push(ProductFormQuantityField::create(
             'Quantity',
             _t('ProductForm.QUANTITY', 'Quantity'),
             is_numeric($this->quantity) ? $this->quantity : 1
@@ -140,7 +142,7 @@ class ProductForm extends Form
 
     public function createValidator()
     {
-        $validator = new ProductForm_Validator(
+        $validator = new ProductFormValidator(
             'ProductClass',
             'ProductID',
             'Quantity'

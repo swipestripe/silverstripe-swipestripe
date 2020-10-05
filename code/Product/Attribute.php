@@ -2,9 +2,10 @@
 
 namespace SwipeStripe\Core\Product;
 
-use SwipeStripe\Core\code\Product\Option;
-use SwipeStripe\Core\code\Product\Product;
-use SwipeStripe\Core\code\Product\Attribute_Default;
+use SwipeStripe\Core\Product\Option;
+use SwipeStripe\Core\Product\Product;
+use SwipeStripe\Core\Product\AttributeDefault;
+use SwipeStripe\Core\Product\AttributeOptionField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HiddenField;
@@ -13,11 +14,11 @@ use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HeaderField;
-use SwipeStripe\Core\code\Admin\GridFieldConfig_BasicSortable;
+use SwipeStripe\Core\Admin\GridFieldConfig_BasicSortable;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\PermissionProvider;
-use SwipeStripe\Core\code\Admin\GridFieldConfig_Basic;
+use SwipeStripe\Core\Admin\GridFieldConfig_Basic;
 
 /**
  * Represents a {@link Product} Attribute, e.g: Size, Color, Material etc.
@@ -34,6 +35,7 @@ use SwipeStripe\Core\code\Admin\GridFieldConfig_Basic;
  */
 class Attribute extends DataObject implements PermissionProvider
 {
+    private static $table_name = 'Attribute';
     private static $singular_name = 'Attribute';
     private static $plural_name = 'Attributes';
 
@@ -62,7 +64,7 @@ class Attribute extends DataObject implements PermissionProvider
 
     private static $has_one = [
         'Product' => Product::class,
-        'DefaultAttribute' => Attribute_Default::class
+        'DefaultAttribute' => AttributeDefault::class
     ];
 
     /**
@@ -153,7 +155,7 @@ class Attribute extends DataObject implements PermissionProvider
         );
 
         if (!$this->ID) {
-            $defaultAttributes = Attribute_Default::get();
+            $defaultAttributes = AttributeDefault::get();
             if ($defaultAttributes && $defaultAttributes->exists()) {
                 $fields->addFieldToTab(
                     'Root.Attribute',
@@ -252,6 +254,6 @@ class Attribute extends DataObject implements PermissionProvider
 
     public function getOptionField($prev = null)
     {
-        return Attribute_OptionField::create($this, $prev);
+        return AttributeOptionField::create($this, $prev);
     }
 }

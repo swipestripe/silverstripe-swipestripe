@@ -2,7 +2,7 @@
 
 namespace SwipeStripe\Core\Admin;
 
-use SwipeStripe\Core\Product\Attribute_Default;
+use SwipeStripe\Core\Product\AttributeDefault;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 
@@ -16,6 +16,8 @@ use SilverStripe\ORM\DataObject;
  */
 class ShopConfig extends DataObject
 {
+    private static $table_name = 'ShopConfig';
+
     private static $singular_name = 'Settings';
     private static $plural_name = 'Settings';
 
@@ -41,7 +43,7 @@ class ShopConfig extends DataObject
     ];
 
     private static $has_many = [
-        'Attributes' => Attribute_Default::class
+        'Attributes' => AttributeDefault::class
     ];
 
     private static $defaults = [

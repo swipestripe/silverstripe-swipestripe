@@ -16,10 +16,15 @@ Payment:
     - SwipeStripe\Core\Order\Payment_Extension
 PaymentProcessor:
   extensions:
-    - SwipeStripe\Core\Order\Payment_ProcessorExtension
+    - SwipeStripe\Core\Order\PaymentProcessorExtension
 SilverStripe\Admin\LeftAndMain:
   extensions:
-    - SwipeStripe\Core\Admin\ShopAdmin_LeftAndMainExtension
+    - SwipeStripe\Core\Admin\ShopAdminLeftAndMainExtension
 PageController:
   extensions:
     - SwipeStripe\Core\Customer\Cart
+SilverStripe\Core\Injector\Injector:
+  DataListFilter.OptionSet:
+    class: SwipeStripe\Core\Admin\ShopSearchFilterOptionSet
+  DataListFilter.PublishedStatus:
+    class: SwipeStripe\Core\Admin\ShopSearchFilterPublishedStatus

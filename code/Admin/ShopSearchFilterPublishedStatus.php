@@ -14,7 +14,7 @@ use SilverStripe\ORM\DataQuery;
  * @package swipestripe
  * @subpackage admin
  */
-class ShopSearchFilter_PublishedStatus extends SearchFilter
+class ShopSearchFilterPublishedStatus extends SearchFilter
 {
     /**
      * Apply filter query SQL to a search query

@@ -16,7 +16,7 @@ use SwipeStripe\Core\code\Form\RepayForm;
  * @package swipestripe
  * @subpackage customer
  */
-class AccountPage_Controller extends \PageController
+class AccountPageController extends \PageController
 {
     /**
      * Allowed actions that can be invoked.

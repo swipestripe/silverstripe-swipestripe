@@ -14,7 +14,7 @@ use SilverStripe\ORM\Filters\SearchFilter;
  * @package swipestripe
  * @subpackage admin
  */
-class ShopSearchFilter_OptionSet extends SearchFilter
+class ShopSearchFilterOptionSet extends SearchFilter
 {
     /**
      * Apply filter query SQL to a search query

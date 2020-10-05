@@ -22,6 +22,7 @@ use SilverStripe\Security\PermissionProvider;
  */
 class Option extends DataObject implements PermissionProvider
 {
+    private static $table_name = 'Option';
     private static $singular_name = 'Option';
     private static $plural_name = 'Options';
 

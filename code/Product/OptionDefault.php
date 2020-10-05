@@ -4,7 +4,7 @@ namespace SwipeStripe\Core\Product;
 
 use SwipeStripe\Core\Product\Option;
 
-class Option_Default extends Option
+class OptionDefault extends Option
 {
     private static $singular_name = 'Option';
     private static $plural_name = 'Options';

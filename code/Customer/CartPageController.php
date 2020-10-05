@@ -10,7 +10,7 @@ namespace SwipeStripe\Core\Customer;
  * @package swipestripe
  * @subpackage customer
  */
-class CartPage_Controller extends \PageController
+class CartPageController extends \PageController
 {
     private static $allowed_actions = [
         'index',

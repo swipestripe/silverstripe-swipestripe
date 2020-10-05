@@ -4,45 +4,42 @@ namespace SwipeStripe\Core\Admin;
 
 use SwipeStripe\Core\Admin\ShopAdmin;
 use SwipeStripe\Core\Admin\ShopConfig;
-use SwipeStripe\Core\Product\Attribute;
-use SilverStripe\View\ArrayData;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\Form;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Permission;
+use SilverStripe\Forms\Form;
 
 /**
- * Shop admin area for managing product attributes.
+ * Shop admin area for managing base currency
  *
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage admin
  */
-class ShopAdmin_Attribute extends ShopAdmin
+class ShopAdminBaseCurrency extends ShopAdmin
 {
     private static $tree_class = ShopConfig::class;
 
     private static $allowed_actions = [
-        'AttributeSettings',
-        'AttributeSettingsForm',
-        'saveAttributeSettings'
+        'BaseCurrencySettings',
+        'BaseCurrencySettingsForm',
+        'saveBaseCurrencySettings'
     ];
 
-    private static $url_rule = 'ShopConfig/Attribute';
-    private static $url_priority = 75;
-    private static $menu_title = 'Shop Product Attributes';
+    private static $url_rule = 'ShopConfig/BaseCurrency';
+    private static $url_priority = 65;
+    private static $menu_title = 'Shop Base Currency';
 
     private static $url_handlers = [
-        'ShopConfig/Attribute/AttributeSettingsForm' => 'AttributeSettingsForm',
-        'ShopConfig/Attribute' => 'AttributeSettings'
+        'ShopConfig/BaseCurrency/BaseCurrencySettingsForm' => 'BaseCurrencySettingsForm',
+        'ShopConfig/BaseCurrency' => 'BaseCurrencySettings'
     ];
 
     public function init()
@@ -62,9 +59,9 @@ class ShopAdmin_Attribute extends ShopAdmin
             $items->remove($items->pop());
         }
 
-        $items->push(ArrayData::create([
-            'Title' => 'Attribute Settings',
-            'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), Attribute::class))
+        $items->push(new ArrayData([
+            'Title' => 'Base Currency',
+            'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'BaseCurrency'))
         ]));
 
         return $items;
@@ -72,17 +69,17 @@ class ShopAdmin_Attribute extends ShopAdmin
 
     public function SettingsForm($request = null)
     {
-        return $this->AttributeSettingsForm();
+        return $this->BaseCurrencySettingsForm();
     }
 
-    public function AttributeSettings($request)
+    public function BaseCurrencySettings($request)
     {
         if ($request->isAjax()) {
             $controller = $this;
             $responseNegotiator = new PjaxResponseNegotiator(
                 [
                     'CurrentForm' => function () use (&$controller) {
-                        return $controller->AttributeSettingsForm()->forTemplate();
+                        return $controller->BaseCurrencySettingsForm()->forTemplate();
                     },
                     'Content' => function () use (&$controller) {
                         return $controller->renderWith('ShopAdminSettings_Content');
@@ -102,7 +99,7 @@ class ShopAdmin_Attribute extends ShopAdmin
         return $this->renderWith('ShopAdminSettings');
     }
 
-    public function AttributeSettingsForm()
+    public function BaseCurrencySettingsForm()
     {
         $shopConfig = ShopConfig::get()->First();
 
@@ -110,28 +107,37 @@ class ShopAdmin_Attribute extends ShopAdmin
             $rootTab = new TabSet(
                 'Root',
                 $tabMain = new Tab(
-                    Attribute::class,
-                    GridField::create(
-                        'Attributes',
-                        'Attributes',
-                        $shopConfig->Attributes(),
-                        GridFieldConfig_RelationEditor::create()
-                    )
+                    'BaseCurrency',
+                    TextField::create('BaseCurrency', _t('ShopConfig.BASE_CURRENCY', 'Base Currency'))
+                        ->setRightTitle('3 letter code for base currency - <a href="http://en.wikipedia.org/wiki/ISO_4217#Active_codes" target="_blank">available codes</a>'),
+                    TextField::create('BaseCurrencySymbol', _t('ShopConfig.BASE_CURRENCY_SYMBOL', 'Base Currency Symbol'))
+                        ->setRightTitle('Symbol to be used for the base currency e.g: $'),
+                    NumericField::create('BaseCurrencyPrecision', _t('ShopConfig.BASE_CURRENCY_PRECISION', 'Base Currency Precision'))
+                        ->setRightTitle('Most currencies use two digits after the decimal place. If using digital currencies like Bitcoin, precision should be at least eight digits after the decimal.')
                 )
             )
         );
 
+        if ($shopConfig->BaseCurrency) {
+            $fields->addFieldToTab('Root.BaseCurrency', new LiteralField('BaseCurrencyNotice', '
+				<p class="message warning">Base currency has already been set, do not change unless you know what you are doing.</p>
+			'), 'BaseCurrency');
+        }
+
         $actions = new FieldList();
-        $actions->push(FormAction::create('saveAttributeSettings', _t('GridFieldDetailForm.Save', 'Save'))
+        $actions->push(FormAction::create('saveBaseCurrencySettings', _t('GridFieldDetailForm.Save', 'Save'))
             ->setUseButtonTag(true)
             ->addExtraClass('ss-ui-action-constructive')
             ->setAttribute('data-icon', 'add'));
+
+        $validator = new RequiredFields('BaseCurrency');
 
         $form = new Form(
             $this,
             'EditForm',
             $fields,
-            $actions
+            $actions,
+            $validator
         );
 
         $form->setTemplate('ShopAdminSettings_EditForm');
@@ -140,14 +146,14 @@ class ShopAdmin_Attribute extends ShopAdmin
         if ($form->Fields()->hasTabset()) {
             $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
         }
-        $form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'Attribute/AttributeSettingsForm'));
+        $form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'BaseCurrency/BaseCurrencySettingsForm'));
 
         $form->loadDataFrom($shopConfig);
 
         return $form;
     }
 
-    public function saveAttributeSettings($data, $form)
+    public function saveBaseCurrencySettings($data, $form)
     {
         //Hack for LeftAndMain::getRecord()
         self::$tree_class = ShopConfig::class;
@@ -155,14 +161,14 @@ class ShopAdmin_Attribute extends ShopAdmin
         $config = ShopConfig::get()->First();
         $form->saveInto($config);
         $config->write();
-        $form->sessionMessage('Saved Attribute Settings', 'good');
+        $form->sessionMessage('Saved BaseCurrency Key', 'good');
 
         $controller = $this;
         $responseNegotiator = new PjaxResponseNegotiator(
             [
                 'CurrentForm' => function () use (&$controller) {
                     //return $controller->renderWith('ShopAdminSettings_Content');
-                    return $controller->AttributeSettingsForm()->forTemplate();
+                    return $controller->BaseCurrencySettingsForm()->forTemplate();
                 },
                 'Content' => function () use (&$controller) {
                     //return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
@@ -189,10 +195,10 @@ class ShopAdmin_Attribute extends ShopAdmin
         }
 
         return $this->customise([
-            'Title' => 'Attribute Management',
-            'Help' => 'Create default attributes',
-            'Link' => Controller::join_links($this->Link(ShopConfig::class), Attribute::class),
-            'LinkTitle' => 'Edit default attributes'
+            'Title' => 'Base Currency',
+            'Help' => 'Set base currency.',
+            'Link' => Controller::join_links($this->Link(ShopConfig::class), 'BaseCurrency'),
+            'LinkTitle' => 'Edit base currency'
         ])->renderWith('ShopAdmin_Snippet');
     }
 }

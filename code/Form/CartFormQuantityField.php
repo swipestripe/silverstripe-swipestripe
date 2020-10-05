@@ -8,14 +8,14 @@ use SilverStripe\Forms\NumericField;
 /**
  * Quantity field for displaying each {@link Item} in an {@link Order} on the {@link CartPage}.
  */
-class CartForm_QuantityField extends TextField
+class CartFormQuantityField extends TextField
 {
     /**
      * Template for rendering the field
      *
      * @var String
      */
-    protected $template = CartForm_QuantityField::class;
+    protected $template = CartFormQuantityField::class;
 
     /**
      * Current {@link Item} represented by this field.

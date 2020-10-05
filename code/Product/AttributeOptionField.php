@@ -5,7 +5,7 @@ namespace SwipeStripe\Core\Product;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\DropdownField;
 
-class Attribute_OptionField extends DropdownField
+class AttributeOptionField extends DropdownField
 {
     public function __construct($attr, $prev = null)
     {

@@ -4,7 +4,7 @@ namespace SwipeStripe\Core\Order;
 
 use SilverStripe\Core\Extension;
 
-class Payment_ProcessorExtension extends Extension
+class PaymentProcessorExtension extends Extension
 {
     public function onBeforeRedirect()
     {

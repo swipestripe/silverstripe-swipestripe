@@ -26,12 +26,13 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Debug;
 use SwipeStripe\Core\Order\Order;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SwipeStripe\Core\Order\Order_Update;
+use SwipeStripe\Core\Form\OrderFormValidator;
+use SwipeStripe\Core\Order\OrderUpdate;
 use SwipeStripe\Core\Admin\ShopConfig;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
-use SwipeStripe\Core\Form\OrderForm_ItemField;
+use SwipeStripe\Core\Form\OrderFormItemField;
 use SwipeStripe\Core\Order\Item;
 
 /**
@@ -144,7 +145,7 @@ class OrderForm extends Form
         $itemFields = CompositeField::create()->setName('ItemsFields');
         if ($items) {
             foreach ($items as $item) {
-                $itemFields->push(new OrderForm_ItemField($item));
+                $itemFields->push(new OrderFormItemField($item));
             }
         }
 
@@ -223,7 +224,7 @@ class OrderForm extends Form
 
     public function createValidator()
     {
-        $validator = OrderForm_Validator::create(
+        $validator = OrderFormValidator::create(
             'PaymentMethod'
         );
 
@@ -349,7 +350,7 @@ class OrderForm extends Form
 
         //Saving an update on the order
         if ($notes = $data['Notes']) {
-            $update = new Order_Update();
+            $update = new OrderUpdate();
             $update->Note = $notes;
             $update->Visible = true;
             $update->OrderID = $order->ID;

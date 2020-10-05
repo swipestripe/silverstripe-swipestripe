@@ -13,7 +13,7 @@ use SilverStripe\Forms\Form;
 use SwipeStripe\Core\code\Customer\CheckoutPage;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\Debug;
-use SwipeStripe\Core\code\Form\CartForm_QuantityField;
+use SwipeStripe\Core\code\Form\CartFormQuantityField;
 use SwipeStripe\Core\code\Order\Item;
 
 /**
@@ -82,7 +82,7 @@ class CartForm extends Form
 
         if ($items) {
             foreach ($items as $item) {
-                $fields->push(CartForm_QuantityField::create(
+                $fields->push(CartFormQuantityField::create(
                     'Quantity[' . $item->ID . ']',
                     $item->Quantity,
                     $item

@@ -23,6 +23,7 @@ use SilverStripe\ORM\DataObject;
  */
 class Modification extends DataObject
 {
+    private static $table_name = 'Modification';
     /**
      * DB fields for the order Modification, the actual {@link Modifier} data is saved into
      * this class so if a modifier is deleted the order still has the necessary

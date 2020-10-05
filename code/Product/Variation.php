@@ -18,6 +18,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Control\Controller;
 use SilverStripe\Security\PermissionProvider;
+use Swipestripe\Core\Product\VariationOptions;
 
 /**
  * Represents a Variation for a Product. A variation needs to have a valid Option set for each
@@ -32,6 +33,7 @@ use SilverStripe\Security\PermissionProvider;
  */
 class Variation extends DataObject implements PermissionProvider
 {
+    private static $table_name = 'Variation';
     /**
      * DB fields for a Variation
      *
@@ -488,12 +490,12 @@ class Variation extends DataObject implements PermissionProvider
         if ($request) {
             $options = $request->requestVar('Options');
             if (isset($options)) {
-                $existingOptions = Variation_Options::get()->where("\"VariationID\" = '{$this->ID}'");
+                $existingOptions = VariationOptions::get()->where("\"VariationID\" = '{$this->ID}'");
                 foreach ($existingOptions as $existingOption) {
                     $existingOption->delete();
                 }
                 foreach ($options as $optionID) {
-                    $join = new Variation_Options();
+                    $join = new VariationOptions();
                     $join->VariationID = $this->ID;
                     $join->OptionID = $optionID;
                     $join->write();

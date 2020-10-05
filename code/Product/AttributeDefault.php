@@ -7,8 +7,9 @@ use SwipeStripe\Core\Admin\ShopConfig;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HiddenField;
 
-class Attribute_Default extends Attribute
+class AttributeDefault extends Attribute
 {
+    private static $table_name = 'AttributeDefault';
     private static $singular_name = 'Attribute';
     private static $plural_name = 'Attributes';
 

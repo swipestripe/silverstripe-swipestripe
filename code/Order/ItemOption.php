@@ -16,6 +16,7 @@ use SilverStripe\ORM\DataObject;
  */
 class ItemOption extends DataObject
 {
+    private static $table_name = 'ItemOption';
     /**
      * Relations for this class
      *

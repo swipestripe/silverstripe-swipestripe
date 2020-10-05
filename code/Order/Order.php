@@ -9,31 +9,31 @@ use Payment;
 use DateInterval;
 use DateTime;
 use SilverStripe\Security\Member;
-use SwipeStripe\Core\code\Product\Price;
-use SwipeStripe\Core\code\Customer\Customer;
-use SwipeStripe\Core\code\Order\Item;
-use SwipeStripe\Core\code\Order\Modification;
-use SwipeStripe\Core\code\Order\Order_Update;
+use SwipeStripe\Core\Product\Price;
+use SwipeStripe\Core\Customer\Customer;
+use SwipeStripe\Core\Order\Item;
+use SwipeStripe\Core\Order\Modification;
+use SwipeStripe\Core\Order\OrderUpdate;
 use SilverStripe\Security\Permission;
 use SilverStripe\ORM\DB;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\CheckboxSetField;
-use SwipeStripe\Core\code\Admin\ShopSearchContext_Order;
+use SwipeStripe\Core\Admin\ShopSearchContext_Order;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SwipeStripe\Core\code\Admin\ShopConfig;
+use SwipeStripe\Core\Admin\ShopConfig;
 use SilverStripe\Control\Director;
-use SwipeStripe\Core\code\Mails\ReceiptEmail;
-use SwipeStripe\Core\code\Mails\NotificationEmail;
+use SwipeStripe\Core\Mails\ReceiptEmail;
+use SwipeStripe\Core\Mails\NotificationEmail;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\LiteralField;
-use SwipeStripe\Core\code\Admin\GridFieldConfig_Basic;
+use SwipeStripe\Core\Admin\GridFieldConfig_Basic;
 use SilverStripe\Forms\GridField\GridField;
-use SwipeStripe\Core\code\Customer\AccountPage;
+use SwipeStripe\Core\Customer\AccountPage;
 use SilverStripe\ORM\DataObject;
-use SwipeStripe\Core\code\Product\Product;
-use SwipeStripe\Core\code\Product\Variation;
+use SwipeStripe\Core\Product\Product;
+use SwipeStripe\Core\Product\Variation;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Core\Convert;
@@ -41,6 +41,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\TextField;
 
 /**
  * Order, created as soon as a user adds a {@link Product} to their cart, the cart is
@@ -49,6 +50,7 @@ use SilverStripe\Forms\HiddenField;
  */
 class Order extends DataObject implements PermissionProvider
 {
+    private static $table_name = 'Order';
     /**
      * Order status once Order has been made, waiting for payment to clear/be approved
      *
@@ -183,7 +185,7 @@ class Order extends DataObject implements PermissionProvider
         'Items' => Item::class,
         'Payments' => 'Payment',
         'Modifications' => Modification::class,
-        'Updates' => Order_Update::class
+        'Updates' => OrderUpdate::class
     ];
 
     /**
@@ -207,7 +209,7 @@ class Order extends DataObject implements PermissionProvider
      */
     private static $searchable_fields = [
         'ID' => [
-            'field' => 'TextField',
+            'field' => TextField::class,
             'filter' => 'PartialMatchFilter',
             'title' => 'Order Number'
         ],
@@ -221,7 +223,7 @@ class Order extends DataObject implements PermissionProvider
         ],
         'Status' => [
             'title' => 'Status',
-            'filter' => 'ShopSearchFilter_OptionSet'
+            'filter' => 'SwipeStripe\Core\Admin\ShopSearchFilterOptionSet'
         ]
     ];
 
