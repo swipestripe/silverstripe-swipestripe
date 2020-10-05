@@ -5,9 +5,6 @@ namespace SwipeStripe\Core\Customer;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
-use SilverStripe\View\Requirements;
-use SwipeStripe\Core\code\Customer\Customer;
-use SwipeStripe\Core\code\Form\OrderForm;
 
 /**
  * A checkout page for displaying the checkout form to a visitor.
@@ -21,7 +18,6 @@ use SwipeStripe\Core\code\Form\OrderForm;
  */
 class CheckoutPage extends Page
 {
-    
     /**
      * Automatically create a CheckoutPage if one is not found
      * on the site at the time the database is built (dev/build).
@@ -42,7 +38,7 @@ class CheckoutPage extends Page
             DB::alteration_message('Checkout page \'Checkout\' created', 'created');
         }
     }
-    
+
     /**
      * Prevent CMS users from creating another checkout page.
      *
@@ -57,7 +53,7 @@ class CheckoutPage extends Page
         }
         return false;
     }
-    
+
     /**
      * Prevent CMS users from deleting the checkout page.
      *
@@ -79,7 +75,7 @@ class CheckoutPage extends Page
             parent::delete();
         }
     }
-    
+
     /**
      * Prevent CMS users from unpublishing the checkout page.
      *
@@ -95,7 +91,7 @@ class CheckoutPage extends Page
         }
         return false;
     }
-    
+
     /**
      * To remove the unpublish button from the CMS, as this page must always be published
      *
@@ -109,7 +105,7 @@ class CheckoutPage extends Page
         $actions->removeByName('action_unpublish');
         return $actions;
     }
-    
+
     /**
      * Remove page type dropdown to prevent users from changing page type.
      *
@@ -121,61 +117,5 @@ class CheckoutPage extends Page
         $fields = parent::getCMSFields();
         $fields->removeByName('ClassName');
         return $fields;
-    }
-}
-
-/**
- * Display the checkout page, with order form. Process the order - send the order details
- * off to the Payment class.
- *
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage customer
- */
-class CheckoutPage_Controller extends PageController
-{
-    protected $orderProcessed = false;
-
-    private static $allowed_actions = array(
-        'index',
-        'OrderForm'
-    );
-    
-    /**
-     * Include some CSS and javascript for the checkout page
-     *
-     * TODO why didn't I use init() here?
-     *
-     * @return Array Contents for page rendering
-     */
-    public function index()
-    {
-        
-        //Update stock levels
-        //Order::delete_abandoned();
-
-        Requirements::css('swipestripe/css/Shop.css');
-
-        return array(
-             'Content' => $this->Content,
-             'Form' => $this->OrderForm()
-        );
-    }
-
-    public function OrderForm()
-    {
-        $order = Cart::get_current_order();
-        $member = Customer::currentUser() ? Customer::currentUser() : singleton(Customer::class);
-
-        $form = OrderForm::create(
-            $this,
-            OrderForm::class
-        )->disableSecurityToken();
-
-        //Populate fields the first time form is loaded
-        $form->populateFields();
-
-        return $form;
     }
 }

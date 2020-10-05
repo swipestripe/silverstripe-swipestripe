@@ -23,7 +23,6 @@ use SilverStripe\Core\Extension;
  */
 class Cart extends Extension
 {
-
     /**
      * Retrieve the current cart for display in the template.
      *
@@ -38,7 +37,7 @@ class Cart extends Extension
         //HTTP::set_cache_age(0);
         return $order;
     }
-    
+
     /**
      * Convenience method to return links to cart related page.
      *
@@ -77,7 +76,7 @@ class Cart extends Extension
                 }
         }
     }
-    
+
     /**
      * Get the current order from the session, if order does not exist create a new one.
      *
@@ -87,19 +86,19 @@ class Cart extends Extension
     {
         $orderID = Session::get('Cart.OrderID');
         $order = null;
-        
+
         if ($orderID) {
             $order = DataObject::get_by_id(Order::class, $orderID);
         }
-        
+
         if (!$orderID || !$order || !$order->exists()) {
             $order = Order::create();
 
             if ($persist) {
                 $order->write();
-                Session::set(Cart::class, array(
+                Session::set(Cart::class, [
                     'OrderID' => $order->ID
-                ));
+                ]);
                 Session::save();
             }
         }

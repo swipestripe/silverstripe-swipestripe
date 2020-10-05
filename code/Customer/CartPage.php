@@ -21,7 +21,6 @@ use SwipeStripe\Core\code\Form\CartForm;
  */
 class CartPage extends Page
 {
-    
     /**
      * Automatically create a CheckoutPage if one is not found
      * on the site at the time the database is built (dev/build).
@@ -42,7 +41,7 @@ class CartPage extends Page
             DB::alteration_message("Cart page 'Cart' created", 'created');
         }
     }
-    
+
     /**
      * Prevent CMS users from creating another cart page.
      *
@@ -57,7 +56,7 @@ class CartPage extends Page
         }
         return false;
     }
-    
+
     /**
      * Prevent CMS users from deleting the cart page.
      *
@@ -79,7 +78,7 @@ class CartPage extends Page
             parent::delete();
         }
     }
-    
+
     /**
      * Prevent CMS users from unpublishing the cart page.
      *
@@ -95,7 +94,7 @@ class CartPage extends Page
         }
         return false;
     }
-    
+
     /**
      * To remove the unpublish button from the CMS, as this page must always be published
      *
@@ -109,7 +108,7 @@ class CartPage extends Page
         $actions->removeByName('action_unpublish');
         return $actions;
     }
-    
+
     /**
      * Remove page type dropdown to prevent users from changing page type.
      *
@@ -121,53 +120,5 @@ class CartPage extends Page
         $fields = parent::getCMSFields();
         $fields->removeByName('ClassName');
         return $fields;
-    }
-}
-
-/**
- * Display the cart page, with cart form. Handle cart form actions.
- *
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage customer
- */
-class CartPage_Controller extends PageController
-{
-    private static $allowed_actions = array(
-        'index',
-        'CartForm'
-    );
-    
-    /**
-     * Include some CSS for the cart page.
-     *
-     * @return Array Contents for page rendering
-     */
-    public function index()
-    {
-        
-        //Update stock levels
-        //Order::delete_abandoned();
-
-        Requirements::css('swipestripe/css/Shop.css');
-
-        return array(
-             'Content' => $this->Content,
-             'Form' => $this->Form
-        );
-    }
-    
-    /**
-     * Form including quantities for items for displaying on the cart page.
-     *
-     * @return CartForm A new cart form
-     */
-    public function CartForm()
-    {
-        return CartForm::create(
-            $this,
-            CartForm::class
-        )->disableSecurityToken();
     }
 }
